@@ -2,7 +2,8 @@
   "schemaPath": "schema/schema.graphql",
   "extensions": {
     "endpoints": {
-      "dev": "http://localhost:8000/graphql?"
+      "prod": "https://itdagene.no/graphql",
+      "dev": "http://localhost:8000/graphql"
     }
   }
 }

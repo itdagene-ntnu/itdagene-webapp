@@ -1,0 +1,41 @@
+version: 2
+jobs:
+  tests:
+    docker:
+      - image: node:8
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-{{ checksum "yarn.lock" }}
+      - run:
+          name: install dependencies
+          command: |
+            yarn
+
+      - save_cache:
+          paths:
+            - ./node_modules/
+          key: deps-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: fetch schema
+          command: |
+            yarn schema prod
+
+      - run:
+          name: compile relay
+          command: |
+            yarn relay
+
+      - run:
+          name: build
+          command: |
+            yarn build
+
+workflows:
+  version: 2
+  on_push:
+    jobs:
+      - tests

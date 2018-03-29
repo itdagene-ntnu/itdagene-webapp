@@ -13,7 +13,6 @@ import {
   DropdownMenu,
   DropdownItem
 } from 'reactstrap';
-import foo from 'bootstrap/dist/css/bootstrap.css';
 import { render } from 'react-dom';
 import { Provider, Subscribe, Container } from 'unstated';
 
