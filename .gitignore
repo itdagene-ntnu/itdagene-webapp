@@ -1,7 +1,6 @@
 __generated__/
 schema/schema.graphql
 .next
-yarn.lock
 yarn-error.log
 node_modules/
 

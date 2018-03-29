@@ -22,6 +22,7 @@ jobs:
       - run:
           name: fetch schema
           command: |
+            mkdir schema
             yarn schema prod
 
       - run:
