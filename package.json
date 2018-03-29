@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "schema": "graphql get-schema",
-    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql"
+    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql",
+    "lint:prettier": "prettier '**/*.{js,css,graphql}' --list-different",
+    "prettier": "prettier '**/*.{js,css,graphql}' --write",
+    "flow": "flow"
   },
   "author": "Odin Ugedal <odin@ugedal.com>",
   "license": "MIT",
@@ -30,6 +33,10 @@
     "babel-plugin-relay": "^1.4.1",
     "flow-bin": "^0.68.0",
     "graphql-cli": "^1.0.0-beta.4",
+    "prettier": "^1.11.1",
     "relay-compiler": "^1.4.1"
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }

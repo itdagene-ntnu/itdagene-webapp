@@ -31,6 +31,16 @@ jobs:
             yarn relay
 
       - run:
+          name: flow
+          command: |
+            yarn flow
+
+      - run:
+          name: lint
+          command: |
+            yarn lint:prettier
+
+      - run:
           name: build
           command: |
             yarn build
