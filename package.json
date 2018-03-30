@@ -20,6 +20,7 @@
     "bootstrap": "4.0.0",
     "dotenv": "^4.0.0",
     "dotenv-webpack": "^1.5.4",
+    "file-loader": "^1.1.11",
     "isomorphic-unfetch": "^2.0.0",
     "next": "^5.0.0",
     "raven": "^2.4.2",
@@ -30,7 +31,10 @@
     "react-relay-network-modern": "^2.1.1",
     "reactstrap": "^5.0.0-beta.3",
     "relay-runtime": "^1.5.0",
-    "unstated": "^1.2.0"
+    "semantic-ui-css": "^2.3.1",
+    "semantic-ui-react": "^0.79.0",
+    "unstated": "^1.2.0",
+    "url-loader": "^1.0.1"
   },
   "browser": {
     "raven": false

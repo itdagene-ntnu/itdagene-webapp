@@ -8,6 +8,7 @@ import {
 } from 'react-relay';
 import withData from '../lib/withData';
 import Link from 'next/link';
+import Head from 'next/head';
 import Year from '../components/Year';
 import Header from '../components/Header';
 
@@ -34,6 +35,9 @@ const Index = ({
 
       return (
         <Fragment>
+          <Head>
+            <link rel="stylesheet" href="/_next/static/style.css" key="css" />
+          </Head>
           <Header />
           <div
             style={{
@@ -61,8 +65,10 @@ export default withData(Index, {
       currentMetaData {
         ...Year_currentMetaData
         id
-        nrOfStands
         year
+      }
+      boardMembers {
+        id
       }
     }
   `,
