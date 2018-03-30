@@ -11,6 +11,8 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Year from '../components/Year';
 import Header from '../components/Header';
+import BoardMember from '../components/BoardMember';
+import { type Page_QueryResponse } from './__generated__/Page_Query.graphql';
 
 const Index = ({
   variables,
@@ -28,7 +30,13 @@ const Index = ({
     environment={environment}
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
-    render={({ error, props }) => {
+    render={({
+      error,
+      props: props
+    }: {
+      error: ?Error,
+      props: ?Page_QueryResponse
+    }) => {
       if (error) return <div>Error</div>;
 
       if (!props) return <div> Laster </div>;
@@ -50,8 +58,13 @@ const Index = ({
               <a> Back </a>
             </Link>
             <h1>
-              <Year currentMetaData={(props: any).currentMetaData} />
+              <Year currentMetaData={props.currentMetaData} />
             </h1>
+          </div>
+          <div>
+            {props.boardMembers.map(user => (
+              <BoardMember key={user.id} user={user} />
+            ))}
           </div>
         </Fragment>
       );
@@ -65,9 +78,9 @@ export default withData(Index, {
       currentMetaData {
         ...Year_currentMetaData
         id
-        year
       }
       boardMembers {
+        ...BoardMember_user
         id
       }
     }
