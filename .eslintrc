@@ -1,0 +1,31 @@
+{
+  "extends": [
+    "react-app",
+    "eslint:recommended",
+    "plugin:flowtype/recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/react"
+  ],
+  "plugins": [
+    "react",
+    "flowtype",
+  ],
+  "globals": {
+    "log": true,
+    "expect": true,
+    "jest": true,
+  },
+  "rules": {
+    "react/prop-types": 2,
+    "react/display-name": 2,
+    "flowtype/no-types-missing-file-annotation": 2,
+    "jsx-a11y/href-no-hash": "off",
+    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }]
+  },
+  "env": {
+    "jest": true,
+    "browser": true
+  }
+}

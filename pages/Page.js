@@ -1,26 +1,33 @@
 //@flow
-import React, { Component, Fragment } from 'react';
-import { QueryRenderer, createRefetchContainer, graphql } from 'react-relay';
+import React, { Fragment } from 'react';
+import {
+  QueryRenderer,
+  graphql,
+  type Environment,
+  type GraphQLTaggedNode
+} from 'react-relay';
 import withData from '../lib/withData';
 import Link from 'next/link';
 import Year from '../components/Year';
 import Header from '../components/Header';
 
-import { type Page_QueryResponse } from './__generated__/Page_Query.graphql';
-
-const Index = ({ variables, query, environment, queryProps }) => (
+const Index = ({
+  variables,
+  query,
+  environment,
+  queryProps
+}: {
+  variables: Object,
+  environment: Environment,
+  query: GraphQLTaggedNode,
+  queryProps: ?any
+}) => (
   <QueryRenderer
     query={query}
     environment={environment}
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
-    render={({
-      error,
-      props
-    }: {
-      props: ?Page_QueryResponse,
-      error: ?Error
-    }) => {
+    render={({ error, props }) => {
       if (error) return <div>Error</div>;
 
       if (!props) return <div> Laster </div>;
@@ -34,13 +41,12 @@ const Index = ({ variables, query, environment, queryProps }) => (
               justifyContent: 'center'
             }}
           >
-            <img src="/static/itdagene_logo.png " />
+            <img alt="itDAGENE logo" src="/static/itdagene_logo.png " />
             <Link href="/">
               <a> Back </a>
             </Link>
-            Stand count {props.currentMetaData.nrOfStands}
             <h1>
-              <Year currentMetaData={props.currentMetaData} />
+              <Year currentMetaData={(props: any).currentMetaData} />
             </h1>
           </div>
         </Fragment>

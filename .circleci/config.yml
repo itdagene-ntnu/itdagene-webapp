@@ -39,6 +39,7 @@ jobs:
           name: lint
           command: |
             yarn lint:prettier
+            yarn lint:eslint
 
       - run:
           name: build

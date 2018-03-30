@@ -9,6 +9,7 @@
     "schema": "graphql get-schema",
     "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql",
     "lint:prettier": "prettier '**/*.{js,css,graphql}' --list-different",
+    "lint:eslint": "eslint . --ignore-path .prettierignore",
     "prettier": "prettier '**/*.{js,css,graphql}' --write",
     "flow": "flow"
   },
@@ -21,6 +22,8 @@
     "dotenv-webpack": "^1.5.4",
     "isomorphic-unfetch": "^2.0.0",
     "next": "^5.0.0",
+    "raven": "^2.4.2",
+    "raven-js": "^3.24.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-relay": "^1.4.1",
@@ -29,8 +32,19 @@
     "relay-runtime": "^1.5.0",
     "unstated": "^1.2.0"
   },
+  "browser": {
+    "raven": false
+  },
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "babel-plugin-relay": "^1.4.1",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.46.1",
+    "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.7.0",
     "flow-bin": "^0.68.0",
     "graphql-cli": "^1.0.0-beta.4",
     "prettier": "^1.11.1",
