@@ -1,42 +1,34 @@
 //@flow
-import 'semantic-ui-css/semantic.min.css';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
 
 import React, { Fragment } from 'react';
 import {
   QueryRenderer,
   graphql,
   type Environment,
+  type Variables,
   type GraphQLTaggedNode
 } from 'react-relay';
 import withData from '../lib/withData';
-import Link from 'next/link';
-import Year from '../components/Year';
-import {
-  Container,
-  Modal,
-  Header,
-  Button,
-  List,
-  Icon
-} from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 
 import { HeaderMenu } from '../components/Header';
 
 import { itdageneBlue } from '../utils/colors';
-import Head from 'next/head';
+import { type pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
 
+type RenderProps = {
+  error: ?Error,
+  props: ?pages_index_QueryResponse
+};
 const Index = ({
   variables,
   query,
   environment,
   queryProps
 }: {
-  variables: Object,
+  variables: Variables,
   environment: Environment,
   query: GraphQLTaggedNode,
   queryProps: ?any
@@ -46,16 +38,13 @@ const Index = ({
     environment={environment}
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
-    render={({ error, props }) => {
+    render={({ error, props }: RenderProps) => {
       if (error) return <div>Error</div>;
 
       if (!props) return <div> Laster </div>;
 
       return (
         <Fragment>
-          <Head>
-            <link rel="stylesheet" href="/_next/static/style.css" key="css" />
-          </Head>
           <div
             style={{ height: 700, background: itdageneBlue }}
             className="ui inverted vertical segment"
@@ -64,7 +53,7 @@ const Index = ({
               <HeaderMenu />
             </Container>
 
-            <WelcomeScreen currentMetaData={(props: any).currentMetaData} />
+            <WelcomeScreen currentMetaData={props.currentMetaData} />
           </div>
           <div className="ui vertical stripe segment">
             <div className="ui middle aligned stackable grid container">

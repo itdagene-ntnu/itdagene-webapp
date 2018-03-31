@@ -8,7 +8,6 @@ const withCss = require('@zeit/next-css');
 module.exports = withCss({
   webpack: (config, { dev }) => {
     config.plugins = config.plugins || [];
-
     config.plugins = [
       ...config.plugins,
 

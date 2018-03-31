@@ -2,14 +2,7 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { type WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
-import {
-  Container,
-  Modal,
-  Header,
-  Button,
-  List,
-  Icon
-} from 'semantic-ui-react';
+import { Container, Header, Button } from 'semantic-ui-react';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData

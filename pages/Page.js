@@ -4,11 +4,11 @@ import {
   QueryRenderer,
   graphql,
   type Environment,
+  type Variables,
   type GraphQLTaggedNode
 } from 'react-relay';
 import withData from '../lib/withData';
 import Link from 'next/link';
-import Head from 'next/head';
 import Year from '../components/Year';
 import Header from '../components/Header';
 import BoardMember from '../components/BoardMember';
@@ -20,7 +20,7 @@ const Index = ({
   environment,
   queryProps
 }: {
-  variables: Object,
+  variables: Variables,
   environment: Environment,
   query: GraphQLTaggedNode,
   queryProps: ?any
@@ -43,9 +43,6 @@ const Index = ({
 
       return (
         <Fragment>
-          <Head>
-            <link rel="stylesheet" href="/_next/static/style.css" key="css" />
-          </Head>
           <Header />
           <div
             style={{
