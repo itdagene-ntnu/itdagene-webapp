@@ -20,26 +20,20 @@ jobs:
           key: deps-{{ checksum "yarn.lock" }}
 
       - run:
-          name: fetch schema
+          name: Fetch schema
           command: |
             mkdir schema
             yarn schema prod
 
       - run:
-          name: compile relay
+          name: Compile relay
           command: |
             yarn relay
 
       - run:
-          name: flow
-          command: |
-            yarn flow
-
-      - run:
           name: lint
           command: |
-            yarn lint:prettier
-            yarn lint:eslint
+            yarn lint
 
       - run:
           name: build

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
+import Footer from '../components/Footer';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
@@ -28,7 +29,6 @@ export default class Default extends Document {
       display: none;
     }
     .segment {
-      min-height: 700px;
       padding: 1em 0em;
     }
      .logo.item img {
@@ -38,7 +38,7 @@ export default class Default extends Document {
       margin-left: 0.5em;
     }
      h1.ui.header {
-      margin-top: 3em;
+      margin-top:1.5em;
       margin-bottom: 0em;
       font-size: 4em!important;
       font-weight: normal;
@@ -55,7 +55,7 @@ export default class Default extends Document {
     }
     .ui.vertical.stripe .button + h3,
     .ui.vertical.stripe p + h3 {
-      margin-top: 3em;
+      margin-top: 1.5em;
     }
     .ui.vertical.stripe .floated.image {
       clear: both;
@@ -102,13 +102,25 @@ export default class Default extends Document {
         font-size: 1.5em;
       }
     }
+    body {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .main {
+      flex: 1;
+    }
 
           `}</style>
           <link rel="stylesheet" href="/_next/static/style.css" key="css" />
         </Head>
         <body>
-          <Main />
-          <NextScript />
+          <main className="main">
+            <Main />
+            <NextScript />
+          </main>
+          <Footer />
         </body>
       </html>
     );

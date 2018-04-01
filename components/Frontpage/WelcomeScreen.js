@@ -10,11 +10,10 @@ type Props = {
 const WelcomeScreen = ({ currentMetaData }: Props) => (
   <Container text textAlign="center">
     <Header as="h1" size="huge" inverted style={{ marginTop: 192 }}>
-      itDAGENE {currentMetaData.year}
+      <b>it</b>DAGENE {currentMetaData.year}
     </Header>
-    <h2>
-      {currentMetaData.startDate} - {currentMetaData.endDate}
-    </h2>
+    <h2>10. & 11. september 2018</h2>
+    <h3>NTNU//Glassgården</h3>
     <Button secondary>
       Les mer <i className="right arrow icon" />
     </Button>

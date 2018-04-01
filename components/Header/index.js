@@ -1,28 +1,32 @@
 //@flow
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
+import type { NextUrl } from '../../utils/types';
 import Link from 'next/link';
 
 const items = [
-  { key: 'home', active: true, name: 'Hjem', to: '/' },
+  { key: 'home', name: 'Hjem', to: '/' },
   { key: 'about-us', name: 'Om oss', to: '/Page' },
-  { key: 'joblistings', name: 'Jobbannonser', to: '/' }
+  { key: 'joblistings', name: 'Jobbannonser', to: '/#' }
 ];
 
-const MenuItem = ({ item }: Object) => {
+const MenuItem = ({ item, url }: { item: Object, url: NextUrl }) => {
   const { to, ...rest } = item;
   return (
     <Link href={to}>
       <a>
-        <Menu.Item {...rest} />
+        <Menu.Item {...rest} active={item.to === url.pathname} />
       </a>
     </Link>
   );
 };
+type Props = {
+  url: NextUrl
+};
 
-export const HeaderMenu = () => (
+export const HeaderMenu = ({ url }: Props) => (
   <Menu inverted secondary borderless>
-    {items.map(item => <MenuItem key={item.key} item={item} />)}
+    {items.map(item => <MenuItem url={url} key={item.key} item={item} />)}
   </Menu>
 );
 

@@ -1,30 +1,21 @@
 //@flow
 import React, { Fragment } from 'react';
-import {
-  QueryRenderer,
-  graphql,
-  type Environment,
-  type Variables,
-  type GraphQLTaggedNode
-} from 'react-relay';
-import withData from '../lib/withData';
-import Link from 'next/link';
-import Year from '../components/Year';
-import Header from '../components/Header';
+import { QueryRenderer, graphql } from 'react-relay';
+import { Container } from 'semantic-ui-react';
+import withData, { type WithDataProps } from '../lib/withData';
+import { HeaderMenu } from '../components/Header';
 import BoardMember from '../components/BoardMember';
+import LoadingIndicator from '../components/LoadingIndicator';
 import { type Page_QueryResponse } from './__generated__/Page_Query.graphql';
+import { itdageneBlue } from '../utils/colors';
 
 const Index = ({
   variables,
   query,
   environment,
-  queryProps
-}: {
-  variables: Variables,
-  environment: Environment,
-  query: GraphQLTaggedNode,
-  queryProps: ?any
-}) => (
+  queryProps,
+  url
+}: WithDataProps) => (
   <QueryRenderer
     query={query}
     environment={environment}
@@ -39,30 +30,29 @@ const Index = ({
     }) => {
       if (error) return <div>Error</div>;
 
-      if (!props) return <div> Laster </div>;
+      if (!props) return <LoadingIndicator url={url} />;
 
       return (
         <Fragment>
-          <Header />
           <div
+            style={{ background: itdageneBlue }}
+            className="ui inverted vertical segment"
+          >
+            <Container middle>
+              <HeaderMenu url={url} />
+            </Container>
+          </div>
+          <Container
             style={{
               display: 'flex',
-              justifyContent: 'center'
+              flexWrap: 'wrap',
+              justifyContent: 'space-evenly'
             }}
           >
-            <img alt="itDAGENE logo" src="/static/itdagene_logo.png " />
-            <Link href="/">
-              <a> Back </a>
-            </Link>
-            <h1>
-              <Year currentMetaData={props.currentMetaData} />
-            </h1>
-          </div>
-          <div>
             {props.boardMembers.map(user => (
               <BoardMember key={user.id} user={user} />
             ))}
-          </div>
+          </Container>
         </Fragment>
       );
     }}
