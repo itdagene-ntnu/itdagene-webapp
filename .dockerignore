@@ -1,0 +1,6 @@
+__generated__/
+schema/schema.graphql
+.next
+yarn-error.log
+node_modules/
+

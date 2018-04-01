@@ -1,21 +1,19 @@
 //@flow
 
+import 'semantic-ui-css/semantic.min.css';
+import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
+import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
+import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
+
 import React, { Fragment } from 'react';
-import {
-  QueryRenderer,
-  graphql,
-  type Environment,
-  type Variables,
-  type GraphQLTaggedNode
-} from 'react-relay';
-import withData from '../lib/withData';
+import { QueryRenderer, graphql } from 'react-relay';
+import withData, { type WithDataProps } from '../lib/withData';
 import { Container } from 'semantic-ui-react';
 
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
-
 import { HeaderMenu } from '../components/Header';
-
 import { itdageneBlue } from '../utils/colors';
+
 import { type pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
 
 type RenderProps = {
@@ -26,13 +24,9 @@ const Index = ({
   variables,
   query,
   environment,
-  queryProps
-}: {
-  variables: Variables,
-  environment: Environment,
-  query: GraphQLTaggedNode,
-  queryProps: ?any
-}) => (
+  queryProps,
+  url
+}: WithDataProps) => (
   <QueryRenderer
     query={query}
     environment={environment}

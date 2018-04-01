@@ -9,7 +9,7 @@ type Props = {
 };
 const WelcomeScreen = ({ currentMetaData }: Props) => (
   <Container text textAlign="center">
-    <Header as="h1" size="huge" inverted header style={{ marginTop: 192 }}>
+    <Header as="h1" size="huge" inverted style={{ marginTop: 192 }}>
       itDAGENE {currentMetaData.year}
     </Header>
     <h2>
