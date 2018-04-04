@@ -14,6 +14,7 @@ ENV RELEASE ${RELEASE}
 
 COPY . /app
 
+RUN mkdir schema
 RUN yarn schema prod
 RUN yarn relay
 RUN RELAY_ENDPOINT=https://itdagene.no/graphql yarn build
