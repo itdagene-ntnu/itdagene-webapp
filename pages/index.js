@@ -14,6 +14,7 @@ import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import { HeaderMenu } from '../components/Header';
 import Stats from '../components/Stats';
 import LoadingIndicator from '../components/LoadingIndicator';
+import Companies from '../components/Companies/Companies';
 import { itdageneBlue } from '../utils/colors';
 
 import { type pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
@@ -147,6 +148,11 @@ const Index = ({
             </div>
           </div>
           <Segment vertical className="stripe">
+            <Container>
+              <Companies query={props} />
+            </Container>
+          </Segment>
+          <Segment vertical className="stripe">
             <Container text>
               <h3 className="ui header">Hva er Lorem Ipsum?</h3>
               <p>
@@ -194,6 +200,7 @@ export default withData(Index, {
         id
         year
       }
+      ...Companies_query
     }
   `,
   variables: {}

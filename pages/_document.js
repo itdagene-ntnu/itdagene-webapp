@@ -112,6 +112,14 @@ export default class Default extends Document {
       flex: 1;
     }
 
+    .zoom {
+        transition: transform .4s; /* Animation */
+    }
+
+    .zoom:hover {
+        transform: scale(1.2);
+    }
+
           `}</style>
           <link rel="stylesheet" href="/_next/static/style.css" key="css" />
         </Head>
