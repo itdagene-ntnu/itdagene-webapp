@@ -52,6 +52,7 @@ ENV RELEASE ${RELEASE}
 
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/yarn.lock .
+COPY --from=builder /app/static static
 RUN yarn --prod
 COPY --from=builder /app/.next .next
 
