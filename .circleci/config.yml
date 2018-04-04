@@ -40,8 +40,23 @@ jobs:
           command: |
             yarn build
 
+  build-docker:
+    machine: true
+    steps:
+      - checkout
+      - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+      - run: docker build -t odinuge/itdagene-webapp:$CIRCLE_BRANCH .
+      - run: docker push odinuge/itdagene-webapp:$CIRCLE_BRANCH
+
 workflows:
   version: 2
   on_push:
     jobs:
       - tests
+      - build-docker:
+          requires:
+            - tests
+          filters:
+            branches:
+              only:
+                - prod
