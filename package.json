@@ -23,6 +23,7 @@
     "dotenv-webpack": "^1.5.4",
     "file-loader": "^1.1.11",
     "isomorphic-unfetch": "^2.0.0",
+    "lodash": "^4.17.5",
     "next": "^5.0.0",
     "raven": "^2.4.2",
     "raven-js": "^3.24.0",

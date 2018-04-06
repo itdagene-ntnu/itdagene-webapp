@@ -8,9 +8,10 @@ import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
 import React, { Fragment } from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
-import { Container, Image, Segment } from 'semantic-ui-react';
+import { List, Container, Image, Segment } from 'semantic-ui-react';
 
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
+import HSP from '../components/Frontpage/HSP';
 import { HeaderMenu } from '../components/Header';
 import Stats from '../components/Stats';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -46,7 +47,7 @@ const Index = ({
             style={{ height: 700, background: itdageneBlue }}
             className="ui inverted vertical segment"
           >
-            <Container middle>
+            <Container>
               <HeaderMenu url={url} />
             </Container>
 
@@ -64,6 +65,13 @@ const Index = ({
                     tredjeklasse. itDAGENE arrangeres en gang i året av data- og
                     kommunikasjonsteknologi ved NTNU i Trondheim.
                   </p>
+                  <List as="ul">
+                    <List.Item as="li">Stands</List.Item>
+                    <List.Item as="li">Sommerjobbmaraton</List.Item>
+                    <List.Item as="li">Mingling</List.Item>
+                    <List.Item as="li">Kurs</List.Item>
+                    <List.Item as="li">Bankett</List.Item>
+                  </List>
                   <h3 className="ui header">Hvor og når?</h3>
                   <p>
                     itDAGENE 2018 finner sted 10. & 11. september, i{' '}
@@ -77,16 +85,14 @@ const Index = ({
                   </p>
                 </div>
                 <div className="six wide right floated column">
-                  <Image
-                    large
-                    src="static/itDAGENE-svart.png"
-                    alt="itdagenLogo"
-                  />
+                  <Image src="static/itdagene-svart.png" alt="itDAGENE logo" />
                 </div>
               </div>
               <div className="row">
                 <div className="center aligned column">
-                  <a className="ui huge button">Mer informasjon</a>
+                  <a href="/om-oss" className="ui huge button">
+                    Les mer
+                  </a>
                 </div>
               </div>
             </div>
@@ -98,53 +104,7 @@ const Index = ({
           </Segment>
           <div className="ui vertical stripe segment">
             <div className="ui middle aligned stackable grid container">
-              <div className="row">
-                <div className="eight wide column">
-                  <h3 className="ui header">Hovedsamarbeidspartner</h3>
-                  <p>
-                    <i>
-                      Vi er stolte av å kunne presentere ITverket AS som
-                      hovedsamarbeidspartner i 2018.
-                    </i>
-                  </p>
-                  <h3 className="ui header">Hvem er ITverket?</h3>
-                  <p>
-                    <i>
-                      «ITverket er et konsulentselskap lokalisert i Oslo med 60
-                      engasjerte ansatte fordelt på avdelingene våre for
-                      systemutvikling (Java og .NET), prosjektledelse og
-                      front-end. Hos oss har vi en god miks av erfarne
-                      konsulenter og nyutdannede, fremmadstormende talenter. Vi
-                      lever etter våre verdier som sier at vi skal være
-                      «pålitelige, lekne og fleksible» både overfor våre kunder,
-                      men også internt. Vi setter mennesket i fokus og ønsker at
-                      våre konsulenter skal utvikle seg faglig, men også
-                      personlig. Dette vil også kundene våre dra stor nytte av.
-                      En fornøyd ansatt er en produktiv ansatt. Vi har jobbet
-                      spesielt aktivt på NTNU de siste 7-8 årene for å tiltrekke
-                      oss flere gode ITverkere og vi har gjort dette med stor
-                      suksess. 22 av våre ansatte er ansatt etter å ha vært med
-                      på våre sommerprosjekter.»
-                    </i>
-                    <br /> - Tom Henrik N. Rogstad, Adm. dir.
-                  </p>
-                </div>
-                <div className="six wide right floated column">
-                  <Image large src="static/itverket.png" alt="itdagenLogo" />
-                  <Image
-                    style={{ marginTop: 80 }}
-                    large
-                    border
-                    src="static/itverket-kafe.jpg"
-                    alt="itdagenLogo"
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="center aligned column">
-                  <a className="ui huge button">Mer informasjon</a>
-                </div>
-              </div>
+              <HSP />
             </div>
           </div>
           <Segment vertical className="stripe">
@@ -198,7 +158,6 @@ export default withData(Index, {
         ...Year_currentMetaData
         ...WelcomeScreen_currentMetaData
         id
-        year
       }
       ...Companies_query
     }

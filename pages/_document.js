@@ -120,6 +120,10 @@ export default class Default extends Document {
         transform: scale(1.2);
     }
 
+    .ui.bulleted.list, ul.ui.list {
+        font-size: 1.33em;
+    }
+
           `}</style>
           <link rel="stylesheet" href="/_next/static/style.css" key="css" />
         </Head>
