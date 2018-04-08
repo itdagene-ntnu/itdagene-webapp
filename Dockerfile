@@ -39,8 +39,12 @@ COPY --from=builder /app/.next .next
 
 RUN sentry-cli releases new ${RELEASE}
 RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
---rewrite --url-prefix="/.next/$(cat .next/BUILD_ID)/" \
-'./.next/'
+--rewrite --url-prefix="~/_next/$(cat .next/BUILD_ID)/page/" \
+'./.next/bundles/pages/'
+
+RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
+--rewrite --url-prefix="~/_next/$(cat .next/BUILD_ID)/" \
+'./.next/main.js'
 RUN sentry-cli releases finalize ${RELEASE}
 
 FROM node:8
