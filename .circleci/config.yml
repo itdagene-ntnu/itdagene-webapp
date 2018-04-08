@@ -45,7 +45,15 @@ jobs:
     steps:
       - checkout
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
-      - run: docker build -t odinuge/itdagene-webapp:$CIRCLE_BRANCH .
+      - run: |
+          RELEASE=${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
+          docker build -t odinuge/itdagene-webapp:$CIRCLE_BRANCH \
+          --build-arg=RELEASE=$RELEASE \
+          --build-arg=SENTRY_AUTH_KEY=$SENTRY_AUTH_KEY \
+          --build-arg SENTRY_ORG=$SENTRY_ORG \
+          --build-arg SENTRY_PROJECT=$SENTRY_PROJECT \
+          --build-arg SENTRY_URL=$SENTRY_URL \
+          .
       - run: docker push odinuge/itdagene-webapp:$CIRCLE_BRANCH
 
 workflows:

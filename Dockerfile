@@ -19,27 +19,26 @@ RUN yarn schema prod
 RUN yarn relay
 RUN RELAY_ENDPOINT=https://itdagene.no/graphql yarn build
 
-#FROM getsentry/sentry-cli:1.26.1 as sentry
-#
-#RUN mkdir /app
-#WORKDIR /app/
-#
-#ARG SENTRY_AUTH_KEY
-#ARG SENTRY_ORG
-#ARG SENTRY_PROJECT
-#ARG SENTRY_URL
-#ARG RELEASE
-#
-#ENV SENTRY_AUTH_TOKEN ${SENTRY_AUTH_KEY}
-#ENV SENTRY_ORG ${SENTRY_ORG}
-#ENV SENTRY_PROJECT ${SENTRY_PROJECT}
-#ENV SENTRY_URL ${SENTRY_URL}
-#
-#COPY --from=builder /app/dist dist
-#COPY --from=builder /app/dist-client dist-client
-#
-#RUN sentry-cli releases new ${RELEASE}
-#RUN sentry-cli releases files ${RELEASE} upload-sourcemaps './.next/'
+FROM getsentry/sentry-cli:1.26.1 as sentry
+
+RUN mkdir /app
+WORKDIR /app/
+
+ARG SENTRY_AUTH_KEY
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
+ARG SENTRY_URL
+ARG RELEASE
+
+ENV SENTRY_AUTH_TOKEN ${SENTRY_AUTH_KEY}
+ENV SENTRY_ORG ${SENTRY_ORG}
+ENV SENTRY_PROJECT ${SENTRY_PROJECT}
+ENV SENTRY_URL ${SENTRY_URL}
+
+COPY --from=builder /app/.next .next
+
+RUN sentry-cli releases new ${RELEASE}
+RUN sentry-cli releases files ${RELEASE} upload-sourcemaps './.next/'
 #RUN sentry-cli releases finalize ${RELEASE}
 
 FROM node:8
