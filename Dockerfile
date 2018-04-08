@@ -17,7 +17,7 @@ COPY . /app
 RUN mkdir schema
 RUN yarn schema prod
 RUN yarn relay
-RUN RELAY_ENDPOINT=https://itdagene.no/graphql yarn build
+RUN yarn build
 
 FROM getsentry/sentry-cli:1.26.1 as sentry
 
@@ -38,8 +38,10 @@ ENV SENTRY_URL ${SENTRY_URL}
 COPY --from=builder /app/.next .next
 
 RUN sentry-cli releases new ${RELEASE}
-RUN sentry-cli releases files ${RELEASE} upload-sourcemaps './.next/'
-#RUN sentry-cli releases finalize ${RELEASE}
+RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
+--rewrite --url-prefix="/.next/$(cat .next/BUILD_ID)/" \
+'./.next/'
+RUN sentry-cli releases finalize ${RELEASE}
 
 FROM node:8
 MAINTAINER Odin Ugedal <odin@ugedal.com>
@@ -52,7 +54,8 @@ ENV RELEASE ${RELEASE}
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/yarn.lock .
 COPY --from=builder /app/static static
+COPY --from=builder /app/server.js server.js
 RUN yarn --prod
 COPY --from=builder /app/.next .next
 
-ENTRYPOINT ["yarn", "start", "-H", "0.0.0.0"]
+ENTRYPOINT ["yarn", "start"]

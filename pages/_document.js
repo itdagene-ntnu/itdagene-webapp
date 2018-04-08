@@ -3,6 +3,7 @@ import * as React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import flush from 'styled-jsx/server';
 import Footer from '../components/Footer';
+import Raven from 'raven';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
@@ -10,8 +11,11 @@ import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
 
 export default class Default extends Document {
-  static getInitialProps({ renderPage }: Object) {
+  static getInitialProps({ renderPage, err }: Object) {
     const { html, head, errorHtml, chunks } = renderPage();
+    if (err) {
+      Raven.captureException(err);
+    }
     const styles = flush();
     return { html, head, errorHtml, chunks, styles };
   }
@@ -24,7 +28,10 @@ export default class Default extends Document {
             name="viewport"
             content="width=device-width, initial-scale=1, maximum-scale=1"
           />
-          <style>{`body { margin: 0 } /* custom! */
+          <style>{`
+    body {
+      margin: 0;
+    }
     .hidden.menu {
       display: none;
     }
