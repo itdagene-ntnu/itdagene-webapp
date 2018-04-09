@@ -41,11 +41,6 @@ const Index = ({
 
       if (!props) return <LoadingIndicator url={url} />;
 
-      // $FlowFixMe
-      if (process.browser) {
-        throw new Error('dsadasdsad');
-      }
-
       return (
         <Fragment>
           <div
