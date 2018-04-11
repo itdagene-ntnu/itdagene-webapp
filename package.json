@@ -31,7 +31,6 @@
     "react-relay-network-modern": "^2.1.1",
     "reactstrap": "^5.0.0-beta.3",
     "relay-runtime": "^1.5.0",
-    "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.79.0",
     "unstated": "^1.2.0",
     "url-loader": "^1.0.1"
@@ -40,6 +39,7 @@
     "raven": false
   },
   "devDependencies": {
+    "semantic-ui-css": "^2.3.1",
     "babel-eslint": "^8.2.2",
     "babel-plugin-relay": "^1.4.1",
     "eslint": "^4.19.1",
