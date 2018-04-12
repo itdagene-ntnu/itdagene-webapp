@@ -1,4 +1,4 @@
-// flow-typed signature: 8398a490d798580a9f5934d2a23f39d7
+// flow-typed signature: b9dc88ecf926046524d2e3050e036df4
 // flow-typed version: <<STUB>>/reactstrap_v^5.0.0-beta.3/flow_v0.68.0
 
 /**
@@ -342,6 +342,10 @@ declare module 'reactstrap/lib/PopperTargetHelper' {
   declare module.exports: any;
 }
 
+declare module 'reactstrap/lib/Portal' {
+  declare module.exports: any;
+}
+
 declare module 'reactstrap/lib/Progress' {
   declare module.exports: any;
 }
@@ -642,6 +646,9 @@ declare module 'reactstrap/lib/PopperContent.js' {
 }
 declare module 'reactstrap/lib/PopperTargetHelper.js' {
   declare module.exports: $Exports<'reactstrap/lib/PopperTargetHelper'>;
+}
+declare module 'reactstrap/lib/Portal.js' {
+  declare module.exports: $Exports<'reactstrap/lib/Portal'>;
 }
 declare module 'reactstrap/lib/Progress.js' {
   declare module.exports: $Exports<'reactstrap/lib/Progress'>;

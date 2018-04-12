@@ -1,8 +1,6 @@
 // flow-typed signature: c689b02543ddc5f06241babda8a7ed4d
 // flow-typed version: 1fdf926e70/react-relay_v1.x.x/flow_>=v0.47.x
 
-import * as React from 'react';
-
 declare module 'react-relay' {
   declare export type RecordState = 'EXISTENT' | 'NONEXISTENT' | 'UNKNOWN';
 
@@ -301,13 +299,34 @@ declare module 'react-relay' {
   declare export function graphql(strings: Array<string>): GraphQLTaggedNode;
 
   declare export type GeneratedNodeMap = { [key: string]: GraphQLTaggedNode };
+  declare export type FragmentReference = empty;
+  declare export type RelayProp = {
+    environment: Environment
+  };
+  declare export type $FragmentRef<T> = {
+    +$fragmentRefs: $PropertyType<T, '$refType'>
+  };
+  
+  declare export type $RelayProps<Props, RelayPropT> = $ObjMap<
+    $Diff<Props, {relay: RelayPropT | void}>,
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(                 T ) =>                  $FragmentRef<T> )
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?                T ) => ?                $FragmentRef<T> )
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>( $ReadOnlyArray< T>) =>  $ReadOnlyArray< $FragmentRef<T>>)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?$ReadOnlyArray< T>) => ?$ReadOnlyArray< $FragmentRef<T>>)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>( $ReadOnlyArray<?T>) =>  $ReadOnlyArray<?$FragmentRef<T>>)
+    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?$ReadOnlyArray<?T>) => ?$ReadOnlyArray<?$FragmentRef<T>>)
+    & (<T: {+$refType: empty}>( T) =>  T)
+    & (<T: {+$refType: empty}>(?T) => ?T)
+    & (<T>(T) => T),
+  >;
 
   declare export function createFragmentContainer<
-    TBase: React$ComponentType<*>
+    Props: {},
+    TBase: React$ComponentType<Props>
   >(
     Component: TBase,
     fragmentSpec: GraphQLTaggedNode | GeneratedNodeMap
-  ): React$ComponentType<*>;
+  ): React$ComponentType<$RelayProps<React$ElementConfig<TBase>, RelayProp>>;
 
   declare export function createRefetchContainer<TBase: React$ComponentType<*>>(
     Component: TBase,
@@ -1320,10 +1339,6 @@ declare module 'react-relay' {
     param: string,
     import: string,
     max_runs: number
-  };
-
-  declare export type RelayProp = {
-    environment: Environment
   };
 
   declare export type RelayPaginationProp = RelayProp & {
