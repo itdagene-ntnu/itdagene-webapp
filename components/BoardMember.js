@@ -5,7 +5,8 @@ import { Card, Icon, Image, List } from 'semantic-ui-react';
 import { type BoardMember_user } from './__generated__/BoardMember_user.graphql';
 
 type Props = {
-  user: BoardMember_user
+  user: BoardMember_user,
+  abc: string
 };
 
 const BoardMember = ({ user }: Props) => (

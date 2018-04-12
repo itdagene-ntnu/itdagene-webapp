@@ -22,14 +22,13 @@
     "file-loader": "^1.1.11",
     "isomorphic-unfetch": "^2.0.0",
     "lodash": "^4.17.5",
-    "next": "^5.0.0",
-    "raven": "^2.4.2",
+    "next": "^5.1.0",
+    "raven": "^2.5.0",
     "raven-js": "^3.24.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
     "react-relay": "^1.4.1",
     "react-relay-network-modern": "^2.1.1",
-    "reactstrap": "^5.0.0-beta.3",
     "relay-runtime": "^1.5.0",
     "semantic-ui-react": "^0.79.0",
     "unstated": "^1.2.0",
@@ -39,7 +38,6 @@
     "raven": false
   },
   "devDependencies": {
-    "semantic-ui-css": "^2.3.1",
     "babel-eslint": "^8.2.2",
     "babel-plugin-relay": "^1.4.1",
     "eslint": "^4.19.1",
@@ -52,7 +50,8 @@
     "flow-bin": "^0.68.0",
     "graphql-cli": "^1.0.0-beta.4",
     "prettier": "^1.11.1",
-    "relay-compiler": "^1.4.1"
+    "relay-compiler": "^1.4.1",
+    "semantic-ui-css": "^2.3.1"
   },
   "prettier": {
     "singleQuote": true

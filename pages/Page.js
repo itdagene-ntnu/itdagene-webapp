@@ -50,7 +50,7 @@ const Index = ({
             }}
           >
             {props.boardMembers.map(user => (
-              <BoardMember key={user.id} user={user} />
+              <BoardMember abc="asd" key={user.id} user={user} />
             ))}
           </Container>
         </Fragment>

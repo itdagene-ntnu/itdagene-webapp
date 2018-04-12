@@ -20,7 +20,7 @@
   "rules": {
     "react/prop-types": 0,
     "react/display-name": 2,
-    "flowtype/no-types-missing-file-annotation": 2,
+    "flowtype/no-types-missing-file-annotation": 0,
     "jsx-a11y/href-no-hash": "off",
     "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }]
   },
