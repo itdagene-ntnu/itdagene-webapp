@@ -35,8 +35,8 @@ const HSP = () => (
     <div className="six wide right floated column">
       <Image src="static/itverket.png" alt="ITverket logo" />
       <Image
-        style={{ marginTop: 80 }}
-        src="static/itverket-kafe.jpg"
+        style={{ marginTop: 80, marginLeft: 'auto', marginRight: 'auto' }}
+        src="http://www.itverket.no/wp-content/themes/itverket/assets/images/dummy_1.jpg"
         alt="Bilde av mann og dame ved pc"
       />
     </div>
