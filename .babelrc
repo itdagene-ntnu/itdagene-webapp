@@ -1,6 +1,7 @@
 {
   "presets": [
-    "next/babel"
+    "next/babel",
+    "@babel/flow"
   ],
   "plugins": [
     "relay"

@@ -1,5 +1,5 @@
 //@flow
-import React, { Fragment } from 'react';
+import * as React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import { Container } from 'semantic-ui-react';
 import withData, { type WithDataProps } from '../lib/withData';
@@ -33,7 +33,7 @@ const Index = ({
       if (!props) return <LoadingIndicator url={url} />;
 
       return (
-        <Fragment>
+        <>
           <div
             style={{ background: itdageneBlue }}
             className="ui inverted vertical segment"
@@ -53,7 +53,7 @@ const Index = ({
               <BoardMember abc="asd" key={user.id} user={user} />
             ))}
           </Container>
-        </Fragment>
+        </>
       );
     }}
   />
