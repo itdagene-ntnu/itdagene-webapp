@@ -2292,6 +2292,12 @@ eslint-plugin-react@^7.7.0:
     jsx-ast-utils "^2.0.1"
     prop-types "^15.6.0"
 
+eslint-plugin-relay@^0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-relay/-/eslint-plugin-relay-0.0.21.tgz#fbda01bd783aa7ed9eb0effe410049911e1449ef"
+  dependencies:
+    graphql "^0.13.0"
+
 eslint-scope@^3.7.1, eslint-scope@~3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-3.7.1.tgz#3d63c3edfda02e06e01a452ad88caacc7cdcb6e8"
@@ -4105,7 +4111,7 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-next@^5.0.0:
+next@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/next/-/next-5.1.0.tgz#9f79f095b28e1be568ba6fc61ec807409ec77e0a"
   dependencies:
@@ -5038,13 +5044,13 @@ raven-js@^3.24.0:
   version "3.24.0"
   resolved "https://registry.yarnpkg.com/raven-js/-/raven-js-3.24.0.tgz#59464d8bc4b3812ae87a282e9bb98ecad5b4b047"
 
-raven@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/raven/-/raven-2.4.2.tgz#0129e2adc30788646fd530b67d08a8ce25d4f6dc"
+raven@^2.5.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/raven/-/raven-2.6.0.tgz#3806a82c9ee8cd3e75c3b7ea7bb1935aad092d0c"
   dependencies:
     cookie "0.3.1"
     md5 "^2.2.1"
-    stack-trace "0.0.9"
+    stack-trace "0.0.10"
     timed-out "4.0.1"
     uuid "3.0.0"
 
@@ -5066,9 +5072,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.2.0:
-  version "16.3.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.1.tgz#6a3c90a4fb62f915bdbcf6204422d93a7d4ca573"
+react-dom@^16.3.1:
+  version "16.3.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.2.tgz#cb90f107e09536d683d84ed5d4888e9640e0e4df"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -5098,9 +5104,9 @@ react-relay@^1.4.1:
     prop-types "^15.5.8"
     relay-runtime "1.5.0"
 
-react@^16.2.0:
-  version "16.3.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.3.1.tgz#4a2da433d471251c69b6033ada30e2ed1202cfd8"
+react@^16.3.1:
+  version "16.3.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.3.2.tgz#fdc8420398533a1e58872f59091b272ce2f91ea9"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -5768,9 +5774,9 @@ ssri@^5.2.4:
   dependencies:
     safe-buffer "^5.1.1"
 
-stack-trace@0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.9.tgz#a8f6eaeca90674c333e7c43953f275b451510695"
+stack-trace@0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
 
 stackframe@^1.0.3:
   version "1.0.4"

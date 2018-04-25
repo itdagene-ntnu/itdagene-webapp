@@ -11,15 +11,20 @@
   "plugins": [
     "react",
     "flowtype",
+    "relay"
   ],
   "globals": {
     "log": true,
     "expect": true,
-    "jest": true,
+    "jest": true
   },
   "rules": {
     "react/prop-types": 0,
     "react/display-name": 2,
+    "relay/graphql-syntax": 2,
+    "relay/compat-uses-vars": 1,
+    "relay/graphql-naming": 2,
+    "relay/generated-flow-types": 1,
     "flowtype/no-types-missing-file-annotation": 0,
     "jsx-a11y/href-no-hash": "off",
     "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }]
