@@ -2,7 +2,7 @@
   "schemaPath": "schema/schema.graphql",
   "extensions": {
     "endpoints": {
-      "prod": "https://itdagene.no/graphql",
+      "prod": "https://itdagene.no/graphql/754a9fe011d12aa909bc0db296db42caaa9d28e3",
       "dev": "http://localhost:8000/graphql"
     }
   }
