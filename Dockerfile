@@ -43,8 +43,8 @@ RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
 './.next/bundles/pages/'
 
 RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
---rewrite --url-prefix="~/_next/$(cat .next/BUILD_ID)/" \
-'./.next/main.js'
+--rewrite --url-prefix="~/_next/static/commons/" \
+'./.next/static/commons/'
 RUN sentry-cli releases finalize ${RELEASE}
 
 FROM node:8
