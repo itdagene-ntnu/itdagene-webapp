@@ -11,24 +11,30 @@ type Props = {
 };
 
 type State = {
-  error: ?Error
+  error: ?Error,
+  resetOnChange: any
 };
 
 class ErrorBoundary extends React.Component<Props, State> {
   state = {
-    error: null
+    error: null,
+    resetOnChange: this.props.resetOnChange
   };
 
   openDialog = () => {
     Raven.lastEventId() && Raven.showReportDialog({});
   };
 
-  componentWillReceiveProps(nextProps: Props) {
-    const { resetOnChange } = this.props;
-    const { error } = this.state;
-    if (error && nextProps.resetOnChange !== resetOnChange) {
-      this.setState({ error: null });
+  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+    const { resetOnChange } = prevState;
+    if (nextProps.resetOnChange !== resetOnChange) {
+      return {
+        ...prevState,
+        resetOnChange,
+        error: null
+      };
     }
+    return null;
   }
 
   componentDidCatch(error: Error, errorInfo: Object) {
