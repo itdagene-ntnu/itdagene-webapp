@@ -11,7 +11,7 @@ Written using [next.js](https://github.com/zeit/next.js/), [react-relay](https:/
 
 ```bash
 $ yarn
-$ yarn schema prod # or dev
+$ yarn schema --project=itdagene --all=false -e prod
 $ yarn relay
 ```
 
