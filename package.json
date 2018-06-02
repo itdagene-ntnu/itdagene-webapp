@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/preset-flow": "^7.0.0-beta.46",
-    "@zeit/next-css": "^0.1.5",
+    "@zeit/next-css": "^0.2.0",
     "express": "^4.16.3",
     "file-loader": "^1.1.11",
     "isomorphic-unfetch": "^2.0.0",
@@ -31,8 +31,8 @@
     "react-relay": "^1.4.1",
     "react-relay-network-modern": "^2.1.1",
     "relay-runtime": "^1.5.0",
-    "semantic-ui-react": "^0.79.0",
-    "unstated": "^1.2.0",
+    "semantic-ui-react": "^0.80.2",
+    "unstated": "^2.1.1",
     "url-loader": "^1.0.1"
   },
   "browser": {
@@ -49,8 +49,8 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "eslint-plugin-relay": "^0.0.21",
-    "flow-bin": "0.72.0",
-    "graphql-cli": "2.16.0",
+    "flow-bin": "0.73.0",
+    "graphql-cli": "2.16.1",
     "prettier": "^1.11.1",
     "relay-compiler": "^1.4.1",
     "semantic-ui-css": "^2.3.1"
