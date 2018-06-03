@@ -31,7 +31,7 @@
     "react-relay": "^1.4.1",
     "react-relay-network-modern": "^2.1.1",
     "relay-runtime": "^1.5.0",
-    "semantic-ui-react": "^0.80.2",
+    "semantic-ui-react": "^0.81.0",
     "unstated": "^2.1.1",
     "url-loader": "^1.0.1"
   },
