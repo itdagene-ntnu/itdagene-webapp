@@ -28,8 +28,7 @@ const Index = ({
   variables,
   query,
   environment,
-  queryProps,
-  url
+  queryProps
 }: WithDataProps) => (
   <QueryRenderer
     query={query}
@@ -39,7 +38,7 @@ const Index = ({
     render={({ error, props }: RenderProps) => {
       if (error) return <div>Error</div>;
 
-      if (!props) return <LoadingIndicator url={url} />;
+      if (!props) return <LoadingIndicator />;
 
       return (
         <Fragment>
@@ -48,7 +47,7 @@ const Index = ({
             className="ui inverted vertical segment"
           >
             <Container>
-              <HeaderMenu url={url} />
+              <HeaderMenu />
             </Container>
 
             <WelcomeScreen currentMetaData={props.currentMetaData} />

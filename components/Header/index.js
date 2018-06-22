@@ -1,7 +1,8 @@
 //@flow
 import React from 'react';
 import { Menu } from 'semantic-ui-react';
-import type { NextUrl } from '../../utils/types';
+import { withRouter } from 'next/router';
+import type { NextRouter } from '../../utils/types';
 import Link from 'next/link';
 
 const items = [
@@ -10,23 +11,22 @@ const items = [
   { key: 'joblistings', name: 'Jobbannonser', to: '/#' }
 ];
 
-const MenuItem = ({ item, url }: { item: Object, url: NextUrl }) => {
-  const { to, ...rest } = item;
-  return (
-    <Link href={to}>
-      <a>
-        <Menu.Item {...rest} active={item.to === url.pathname} />
-      </a>
-    </Link>
-  );
-};
-type Props = {
-  url: NextUrl
-};
+const MenuItem = withRouter(
+  ({ item, router }: { item: Object, router: NextRouter }) => {
+    const { to, ...rest } = item;
+    return (
+      <Link href={to}>
+        <a>
+          <Menu.Item {...rest} active={item.to === router.pathname} />
+        </a>
+      </Link>
+    );
+  }
+);
 
-export const HeaderMenu = ({ url }: Props) => (
+export const HeaderMenu = () => (
   <Menu inverted secondary borderless>
-    {items.map(item => <MenuItem url={url} key={item.key} item={item} />)}
+    {items.map(item => <MenuItem key={item.key} item={item} />)}
   </Menu>
 );
 

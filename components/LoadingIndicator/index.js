@@ -1,19 +1,14 @@
 //@flow
 import React, { Fragment } from 'react';
-import type { NextUrl } from '../../utils/types';
 import { Container, Header, Segment, Loader } from 'semantic-ui-react';
 import { HeaderMenu } from '../Header';
 import { itdageneBlue } from '../../utils/colors';
 
-type Props = {
-  url: NextUrl
-};
-
-const LoadingIndicator = ({ url }: Props) => (
+const LoadingIndicator = () => (
   <Fragment>
     <Segment style={{ background: itdageneBlue }} vertical>
       <Container>
-        <HeaderMenu url={url} />
+        <HeaderMenu />
       </Container>
     </Segment>
     <div style={{ paddingTop: 150 }}>

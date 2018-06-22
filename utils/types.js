@@ -1,6 +1,6 @@
 //@flow
 
-export type NextUrl = {
+export type NextRouter = {
   asPath: string,
   pathname: string,
   query: { [string]: string }
