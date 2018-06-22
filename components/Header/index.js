@@ -8,7 +8,7 @@ import Link from 'next/link';
 const items = [
   { key: 'home', name: 'Hjem', to: '/' },
   { key: 'about-us', name: 'Om oss', to: '/Page' },
-  { key: 'joblistings', name: 'Jobbannonser', to: '/#' }
+  { key: 'joblistings', name: 'Jobbannonser', to: '/joblistings' }
 ];
 
 const MenuItem = withRouter(

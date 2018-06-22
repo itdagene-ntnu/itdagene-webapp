@@ -37,7 +37,7 @@ const Index = ({
             style={{ background: itdageneBlue }}
             className="ui inverted vertical segment"
           >
-            <Container middle>
+            <Container>
               <HeaderMenu />
             </Container>
           </div>
