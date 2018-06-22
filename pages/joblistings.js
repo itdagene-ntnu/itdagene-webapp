@@ -27,8 +27,7 @@ const Index = ({
   variables,
   query,
   environment,
-  queryProps,
-  url
+  queryProps
 }: WithDataProps) => (
   <QueryRenderer
     query={query}
@@ -38,7 +37,7 @@ const Index = ({
     render={({ error, props }: RenderProps) => {
       if (error) return <div>Error</div>;
 
-      if (!props) return <LoadingIndicator url={url} />;
+      if (!props) return <LoadingIndicator />;
 
       return (
         <>
@@ -47,7 +46,7 @@ const Index = ({
             className="ui inverted vertical segment"
           >
             <Container middle>
-              <HeaderMenu url={url} />
+              <HeaderMenu />
             </Container>
           </div>
           <Container
@@ -65,11 +64,11 @@ const Index = ({
   />
 );
 
-export default withData(Index, url => ({
+export default withData(Index, router => ({
   query,
   variables: {
-    type: url.query.type || '',
-    company: url.query.company || '',
+    type: router.query.type || '',
+    company: router.query.company || '',
     count: 5
   }
 }));
