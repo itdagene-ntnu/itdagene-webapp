@@ -1,7 +1,11 @@
 {
   "presets": [
-    "next/babel",
-    "@babel/flow"
+    ["next/babel", {
+      "preset-env": {
+        "modules": "commonjs"
+      }
+    }],
+    "@babel/flow",
   ],
   "plugins": [
     "relay"
