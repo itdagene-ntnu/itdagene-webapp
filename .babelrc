@@ -1,13 +1,22 @@
 {
   "presets": [
-    ["next/babel", {
-      "preset-env": {
-        "modules": "commonjs"
-      }
-    }],
+    "next/babel",
     "@babel/flow",
   ],
   "plugins": [
     "relay"
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": ["relay"],
+      "presets": [
+        ["next/babel", {
+          "preset-env": {
+            "modules": "commonjs"
+          }
+        }],
+        "@babel/flow",
+      ]
+    }
+  }
 }
