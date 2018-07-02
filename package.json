@@ -45,9 +45,9 @@
     "babel-eslint": "^8.2.2",
     "babel-jest": "^23.2.0",
     "babel-plugin-relay": "^1.4.1",
-    "eslint": "^5.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "eslint": "^5.0.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-config-react-app": "^2.1.0",
     "eslint-plugin-flowtype": "^2.46.1",
@@ -66,5 +66,21 @@
   },
   "prettier": {
     "singleQuote": true
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/testing/jest.setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/.next/",
+      "<rootDir>/node_modules/"
+    ],
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/jest/FileStub.js",
+      "\\.(css|less)$": "<rootDir>/jest/CssStub.js"
+    }
   }
 }

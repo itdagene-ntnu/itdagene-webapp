@@ -20,6 +20,7 @@ $ yarn relay
 ```bash
 $ yarn dev
 $ # open http://localhost:8000
+$ DEBUG=true yarn test
 ```
 
 ## Production

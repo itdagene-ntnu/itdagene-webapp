@@ -1,12 +1,12 @@
 import puppeteer from 'puppeteer';
 
-const baseUrl = 'http://localhost:3000';
-
-let page;
-let browser;
 const width = 1920;
 const height = 1080;
 const DEBUG = process.env.DEBUG;
+const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+
+let page;
+let browser;
 
 beforeAll(async () => {
   browser = await puppeteer.launch({
