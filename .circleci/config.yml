@@ -2,7 +2,7 @@ version: 2
 jobs:
   tests:
     docker:
-      - image: node:8
+      - image: circleci/node:latest-browsers
     working_directory: ~/repo
     steps:
       - checkout
@@ -39,6 +39,18 @@ jobs:
           name: build
           command: |
             yarn build
+      - run:
+          name: run server
+          command: |
+            RELAY_ENDPOINT=https://itdagene.no/graphql/754a9fe011d12aa909bc0db296db42caaa9d28e3 yarn start
+          background: true
+
+      - run:
+          shell: /bin/sh
+          command: |
+            wget --retry-connrefused --waitretry=1 --read-timeout=20 --timeout=15 -t 10 http://localhost:3000/
+      - run:
+          command: yarn test
 
   build-docker:
     machine: true
