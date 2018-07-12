@@ -1,10 +1,11 @@
 //@flow
-import React, { Fragment } from 'react';
-import { createFragmentContainer, graphql } from 'react-relay';
-import { type Companies_query } from './__generated__/Companies_query.graphql';
 import { Header } from 'semantic-ui-react';
-import CompanyView from './CompanyView';
+import { createFragmentContainer, graphql } from 'react-relay';
+import React, { Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
+
+import { type Companies_query } from './__generated__/Companies_query.graphql';
+import CompanyView from './CompanyView';
 
 type Props = {
   query: Companies_query
