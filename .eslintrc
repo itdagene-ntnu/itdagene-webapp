@@ -16,7 +16,10 @@
   "globals": {
     "log": true,
     "expect": true,
-    "jest": true
+    "jest": true,
+    "page": true,
+    "browser": true,
+    "jestPuppeteer": true
   },
   "rules": {
     "react/prop-types": 0,

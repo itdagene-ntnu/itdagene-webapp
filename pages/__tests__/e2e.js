@@ -1,29 +1,6 @@
-import puppeteer from 'puppeteer';
 
-const width = 1920;
-const height = 1080;
-const DEBUG = process.env.DEBUG;
 const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
-let page;
-let browser;
-
-beforeAll(async () => {
-  browser = await puppeteer.launch({
-    headless: !DEBUG,
-    slowMo: DEBUG ? 500 : 0,
-    args: [
-      `--window-size=${width},${height}`,
-      '--no-sandbox',
-      '--disable-setuid-sandbox'
-    ]
-  });
-  page = await browser.newPage();
-  await page.setViewport({ width, height });
-});
-afterAll(() => {
-  browser.close();
-});
 describe('Page rendering', () => {
   test(
     'Frontpage page rendering',

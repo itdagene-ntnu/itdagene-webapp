@@ -1,4 +1,5 @@
 __generated__/
+coverage/
 schema/schema.graphql
 .next
 yarn-error.log
