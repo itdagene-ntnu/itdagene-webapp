@@ -40,6 +40,8 @@ const Index = ({
 
       if (!props) return <LoadingIndicator />;
 
+      if (!props.node || !props.node.company) return <div>Error</div>;
+
       return (
         <>
           <div
@@ -61,7 +63,7 @@ const Index = ({
           >
             <h1>{props.node.company.name}</h1>
             <pre>{cowsay.say({ text: props.node.title })}</pre>
-            <ReactMarkdown source={props.node.description} />
+            <ReactMarkdown source={props.node && props.node.description} />
           </Container>
         </>
       );

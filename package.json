@@ -13,7 +13,7 @@
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn flow",
     "prettier": "prettier '**/*.{js,css,graphql}' --write",
     "flow": "flow --quiet",
-    "test": "NODE_ENV=test jest"
+    "test": "JEST_PUPPETEER_CONFIG=./testing/jest-puppeteer.config.js NODE_ENV=test jest"
   },
   "author": "Odin Ugedal <odin@ugedal.com>",
   "license": "MIT",
