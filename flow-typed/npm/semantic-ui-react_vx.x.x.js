@@ -1,4 +1,4 @@
-// flow-typed signature: 5e2c2f4684777a3494e9903a125dde55
+// flow-typed signature: b61d994bc16eb03f05a13b6cdc3d6358
 // flow-typed version: <<STUB>>/semantic-ui-react_v^0.81.1/flow_v0.75.0
 
 /**
@@ -551,10 +551,6 @@ declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/EventPool' {
 }
 
 declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/EventSet' {
-  declare module.exports: any;
-}
-
-declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/eventStack' {
   declare module.exports: any;
 }
 
@@ -1547,10 +1543,6 @@ declare module 'semantic-ui-react/dist/es/lib/eventStack/EventPool' {
 }
 
 declare module 'semantic-ui-react/dist/es/lib/eventStack/EventSet' {
-  declare module.exports: any;
-}
-
-declare module 'semantic-ui-react/dist/es/lib/eventStack/eventStack' {
   declare module.exports: any;
 }
 
@@ -2550,10 +2542,6 @@ declare module 'semantic-ui-react/src/lib/eventStack/EventSet' {
   declare module.exports: any;
 }
 
-declare module 'semantic-ui-react/src/lib/eventStack/eventStack' {
-  declare module.exports: any;
-}
-
 declare module 'semantic-ui-react/src/lib/eventStack/EventStack' {
   declare module.exports: any;
 }
@@ -3414,9 +3402,6 @@ declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/EventPool.js' {
 declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/EventSet.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/eventStack/EventSet'>;
 }
-declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/eventStack.js' {
-  declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/eventStack/eventStack'>;
-}
 declare module 'semantic-ui-react/dist/commonjs/lib/eventStack/EventStack.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/commonjs/lib/eventStack/EventStack'>;
 }
@@ -4160,9 +4145,6 @@ declare module 'semantic-ui-react/dist/es/lib/eventStack/EventPool.js' {
 }
 declare module 'semantic-ui-react/dist/es/lib/eventStack/EventSet.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/eventStack/EventSet'>;
-}
-declare module 'semantic-ui-react/dist/es/lib/eventStack/eventStack.js' {
-  declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/eventStack/eventStack'>;
 }
 declare module 'semantic-ui-react/dist/es/lib/eventStack/EventStack.js' {
   declare module.exports: $Exports<'semantic-ui-react/dist/es/lib/eventStack/EventStack'>;
@@ -4910,9 +4892,6 @@ declare module 'semantic-ui-react/src/lib/eventStack/EventPool.js' {
 }
 declare module 'semantic-ui-react/src/lib/eventStack/EventSet.js' {
   declare module.exports: $Exports<'semantic-ui-react/src/lib/eventStack/EventSet'>;
-}
-declare module 'semantic-ui-react/src/lib/eventStack/eventStack.js' {
-  declare module.exports: $Exports<'semantic-ui-react/src/lib/eventStack/eventStack'>;
 }
 declare module 'semantic-ui-react/src/lib/eventStack/EventStack.js' {
   declare module.exports: $Exports<'semantic-ui-react/src/lib/eventStack/EventStack'>;

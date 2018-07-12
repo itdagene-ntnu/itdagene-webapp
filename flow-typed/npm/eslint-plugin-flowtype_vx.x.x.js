@@ -1,4 +1,4 @@
-// flow-typed signature: 050762d453fbbc02b82e7dd6a3ef87a9
+// flow-typed signature: c966081d144a31e9172df7590e26fc50
 // flow-typed version: <<STUB>>/eslint-plugin-flowtype_v^2.46.1/flow_v0.75.0
 
 /**
@@ -27,6 +27,26 @@ declare module 'eslint-plugin-flowtype/bin/readmeAssertions' {
 }
 
 declare module 'eslint-plugin-flowtype/dist/index' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyle/index' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyle/isSimpleType' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyle/needWrap' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyleComplexType' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyleSimpleType' {
   declare module.exports: any;
 }
 
@@ -232,6 +252,21 @@ declare module 'eslint-plugin-flowtype/bin/readmeAssertions.js' {
 }
 declare module 'eslint-plugin-flowtype/dist/index.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/index'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyle/index.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/arrayStyle/index'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyle/isSimpleType.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/arrayStyle/isSimpleType'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyle/needWrap.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/arrayStyle/needWrap'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyleComplexType.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/arrayStyleComplexType'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/arrayStyleSimpleType.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/arrayStyleSimpleType'>;
 }
 declare module 'eslint-plugin-flowtype/dist/rules/booleanStyle.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/booleanStyle'>;

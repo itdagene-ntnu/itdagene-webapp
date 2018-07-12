@@ -1,4 +1,4 @@
-// flow-typed signature: 1e2079ab52b0778c7dcfe546b435d367
+// flow-typed signature: 13a3a131842b7b3348e37db6d4480aaa
 // flow-typed version: <<STUB>>/next_v^6.0.0/flow_v0.75.0
 
 /**
@@ -43,6 +43,70 @@ declare module 'next/config' {
 }
 
 declare module 'next/constants' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/babel/plugins/handle-import' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/babel/preset' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/index' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/loaders/emit-file-loader' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/loaders/hot-self-accept-loader' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/loaders/next-babel-loader' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/plugins/build-manifest-plugin' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/plugins/dynamic-chunks-plugin' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/plugins/nextjs-ssr-import' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/plugins/pages-manifest-plugin' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/plugins/pages-plugin' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/plugins/unlink-file-plugin' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/build/webpack/utils' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/client/dev-error-overlay' {
+  declare module.exports: any;
+}
+
+declare module 'next/dist/client/error-boundary' {
   declare module.exports: any;
 }
 
@@ -122,6 +186,10 @@ declare module 'next/dist/lib/prefetch' {
   declare module.exports: any;
 }
 
+declare module 'next/dist/lib/promisify' {
+  declare module.exports: any;
+}
+
 declare module 'next/dist/lib/router/index' {
   declare module.exports: any;
 }
@@ -162,58 +230,6 @@ declare module 'next/dist/pages/_error' {
   declare module.exports: any;
 }
 
-declare module 'next/dist/server/build/babel/plugins/handle-import' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/babel/preset' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/index' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/loaders/emit-file-loader' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/loaders/hot-self-accept-loader' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/plugins/build-manifest-plugin' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/plugins/dynamic-chunks-plugin' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/plugins/nextjs-ssr-import' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/plugins/pages-manifest-plugin' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/plugins/pages-plugin' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/plugins/unlink-file-plugin' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/webpack' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/build/webpack/utils' {
-  declare module.exports: any;
-}
-
 declare module 'next/dist/server/config' {
   declare module.exports: any;
 }
@@ -239,10 +255,6 @@ declare module 'next/dist/server/lib/is-async-supported' {
 }
 
 declare module 'next/dist/server/lib/path-match' {
-  declare module.exports: any;
-}
-
-declare module 'next/dist/server/lib/promisify' {
   declare module.exports: any;
 }
 
@@ -321,6 +333,54 @@ declare module 'next/config.js' {
 declare module 'next/constants.js' {
   declare module.exports: $Exports<'next/constants'>;
 }
+declare module 'next/dist/build/babel/plugins/handle-import.js' {
+  declare module.exports: $Exports<'next/dist/build/babel/plugins/handle-import'>;
+}
+declare module 'next/dist/build/babel/preset.js' {
+  declare module.exports: $Exports<'next/dist/build/babel/preset'>;
+}
+declare module 'next/dist/build/index.js' {
+  declare module.exports: $Exports<'next/dist/build/index'>;
+}
+declare module 'next/dist/build/webpack.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack'>;
+}
+declare module 'next/dist/build/webpack/loaders/emit-file-loader.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/loaders/emit-file-loader'>;
+}
+declare module 'next/dist/build/webpack/loaders/hot-self-accept-loader.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/loaders/hot-self-accept-loader'>;
+}
+declare module 'next/dist/build/webpack/loaders/next-babel-loader.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/loaders/next-babel-loader'>;
+}
+declare module 'next/dist/build/webpack/plugins/build-manifest-plugin.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/plugins/build-manifest-plugin'>;
+}
+declare module 'next/dist/build/webpack/plugins/dynamic-chunks-plugin.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/plugins/dynamic-chunks-plugin'>;
+}
+declare module 'next/dist/build/webpack/plugins/nextjs-ssr-import.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/plugins/nextjs-ssr-import'>;
+}
+declare module 'next/dist/build/webpack/plugins/pages-manifest-plugin.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/plugins/pages-manifest-plugin'>;
+}
+declare module 'next/dist/build/webpack/plugins/pages-plugin.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/plugins/pages-plugin'>;
+}
+declare module 'next/dist/build/webpack/plugins/unlink-file-plugin.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/plugins/unlink-file-plugin'>;
+}
+declare module 'next/dist/build/webpack/utils.js' {
+  declare module.exports: $Exports<'next/dist/build/webpack/utils'>;
+}
+declare module 'next/dist/client/dev-error-overlay.js' {
+  declare module.exports: $Exports<'next/dist/client/dev-error-overlay'>;
+}
+declare module 'next/dist/client/error-boundary.js' {
+  declare module.exports: $Exports<'next/dist/client/error-boundary'>;
+}
 declare module 'next/dist/client/head-manager.js' {
   declare module.exports: $Exports<'next/dist/client/head-manager'>;
 }
@@ -378,6 +438,9 @@ declare module 'next/dist/lib/page-loader.js' {
 declare module 'next/dist/lib/prefetch.js' {
   declare module.exports: $Exports<'next/dist/lib/prefetch'>;
 }
+declare module 'next/dist/lib/promisify.js' {
+  declare module.exports: $Exports<'next/dist/lib/promisify'>;
+}
 declare module 'next/dist/lib/router/index.js' {
   declare module.exports: $Exports<'next/dist/lib/router/index'>;
 }
@@ -408,45 +471,6 @@ declare module 'next/dist/pages/_document.js' {
 declare module 'next/dist/pages/_error.js' {
   declare module.exports: $Exports<'next/dist/pages/_error'>;
 }
-declare module 'next/dist/server/build/babel/plugins/handle-import.js' {
-  declare module.exports: $Exports<'next/dist/server/build/babel/plugins/handle-import'>;
-}
-declare module 'next/dist/server/build/babel/preset.js' {
-  declare module.exports: $Exports<'next/dist/server/build/babel/preset'>;
-}
-declare module 'next/dist/server/build/index.js' {
-  declare module.exports: $Exports<'next/dist/server/build/index'>;
-}
-declare module 'next/dist/server/build/loaders/emit-file-loader.js' {
-  declare module.exports: $Exports<'next/dist/server/build/loaders/emit-file-loader'>;
-}
-declare module 'next/dist/server/build/loaders/hot-self-accept-loader.js' {
-  declare module.exports: $Exports<'next/dist/server/build/loaders/hot-self-accept-loader'>;
-}
-declare module 'next/dist/server/build/plugins/build-manifest-plugin.js' {
-  declare module.exports: $Exports<'next/dist/server/build/plugins/build-manifest-plugin'>;
-}
-declare module 'next/dist/server/build/plugins/dynamic-chunks-plugin.js' {
-  declare module.exports: $Exports<'next/dist/server/build/plugins/dynamic-chunks-plugin'>;
-}
-declare module 'next/dist/server/build/plugins/nextjs-ssr-import.js' {
-  declare module.exports: $Exports<'next/dist/server/build/plugins/nextjs-ssr-import'>;
-}
-declare module 'next/dist/server/build/plugins/pages-manifest-plugin.js' {
-  declare module.exports: $Exports<'next/dist/server/build/plugins/pages-manifest-plugin'>;
-}
-declare module 'next/dist/server/build/plugins/pages-plugin.js' {
-  declare module.exports: $Exports<'next/dist/server/build/plugins/pages-plugin'>;
-}
-declare module 'next/dist/server/build/plugins/unlink-file-plugin.js' {
-  declare module.exports: $Exports<'next/dist/server/build/plugins/unlink-file-plugin'>;
-}
-declare module 'next/dist/server/build/webpack.js' {
-  declare module.exports: $Exports<'next/dist/server/build/webpack'>;
-}
-declare module 'next/dist/server/build/webpack/utils.js' {
-  declare module.exports: $Exports<'next/dist/server/build/webpack/utils'>;
-}
 declare module 'next/dist/server/config.js' {
   declare module.exports: $Exports<'next/dist/server/config'>;
 }
@@ -467,9 +491,6 @@ declare module 'next/dist/server/lib/is-async-supported.js' {
 }
 declare module 'next/dist/server/lib/path-match.js' {
   declare module.exports: $Exports<'next/dist/server/lib/path-match'>;
-}
-declare module 'next/dist/server/lib/promisify.js' {
-  declare module.exports: $Exports<'next/dist/server/lib/promisify'>;
 }
 declare module 'next/dist/server/lib/source-map-support.js' {
   declare module.exports: $Exports<'next/dist/server/lib/source-map-support'>;
