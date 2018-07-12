@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "schema": "graphql get-schema",
-    "relay":
-      "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql",
+    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql",
     "lint:prettier": "prettier '**/*.{js,css,graphql}' --list-different",
     "lint:eslint": "eslint . --ignore-path .prettierignore",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn flow",
@@ -30,6 +29,7 @@
     "raven-js": "^3.24.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
+    "react-markdown": "^3.3.4",
     "react-relay": "^1.4.1",
     "react-relay-network-modern": "^2.1.1",
     "relay-runtime": "^1.5.0",
@@ -69,14 +69,18 @@
     "singleQuote": true
   },
   "jest": {
-    "setupFiles": ["<rootDir>/testing/jest.setup.js"],
-    "testPathIgnorePatterns": ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+    "setupFiles": [
+      "<rootDir>/testing/jest.setup.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/.next/",
+      "<rootDir>/node_modules/"
+    ],
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-        "<rootDir>/jest/FileStub.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/jest/FileStub.js",
       "\\.(css|less)$": "<rootDir>/jest/CssStub.js"
     }
   }

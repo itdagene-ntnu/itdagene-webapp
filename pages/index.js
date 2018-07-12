@@ -5,20 +5,20 @@ import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
 
-import React, { Fragment } from 'react';
-import { QueryRenderer, graphql } from 'react-relay';
-import withData, { type WithDataProps } from '../lib/withData';
 import { List, Container, Image, Segment } from 'semantic-ui-react';
+import { QueryRenderer, graphql } from 'react-relay';
+import React, { Fragment } from 'react';
 
-import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
-import HSP from '../components/Frontpage/HSP';
 import { HeaderMenu } from '../components/Header';
-import Stats from '../components/Stats';
-import LoadingIndicator from '../components/LoadingIndicator';
-import Companies from '../components/Companies/Companies';
 import { itdageneBlue } from '../utils/colors';
-
 import { type pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
+import Collaborators from '../components/Collaborators/Collaborators';
+import Companies from '../components/Companies/Companies';
+import HSP from '../components/Frontpage/HSP';
+import LoadingIndicator from '../components/LoadingIndicator';
+import Stats from '../components/Stats';
+import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
+import withData, { type WithDataProps } from '../lib/withData';
 
 type RenderProps = {
   error: ?Error,
@@ -108,6 +108,11 @@ const Index = ({
           </div>
           <Segment vertical className="stripe">
             <Container>
+              <Collaborators showDescription query={props} />
+            </Container>
+          </Segment>
+          <Segment vertical className="stripe">
+            <Container>
               <Companies query={props} />
             </Container>
           </Segment>
@@ -159,6 +164,7 @@ export default withData(Index, {
         id
       }
       ...Companies_query
+      ...Collaborators_query
     }
   `,
   variables: {}
