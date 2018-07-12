@@ -1,5 +1,7 @@
-import * as React from 'react';
 import { createPaginationContainer, graphql } from 'react-relay';
+import Link from 'next/link';
+import * as React from 'react';
+
 import type { JoblistingsContainer_root } from './__generated__/JoblistingsContainer_root.graphql';
 
 export const query = graphql`
@@ -18,9 +20,11 @@ const JoblistigsContainer = (props: { root: JoblistingsContainer_root }) => (
     <ol>
       {props.root.joblistings.edges.map(({ node }) => (
         <li key={node.id}>
-          <a href={node.url}>
-            {node.title} - {node.company.name}
-          </a>
+          <Link href={`/joblistings/${node.id}`}>
+            <a>
+              {node.title} - {node.company.name}
+            </a>
+          </Link>
         </li>
       ))}
     </ol>

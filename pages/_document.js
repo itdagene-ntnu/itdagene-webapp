@@ -1,14 +1,16 @@
 //@flow
-import * as React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
-import flush from 'styled-jsx/server';
-import Footer from '../components/Footer';
-import Raven from 'raven';
-
 import 'semantic-ui-css/semantic.min.css';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
+
+import Document, { Head, Main, NextScript } from 'next/document';
+import Raven from 'raven';
+import * as React from 'react';
+
+import flush from 'styled-jsx/server';
+
+import Footer from '../components/Footer';
 
 export default class Default extends Document {
   static getInitialProps({ renderPage, err }: Object) {
@@ -31,6 +33,7 @@ export default class Default extends Document {
           <style>{`
     body {
       margin: 0;
+      font-size: 16px !important;
     }
     .hidden.menu {
       display: none;
