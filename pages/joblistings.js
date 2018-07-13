@@ -13,11 +13,8 @@ import type { JoblistingsContainer_root } from '../components/Joblistings/__gene
 import { QueryRenderer } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 
-import LoadingIndicator from '../components/LoadingIndicator';
-
 import { Container } from 'semantic-ui-react';
-import { HeaderMenu } from '../components/Header';
-import { itdageneBlue } from '../utils/colors';
+import Layout from '../components/Layout';
 
 type RenderProps = {
   error: ?Error,
@@ -35,30 +32,23 @@ const Index = ({
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
     render={({ error, props }: RenderProps) => {
-      if (error) return <div>Error</div>;
-
-      if (!props) return <LoadingIndicator />;
-
       return (
-        <>
-          <div
-            style={{ background: itdageneBlue }}
-            className="ui inverted vertical segment"
-          >
-            <Container>
-              <HeaderMenu />
-            </Container>
-          </div>
-          <Container
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-evenly'
-            }}
-          >
-            <JoblistingsContainer root={props} />
-          </Container>
-        </>
+        <Layout
+          {...{ error, props }}
+          contentRenderer={() => (
+            <>
+              <Container
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-evenly'
+                }}
+              >
+                <JoblistingsContainer root={props} />
+              </Container>
+            </>
+          )}
+        />
       );
     }}
   />

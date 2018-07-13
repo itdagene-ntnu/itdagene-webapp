@@ -12,12 +12,11 @@ import { QueryRenderer } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 
 import { graphql } from 'react-relay';
-import LoadingIndicator from '../components/LoadingIndicator';
 import { type joblistingPage_QueryResponse } from './__generated__/joblistingPage_Query.graphql';
 
-import { Container } from 'semantic-ui-react';
-import { HeaderMenu } from '../components/Header';
-import { itdageneBlue } from '../utils/colors';
+import Flex from 'styled-flex-component';
+import { ResponsiveContent } from '../components/Styled';
+import Layout from '../components/Layout';
 
 type RenderProps = {
   error: ?Error,
@@ -35,37 +34,25 @@ const Index = ({
     environment={environment}
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
-    render={({ error, props: props }: RenderProps) => {
-      if (error) return <div>Error</div>;
-
-      if (!props) return <LoadingIndicator />;
-
-      if (!props.node || !props.node.company) return <div>Error</div>;
-
+    render={({ error, props }: RenderProps) => {
+      if (!props || !props.joblisting) return null;
       return (
-        <>
-          <div
-            style={{ background: itdageneBlue }}
-            className="ui inverted vertical segment"
-          >
-            <Container>
-              <HeaderMenu />
-            </Container>
-          </div>
-          <Container
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              justifyContent: 'space-evenly'
-            }}
-          >
-            <h1>{props.node.company.name}</h1>
-            <pre>{cowsay.say({ text: props.node.title })}</pre>
-            <ReactMarkdown source={props.node && props.node.description} />
-          </Container>
-        </>
+        <Layout
+          {...{ error, props }}
+          contentRenderer={() => (
+            <ResponsiveContent>
+              <Flex center column>
+                {/* //$FlowFixMe */}
+                <h1>{props.joblisting.company.name}</h1>
+                {/* //$FlowFixMe */}
+                <pre>{cowsay.say({ text: props.joblisting.title })}</pre>
+                <ReactMarkdown
+                  source={props.joblisting && props.joblisting.description}
+                />
+              </Flex>
+            </ResponsiveContent>
+          )}
+        />
       );
     }}
   />
@@ -73,7 +60,7 @@ const Index = ({
 export default withData(Index, ({ query: { id } }) => ({
   query: graphql`
     query joblistingPage_Query($id: ID!) {
-      node(id: $id) {
+      joblisting: node(id: $id) {
         ... on Joblisting {
           title
           description
