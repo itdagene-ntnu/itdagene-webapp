@@ -1,13 +1,23 @@
 //@flow
 import * as React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
-import { Container } from 'semantic-ui-react';
 import withData, { type WithDataProps } from '../lib/withData';
-import { HeaderMenu } from '../components/Header';
 import BoardMember from '../components/BoardMember';
-import LoadingIndicator from '../components/LoadingIndicator';
 import { type Page_QueryResponse } from './__generated__/Page_Query.graphql';
-import { itdageneBlue } from '../utils/colors';
+import Layout from '../components/Layout';
+import Flex from 'styled-flex-component';
+import sortBy from 'lodash/sortBy';
+
+const ROLES = [
+  'Leder',
+  'Nestleder',
+  'Økonomi',
+  'Bedrift',
+  'Bankett',
+  'Logistikk',
+  'Markedsføring',
+  'Web'
+];
 
 const Index = ({
   variables,
@@ -27,32 +37,19 @@ const Index = ({
       error: ?Error,
       props: ?Page_QueryResponse
     }) => {
-      if (error) return <div>Error</div>;
-
-      if (!props) return <LoadingIndicator />;
-
+      if (!props) return <Layout {...{ error, props }} />;
       return (
-        <>
-          <div
-            style={{ background: itdageneBlue }}
-            className="ui inverted vertical segment"
-          >
-            <Container>
-              <HeaderMenu />
-            </Container>
-          </div>
-          <Container
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-evenly'
-            }}
-          >
-            {props.boardMembers.map(user => (
-              <BoardMember abc="asd" key={user.id} user={user} />
-            ))}
-          </Container>
-        </>
+        <Layout
+          responsive
+          {...{ error, props }}
+          contentRenderer={() => (
+            <Flex wrap justifyAround>
+              {sortBy(props.boardMembers, m => ROLES.indexOf(m.role)).map(
+                user => <BoardMember key={user.id} user={user} />
+              )}
+            </Flex>
+          )}
+        />
       );
     }}
   />
@@ -68,6 +65,8 @@ export default withData(Index, {
       boardMembers {
         ...BoardMember_user
         id
+        role
+        fullName
       }
     }
   `,
