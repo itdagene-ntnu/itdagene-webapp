@@ -1,6 +1,8 @@
 //@flow
-import { Image } from 'semantic-ui-react';
 import { createFragmentContainer, graphql } from 'react-relay';
+import styled from 'styled-components';
+import { ZoomImage } from '../Styled';
+
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -10,22 +12,18 @@ type Props = {
   company: CollaboratorView_company,
   showDescription?: boolean
 };
+const Image = styled(ZoomImage)`
+  width: 270px;
+  height: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+`;
 
 const CollaboratorView = ({ company, showDescription }: Props) => (
-  <div style={{ padding: '0 10px' }}>
+  <div style={{ flex: 1, minWidth: 350, padding: '0 10px' }}>
     <a href={company.url}>
-      <Image
-        style={{
-          maxWidth: showDescription ? 270 : 330,
-          height: showDescription ? 200 : 240,
-          objectFit: 'contain',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          padding: 15
-        }}
-        className="zoom"
-        src={company.logo ? `https://itdagene.no/uploads/${company.logo}` : ''}
-      />
+      <Image src={company.logo || ''} />
     </a>
     {showDescription && <ReactMarkdown source={company.description} />}
   </div>
@@ -37,7 +35,7 @@ export default createFragmentContainer(
     fragment CollaboratorView_company on Company {
       id
       name
-      logo
+      logo(width: 270, height: 200)
       url
       description
     }

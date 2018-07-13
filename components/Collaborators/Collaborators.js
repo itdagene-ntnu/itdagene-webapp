@@ -12,8 +12,9 @@ type Props = {
 };
 
 const containerStyle = {
-  display: 'grid',
-  gridTemplateColumns: `repeat(auto-fill, minmax(350px, 1fr))`
+  display: 'flex',
+  flexFlow: 'row wrap',
+  justifyContent: 'center'
 };
 
 const Collaborators = ({ query, showDescription }: Props) => (

@@ -3,13 +3,21 @@ import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { type WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
 import { Container, Header, Button } from 'semantic-ui-react';
+import styled from 'styled-components';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData
 };
+
+const MainContainer = styled(Container)`
+  padding-top: 160px;
+  padding-bottom: 170px;
+  color: white;
+`;
+
 const WelcomeScreen = ({ currentMetaData }: Props) => (
-  <Container text textAlign="center">
-    <Header as="h1" size="huge" inverted style={{ marginTop: 192 }}>
+  <MainContainer inverted text textAlign="center">
+    <Header as="h1" size="huge" inverted>
       <b>it</b>DAGENE {currentMetaData.year}
     </Header>
     <h2>10. & 11. september 2018</h2>
@@ -17,7 +25,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
     <Button secondary>
       Les mer <i className="right arrow icon" />
     </Button>
-  </Container>
+  </MainContainer>
 );
 
 export default createFragmentContainer(

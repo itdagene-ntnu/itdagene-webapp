@@ -1,22 +1,27 @@
 //@flow
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { Image } from 'semantic-ui-react';
+import { ZoomImage } from '../Styled';
+import styled from 'styled-components';
 import { type CompanyView_company } from './__generated__/CompanyView_company.graphql';
 
 type Props = {
   company: CompanyView_company
 };
+const Image = styled(ZoomImage)`
+  width: 161px;
+  height: 161px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 15px;
+`;
 
-const CompanyView = ({ company }: Props) => (
-  <a href={company.url}>
-    <Image
-      style={{ width: 180, height: 180, objectFit: 'contain', padding: 15 }}
-      className="zoom"
-      src={company.logo ? `https://itdagene.no/uploads/${company.logo}` : ''}
-    />
-  </a>
-);
+const CompanyView = ({ company }: Props) =>
+  company.logo ? (
+    <a href={company.url}>
+      <Image src={company.logo || ''} />
+    </a>
+  ) : null;
 
 export default createFragmentContainer(
   CompanyView,
@@ -24,7 +29,8 @@ export default createFragmentContainer(
     fragment CompanyView_company on Company {
       id
       name
-      logo
+      logo(width: 240, height: 240)
+      name
       url
     }
   `
