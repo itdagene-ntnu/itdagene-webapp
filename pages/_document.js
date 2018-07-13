@@ -31,18 +31,32 @@ export default class Default extends Document {
             content="width=device-width, initial-scale=1, maximum-scale=1"
           />
           <link
-            href="https://fonts.googleapis.com/css?family=Lato"
+            href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin"
             rel="stylesheet"
           />
           <style>{`
             body {
               margin: 0;
-              font-size: 16px !important;
-              font-family: 'Lato', sans-serif;
+              padding: 0;
+              font-size: 16px;
+              line-height: 1.4285em;
+              color: rgba(0, 0, 0, 0.87);
+              font-smoothing: antialiased;
+              word-break: break-word;
+            }
+            a {
+              color: #037bb4;
+              text-decoration: none;
             }
 
+            a:hover {
+              color: #1e70bf;
+              text-decoration: none;
+            }
+
+
           `}</style>
-          <link rel="stylesheet" href="/_next/static/style.css" key="css" />
+          {/*<link rel="stylesheet" href="/_next/static/style.css" key="css" />*/}
 
           {this.props.styleTags}
         </Head>

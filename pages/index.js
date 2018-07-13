@@ -1,4 +1,5 @@
 //@flow
+import React from 'react';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
@@ -6,17 +7,15 @@ import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
 
 import { Section } from '../components/Styled';
-import { List, Container } from 'semantic-ui-react';
 import { Image, CenterIt } from '../components/Styled';
 import { QueryRenderer, graphql } from 'react-relay';
-import React, { Fragment } from 'react';
 
 import { type pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
 import Collaborators from '../components/Collaborators/Collaborators';
 import Companies from '../components/Companies/Companies';
 import Flex, { FlexItem } from 'styled-flex-component';
+import styled from 'styled-components';
 import HSP from '../components/Frontpage/HSP';
-import Stats from '../components/Stats';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import withData, { type WithDataProps } from '../lib/withData';
 import Layout, { BlueSection } from '../components/Layout';
@@ -26,11 +25,16 @@ type RenderProps = {
   props: ?pages_index_QueryResponse
 };
 
+const BiggerText = styled('div')`
+  font-size: 18px;
+  line-height: 1.46em;
+`;
+
 const AboutSection = () => (
   <>
     <Flex justifyAround wrapReverse>
       <FlexItem style={{ maxWidth: 700 }}>
-        <h3>Hva er itDAGENE?</h3>
+        <h1>Hva er itDAGENE?</h1>
         <p>
           itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
           fremtidige arbeidsgivere. Messen arrangeres av studenter for
@@ -38,20 +42,21 @@ const AboutSection = () => (
           itDAGENE arrangeres en gang i året av data- og kommunikasjonsteknologi
           ved NTNU i Trondheim.
         </p>
-        <List as="ul">
-          <List.Item as="li">Stands</List.Item>
-          <List.Item as="li">Sommerjobbmaraton</List.Item>
-          <List.Item as="li">Mingling</List.Item>
-          <List.Item as="li">Kurs</List.Item>
-          <List.Item as="li">Bankett</List.Item>
-        </List>
-        <h3 className="ui header">Hvor og når?</h3>
+        <ul>
+          <li>Stands</li>
+          <li>Sommerjobbmaraton</li>
+          <li>Mingling</li>
+          <li>Kurs</li>
+          <li>Bankett</li>
+        </ul>
+        <h2>Hvor og når?</h2>
         <p>
-          itDAGENE 2018 finner sted 10. & 11. september, i <a> Glassgården </a>{' '}
-          på NTNU Campus Gløshaugen.
+          itDAGENE 2018 finner sted 10. & 11. september, i{' '}
+          <a href="http://bit.ly/2uupU4h"> Glassgården </a> på NTNU Campus
+          Gløshaugen.
         </p>
 
-        <h3 className="ui header">Interessert i å delta?</h3>
+        <h2>Interessert i å delta?</h2>
         <p>
           Vi tilbyr masse rart. Deriblant har vi en bankett. Dette er bare masse
           tekst-fyll.
@@ -93,18 +98,18 @@ const Index = ({
         <Layout
           {...{ error, props }}
           contentRenderer={() => (
-            <Fragment>
+            <BiggerText>
               <BlueSection>
                 <WelcomeScreen currentMetaData={props.currentMetaData} />
               </BlueSection>
               <Section>
                 <AboutSection />
               </Section>
-              <Section>
-                <Container>
-                  <Stats />
-                </Container>
+              {/*<Section>
+
+                <Stats />
               </Section>
+              */}
               <Section>
                 <HSP />
               </Section>
@@ -146,7 +151,7 @@ const Index = ({
                 </p>
                 <a className="ui large button">Les mer</a>
               </Section>
-            </Fragment>
+            </BiggerText>
           )}
         />
       );
