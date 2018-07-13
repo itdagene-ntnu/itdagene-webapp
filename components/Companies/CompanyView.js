@@ -9,11 +9,11 @@ type Props = {
   company: CompanyView_company
 };
 const Image = styled(ZoomImage)`
-  width: 161px;
-  height: 161px;
+  width: 158px;
+  height: 158px;
   margin-left: auto;
   margin-right: auto;
-  padding: 15px;
+  padding: 14px;
 `;
 
 const CompanyView = ({ company }: Props) =>

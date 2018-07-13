@@ -35,7 +35,7 @@ export default createFragmentContainer(
     fragment CollaboratorView_company on Company {
       id
       name
-      logo(width: 270, height: 200)
+      logo(width: 378, height: 280)
       url
       description
     }

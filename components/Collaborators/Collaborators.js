@@ -1,28 +1,25 @@
 //@flow
-import { Header } from 'semantic-ui-react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import React, { Fragment } from 'react';
 
 import { type Collaborators_query } from './__generated__/Collaborators_query.graphql';
 import CollaboratorView from './Collaborator';
+import Flex from 'styled-flex-component';
+import styled from 'styled-components';
 
 type Props = {
   query: Collaborators_query,
   showDescription?: boolean
 };
 
-const containerStyle = {
-  display: 'flex',
-  flexFlow: 'row wrap',
-  justifyContent: 'center'
-};
+const Title = styled('h1')`
+  text-align: center;
+`;
 
 const Collaborators = ({ query, showDescription }: Props) => (
   <Fragment>
-    <Header as="h3" textAlign="center">
-      Våre samarbeidspartnere
-    </Header>
-    <div style={containerStyle}>
+    <Title>Våre samarbeidspartnere</Title>
+    <Flex wrap justifyCenter>
       {query.collaborators.map(company => (
         <CollaboratorView
           showDescription={showDescription}
@@ -30,7 +27,7 @@ const Collaborators = ({ query, showDescription }: Props) => (
           company={company}
         />
       ))}
-    </div>
+    </Flex>
   </Fragment>
 );
 

@@ -19,14 +19,14 @@ const HSP = () => (
   <Flex justifyAround wrapReverse>
     <FlexItem style={{ maxWidth: 700 }}>
       <CenterIt>
-        <h3>Hovedsamarbeidspartner</h3>
+        <h1>Hovedsamarbeidspartner</h1>
         <p>
           <i>
             Vi er stolte av å kunne presentere ITverket AS som
             hovedsamarbeidspartner i 2018.
           </i>
         </p>
-        <h3>Hvem er ITverket?</h3>
+        <h2>Hvem er ITverket?</h2>
         <p>
           <i>
             «ITverket er et konsulentselskap lokalisert i Oslo med 60 engasjerte

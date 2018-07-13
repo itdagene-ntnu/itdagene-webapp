@@ -1,9 +1,10 @@
 //@flow
-import { Header } from 'semantic-ui-react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import React, { Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
+import styled from 'styled-components';
 
+import Flex from 'styled-flex-component';
 import { type Companies_query } from './__generated__/Companies_query.graphql';
 import CompanyView from './CompanyView';
 
@@ -11,11 +12,9 @@ type Props = {
   query: Companies_query
 };
 
-const containerStyle = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center'
-};
+const Title = styled('h1')`
+  text-align: center;
+`;
 
 const Companies = ({ query }: Props) => {
   const sections = [
@@ -30,14 +29,12 @@ const Companies = ({ query }: Props) => {
   ];
   return sections.map(({ title, data }) => (
     <Fragment key={title}>
-      <Header as="h3" textAlign="center">
-        {title}
-      </Header>
-      <div style={containerStyle}>
+      <Title>{title}</Title>
+      <Flex wrap center>
         {data.map(company => (
           <CompanyView key={company.id} company={company} />
         ))}
-      </div>
+      </Flex>
     </Fragment>
   ));
 };
