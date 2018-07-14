@@ -1,10 +1,8 @@
 //@flow
 
-import cowsay from 'cowsay-browser';
 import 'semantic-ui-css/semantic.min.css';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
-import ReactMarkdown from 'react-markdown';
 import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
 
 import React from 'react';
@@ -14,9 +12,8 @@ import withData, { type WithDataProps } from '../lib/withData';
 import { graphql } from 'react-relay';
 import { type joblistingPage_QueryResponse } from './__generated__/joblistingPage_Query.graphql';
 
-import Flex from 'styled-flex-component';
-import { ResponsiveContent } from '../components/Styled';
 import Layout from '../components/Layout';
+import JoblistingView from '../components/Joblistings/JoblistingView';
 
 type RenderProps = {
   error: ?Error,
@@ -35,23 +32,14 @@ const Index = ({
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
     render={({ error, props }: RenderProps) => {
-      if (!props || !props.joblisting) return null;
       return (
         <Layout
+          responsive
           {...{ error, props }}
-          contentRenderer={() => (
-            <ResponsiveContent>
-              <Flex center column>
-                {/* //$FlowFixMe */}
-                <h1>{props.joblisting.company.name}</h1>
-                {/* //$FlowFixMe */}
-                <pre>{cowsay.say({ text: props.joblisting.title })}</pre>
-                <ReactMarkdown
-                  source={props.joblisting && props.joblisting.description}
-                />
-              </Flex>
-            </ResponsiveContent>
-          )}
+          contentRenderer={() =>
+            props &&
+            props.joblisting && <JoblistingView joblisting={props.joblisting} />
+          }
         />
       );
     }}
@@ -62,12 +50,7 @@ export default withData(Index, ({ query: { id } }) => ({
     query joblistingPage_Query($id: ID!) {
       joblisting: node(id: $id) {
         ... on Joblisting {
-          title
-          description
-          company {
-            name
-            logo
-          }
+          ...JoblistingView_joblisting
         }
       }
     }
