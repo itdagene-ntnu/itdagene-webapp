@@ -2,18 +2,12 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 import Flex, { FlexItem } from 'styled-flex-component';
-import { ResponsiveContent } from '../Styled';
+import { ResponsiveContent, NoBulletUl } from '../Styled';
 
 const Container = styled('div')`
   padding: 2.5em 0em;
   border-top: 1px solid #e2e9f1;
   background-color: #f7f9fb;
-`;
-
-const NoBulletUl = styled('ul')`
-  list-style-type: none;
-  -moz-padding-start: 0px;
-  -webkit-padding-start: 0px;
 `;
 
 const RightBorderFlex = styled(FlexItem)`
