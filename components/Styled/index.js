@@ -71,3 +71,9 @@ export const CenterIt = styled('div')`
       align-items: center;
     `};
 `;
+
+export const NoBulletUl = styled('ul')`
+  list-style-type: none;
+  -moz-padding-start: 0px;
+  -webkit-padding-start: 0px;
+`;
