@@ -39,10 +39,12 @@ export default class Default extends Document {
               margin: 0;
               padding: 0;
               font-size: 16px;
-              line-height: 1.4285em;
               color: rgba(0, 0, 0, 0.87);
               font-smoothing: antialiased;
               word-break: break-word;
+            }
+            p {
+              line-height: 1.4285em;
             }
             a {
               color: #037bb4;
@@ -52,6 +54,9 @@ export default class Default extends Document {
             a:hover {
               color: #1e70bf;
               text-decoration: none;
+            }
+            h1 {
+              font-weight: normal;
             }
 
 
