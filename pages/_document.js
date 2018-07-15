@@ -26,6 +26,7 @@ export default class Default extends Document {
     return (
       <html>
         <Head>
+          <title>itDAGENE</title>
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, maximum-scale=1"
@@ -61,6 +62,79 @@ export default class Default extends Document {
 
 
           `}</style>
+
+          <meta name="theme-color" content="#0d7ab3" />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/static/icon-512x512.png"
+            sizes="512x512"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/static/icon-512x512.png"
+            sizes="512x512"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/static/icon-384x384.png"
+            sizes="384x384"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/static/icon-384x384.png"
+            sizes="384x384"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/static/icon-256x256.png"
+            sizes="256x256"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/static/icon-256x256.png"
+            sizes="256x256"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/static/icon-192x192.png"
+            sizes="192x192"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/static/icon-192x192.png"
+            sizes="192x192"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/static/icon-96x96.png"
+            sizes="96x96"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/static/icon-96x96.png"
+            sizes="96x96"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/static/icon-48x48.png"
+            sizes="48x48"
+          />
+          <link
+            rel="apple-touch-icon"
+            href="/static/icon-48x48.png"
+            sizes="48x48"
+          />
+
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-title" content="itDAGENE" />
+          <link rel="manifest" href="/static/manifest.json" />
           {/*<link rel="stylesheet" href="/_next/static/style.css" key="css" />*/}
 
           {this.props.styleTags}
