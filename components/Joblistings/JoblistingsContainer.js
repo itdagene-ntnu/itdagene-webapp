@@ -41,7 +41,7 @@ const JoblistigsContainer = (props: { root: JoblistingsContainer_root }) => (
           );
         }}
       >
-        Load More
+        Hent flere
       </button>
     )}
   </div>

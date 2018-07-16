@@ -59,6 +59,6 @@ export default withData(Index, router => ({
   variables: {
     type: router.query.type || '',
     company: router.query.company || '',
-    count: 5
+    count: 15
   }
 }));
