@@ -1,8 +1,8 @@
-import React from 'react';
+//@flow
+import * as React from 'react';
 import styled, { css } from 'styled-components';
 import LoadingIndicator from '../LoadingIndicator';
 import { HeaderMenu } from '../Header';
-import { Container } from 'semantic-ui-react';
 import { itdageneBlue } from '../../utils/colors';
 
 import Footer from '../Footer';
@@ -57,15 +57,27 @@ export const BlueSection = styled.div`
 
 export const Wrapper = (props: any) => <MainFlex {...props} />;
 
-export const Layout = (props: any) => {
-  const { shouldCenter, responsive, contentRenderer: ContentRenderer } = props;
-
-  const { props: gqlProps, error } = props;
+export const Layout = <T>({
+  props,
+  error,
+  shouldCenter,
+  responsive,
+  contentRenderer: ContentRenderer
+}: {
+  props: ?T,
+  error: ?Error,
+  shouldCenter?: boolean,
+  responsive?: boolean,
+  contentRenderer: (props: { props: T, error: ?Error }) => React.Node
+}) => {
   if (error) return <div>Error</div>;
 
-  if (!gqlProps)
+  if (!props)
     return (
       <Wrapper>
+        <BlueSection>
+          <HeaderMenu />
+        </BlueSection>
         <Content center>
           <LoadingIndicator />
         </Content>
@@ -76,14 +88,10 @@ export const Layout = (props: any) => {
     <div>
       <Wrapper>
         <BlueSection>
-          <div className="ui vertical segment">
-            <Container>
-              <HeaderMenu />
-            </Container>
-          </div>
+          <HeaderMenu />
         </BlueSection>
         <Content center={shouldCenter} responsive={responsive}>
-          <ContentRenderer />
+          <ContentRenderer {...{ error, props }} />
         </Content>
         <Footer />
       </Wrapper>

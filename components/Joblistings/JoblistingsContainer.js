@@ -20,7 +20,7 @@ const JoblistigsContainer = (props: { root: JoblistingsContainer_root }) => (
     <ol>
       {props.root.joblistings.edges.map(({ node }) => (
         <li key={node.id}>
-          <Link href={`/joblistings/${node.id}`}>
+          <Link href={{ pathname: '/jobbannonse', query: { id: node.id } }}>
             <a>
               {node.title} - {node.company.name}
             </a>

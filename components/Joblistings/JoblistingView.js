@@ -23,14 +23,16 @@ const Sidebar = styled('div')`
 `;
 
 const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
-  <NoBulletUl>
+  <NoBulletUl style={{ width: '100%' }}>
     {metaExtractor(joblisting)
       .filter(Boolean)
       .filter(e => !!e.value)
       .map(({ key, value }) => (
         <li key={key}>
-          <span style={{ marginRight: 5 }}>{key}</span>
-          <strong>{value}</strong>
+          <Flex justifyBetween>
+            <span style={{ marginRight: 5, color: 'gray ' }}>{key}:</span>
+            <strong>{value}</strong>
+          </Flex>
         </li>
       ))}
   </NoBulletUl>
@@ -61,30 +63,45 @@ function joinValues(values) {
   );
 }
 
+const isCurrentYear = day => dayjs(day).year() === dayjs().year();
+
 const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   {
-    key: 'Klassetrinn',
-    value: `${joblisting.fromYear}. - ${joblisting.toYear}. trinn`
-  },
-  {
-    key: 'Søknadsfrist',
+    key: 'Frist',
     value:
       joblisting.deadline &&
-      dayjs(joblisting.deadline).format('DD MMM YYYY HH:MM')
+      dayjs(joblisting.deadline).format(
+        `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
+      )
   },
   {
     key: 'Type',
     value: typeExtractor(joblisting.type)
   },
   {
+    key: 'Klassetrinn',
+    value: `${joblisting.fromYear}. - ${joblisting.toYear}. trinn`
+  },
+  {
     key: 'Sted',
     value: joinValues(joblisting.towns)
   }
 ];
+const GrayText = styled('div')`
+  color: gray;
+`;
+
+const CompanyDesc = styled(GrayText)`
+  font-style: italic;
+  text-align: left;
+`;
 
 const Joblisting = ({ joblisting }: Props) => (
   <>
     <h1>{joblisting.title}</h1>
+    <GrayText>
+      Publisert: {dayjs(joblisting.dateCreated).format('D. MMMM YYYY')}
+    </GrayText>
     <Flex wrapReverse>
       <FlexItem basis="600px" grow={3}>
         <Flex column>
@@ -93,15 +110,24 @@ const Joblisting = ({ joblisting }: Props) => (
       </FlexItem>
       <FlexItem center basis="300px" grow={1}>
         <Sidebar>
-          <h3>{joblisting.company.name}</h3>
-          <img
-            width={200}
-            src={joblisting.company.logo}
-            alt={`Logo til ${joblisting.company.name}`}
-          />
-          <ReactMarkdown source={joblisting.company.description} />
-          <List joblisting={joblisting} />
-          {joblisting.url && <a href={joblisting.url}>Søk her</a>}
+          <div style={{ width: '100%' }}>
+            <h3>{joblisting.company.name}</h3>
+            <img
+              width={200}
+              src={joblisting.company.logo}
+              alt={`Logo til ${joblisting.company.name}`}
+            />
+            <List joblisting={joblisting} />
+            {joblisting.url && (
+              <a href={joblisting.url}>
+                <h3>Søk her</h3>
+              </a>
+            )}
+          </div>
+
+          <CompanyDesc>
+            <ReactMarkdown source={joblisting.company.description} />
+          </CompanyDesc>
         </Sidebar>
       </FlexItem>
     </Flex>
@@ -128,6 +154,7 @@ export default createFragmentContainer(
       fromYear
       toYear
       url
+      dateCreated
     }
   `
 );

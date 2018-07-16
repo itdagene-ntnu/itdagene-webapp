@@ -69,6 +69,7 @@ export const CenterIt = styled('div')`
     text &&
     css`
       align-items: center;
+      text-align: center;
     `};
 `;
 

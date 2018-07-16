@@ -35,7 +35,7 @@ const Index = ({
       return (
         <Layout
           {...{ error, props }}
-          contentRenderer={() => (
+          contentRenderer={({ props }) => (
             <>
               <Container
                 style={{

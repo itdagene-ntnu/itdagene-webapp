@@ -10,14 +10,14 @@ import { QueryRenderer } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 
 import { graphql } from 'react-relay';
-import { type joblistingPage_QueryResponse } from './__generated__/joblistingPage_Query.graphql';
+import { type jobbannonse_QueryResponse } from './__generated__/jobbannonse_Query.graphql';
 
 import Layout from '../components/Layout';
 import JoblistingView from '../components/Joblistings/JoblistingView';
 
 type RenderProps = {
   error: ?Error,
-  props: ?joblistingPage_QueryResponse
+  props: ?jobbannonse_QueryResponse
 };
 
 const Index = ({
@@ -36,8 +36,7 @@ const Index = ({
         <Layout
           responsive
           {...{ error, props }}
-          contentRenderer={() =>
-            props &&
+          contentRenderer={({ props }) =>
             props.joblisting && <JoblistingView joblisting={props.joblisting} />
           }
         />
@@ -47,7 +46,7 @@ const Index = ({
 );
 export default withData(Index, ({ query: { id } }) => ({
   query: graphql`
-    query joblistingPage_Query($id: ID!) {
+    query jobbannonse_Query($id: ID!) {
       joblisting: node(id: $id) {
         ... on Joblisting {
           ...JoblistingView_joblisting

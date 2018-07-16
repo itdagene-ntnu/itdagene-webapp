@@ -27,13 +27,17 @@ type RenderProps = {
 
 const BiggerText = styled('div')`
   font-size: 18px;
-  line-height: 1.46em;
+`;
+const ReadMore = styled('a')`
+  background: green;
+  border-radius: 2000px;
+  padding: 0 20px;
 `;
 
 const AboutSection = () => (
   <>
     <Flex justifyAround wrapReverse>
-      <FlexItem style={{ maxWidth: 700 }}>
+      <FlexItem basis="700px">
         <h1>Hva er itDAGENE?</h1>
         <p>
           itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
@@ -65,7 +69,7 @@ const AboutSection = () => (
       <FlexItem>
         <CenterIt>
           <Image
-            style={{ width: 350 }}
+            style={{ width: 350, maxWidth: '100%' }}
             src="static/itdagene-svart.png"
             alt="itDAGENE logo"
           />
@@ -73,9 +77,7 @@ const AboutSection = () => (
       </FlexItem>
     </Flex>
     <CenterIt text>
-      <a href="/om-oss" className="ui huge button">
-        Les mer
-      </a>
+      <ReadMore href="/om-oss">Les mer</ReadMore>
     </CenterIt>
   </>
 );
@@ -92,12 +94,10 @@ const Index = ({
     dataFrom={'STORE_THEN_NETWORK'}
     variables={variables}
     render={({ props, error }: RenderProps) => {
-      if (!props) return <Layout {...{ error, props }} />;
-
       return (
         <Layout
           {...{ error, props }}
-          contentRenderer={() => (
+          contentRenderer={({ props }) => (
             <BiggerText>
               <BlueSection>
                 <WelcomeScreen currentMetaData={props.currentMetaData} />
