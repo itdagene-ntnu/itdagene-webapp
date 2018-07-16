@@ -18,7 +18,7 @@
   "author": "Odin Ugedal <odin@ugedal.com>",
   "license": "MIT",
   "dependencies": {
-    "@babel/preset-flow": "7.0.0-beta.46",
+    "@babel/preset-flow": "7.0.0-beta.51",
     "@zeit/next-css": "^0.2.0",
     "babel-polyfill": "^6.26.0",
     "cowsay-browser": "^1.1.8",
