@@ -28,23 +28,24 @@ type RenderProps = {
 const BiggerText = styled('div')`
   font-size: 18px;
 `;
-const ReadMore = styled('a')`
-  background: green;
-  border-radius: 2000px;
-  padding: 0 20px;
+const ReadMore = styled('h4')`
+  padding: 20px 40px;
 `;
 
 const AboutSection = () => (
   <>
     <Flex justifyAround wrapReverse>
-      <FlexItem basis="700px">
-        <h1>Hva er itDAGENE?</h1>
+      <FlexItem grow={1} basis="700px">
+        <h1 id="om-itdagene">Hva er itDAGENE?</h1>
         <p>
           itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
           fremtidige arbeidsgivere. Messen arrangeres av studenter for
           studenter, overskuddet går til studentenes ekskursjon i tredjeklasse.
           itDAGENE arrangeres en gang i året av data- og kommunikasjonsteknologi
           ved NTNU i Trondheim.
+        </p>
+        <p>
+          Hvert år har vi besøk av mer enn 60 bedrifter, fordelt på to dager.
         </p>
         <ul>
           <li>Stands</li>
@@ -77,7 +78,9 @@ const AboutSection = () => (
       </FlexItem>
     </Flex>
     <CenterIt text>
-      <ReadMore href="/om-oss">Les mer</ReadMore>
+      <a href="/om-itdagene">
+        <ReadMore>Les mer</ReadMore>
+      </a>
     </CenterIt>
   </>
 );
@@ -120,7 +123,7 @@ const Index = ({
                 <Companies query={props} />
               </Section>
               <Section style={{ borderBottom: 0 }}>
-                <h3 className="ui header">Hva er Lorem Ipsum?</h3>
+                <h2>Hva er Lorem Ipsum?</h2>
                 <p>
                   Lorem Ipsum er rett og slett dummytekst fra og for
                   trykkeindustrien. Lorem Ipsum har vært bransjens standard for
@@ -130,11 +133,11 @@ const Index = ({
                   i tillegg til å bestå gjennom fem århundrer også tålt spranget
                   over til elektronisk typografi uten vesentlige endringer.{' '}
                 </p>
-                <a className="ui large button">Les mer</a>
-                <h4 className="ui horizontal header divider">
+                <a>Les mer</a>
+                <h4>
                   <a href="/#">Mer informasjon</a>
                 </h4>
-                <h3 className="ui header">Bankett</h3>
+                <h2>Bankett</h2>
                 <p>
                   itDAGENE avholder årlig en bankett for it-studenter og
                   bedrifter. Årets bankett blir som tidligere år på Scandic
@@ -149,7 +152,7 @@ const Index = ({
                   så det er bare å gjøre seg klar til en hyggelig og sosial
                   kveld!
                 </p>
-                <a className="ui large button">Les mer</a>
+                <a href="/#">Les mer</a>
               </Section>
             </BiggerText>
           )}

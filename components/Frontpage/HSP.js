@@ -19,7 +19,7 @@ const MiscPhoto = styled(Image)`
 
 const HSP = () => (
   <Flex justifyAround wrapReverse>
-    <FlexItem style={{ maxWidth: 700 }}>
+    <FlexItem grow={1} basis="700px">
       <CenterIt>
         <h1>Hovedsamarbeidspartner</h1>
         <p>

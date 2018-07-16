@@ -3,7 +3,6 @@ import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { type WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
 import styled from 'styled-components';
-import { Button } from 'semantic-ui-react';
 import { CenterIt } from '../Styled';
 
 type Props = {
@@ -19,6 +18,17 @@ const MainContainer = styled(CenterIt)`
 const Header = styled('h1')`
   font-size: 4em !important;
   font-weight: normal;
+  margin-bottom: 0;
+`;
+
+const SubHeader = styled('h2')`
+  margin: 0;
+`;
+
+const ReadMore = styled('h4')`
+  background: white;
+  border-radius: 2000px;
+  padding: 20px 40px;
 `;
 
 const WelcomeScreen = ({ currentMetaData }: Props) => (
@@ -27,11 +37,11 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
       <Header>
         <b>it</b>DAGENE {currentMetaData.year}
       </Header>
-      <h2>10. & 11. september 2018</h2>
+      <SubHeader>10. & 11. september 2018</SubHeader>
       <h3>NTNU//Glassgården</h3>
-      <Button secondary>
-        Les mer <i className="right arrow icon" />
-      </Button>
+      <a href="/om-itdagene">
+        <ReadMore>Les mer</ReadMore>
+      </a>
     </MainContainer>
   </div>
 );

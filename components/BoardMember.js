@@ -9,13 +9,12 @@ import styled from 'styled-components';
 
 const RoundHead = styled(Image)`
   border-radius: 2000px;
-  width: 250px;
-  height: 250px;
+  width: 240px;
+  height: 240px;
 `;
 
 const Card = styled(FlexItem)`
-  width: 220px;
-  margin: 30px;
+  margin: 15px;
 `;
 
 type Props = {

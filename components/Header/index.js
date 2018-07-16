@@ -19,7 +19,7 @@ const StyledMenuItem = styled('span')`
 
 const items = [
   { key: 'home', name: 'Hjem', to: '/' },
-  { key: 'about-us', name: 'Om oss', to: '/styret' },
+  { key: 'about-us', name: 'Om itDAGENE', to: '/om-itdagene' },
   { key: 'joblistings', name: 'Jobbannonser', to: '/jobbannonser' }
 ];
 

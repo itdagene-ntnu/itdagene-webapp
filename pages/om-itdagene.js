@@ -3,7 +3,7 @@ import * as React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 import BoardMember from '../components/BoardMember';
-import { type styret_QueryResponse } from './__generated__/styret_Query.graphql';
+import { type omItdagene_QueryResponse } from './__generated__/omItdagene_Query.graphql';
 import Layout from '../components/Layout';
 import Flex from 'styled-flex-component';
 import sortBy from 'lodash/sortBy';
@@ -35,7 +35,7 @@ const Index = ({
       props: props
     }: {
       error: ?Error,
-      props: ?styret_QueryResponse
+      props: ?omItdagene_QueryResponse
     }) => {
       return (
         <Layout
@@ -44,7 +44,7 @@ const Index = ({
           contentRenderer={({ props, error }) => (
             <>
               <h1> Styret </h1>
-              <Flex wrap justifyEven>
+              <Flex wrap center>
                 {sortBy(props.boardMembers, m => ROLES.indexOf(m.role)).map(
                   user => <BoardMember key={user.id} user={user} />
                 )}
@@ -59,7 +59,7 @@ const Index = ({
 
 export default withData(Index, {
   query: graphql`
-    query styret_Query {
+    query omItdagene_Query {
       currentMetaData {
         ...Year_currentMetaData
         id

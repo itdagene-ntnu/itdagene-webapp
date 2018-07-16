@@ -33,7 +33,7 @@ export const BorderlessSection = styled(ResponsiveContent)`
   -webkit-box-shadow: none;
   box-shadow: none;
   border: none;
-  padding: 8em 0em;
+  padding: 6em 0em;
 `;
 
 export const BottomBorder = styled('div')`
