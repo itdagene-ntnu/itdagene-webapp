@@ -2,6 +2,7 @@
 const Raven = require('raven');
 const express = require('express');
 const next = require('next');
+const proxy = require('express-http-proxy');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -12,6 +13,12 @@ Raven.config(process.env.RAVEN_DSN, {
 }).install();
 app.prepare().then(() => {
   const server = express();
+  server.use(
+    '/graphql',
+    proxy(process.env.RELAY_ENDPOINT || 'http://localhost:8000/graphql', {
+      proxyReqPathResolver: () => '/graphql'
+    })
+  );
   server.use(Raven.requestHandler());
   server.get('/joblistings/:id', (req, res) => {
     const actualPage = '/joblisting-page';
