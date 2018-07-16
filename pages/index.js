@@ -52,7 +52,9 @@ const AboutSection = () => (
           <li>Sommerjobbmaraton</li>
           <li>Mingling</li>
           <li>Kurs</li>
-          <li>Bankett</li>
+          <li>
+            <a href="/info?side=bankett">Bankett</a>
+          </li>
         </ul>
         <h2>Hvor og når?</h2>
         <p>
@@ -152,7 +154,7 @@ const Index = ({
                   så det er bare å gjøre seg klar til en hyggelig og sosial
                   kveld!
                 </p>
-                <a href="/#">Les mer</a>
+                <a href="/info?side=bankett">Les mer</a>
               </Section>
             </BiggerText>
           )}
