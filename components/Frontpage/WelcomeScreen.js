@@ -22,16 +22,18 @@ const Header = styled('h1')`
 `;
 
 const WelcomeScreen = ({ currentMetaData }: Props) => (
-  <MainContainer text>
-    <Header>
-      <b>it</b>DAGENE {currentMetaData.year}
-    </Header>
-    <h2>10. & 11. september 2018</h2>
-    <h3>NTNU//Glassgården</h3>
-    <Button secondary>
-      Les mer <i className="right arrow icon" />
-    </Button>
-  </MainContainer>
+  <div>
+    <MainContainer text>
+      <Header>
+        <b>it</b>DAGENE {currentMetaData.year}
+      </Header>
+      <h2>10. & 11. september 2018</h2>
+      <h3>NTNU//Glassgården</h3>
+      <Button secondary>
+        Les mer <i className="right arrow icon" />
+      </Button>
+    </MainContainer>
+  </div>
 );
 
 export default createFragmentContainer(

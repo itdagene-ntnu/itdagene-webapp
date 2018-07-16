@@ -5,11 +5,13 @@ import styled from 'styled-components';
 
 const HSPLogo = styled(Image)`
   width: 350px;
+  max-width: 100%;
   padding-bottom: 14px;
 `;
 
 const MiscPhoto = styled(Image)`
   width: 240px;
+  max-width: 100%;
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;

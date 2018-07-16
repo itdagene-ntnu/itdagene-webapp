@@ -15,13 +15,14 @@ type Props = {
 const Image = styled(ZoomImage)`
   width: 270px;
   height: 200px;
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding: 15px;
 `;
 
 const CollaboratorView = ({ company, showDescription }: Props) => (
-  <div style={{ flex: 1, minWidth: 350, padding: '0 10px' }}>
+  <div style={{ flex: 1, maxWidth: '100%', flexBasis: 350, padding: '0 10px' }}>
     <a href={company.url}>
       <Image src={company.logo || ''} />
     </a>
