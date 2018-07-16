@@ -32,16 +32,6 @@ const CollaboratorView = ({
       <Image src={company.logo || ''} />
     </a>
     {showDescription && <ReactMarkdown source={company.description} />}
-    {showJoblistings &&
-      company.joblistings &&
-      company.joblistings.edges.map(({ node = {} }) => (
-        <>
-          <a style={{ fontSize: 14 }} href="/#" key={node.id}>
-            {node.title}
-          </a>
-          <br />
-        </>
-      ))}
   </div>
 );
 
@@ -54,14 +44,6 @@ export default createFragmentContainer(
       logo(width: 378, height: 280)
       url
       description
-      joblistings(first: 3) {
-        edges {
-          node {
-            title
-            id
-          }
-        }
-      }
     }
   `
 );
