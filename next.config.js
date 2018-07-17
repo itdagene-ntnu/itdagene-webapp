@@ -1,5 +1,4 @@
 const withCss = require('@zeit/next-css');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = withCss({
@@ -29,8 +28,6 @@ module.exports = withCss({
         }
       }
     });
-
-    config.plugins.push(new LodashModuleReplacementPlugin());
 
     const originalEntry = config.entry;
     config.entry = async () => {

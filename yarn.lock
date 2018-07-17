@@ -170,13 +170,6 @@
     "@babel/types" "7.0.0-beta.42"
     lodash "^4.2.0"
 
-"@babel/helper-module-imports@^7.0.0-beta.49":
-  version "7.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0-beta.54.tgz#c2d8e14ff034225bf431356db77ef467b8d35aac"
-  dependencies:
-    "@babel/types" "7.0.0-beta.54"
-    lodash "^4.17.5"
-
 "@babel/helper-module-transforms@7.0.0-beta.42":
   version "7.0.0-beta.42"
   resolved "https://registry.yarnpkg.com/@babel/helper-module-transforms/-/helper-module-transforms-7.0.0-beta.42.tgz#4d260cc786e712e8440bef58dae28040b77a6183"
@@ -755,14 +748,6 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@babel/types@7.0.0-beta.54", "@babel/types@^7.0.0-beta.49":
-  version "7.0.0-beta.54"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.54.tgz#025ad68492fed542c13f14c579a44c848e531063"
-  dependencies:
-    esutils "^2.0.2"
-    lodash "^4.17.5"
-    to-fast-properties "^2.0.0"
-
 "@kbrandwijk/swagger-to-graphql@2.4.3":
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/@kbrandwijk/swagger-to-graphql/-/swagger-to-graphql-2.4.3.tgz#7c0fb2410eb0b6b9cc81fad28cc20f9386153cf1"
@@ -1322,16 +1307,6 @@ babel-plugin-istanbul@^4.1.6:
 babel-plugin-jest-hoist@^23.2.0:
   version "23.2.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-jest-hoist/-/babel-plugin-jest-hoist-23.2.0.tgz#e61fae05a1ca8801aadee57a6d66b8cefaf44167"
-
-babel-plugin-lodash@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-lodash/-/babel-plugin-lodash-3.3.4.tgz#4f6844358a1340baed182adbeffa8df9967bc196"
-  dependencies:
-    "@babel/helper-module-imports" "^7.0.0-beta.49"
-    "@babel/types" "^7.0.0-beta.49"
-    glob "^7.1.1"
-    lodash "^4.17.10"
-    require-package-name "^2.0.1"
 
 babel-plugin-react-require@3.0.0:
   version "3.0.0"
@@ -5748,12 +5723,6 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
-lodash-webpack-plugin@^0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/lodash-webpack-plugin/-/lodash-webpack-plugin-0.11.5.tgz#c4bd064b4f561c3f823fa5982bdeb12c475390b9"
-  dependencies:
-    lodash "^4.17.4"
-
 lodash._getnative@^3.0.0:
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/lodash._getnative/-/lodash._getnative-3.9.1.tgz#570bc7dede46d61cdcde687d65d3eecbaa3aaff5"
@@ -7935,10 +7904,6 @@ require-from-string@^2.0.1:
 require-main-filename@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-1.0.1.tgz#97f717b69d48784f5f526a6c5aa8ffdda055a4d1"
-
-require-package-name@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/require-package-name/-/require-package-name-2.0.1.tgz#c11e97276b65b8e2923f75dabf5fb2ef0c3841b9"
 
 require-uncached@^1.0.3:
   version "1.0.3"
