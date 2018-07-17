@@ -1,6 +1,5 @@
 const withCss = require('@zeit/next-css');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = withCss({
