@@ -9,6 +9,7 @@ import { type pages_index_QueryResponse } from './__generated__/pages_index_Quer
 import Collaborators from '../components/Collaborators/Collaborators';
 import Companies from '../components/Companies/Companies';
 import Flex, { FlexItem } from 'styled-flex-component';
+import Link from 'next/link';
 import styled from 'styled-components';
 import HSP from '../components/Frontpage/HSP';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
@@ -48,7 +49,9 @@ const AboutSection = () => (
           <li>Mingling</li>
           <li>Kurs</li>
           <li>
-            <a href="/info?side=bankett">Bankett</a>
+            <Link href="/info?side=bankett">
+              <a>Bankett</a>
+            </Link>
           </li>
         </ul>
         <h2>Hvor og når?</h2>
@@ -75,9 +78,11 @@ const AboutSection = () => (
       </FlexItem>
     </Flex>
     <CenterIt text>
-      <a href="/om-itdagene">
-        <ReadMore>Les mer</ReadMore>
-      </a>
+      <Link href="/om-itdagene">
+        <a>
+          <ReadMore>Les mer</ReadMore>
+        </a>
+      </Link>
     </CenterIt>
   </>
 );

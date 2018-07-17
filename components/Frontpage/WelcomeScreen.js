@@ -2,6 +2,7 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { type WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
+import Link from 'next/link';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 
@@ -39,9 +40,11 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
       </Header>
       <SubHeader>10. & 11. september 2018</SubHeader>
       <h3>NTNU//Glassgården</h3>
-      <a href="/om-itdagene">
-        <ReadMore>Les mer</ReadMore>
-      </a>
+      <Link href="/om-itdagene">
+        <a>
+          <ReadMore>Les mer</ReadMore>
+        </a>
+      </Link>
     </MainContainer>
   </div>
 );
