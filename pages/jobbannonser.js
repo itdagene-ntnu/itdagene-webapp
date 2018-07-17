@@ -1,10 +1,5 @@
 //@flow
 
-import 'semantic-ui-css/semantic.min.css';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
-
 import React from 'react';
 import JoblistingsContainer, {
   query
@@ -13,7 +8,6 @@ import type { JoblistingsContainer_root } from '../components/Joblistings/__gene
 import { QueryRenderer } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 
-import { Container } from 'semantic-ui-react';
 import Layout from '../components/Layout';
 
 type RenderProps = {
@@ -34,20 +28,9 @@ const Index = ({
     render={({ error, props }: RenderProps) => {
       return (
         <Layout
+          responsive
           {...{ error, props }}
-          contentRenderer={({ props }) => (
-            <>
-              <Container
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-evenly'
-                }}
-              >
-                <JoblistingsContainer root={props} />
-              </Container>
-            </>
-          )}
+          contentRenderer={({ props }) => <JoblistingsContainer root={props} />}
         />
       );
     }}

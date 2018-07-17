@@ -1,11 +1,6 @@
 //@flow
 import React from 'react';
 
-import 'semantic-ui-css/semantic.min.css';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.eot';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.woff';
-import 'semantic-ui-css/themes/default/assets/fonts/icons.woff2';
-
 import { Section } from '../components/Styled';
 import { Image, CenterIt } from '../components/Styled';
 import { QueryRenderer, graphql } from 'react-relay';
