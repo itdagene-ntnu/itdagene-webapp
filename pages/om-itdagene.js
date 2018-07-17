@@ -6,7 +6,7 @@ import BoardMember from '../components/BoardMember';
 import { type omItdagene_QueryResponse } from './__generated__/omItdagene_Query.graphql';
 import Layout from '../components/Layout';
 import Flex from 'styled-flex-component';
-import sortBy from 'lodash/sortBy';
+import { sortBy } from 'lodash';
 
 const ROLES = [
   'Leder',

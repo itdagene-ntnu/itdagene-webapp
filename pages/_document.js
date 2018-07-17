@@ -130,7 +130,6 @@ export default class Default extends Document {
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-title" content="itDAGENE" />
           <link rel="manifest" href="/static/manifest.json" />
-          {/*<link rel="stylesheet" href="/_next/static/style.css" key="css" />*/}
 
           {this.props.styleTags}
         </Head>

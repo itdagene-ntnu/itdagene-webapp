@@ -1,7 +1,9 @@
 const withCss = require('@zeit/next-css');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-module.exports = withCss({
+const webpack = withCss({
   webpack: (config, { dev }) => {
     if (!dev) {
       config.devtool = 'source-map';
@@ -28,6 +30,9 @@ module.exports = withCss({
         }
       }
     });
+
+    config.plugins.push(new LodashModuleReplacementPlugin());
+
     const originalEntry = config.entry;
     config.entry = async () => {
       const entries = await originalEntry();
@@ -43,5 +48,20 @@ module.exports = withCss({
     };
 
     return config;
+  }
+});
+module.exports = withBundleAnalyzer({
+  webpack,
+  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
+  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
+  bundleAnalyzerConfig: {
+    server: {
+      analyzerMode: 'static',
+      reportFilename: '../../bundles/server.html'
+    },
+    browser: {
+      analyzerMode: 'static',
+      reportFilename: '../bundles/client.html'
+    }
   }
 });

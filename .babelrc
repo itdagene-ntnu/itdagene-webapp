@@ -5,6 +5,7 @@
   ],
   "plugins": [
     "relay",
+    "lodash",
     [
       "styled-components",
       {

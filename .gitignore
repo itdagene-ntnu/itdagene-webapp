@@ -4,4 +4,4 @@ schema/schema.graphql
 .next
 yarn-error.log
 node_modules/
-
+bundles/
