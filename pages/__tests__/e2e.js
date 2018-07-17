@@ -10,9 +10,17 @@ describe('Page rendering', () => {
     16000
   );
   test(
+    'About us page rendering',
+    async () => {
+      const response = await page.goto(baseUrl + '/om-itdagene');
+      expect(response.status()).toBe(200);
+    },
+    16000
+  );
+  test(
     'Joblistings page rendering',
     async () => {
-      const response = await page.goto(baseUrl + '/joblistings');
+      const response = await page.goto(baseUrl + '/jobbannonser');
       expect(response.status()).toBe(200);
     },
     16000
