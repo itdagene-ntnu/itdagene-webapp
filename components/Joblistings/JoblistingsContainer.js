@@ -32,7 +32,6 @@ const JoblistigsContainer = withRouter(
     <div>
       <Range
         onAfterChange={ee => {
-          console.log('dddd', ee);
           Router.push({
             pathname: '/jobbannonser',
             query: { fromYear: ee[0], toYear: ee[1] }
