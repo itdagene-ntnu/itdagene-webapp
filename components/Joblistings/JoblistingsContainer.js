@@ -1,50 +1,79 @@
 import { createPaginationContainer, graphql } from 'react-relay';
 import Link from 'next/link';
+import Router from 'next/router';
 import * as React from 'react';
-
+import { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import type { JoblistingsContainer_root } from './__generated__/JoblistingsContainer_root.graphql';
+import { withRouter } from 'next/router';
 
 export const query = graphql`
   query JoblistingsContainer_Query(
     $count: Int
     $cursor: String
     $type: String
+    $fromYear: Float
+    $toYear: Float
     $company: ID
   ) {
     ...JoblistingsContainer_root
-      @arguments(count: $count, cursor: $cursor, type: $type, company: $company)
+      @arguments(
+        count: $count
+        cursor: $cursor
+        type: $type
+        company: $company
+        fromYear: $fromYear
+        toYear: $toYear
+      )
   }
 `;
-const JoblistigsContainer = (props: { root: JoblistingsContainer_root }) => (
-  <div>
-    <ol>
-      {props.root.joblistings.edges.map(({ node }) => (
-        <li key={node.id}>
-          <Link href={{ pathname: '/jobbannonse', query: { id: node.id } }}>
-            <a>
-              {node.title} - {node.company.name}
-            </a>
-          </Link>
-        </li>
-      ))}
-    </ol>
-    {props.relay.hasMore() && (
-      <button
-        onClick={() => {
-          if (!props.relay.hasMore() || props.relay.isLoading()) {
-            return;
-          }
-
-          props.relay.loadMore(
-            10, // Fetch the next 10 feed items
-            error => {}
-          );
+const JoblistigsContainer = withRouter(
+  (props: { root: JoblistingsContainer_root }) => (
+    <div>
+      <Range
+        onAfterChange={ee => {
+          console.log('dddd', ee);
+          Router.push({
+            pathname: '/jobbannonser',
+            query: { fromYear: ee[0], toYear: ee[1] }
+          });
         }}
-      >
-        Hent flere
-      </button>
-    )}
-  </div>
+        min={1}
+        max={5}
+        defaultValue={[
+          parseInt(props.router.query.fromYear, 10) || 1,
+          parseInt(props.router.query.toYear, 10) || 5
+        ]}
+      />
+      <ol>
+        {props.root.joblistings.edges.map(({ node }) => (
+          <li key={node.id}>
+            <Link href={{ pathname: '/jobbannonse', query: { id: node.id } }}>
+              <a>
+                {node.title} - {node.company.name}
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ol>
+      {props.relay.hasMore() && (
+        <button
+          onClick={() => {
+            if (!props.relay.hasMore() || props.relay.isLoading()) {
+              return;
+            }
+
+            props.relay.loadMore(
+              10, // Fetch the next 10 feed items
+              error => {}
+            );
+          }}
+        >
+          Hent flere
+        </button>
+      )}
+    </div>
+  )
 );
 
 export default createPaginationContainer(
@@ -56,6 +85,8 @@ export default createPaginationContainer(
           count: { type: "Int", defaultValue: 10 }
           cursor: { type: "String" }
           type: { type: "String" }
+          fromYear: { type: "Float" }
+          toYear: { type: "Float" }
           company: { type: "ID" }
         ) {
         joblistings(
@@ -63,10 +94,17 @@ export default createPaginationContainer(
           after: $cursor
           type: $type
           company: $company
-        ) @connection(key: "Joblistings_joblistings") {
+          fromYear: $fromYear
+          toYear: $toYear
+        )
+          @connection(
+            key: "Joblistings_joblistings"
+            filters: ["toYear", "fromYear", "company", "type"]
+          ) {
           edges {
             node {
               id
+              __typename
               type
               title
               url
@@ -95,9 +133,11 @@ export default createPaginationContainer(
       };
     },
     getVariables(props, { cursor, count }, fragmentVariables) {
-      const { type, company } = fragmentVariables;
+      const { type, company, fromYear, toYear } = fragmentVariables;
       return {
         count,
+        fromYear,
+        toYear,
         cursor,
         type,
         company

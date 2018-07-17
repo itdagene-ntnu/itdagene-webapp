@@ -41,6 +41,8 @@ export default withData(Index, router => ({
   query,
   variables: {
     type: router.query.type || '',
+    fromYear: parseInt(router.query.fromYear, 10) || 1,
+    toYear: parseInt(router.query.toYear, 10) || 5,
     company: router.query.company || '',
     count: 15
   }

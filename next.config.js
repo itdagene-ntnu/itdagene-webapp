@@ -3,7 +3,7 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const withBundleAnalyzer = require('@zeit/next-bundle-analyzer');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
-const webpack = withCss({
+module.exports = withCss({
   webpack: (config, { dev }) => {
     if (!dev) {
       config.devtool = 'source-map';
@@ -48,20 +48,5 @@ const webpack = withCss({
     };
 
     return config;
-  }
-});
-module.exports = withBundleAnalyzer({
-  webpack,
-  analyzeServer: ['server', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  analyzeBrowser: ['browser', 'both'].includes(process.env.BUNDLE_ANALYZE),
-  bundleAnalyzerConfig: {
-    server: {
-      analyzerMode: 'static',
-      reportFilename: '../../bundles/server.html'
-    },
-    browser: {
-      analyzerMode: 'static',
-      reportFilename: '../bundles/client.html'
-    }
   }
 });

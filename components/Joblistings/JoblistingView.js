@@ -64,6 +64,7 @@ function joinValues(values) {
 }
 
 const isCurrentYear = day => dayjs(day).year() === dayjs().year();
+const onlyOneYear = ({ fromYear, toYear }) => fromYear === toYear;
 
 const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   {
@@ -80,7 +81,9 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   },
   {
     key: 'Klassetrinn',
-    value: `${joblisting.fromYear}. - ${joblisting.toYear}. trinn`
+    value: onlyOneYear(joblisting)
+      ? ''
+      : `${joblisting.fromYear}. - ` + `${joblisting.toYear}. trinn`
   },
   {
     key: 'Sted',
