@@ -61,6 +61,7 @@ export const Layout = <T>({
   props,
   error,
   shouldCenter,
+  noLoading,
   responsive,
   contentRenderer: ContentRenderer
 }: {
@@ -68,11 +69,12 @@ export const Layout = <T>({
   error: ?Error,
   shouldCenter?: boolean,
   responsive?: boolean,
-  contentRenderer: (props: { props: T, error: ?Error }) => React.Node
+  contentRenderer: (props: { props: T, error: ?Error }) => React.Node,
+  noLoading?: boolean
 }) => {
   if (error) return <div>Error</div>;
 
-  if (!props)
+  if (!props && !noLoading)
     return (
       <Wrapper>
         <BlueSection>

@@ -30,8 +30,12 @@ const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
       .map(({ key, value }) => (
         <li key={key}>
           <Flex justifyBetween>
-            <span style={{ marginRight: 5, color: 'gray ' }}>{key}:</span>
-            <strong>{value}</strong>
+            <span
+              style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
+            >
+              {key}:
+            </span>
+            <strong style={{ textAlign: 'right' }}>{value}</strong>
           </Flex>
         </li>
       ))}

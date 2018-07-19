@@ -9,11 +9,16 @@ type Props = {
   company: CompanyView_company
 };
 const Image = styled(ZoomImage)`
-  width: 158px;
-  height: 158px;
+  width: 156px;
+  height: 130px;
   margin-left: auto;
   margin-right: auto;
   padding: 14px;
+  @media only screen and (max-width: 767px) {
+    width: 120px;
+    height: 100px;
+    padding: 7px;
+  }
 `;
 
 const CompanyView = ({ company }: Props) =>
@@ -29,7 +34,8 @@ export default createFragmentContainer(
     fragment CompanyView_company on Company {
       id
       name
-      logo(width: 240, height: 240)
+      # Keep this image with an aspect ratio of 5/6. So not squared
+      logo(width: 240, height: 200)
       name
       url
     }
