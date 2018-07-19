@@ -28,6 +28,7 @@ const Index = ({
     render={({ error, props }: RenderProps) => {
       return (
         <Layout
+          noLoading
           responsive
           {...{ error, props }}
           contentRenderer={({ props }) => <JoblistingsContainer root={props} />}

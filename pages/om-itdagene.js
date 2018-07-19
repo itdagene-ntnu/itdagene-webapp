@@ -4,6 +4,7 @@ import { QueryRenderer, graphql } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 import BoardMember from '../components/BoardMember';
 import { type omItdagene_QueryResponse } from './__generated__/omItdagene_Query.graphql';
+import PageView from '../components/PageView';
 import Layout from '../components/Layout';
 import Flex from 'styled-flex-component';
 import { sortBy } from 'lodash';
@@ -43,7 +44,10 @@ const Index = ({
           {...{ error, props }}
           contentRenderer={({ props, error }) => (
             <>
-              <h1> Styret </h1>
+              {props.omItdagene && <PageView page={props.omItdagene} />}
+              <h1>
+                Styret {props.currentMetaData && props.currentMetaData.year}
+              </h1>
               <Flex wrap center>
                 {sortBy(props.boardMembers, m => ROLES.indexOf(m.role)).map(
                   user => <BoardMember key={user.id} user={user} />
@@ -61,7 +65,7 @@ export default withData(Index, {
   query: graphql`
     query omItdagene_Query {
       currentMetaData {
-        ...Year_currentMetaData
+        year
         id
       }
       boardMembers {
