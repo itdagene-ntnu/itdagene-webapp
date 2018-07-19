@@ -74,6 +74,10 @@ export default withData(Index, {
         role
         fullName
       }
+
+      omItdagene: page(slug: "om-itdagene") {
+        ...PageView_page
+      }
     }
   `,
   variables: {}
