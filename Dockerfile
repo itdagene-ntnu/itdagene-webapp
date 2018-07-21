@@ -15,7 +15,7 @@ ENV RELEASE ${RELEASE}
 COPY . /app
 
 RUN mkdir schema
-RUN yarn schema --project=itdagene --all=false -e prod
+RUN yarn schema:prod
 RUN yarn relay
 RUN yarn build
 

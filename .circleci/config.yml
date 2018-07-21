@@ -23,7 +23,7 @@ jobs:
           name: Fetch schema
           command: |
             mkdir schema
-            yarn schema prod
+            yarn schema:prod
 
       - run:
           name: Compile relay
@@ -42,7 +42,7 @@ jobs:
 
       - run:
           command: |
-            RELAY_ENDPOINT=https://itdagene.no/graphql/754a9fe011d12aa909bc0db296db42caaa9d28e3 yarn test
+            RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 
   build-docker:
     machine: true

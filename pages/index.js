@@ -125,7 +125,7 @@ const Index = ({
                 <Companies query={props} />
               </Section>
               <Section style={{ borderBottom: 0 }}>
-                <h2>Hva er Lorem Ipsum?</h2>
+                <h2>Sommerjobbmaraton</h2>
                 <p>
                   Lorem Ipsum er rett og slett dummytekst fra og for
                   trykkeindustrien. Lorem Ipsum har vært bransjens standard for
@@ -136,9 +136,6 @@ const Index = ({
                   over til elektronisk typografi uten vesentlige endringer.{' '}
                 </p>
                 <a>Les mer</a>
-                <h4>
-                  <a href="/#">Mer informasjon</a>
-                </h4>
                 <h2>Bankett</h2>
                 <p>
                   itDAGENE avholder årlig en bankett for it-studenter og
