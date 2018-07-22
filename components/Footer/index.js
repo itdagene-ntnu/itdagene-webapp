@@ -24,7 +24,7 @@ const Footer = () => (
             <li>
               <img
                 style={{ width: 100 }}
-                src="/static/itdagene-svart.png"
+                src="/static/itdagene-gray.png"
                 alt="itDAGENE logo"
               />
             </li>

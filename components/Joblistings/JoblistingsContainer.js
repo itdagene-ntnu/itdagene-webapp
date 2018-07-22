@@ -151,12 +151,20 @@ const CompanySelector = ({ router, environment }) => (
   </div>
 );
 
+const JoblistingGrid = styled(Flex)`
+  width: 100%;
+  @media only screen and (max-width: 767px) {
+    justify-content: center;
+  }
+`;
+
 const JoblistigsContainer = withRouter(
   (props: { root: JoblistingsContainer_root }) => (
     <div>
+      <h1> Jobbannonser </h1>
       <Flex wrapReverse>
         <FlexItem center basis="700px" grow={26}>
-          <Flex wrap style={{ width: '100%' }}>
+          <JoblistingGrid wrap>
             {props.root &&
               props.root.joblistings.edges.map(({ node }) => (
                 <Link
@@ -167,7 +175,13 @@ const JoblistigsContainer = withRouter(
                   }}
                 >
                   <div
-                    style={{ cursor: 'pointer', maxWidth: 239, padding: 15 }}
+                    style={{
+                      flexGrow: 1,
+                      cursor: 'pointer',
+                      maxWidth: 300,
+                      width: 239,
+                      padding: 15
+                    }}
                   >
                     <CompanyImage
                       src={node.company.logo || '/static/itdagene-svart.png'}
@@ -183,7 +197,7 @@ const JoblistigsContainer = withRouter(
               props.root.joblistings.edges.length === 0 && (
                 <h2> Fant ingen annonser med søket ditt :( </h2>
               )}
-          </Flex>
+          </JoblistingGrid>
 
           {props.relay.hasMore() && (
             <h3 style={{ textAlign: 'center' }}>
@@ -210,6 +224,11 @@ const JoblistigsContainer = withRouter(
           <Sidebar>
             <h4> Type </h4>
             <TypeSelector />
+            <h4> Bedrift</h4>
+            <CompanySelector
+              router={props.router}
+              environment={props.relay.environment}
+            />
             <h4> Årstrinn </h4>
             <Range
               onAfterChange={ee => {
@@ -232,11 +251,6 @@ const JoblistigsContainer = withRouter(
                 parseInt(props.router.query.fromYear, 10) || 1,
                 parseInt(props.router.query.toYear, 10) || 5
               ]}
-            />
-            <h4> Bedrift</h4>
-            <CompanySelector
-              router={props.router}
-              environment={props.relay.environment}
             />
           </Sidebar>
         </FlexItem>

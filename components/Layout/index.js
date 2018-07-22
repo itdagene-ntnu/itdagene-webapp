@@ -77,9 +77,7 @@ export const Layout = <T>({
   if (!props && !noLoading)
     return (
       <Wrapper>
-        <BlueSection>
-          <HeaderMenu />
-        </BlueSection>
+        <HeaderMenu />
         <Content center>
           <LoadingIndicator />
         </Content>
@@ -89,9 +87,7 @@ export const Layout = <T>({
   return (
     <div>
       <Wrapper>
-        <BlueSection>
-          <HeaderMenu />
-        </BlueSection>
+        <HeaderMenu />
         <Content center={shouldCenter} responsive={responsive}>
           <ContentRenderer {...{ error, props }} />
         </Content>

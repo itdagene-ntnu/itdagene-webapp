@@ -9,8 +9,8 @@ import styled from 'styled-components';
 
 const RoundHead = styled(Image)`
   border-radius: 2000px;
-  width: 240px;
-  height: 240px;
+  width: 195px;
+  height: 195px;
 `;
 
 const Card = styled(FlexItem)`
