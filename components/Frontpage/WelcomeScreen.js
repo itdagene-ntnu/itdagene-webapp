@@ -2,7 +2,9 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { type WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
+import Countdown from '../Countdown';
 import Link from 'next/link';
+import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 
@@ -35,11 +37,19 @@ const ReadMore = styled('h4')`
 const WelcomeScreen = ({ currentMetaData }: Props) => (
   <div>
     <MainContainer text>
-      <Header>
-        <b>it</b>DAGENE {currentMetaData.year}
-      </Header>
-      <SubHeader>10. & 11. september 2018</SubHeader>
-      <h3>NTNU//Glassgården</h3>
+      <Flex column spaceBetween>
+        <FlexItem>
+          <Header>
+            <b>it</b>DAGENE {currentMetaData.year}
+          </Header>
+          <SubHeader>10. & 11. september 2018</SubHeader>
+          <h3>NTNU//Glassgården</h3>
+        </FlexItem>
+        <FlexItem>
+          <Countdown currentMetaData={currentMetaData} />
+        </FlexItem>
+      </Flex>
+
       <Link href="/om-itdagene">
         <a>
           <ReadMore>Les mer</ReadMore>
@@ -55,6 +65,7 @@ export default createFragmentContainer(
     fragment WelcomeScreen_currentMetaData on MetaData {
       year
       startDate
+      ...Countdown_currentMetaData
       endDate
     }
   `

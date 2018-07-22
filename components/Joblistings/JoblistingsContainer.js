@@ -184,7 +184,7 @@ const JoblistigsContainer = withRouter(
                     }}
                   >
                     <CompanyImage
-                      src={node.company.logo || '/static/itdagene-svart.png'}
+                      src={node.company.logo || '/static/itdagene-gray.png'}
                     />
                     <a>
                       {node.title} - {node.company.name}

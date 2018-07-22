@@ -1,15 +1,17 @@
 //@flow
-import React from 'react';
+import * as React from 'react';
 import { withRouter } from 'next/router';
 import type { NextRouter } from '../../utils/types';
 import { ResponsiveContent } from '../Styled';
 import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
+import HamburgerMenu from 'react-hamburger-menu';
 
+// background: #f7f9fb;
 const Header = styled('header')`
-  background: #f7f9fb;
   border-bottom: 1px solid #e2e9f1;
+  background: white;
 `;
 
 const StyledMenuItem = styled('span')`
@@ -45,23 +47,78 @@ const MenuItem = withRouter(
   }
 );
 
-export const HeaderMenu = () => (
-  <Header>
-    <ResponsiveContent>
-      <Flex justifyBetween style={{ padding: '20px 0' }}>
-        <FlexItem>
-          <Link href="/">
-            <a>
-              <img src="/static/itdagene-gray.png" alt="Hvit itDAGENE logo" />
-            </a>
-          </Link>
-        </FlexItem>
-        <Flex style={{ alignItems: 'center' }}>
-          {items.map(item => <MenuItem key={item.key} item={item} />)}
-        </Flex>
-      </Flex>
-    </ResponsiveContent>
-  </Header>
-);
+type State = {
+  open: boolean
+};
+
+export const OnOther = styled('div')`
+  @media only screen and (max-width: 767px) {
+    display: none;
+  }
+`;
+export const OnMobile = styled('div')`
+  display: none;
+
+  @media only screen and (max-width: 767px) {
+    display: block;
+  }
+`;
+class StatefulDropdown extends React.Component<{||}, State> {
+  state = {
+    open: false
+  };
+  onMenuClicked = () =>
+    this.setState(prevState => ({
+      open: !prevState.open
+    }));
+
+  render() {
+    return (
+      <Header>
+        <ResponsiveContent>
+          <Flex justifyBetween style={{ padding: '20px 0' }}>
+            <FlexItem>
+              <Link href="/">
+                <a>
+                  <img
+                    src="/static/itdagene-gray.png"
+                    alt="Hvit itDAGENE logo"
+                  />
+                </a>
+              </Link>
+            </FlexItem>
+            <Flex style={{ alignItems: 'center' }}>
+              <OnOther>
+                {items.map(item => <MenuItem key={item.key} item={item} />)}
+              </OnOther>
+              <OnMobile>
+                <HamburgerMenu
+                  aria-label="Meny"
+                  isOpen={this.state.open}
+                  menuClicked={this.onMenuClicked}
+                  width={18}
+                  height={15}
+                  strokeWidth={2}
+                  rotate={0}
+                  color="black"
+                  borderRadius={0}
+                  animationDuration={0.5}
+                />
+              </OnMobile>
+            </Flex>
+          </Flex>
+          <OnMobile>
+            <Flex column style={{ lineHeight: '42px' }}>
+              {this.state.open &&
+                items.map(item => <MenuItem key={item.key} item={item} />)}
+            </Flex>
+          </OnMobile>
+        </ResponsiveContent>
+      </Header>
+    );
+  }
+}
+
+export const HeaderMenu = () => <StatefulDropdown />;
 
 export default HeaderMenu;
