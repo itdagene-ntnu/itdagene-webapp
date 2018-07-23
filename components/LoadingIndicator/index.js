@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { itdageneBlue } from '../../utils/colors';
 
 const Spinner = styled('div')`
@@ -40,13 +40,29 @@ const Bounce2 = styled(Bounce1)`
   animation-delay: -1s;
 `;
 
-const LoadingIndicator = () => (
-  <div style={{ paddingTop: 150 }}>
+const Base = styled('div')`
+  text-align: center;
+
+  ${({ noMargin = false }: { noMargin?: boolean }) =>
+    !noMargin &&
+    css`
+      padding-top: 150px;
+    `};
+`;
+
+const LoadingIndicator = ({
+  noMargin = false,
+  hideText = false
+}: {
+  noMargin?: boolean,
+  hideText?: boolean
+}) => (
+  <Base {...{ noMargin }}>
     <Spinner>
       <Bounce1 />
       <Bounce2 />
     </Spinner>
-    <h2>Laster inn</h2>
-  </div>
+    {!hideText && <h2>Laster inn</h2>}
+  </Base>
 );
 export default LoadingIndicator;

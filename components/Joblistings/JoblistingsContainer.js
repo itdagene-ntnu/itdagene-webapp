@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import type { JoblistingsContainer_root } from './__generated__/JoblistingsContainer_root.graphql';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/lib/Async';
+import LoadingIndicator from '../LoadingIndicator';
 import { fetchQuery } from 'relay-runtime';
 
 const searchQuery = graphql`
@@ -158,109 +159,131 @@ const JoblistingGrid = styled(Flex)`
   }
 `;
 
-const JoblistigsContainer = withRouter(
-  (props: { root: JoblistingsContainer_root }) => (
-    <div>
-      <h1> Jobbannonser </h1>
-      <Flex wrapReverse>
-        <FlexItem center basis="700px" grow={26}>
-          <JoblistingGrid wrap>
-            {props.root &&
-              props.root.joblistings.edges.map(({ node }) => (
-                <Link
-                  key={node.id}
-                  href={{
-                    pathname: '/jobbannonse',
-                    query: { id: node.id }
-                  }}
-                >
-                  <div
-                    style={{
-                      flexGrow: 1,
-                      cursor: 'pointer',
-                      maxWidth: 300,
-                      width: 239,
-                      padding: 15
+type Props = {
+  root: JoblistingsContainer_root
+};
+
+type State = { loading: boolean };
+
+class JoblistigsContainer extends React.Component<Props, State> {
+  state = { loading: false };
+
+  loadingStart = () => this.setState(prevState => ({ loading: true }));
+  loadingEnd = () => this.setState(prevState => ({ loading: false }));
+  render() {
+    const { props } = this;
+
+    return (
+      <div>
+        <h1> Jobbannonser </h1>
+        <Flex wrapReverse>
+          <FlexItem center basis="700px" grow={26}>
+            <JoblistingGrid wrap>
+              {props.root &&
+                props.root.joblistings.edges.map(({ node }) => (
+                  <Link
+                    key={node.id}
+                    href={{
+                      pathname: '/jobbannonse',
+                      query: { id: node.id }
                     }}
                   >
-                    <CompanyImage
-                      src={node.company.logo || '/static/itdagene-gray.png'}
-                    />
                     <a>
-                      {node.title} - {node.company.name}
+                      <div
+                        style={{
+                          flexGrow: 1,
+                          cursor: 'pointer',
+                          maxWidth: 300,
+                          width: 239,
+                          padding: 15
+                        }}
+                      >
+                        <CompanyImage
+                          src={node.company.logo || '/static/itdagene-gray.png'}
+                        />
+                        {node.title} - {node.company.name}
+                      </div>
                     </a>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
 
-            {props.root &&
-              props.root.joblistings.edges.length === 0 && (
-                <h2> Fant ingen annonser med søket ditt :( </h2>
+              {props.root &&
+                props.root.joblistings.edges.length === 0 && (
+                  <h2> Fant ingen annonser med søket ditt :( </h2>
+                )}
+            </JoblistingGrid>
+
+            {this.state.loading && <LoadingIndicator hideText noMargin />}
+            {!props.root && <LoadingIndicator />}
+            {props.relay.hasMore() &&
+              !this.state.loading && (
+                <h3 style={{ textAlign: 'center' }}>
+                  <a
+                    href="/#"
+                    onClick={e => {
+                      if (!props.relay.hasMore() || props.relay.isLoading()) {
+                        return;
+                      }
+
+                      this.loadingStart();
+                      props.relay.loadMore(
+                        9, // Fetch the next 9 feed items
+                        error => {
+                          this.loadingEnd();
+                        }
+                      );
+                      e.preventDefault();
+                    }}
+                  >
+                    Hent flere
+                  </a>
+                </h3>
               )}
-          </JoblistingGrid>
-
-          {props.relay.hasMore() && (
-            <h3 style={{ textAlign: 'center' }}>
-              <a
-                href="/#"
-                onClick={e => {
-                  if (!props.relay.hasMore() || props.relay.isLoading()) {
-                    return;
-                  }
-
-                  props.relay.loadMore(
-                    9, // Fetch the next 9 feed items
-                    error => {}
-                  );
-                  e.preventDefault();
+          </FlexItem>
+          <FlexItem basis="315px" grow={1}>
+            <Sidebar>
+              <h4> Type </h4>
+              <TypeSelector />
+              <h4> Bedrift</h4>
+              <CompanySelector
+                router={props.router}
+                environment={props.relay.environment}
+              />
+              <h4> Årstrinn </h4>
+              <Range
+                onAfterChange={ee => {
+                  Router.push({
+                    pathname: '/jobbannonser',
+                    query: { ...Router.query, fromYear: ee[0], toYear: ee[1] }
+                  });
                 }}
-              >
-                Hent flere
-              </a>
-            </h3>
-          )}
-        </FlexItem>
-        <FlexItem basis="315px" grow={1}>
-          <Sidebar>
-            <h4> Type </h4>
-            <TypeSelector />
-            <h4> Bedrift</h4>
-            <CompanySelector
-              router={props.router}
-              environment={props.relay.environment}
-            />
-            <h4> Årstrinn </h4>
-            <Range
-              onAfterChange={ee => {
-                Router.push({
-                  pathname: '/jobbannonser',
-                  query: { ...Router.query, fromYear: ee[0], toYear: ee[1] }
-                });
-              }}
-              marks={{
-                1: '1.klasse',
-                2: '2.klasse',
-                3: '3.klasse',
-                4: '4.klasse',
-                5: '5.klasse'
-              }}
-              dots
-              min={1}
-              max={5}
-              defaultValue={[
-                parseInt(props.router.query.fromYear, 10) || 1,
-                parseInt(props.router.query.toYear, 10) || 5
-              ]}
-            />
-          </Sidebar>
-        </FlexItem>
-      </Flex>
-    </div>
-  )
-);
+                marks={{
+                  1: '1.klasse',
+                  2: '2.klasse',
+                  3: '3.klasse',
+                  4: '4.klasse',
+                  5: '5.klasse'
+                }}
+                dots
+                min={1}
+                max={5}
+                defaultValue={[
+                  parseInt(props.router.query.fromYear, 10) || 1,
+                  parseInt(props.router.query.toYear, 10) || 5
+                ]}
+              />
+            </Sidebar>
+          </FlexItem>
+        </Flex>
+      </div>
+    );
+  }
+}
+
+const Abs = withRouter(JoblistigsContainer);
 
 export default createPaginationContainer(
-  JoblistigsContainer,
+  Abs,
   {
     root: graphql`
       fragment JoblistingsContainer_root on Query
