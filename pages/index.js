@@ -21,9 +21,6 @@ type RenderProps = {
   props: ?pages_index_QueryResponse
 };
 
-const BiggerText = styled('div')`
-  font-size: 18px;
-`;
 const ReadMore = styled('h4')`
   padding: 20px 40px;
 `;
@@ -103,7 +100,7 @@ const Index = ({
         <Layout
           {...{ error, props }}
           contentRenderer={({ props }) => (
-            <BiggerText>
+            <>
               <BlueSection>
                 <WelcomeScreen currentMetaData={props.currentMetaData} />
               </BlueSection>
@@ -153,7 +150,7 @@ const Index = ({
                 </p>
                 <a href="/info?side=bankett">Les mer</a>
               </Section>
-            </BiggerText>
+            </>
           )}
         />
       );

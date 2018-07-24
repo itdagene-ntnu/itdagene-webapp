@@ -81,7 +81,8 @@ class StatefulDropdown extends React.Component<{||}, State> {
               <Link href="/">
                 <a>
                   <img
-                    src="/static/itdagene-gray.png"
+                    style={{ height: '35px' }}
+                    src="/static/itdagene-gray2.png"
                     alt="Hvit itDAGENE logo"
                   />
                 </a>

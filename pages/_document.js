@@ -39,6 +39,9 @@ export default class Default extends Document {
               font-smoothing: antialiased;
               word-break: break-word;
             }
+            img {
+              max-width: 100%;
+            }
             p {
               line-height: 1.4285em;
             }
