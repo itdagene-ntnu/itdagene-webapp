@@ -68,7 +68,7 @@ const AboutSection = () => (
         <CenterIt>
           <Image
             style={{ width: 350, maxWidth: '100%' }}
-            src="static/itdagene-svart.png"
+            src="static/itdagene-gray2.png"
             alt="itDAGENE logo"
           />
         </CenterIt>

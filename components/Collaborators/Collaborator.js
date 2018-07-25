@@ -15,10 +15,10 @@ type Props = {
 };
 const Image = styled(ZoomImage)`
   width: 270px;
-  height: 200px;
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  height: 100px;
+  max-width: calc(100% - 30px);
+  object-fit: cover;
+  margin: 40px auto 0 auto;
   padding: 15px;
 `;
 
@@ -41,7 +41,7 @@ export default createFragmentContainer(
     fragment CollaboratorView_company on Company {
       id
       name
-      logo(width: 378, height: 280)
+      logo(width: 459, height: 170)
       url
       description
     }

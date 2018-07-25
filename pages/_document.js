@@ -61,7 +61,7 @@ export default class Default extends Document {
 
           `}</style>
 
-          <meta name="theme-color" content="#0d7ab3" />
+          <meta name="theme-color" content="#ffffff" />
           <link
             rel="icon"
             type="image/png"

@@ -4,7 +4,7 @@
   "start_url": "/?startup=manifest",
   "display": "standalone",
   "background_color": "#f2f2f1",
-  "theme_color": "#0d7ab3",
+  "theme_color": "#ffffff",
   "description":
     "itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med fremtidige arbeidsgivere.",
   "icons": [

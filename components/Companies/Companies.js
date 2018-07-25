@@ -30,7 +30,7 @@ const Companies = ({ query }: Props) => {
   return sections.map(({ title, data }) => (
     <Fragment key={title}>
       <Title>{title}</Title>
-      <Flex wrap center>
+      <Flex wrap justifyAround>
         {data.map(company => (
           <CompanyView key={company.id} company={company} />
         ))}
