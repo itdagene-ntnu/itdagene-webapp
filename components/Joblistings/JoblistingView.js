@@ -72,6 +72,10 @@ const onlyOneYear = ({ fromYear, toYear }) => fromYear === toYear;
 
 const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   {
+    key: 'Bedrift',
+    value: joblisting.company.name
+  },
+  {
     key: 'Frist',
     value:
       joblisting.deadline &&
@@ -118,9 +122,7 @@ const Joblisting = ({ joblisting }: Props) => (
       <FlexItem center basis="300px" grow={1}>
         <Sidebar>
           <div style={{ width: '100%' }}>
-            <h3>{joblisting.company.name}</h3>
             <img
-              width={200}
               src={joblisting.company.logo}
               alt={`Logo til ${joblisting.company.name}`}
             />

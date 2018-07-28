@@ -27,16 +27,12 @@ const searchQuery = graphql`
 `;
 
 const CompanyImage = styled(Image)`
-  width: 220px;
+  width: 95%;
+  max-width: 232px;
   object-fit: contain;
-  height: 180px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 14px;
+  margin: 20px auto 15px auto;
   @media only screen and (max-width: 767px) {
-    width: 120px;
-    height: 100px;
-    padding: 7px;
+    max-width: none;
   }
 `;
 
@@ -66,7 +62,7 @@ const Sidebar = styled('div')`
   flex-direction: column;
   align-items: center;
   #border-left: 1px solid #e2e9f1;
-  margin: 20px 20px 20px 20px;
+  margin: 10px;
   padding: 0 20px;
 `;
 
@@ -154,8 +150,19 @@ const CompanySelector = ({ router, environment }) => (
 
 const JoblistingGrid = styled(Flex)`
   width: 100%;
+  flex-wrap: wrap;
   @media only screen and (max-width: 767px) {
     justify-content: center;
+  }
+`;
+const CompanyElement = styled('div')`
+  flex-grow: 1;
+  cursor: pointer;
+  flex-basis: 239px;
+  max-width: 239px;
+  padding: 50px 15px 15px 15px;
+  @media only screen and (max-width: 767px) {
+    max-width: none;
   }
 `;
 
@@ -178,33 +185,45 @@ class JoblistigsContainer extends React.Component<Props, State> {
         <h1> Jobbannonser </h1>
         <Flex wrapReverse>
           <FlexItem center basis="700px" grow={26}>
-            <JoblistingGrid wrap>
+            <JoblistingGrid>
               {props.root &&
                 props.root.joblistings.edges.map(({ node }) => (
-                  <Link
-                    key={node.id}
-                    href={{
-                      pathname: '/jobbannonse',
-                      query: { id: node.id }
-                    }}
-                  >
-                    <a>
-                      <div
-                        style={{
-                          flexGrow: 1,
-                          cursor: 'pointer',
-                          maxWidth: 300,
-                          width: 239,
-                          padding: 15
-                        }}
-                      >
+                  <CompanyElement key={node.id}>
+                    <Link
+                      key={node.id}
+                      href={{
+                        pathname: '/jobbannonse',
+                        query: { id: node.id }
+                      }}
+                    >
+                      <a>
                         <CompanyImage
                           src={node.company.logo || '/static/itdagene-gray.png'}
                         />
-                        {node.title} - {node.company.name}
-                      </div>
-                    </a>
-                  </Link>
+                        <h3
+                          style={{
+                            fontWeight: 'normal',
+                            fontSize: 20,
+                            lineHeight: '24px',
+                            color: 'black',
+                            minHeight: 48,
+                            margin: '5px 0',
+                            textAlign: 'center'
+                          }}
+                        >
+                          {node.title}
+                        </h3>
+                        <div style={{ color: 'gray', textAlign: 'center' }}>
+                          {
+                            options.find(
+                              el => el.value === node.type.toLowerCase()
+                            ).label
+                          }{' '}
+                          @ {node.company.name}
+                        </div>
+                      </a>
+                    </Link>
+                  </CompanyElement>
                 ))}
 
               {props.root &&
@@ -240,7 +259,7 @@ class JoblistigsContainer extends React.Component<Props, State> {
                 </h3>
               )}
           </FlexItem>
-          <FlexItem basis="315px" grow={1}>
+          <FlexItem basis="300px" grow={1}>
             <Sidebar>
               <h4> Type </h4>
               <TypeSelector />
@@ -316,7 +335,7 @@ export default createPaginationContainer(
               url
               company {
                 name
-                logo(width: 220, height: 180)
+                logo(width: 400, height: 130)
               }
             }
           }
