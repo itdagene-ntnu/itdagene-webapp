@@ -150,7 +150,7 @@ export default createFragmentContainer(
       id
       company {
         name
-        logo
+        logo(width: 800, height: 260)
         description
         url
         id

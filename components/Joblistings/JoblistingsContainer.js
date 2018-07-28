@@ -160,7 +160,7 @@ const CompanyElement = styled('div')`
   cursor: pointer;
   flex-basis: 239px;
   max-width: 239px;
-  padding: 50px 15px 15px 15px;
+  padding: 60px 15px 15px 15px;
   @media only screen and (max-width: 767px) {
     max-width: none;
   }
@@ -206,7 +206,7 @@ class JoblistigsContainer extends React.Component<Props, State> {
                             fontSize: 20,
                             lineHeight: '24px',
                             color: 'black',
-                            minHeight: 48,
+                            // minHeight: 48,
                             margin: '5px 0',
                             textAlign: 'center'
                           }}
@@ -335,7 +335,7 @@ export default createPaginationContainer(
               url
               company {
                 name
-                logo(width: 400, height: 130)
+                logo(width: 800, height: 260)
               }
             }
           }
