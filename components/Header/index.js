@@ -10,7 +10,8 @@ import HamburgerMenu from 'react-hamburger-menu';
 
 // background: #f7f9fb;
 const Header = styled('header')`
-  border-bottom: 1px solid #e2e9f1;
+  #border-bottom: 1px solid #e2e9f1;
+  border-bottom: 3px solid #027cb5;
   background: white;
 `;
 
@@ -29,6 +30,7 @@ const StyledMenuItem = styled('span')`
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
   { key: 'about-us', name: 'OM itDAGENE', to: '/om-itdagene' },
+  { key: 'program', name: 'PROGRAM', to: '/info?side=program' },
   { key: 'joblistings', name: 'JOBBANNONSER', to: '/jobbannonser' }
 ];
 
@@ -38,7 +40,7 @@ const MenuItem = withRouter(
     return (
       <Link href={to}>
         <a>
-          <StyledMenuItem active={item.to === router.pathname}>
+          <StyledMenuItem active={item.to === router.asPath}>
             {name}
           </StyledMenuItem>
         </a>
