@@ -103,15 +103,25 @@ const Index = ({
               <Section>
                 <AboutSection {...props} />
               </Section>
-              <Section>
-                <HSP />
-              </Section>
-              <Section>
-                <Collaborators showDescription query={props} />
-              </Section>
-              <Section>
-                <Companies query={props} />
-              </Section>
+              {props.currentMetaData.mainCollaborator && (
+                <Section>
+                  <HSP />
+                </Section>
+              )}
+              {props.currentMetaData.collaborators && (
+                <Section>
+                  <Collaborators
+                    showDescription
+                    query={props.currentMetaData}
+                  />
+                </Section>
+              )}
+              {(props.currentMetaData.companiesFirstDay ||
+                props.currentMetaData.companiesLastDay) && (
+                <Section>
+                  <Companies query={props.currentMetaData} />
+                </Section>
+              )}
               <Section style={{ borderBottom: 0 }}>
                 <EventsSection query={props} />
               </Section>
@@ -130,9 +140,24 @@ export default withData(Index, {
         ...Year_currentMetaData
         ...WelcomeScreen_currentMetaData
         id
+        collaborators {
+          id
+        }
+        collaborators {
+          id
+        }
+        companiesFirstDay {
+          id
+        }
+        companiesLastDay {
+          id
+        }
+        mainCollaborator {
+          id
+        }
+        ...Companies_query
+        ...Collaborators_query
       }
-      ...Companies_query
-      ...Collaborators_query
 
       frontpage: page(slug: "frontpage") {
         ...PageView_page

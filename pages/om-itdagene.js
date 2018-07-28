@@ -49,9 +49,9 @@ const Index = ({
                 Styret {props.currentMetaData && props.currentMetaData.year}
               </h1>
               <Flex wrap center>
-                {sortBy(props.boardMembers, m => ROLES.indexOf(m.role)).map(
-                  user => <BoardMember key={user.id} user={user} />
-                )}
+                {sortBy(props.currentMetaData.boardMembers, m =>
+                  ROLES.indexOf(m.role)
+                ).map(user => <BoardMember key={user.id} user={user} />)}
               </Flex>
             </>
           )}
@@ -67,12 +67,12 @@ export default withData(Index, {
       currentMetaData {
         year
         id
-      }
-      boardMembers {
-        ...BoardMember_user
-        id
-        role
-        fullName
+        boardMembers {
+          ...BoardMember_user
+          id
+          role
+          fullName
+        }
       }
 
       omItdagene: page(slug: "om-itdagene") {
