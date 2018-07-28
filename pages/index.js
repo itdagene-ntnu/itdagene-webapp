@@ -15,54 +15,20 @@ import HSP from '../components/Frontpage/HSP';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import withData, { type WithDataProps } from '../lib/withData';
 import Layout, { BlueSection } from '../components/Layout';
+import PageView from '../components/PageView';
 
 type RenderProps = {
   error: ?Error,
   props: ?pages_index_QueryResponse
 };
 
-const ReadMore = styled('h4')`
-  padding: 20px 40px;
-`;
+const ReadMore = styled('h4')``;
 
-const AboutSection = () => (
+const AboutSection = (props: pages_index_QueryResponse) => (
   <>
     <Flex justifyAround wrapReverse>
       <FlexItem grow={1} basis="700px">
-        <h1 id="om-itdagene">Hva er itDAGENE?</h1>
-        <p>
-          itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
-          fremtidige arbeidsgivere. Messen arrangeres av studenter for
-          studenter, overskuddet går til studentenes ekskursjon i tredjeklasse.
-          itDAGENE arrangeres en gang i året av data- og kommunikasjonsteknologi
-          ved NTNU i Trondheim.
-        </p>
-        <p>
-          Hvert år har vi besøk av mer enn 60 bedrifter, fordelt på to dager.
-        </p>
-        <ul>
-          <li>Stands</li>
-          <li>Sommerjobbmaraton</li>
-          <li>Mingling</li>
-          <li>Kurs</li>
-          <li>
-            <Link href="/info?side=bankett">
-              <a>Bankett</a>
-            </Link>
-          </li>
-        </ul>
-        <h2>Hvor og når?</h2>
-        <p>
-          itDAGENE 2018 finner sted 10. & 11. september, i{' '}
-          <a href="http://bit.ly/2uupU4h"> Glassgården </a> på NTNU Campus
-          Gløshaugen.
-        </p>
-
-        <h2>Interessert i å delta?</h2>
-        <p>
-          Vi tilbyr masse rart. Deriblant har vi en bankett. Dette er bare masse
-          tekst-fyll.
-        </p>
+        {props.frontpage && <PageView hideDate page={props.frontpage} />}
       </FlexItem>
       <FlexItem>
         <CenterIt>
@@ -81,6 +47,36 @@ const AboutSection = () => (
         </a>
       </Link>
     </CenterIt>
+  </>
+);
+
+const Centered = styled('div')`
+  text-align: center;
+`;
+
+const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
+  <>
+    <Centered>
+      <h1>Hva skjer?</h1>
+    </Centered>
+    {/* This should be a generic graphql query */}
+    <Flex wrap>
+      {[query.bankett, query.sommerjobbmaraton, query.stands, query.kurs]
+        .filter(Boolean)
+        .map(element => (
+          <FlexItem key={element.slug} basis={'400px'} grow={1}>
+            <h2> {element.title} </h2>
+            <p>{element.ingress}</p>
+            <Centered>
+              <Link href={`/info?side=${element.slug}`}>
+                <a>
+                  <ReadMore>Les mer</ReadMore>
+                </a>
+              </Link>
+            </Centered>
+          </FlexItem>
+        ))}
+    </Flex>
   </>
 );
 
@@ -105,13 +101,8 @@ const Index = ({
                 <WelcomeScreen currentMetaData={props.currentMetaData} />
               </BlueSection>
               <Section>
-                <AboutSection />
+                <AboutSection {...props} />
               </Section>
-              {/*<Section>
-
-                <Stats />
-              </Section>
-              */}
               <Section>
                 <HSP />
               </Section>
@@ -122,33 +113,7 @@ const Index = ({
                 <Companies query={props} />
               </Section>
               <Section style={{ borderBottom: 0 }}>
-                <h2>Sommerjobbmaraton</h2>
-                <p>
-                  Lorem Ipsum er rett og slett dummytekst fra og for
-                  trykkeindustrien. Lorem Ipsum har vært bransjens standard for
-                  dummytekst helt siden 1500-tallet, da en ukjent boktrykker
-                  stokket en mengde bokstaver for å lage et prøveeksemplar av en
-                  bok. Lorem Ipsum har tålt tidens tann usedvanlig godt, og har
-                  i tillegg til å bestå gjennom fem århundrer også tålt spranget
-                  over til elektronisk typografi uten vesentlige endringer.{' '}
-                </p>
-                <a>Les mer</a>
-                <h2>Bankett</h2>
-                <p>
-                  itDAGENE avholder årlig en bankett for it-studenter og
-                  bedrifter. Årets bankett blir som tidligere år på Scandic
-                  Lerkendal, som ligger under en kilometer fra Gløshaugen,
-                  mandag 10. september. Det serveres middag og drikke, med
-                  underholdning og studentsanger. Banketten er et perfekt sted
-                  for studenter å mingle med fremtidige arbeidsgivere og lære
-                  mer om hver enkelt bedrift. Lurer du kanskje på om bedriften
-                  har noen sosiale arrangementer? Eller hva
-                  bedriftsrepresentanten har studert tidligere? Du kommer til å
-                  bli plassert på bord med bedriftsrepresentanter og studenter,
-                  så det er bare å gjøre seg klar til en hyggelig og sosial
-                  kveld!
-                </p>
-                <a href="/info?side=bankett">Les mer</a>
+                <EventsSection query={props} />
               </Section>
             </>
           )}
@@ -168,6 +133,31 @@ export default withData(Index, {
       }
       ...Companies_query
       ...Collaborators_query
+
+      frontpage: page(slug: "frontpage") {
+        ...PageView_page
+      }
+
+      bankett: page(slug: "bankett") {
+        title
+        slug
+        ingress
+      }
+      sommerjobbmaraton: page(slug: "sommerjobbmaraton") {
+        title
+        slug
+        ingress
+      }
+      stands: page(slug: "stands") {
+        title
+        slug
+        ingress
+      }
+      kurs: page(slug: "kurs") {
+        title
+        slug
+        ingress
+      }
     }
   `,
   variables: {}
