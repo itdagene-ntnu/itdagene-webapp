@@ -63,13 +63,15 @@ export const Layout = <T>({
   shouldCenter,
   noLoading,
   responsive,
-  contentRenderer: ContentRenderer
+  contentRenderer: ContentRenderer,
+  children
 }: {
-  props: ?T,
-  error: ?Error,
+  props?: ?T,
+  error?: ?Error,
   shouldCenter?: boolean,
   responsive?: boolean,
-  contentRenderer: (props: { props: T, error: ?Error }) => React.Node,
+  contentRenderer?: (props: { props: T, error: ?Error }) => React.Node,
+  children?: React.Node,
   noLoading?: boolean
 }) => {
   if (error) return <div>Error</div>;
@@ -89,7 +91,8 @@ export const Layout = <T>({
       <Wrapper>
         <HeaderMenu />
         <Content center={shouldCenter} responsive={responsive}>
-          <ContentRenderer {...{ error, props }} />
+          {ContentRenderer ? <ContentRenderer {...{ error, props }} /> : null}
+          {children ? children : null}
         </Content>
         <Footer />
       </Wrapper>

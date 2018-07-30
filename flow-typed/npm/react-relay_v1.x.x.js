@@ -306,18 +306,28 @@ declare module 'react-relay' {
   declare export type $FragmentRef<T> = {
     +$fragmentRefs: $PropertyType<T, '$refType'>
   };
-  
+
   declare export type $RelayProps<Props, RelayPropT> = $ObjMap<
-    $Diff<Props, {relay: RelayPropT | void}>,
-    & (<TRef: FragmentReference, T: {+$refType: TRef}>(                 T ) =>                  $FragmentRef<T> )
-    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?                T ) => ?                $FragmentRef<T> )
-    & (<TRef: FragmentReference, T: {+$refType: TRef}>( $ReadOnlyArray< T>) =>  $ReadOnlyArray< $FragmentRef<T>>)
-    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?$ReadOnlyArray< T>) => ?$ReadOnlyArray< $FragmentRef<T>>)
-    & (<TRef: FragmentReference, T: {+$refType: TRef}>( $ReadOnlyArray<?T>) =>  $ReadOnlyArray<?$FragmentRef<T>>)
-    & (<TRef: FragmentReference, T: {+$refType: TRef}>(?$ReadOnlyArray<?T>) => ?$ReadOnlyArray<?$FragmentRef<T>>)
-    & (<T: {+$refType: empty}>( T) =>  T)
-    & (<T: {+$refType: empty}>(?T) => ?T)
-    & (<T>(T) => T),
+    $Diff<Props, { relay: RelayPropT | void }>,
+    (<TRef: FragmentReference, T: { +$refType: TRef }>(T) => $FragmentRef<T>) &
+      (<TRef: FragmentReference, T: { +$refType: TRef }>(
+        ?T
+      ) => ?$FragmentRef<T>) &
+      (<TRef: FragmentReference, T: { +$refType: TRef }>(
+        $ReadOnlyArray<T>
+      ) => $ReadOnlyArray<$FragmentRef<T>>) &
+      (<TRef: FragmentReference, T: { +$refType: TRef }>(
+        ?$ReadOnlyArray<T>
+      ) => ?$ReadOnlyArray<$FragmentRef<T>>) &
+      (<TRef: FragmentReference, T: { +$refType: TRef }>(
+        $ReadOnlyArray<?T>
+      ) => $ReadOnlyArray<?$FragmentRef<T>>) &
+      (<TRef: FragmentReference, T: { +$refType: TRef }>(
+        ?$ReadOnlyArray<?T>
+      ) => ?$ReadOnlyArray<?$FragmentRef<T>>) &
+      (<T: { +$refType: empty }>(T) => T) &
+      (<T: { +$refType: empty }>(?T) => ?T) &
+      (<T>(T) => T)
   >;
 
   declare export function createFragmentContainer<
@@ -378,7 +388,7 @@ declare module 'react-relay' {
     | number
     | Variables
     | void
-    | Array<Variables>;
+    | Array<Variable>;
   declare export type Variables = ?{ [string]: Variable };
   declare export type DataID = string;
 
@@ -1358,8 +1368,9 @@ declare module 'react-relay' {
 
   declare export type RelayRefetchProp = RelayProp & {
     refetch: (
-      refetchVariables: | Variables
-      | ((fragmentVariables: Variables) => Variables),
+      refetchVariables:
+        | Variables
+        | ((fragmentVariables: Variables) => Variables),
       renderVariables: ?Variables,
       callback: ?(error: ?Error) => void,
       options?: RefetchOptions
