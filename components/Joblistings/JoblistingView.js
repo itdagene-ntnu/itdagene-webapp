@@ -95,7 +95,7 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   },
   {
     key: 'Sted',
-    value: joinValues(joblisting.towns)
+    value: joinValues(joblisting.towns.map(({ name }) => name))
   }
 ];
 const GrayText = styled('div')`
@@ -155,7 +155,9 @@ export default createFragmentContainer(
         url
         id
       }
-      towns
+      towns {
+        name
+      }
       deadline
       title
       type
