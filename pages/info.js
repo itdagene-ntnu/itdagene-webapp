@@ -46,7 +46,7 @@ const Index = ({
     }}
   />
 );
-export default withData(Index, ({ query: { side = '' } }) => ({
+export default withData(Index, {
   query: graphql`
     query info_Query($side: String!) {
       page(slug: $side) {
@@ -56,5 +56,5 @@ export default withData(Index, ({ query: { side = '' } }) => ({
       }
     }
   `,
-  variables: { side }
-}));
+  variables: ({ query: { side = '' } }) => ({ side })
+});

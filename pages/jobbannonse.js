@@ -32,14 +32,21 @@ const Index = ({
           responsive
           {...{ error, props }}
           contentRenderer={({ props }) =>
-            props.joblisting && <JoblistingView joblisting={props.joblisting} />
+            props.joblisting ? (
+              <JoblistingView joblisting={props.joblisting} />
+            ) : (
+              <>
+                <h1>Finner ikke siden :( </h1>
+                <h2>404 Errr</h2>
+              </>
+            )
           }
         />
       );
     }}
   />
 );
-export default withData(Index, ({ query: { id } }) => ({
+export default withData(Index, {
   query: graphql`
     query jobbannonse_Query($id: ID!) {
       joblisting: node(id: $id) {
@@ -49,5 +56,7 @@ export default withData(Index, ({ query: { id } }) => ({
       }
     }
   `,
-  variables: { id }
-}));
+  variables: ({ query: { id } }) => ({
+    id
+  })
+});

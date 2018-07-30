@@ -24,31 +24,35 @@ type RenderProps = {
 
 const ReadMore = styled('h4')``;
 
-const AboutSection = (props: pages_index_QueryResponse) => (
-  <>
-    <Flex justifyAround wrapReverse>
-      <FlexItem grow={1} basis="700px">
-        {props.frontpage && <PageView hideDate page={props.frontpage} />}
-      </FlexItem>
-      <FlexItem>
-        <CenterIt>
-          <Image
-            style={{ width: 350, maxWidth: '100%' }}
-            src="static/itdagene-gray2.png"
-            alt="itDAGENE logo"
-          />
-        </CenterIt>
-      </FlexItem>
-    </Flex>
-    <CenterIt text>
-      <Link href="/om-itdagene">
-        <a>
-          <ReadMore>Les mer</ReadMore>
-        </a>
-      </Link>
-    </CenterIt>
-  </>
-);
+const AboutSection = (props: pages_index_QueryResponse) => {
+  const frontpage =
+    props.pages && props.pages.find(el => el && el.slug === 'frontpage');
+  return (
+    <>
+      <Flex justifyAround wrapReverse>
+        <FlexItem grow={1} basis="700px">
+          {frontpage && <PageView hideDate page={frontpage} />}
+        </FlexItem>
+        <FlexItem>
+          <CenterIt>
+            <Image
+              style={{ width: 350, maxWidth: '100%' }}
+              src="static/itdagene-gray2.png"
+              alt="itDAGENE logo"
+            />
+          </CenterIt>
+        </FlexItem>
+      </Flex>
+      <CenterIt text>
+        <Link href="/om-itdagene">
+          <a>
+            <ReadMore>Les mer</ReadMore>
+          </a>
+        </Link>
+      </CenterIt>
+    </>
+  );
+};
 
 const Centered = styled('div')`
   text-align: center;
@@ -61,9 +65,8 @@ const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
     </Centered>
     {/* This should be a generic graphql query */}
     <Flex wrap>
-      {[query.bankett, query.sommerjobbmaraton, query.stands, query.kurs]
-        .filter(Boolean)
-        .map(element => (
+      {query.pages &&
+        query.pages.filter(Boolean).map(element => (
           <FlexItem key={element.slug} basis={'400px'} grow={1}>
             <h2> {element.title} </h2>
             <p>{element.ingress}</p>
@@ -135,7 +138,7 @@ const Index = ({
 
 export default withData(Index, {
   query: graphql`
-    query pages_index_Query {
+    query pages_index_Query($slugs: [String!]!) {
       currentMetaData {
         ...Year_currentMetaData
         ...WelcomeScreen_currentMetaData
@@ -159,31 +162,15 @@ export default withData(Index, {
         ...Collaborators_query
       }
 
-      frontpage: page(slug: "frontpage") {
+      pages(slugs: $slugs) {
         ...PageView_page
-      }
-
-      bankett: page(slug: "bankett") {
-        title
-        slug
-        ingress
-      }
-      sommerjobbmaraton: page(slug: "sommerjobbmaraton") {
-        title
-        slug
-        ingress
-      }
-      stands: page(slug: "stands") {
-        title
-        slug
-        ingress
-      }
-      kurs: page(slug: "kurs") {
         title
         slug
         ingress
       }
     }
   `,
-  variables: {}
+  variables: {
+    slugs: ['frontpage', 'bankett', 'sommerjobbmaraton', 'stands', 'kurs']
+  }
 });
