@@ -99,6 +99,7 @@ const loadOptions = async (inputValue, environment, searchQuery) => {
 const CompanySelector = withRouter(({ router, environment }) => (
   <div style={{ width: '100%' }}>
     <AsyncSelect
+      defaultOptions
       isClearable
       loadOptions={debounce(
         input => loadOptions(input, environment, companySearchQuery),
@@ -110,6 +111,7 @@ const CompanySelector = withRouter(({ router, environment }) => (
       noOptionsMessage={input =>
         input.inputValue ? 'Fant ingen på bedrifter... :(' : 'Søk her!'
       }
+      cacheOptions
       filterOptions={(options, filter, currentValues) => {
         /* Do no filtering, just return all options
         // https://github.com/JedWatson/react-select#note-about-filtering-async-options */
@@ -135,12 +137,14 @@ const parseTowns = query => {
 const TownSelector = withRouter(({ router, environment }) => (
   <div style={{ width: '100%' }}>
     <AsyncSelect
+      defaultOptions
       isClearable
       isMulti
       loadOptions={debounce(
         input => loadOptions(input, environment, townSearchQuery),
         150
       )}
+      cacheOptions
       placeholder="Ikke valgt"
       noOptionsMessage={input =>
         input.inputValue ? 'Fant ingen steder... :(' : 'Søk her!'
