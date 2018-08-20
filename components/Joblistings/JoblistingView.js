@@ -77,11 +77,11 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   },
   {
     key: 'Frist',
-    value:
-      joblisting.deadline &&
-      dayjs(joblisting.deadline).format(
-        `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
-      )
+    value: joblisting.deadline
+      ? dayjs(joblisting.deadline).format(
+          `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
+        )
+      : 'Løpende'
   },
   {
     key: 'Type',
@@ -90,7 +90,7 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   {
     key: 'Klassetrinn',
     value: onlyOneYear(joblisting)
-      ? ''
+      ? joblisting.fromYear
       : `${joblisting.fromYear}. - ` + `${joblisting.toYear}. trinn`
   },
   {
