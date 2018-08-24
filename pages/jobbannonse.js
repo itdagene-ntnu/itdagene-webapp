@@ -31,6 +31,20 @@ const Index = ({
         <Layout
           responsive
           {...{ error, props }}
+          opengraphMetadata={({ props }) =>
+            props.joblisting
+              ? {
+                  ...props.joblisting,
+                  title:
+                    props.joblisting.company &&
+                    `${props.joblisting.company.name} | ${props.joblisting
+                      .title || ''}`,
+                  description:
+                    props.joblisting.company &&
+                    props.joblisting.company.description
+                }
+              : null
+          }
           contentRenderer={({ props }) =>
             props.joblisting ? (
               <JoblistingView joblisting={props.joblisting} />
@@ -52,6 +66,13 @@ export default withData(Index, {
       joblisting: node(id: $id) {
         ... on Joblisting {
           ...JoblistingView_joblisting
+          title
+          description
+          sharingImage
+          company {
+            description
+            name
+          }
         }
       }
     }

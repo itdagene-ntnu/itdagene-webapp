@@ -1,7 +1,6 @@
 //@flow
 import * as React from 'react';
 import { withRouter } from 'next/router';
-import Head from 'next/head';
 import type { NextRouter } from '../../utils/types';
 import { ResponsiveContent } from '../Styled';
 import Flex, { FlexItem } from 'styled-flex-component';
@@ -80,19 +79,6 @@ class StatefulDropdown extends React.Component<{||}, State> {
   render() {
     return (
       <Header>
-        <Head>
-          <title> itDAGNE </title>
-          <meta property="og:type" content="website" />
-          <meta property="og:title" content="itDAGENE" />
-          <meta
-            property="og:description"
-            content="itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med fremtidige arbeidsgivere. Messen arrangeres av studenter for studenter, overskuddet går til studentenes ekskursjon i tredjeklasse. itDAGENE arrangeres en gang i året av data- og kommunikasjonsteknologi ved NTNU i Trondheim."
-          />
-          <meta
-            property="og:image"
-            content="/static/itdagene_facebookshare.png"
-          />
-        </Head>
         <ResponsiveContent>
           <Flex justifyBetween style={{ padding: '20px 0' }}>
             <FlexItem>

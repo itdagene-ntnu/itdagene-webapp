@@ -1,4 +1,5 @@
 //@flow
+import Head from 'next/head';
 import * as React from 'react';
 import styled, { css } from 'styled-components';
 import LoadingIndicator from '../LoadingIndicator';
@@ -57,6 +58,36 @@ export const BlueSection = styled.div`
 
 export const Wrapper = (props: any) => <MainFlex {...props} />;
 
+const defaultDescription =
+  'itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med fremtidige arbeidsgivere. Messen arrangeres av studenter for studenter, overskuddet går til studentenes ekskursjon i tredjeklasse. itDAGENE arrangeres en gang i året av data- og kommunikasjonsteknologi ved NTNU i Trondheim.';
+const defaultSharingImage = '/static/itdagene_facebookshare.png';
+
+const OpengraphRenderer = ({
+  object
+}: {
+  object?: ?{
+    +title?: ?string,
+    +description?: ?string,
+    +sharingImage?: ?string
+  }
+}) => {
+  const {
+    title,
+    description = defaultDescription,
+    sharingImage = defaultSharingImage
+  } =
+    object || {};
+  return (
+    <Head>
+      <title> itDAGENE {title && `| ${title}`}</title>
+      <meta property="og:type" content="website" />
+      <meta property="og:title" content={title || 'itDAGENE'} />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={sharingImage} />
+    </Head>
+  );
+};
+
 export const Layout = <T>({
   props,
   error,
@@ -64,6 +95,7 @@ export const Layout = <T>({
   noLoading,
   responsive,
   contentRenderer: ContentRenderer,
+  opengraphMetadata,
   children
 }: {
   props?: ?T,
@@ -71,6 +103,11 @@ export const Layout = <T>({
   shouldCenter?: boolean,
   responsive?: boolean,
   contentRenderer?: (props: { props: T, error: ?Error }) => React.Node,
+  opengraphMetadata?: (props: { props: T, error: ?Error }) => ?{
+    +title?: ?string,
+    +sharingImage?: ?string,
+    +description?: ?string
+  },
   children?: React.Node,
   noLoading?: boolean
 }) => {
@@ -79,6 +116,7 @@ export const Layout = <T>({
   if (!props && !noLoading)
     return (
       <Wrapper>
+        <OpengraphRenderer />
         <HeaderMenu />
         <Content center>
           <LoadingIndicator />
@@ -90,6 +128,13 @@ export const Layout = <T>({
     <div>
       <Wrapper>
         <HeaderMenu />
+        <OpengraphRenderer
+          object={
+            opengraphMetadata && props
+              ? opengraphMetadata({ props, error })
+              : null
+          }
+        />
         <Content center={shouldCenter} responsive={responsive}>
           {ContentRenderer ? <ContentRenderer {...{ error, props }} /> : null}
           {children ? children : null}
