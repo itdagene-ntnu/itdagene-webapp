@@ -36,11 +36,11 @@ const Companies = ({ query }: Props) => {
           <CompanyView key={company.id} company={company} />
         ))}
       </Flex>
-      <p style={{ textAlign: 'center' }}>
+      <h4 style={{ textAlign: 'center' }}>
         <Link>
           <a href="/info?side=stands"> Kart over stands </a>
         </Link>
-      </p>
+      </h4>
     </Fragment>
   ));
 };
