@@ -81,6 +81,7 @@ class StatefulDropdown extends React.Component<{||}, State> {
     return (
       <Header>
         <Head>
+          <title> itDAGNE </title>
           <meta property="og:type" content="website" />
           <meta property="og:title" content="itDAGENE" />
           <meta
