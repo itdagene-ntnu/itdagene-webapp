@@ -37,6 +37,11 @@
       "src": "/static/icon-444x444.png",
       "sizes": "444x444",
       "type": "image/png"
+    },
+    {
+      "src": "/static/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }
