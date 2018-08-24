@@ -226,7 +226,6 @@ export const JoblistingsList = createPaginationContainer(
 
 const JoblistingsContainer = ({ environment, variables, children }: Props) => (
   <div>
-    <h1> Jobbannonser </h1>
     <Flex wrapReverse>
       <FlexItem center basis="700px" grow={26}>
         {children}

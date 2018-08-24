@@ -76,10 +76,12 @@ export const jobTypeOptions = [
 const JobTypeSelector = withRouter(({ router }) => (
   <div style={{ width: '100%' }}>
     <Select
-      isClearable
+      isClearable={false}
       placeholder="Ikke valgt"
       styles={customStyles}
-      defaultValue={jobTypeOptions.find(el => el.value === router.query.type)}
+      defaultValue={jobTypeOptions.find(
+        el => el.value === (router.query.type || '')
+      )}
       onChange={el => onQueryChange({ type: el && el.value })}
       options={jobTypeOptions}
     />
@@ -99,14 +101,15 @@ const loadOptions = async (inputValue, environment, searchQuery) => {
 const CompanySelector = withRouter(({ router, environment }) => (
   <div style={{ width: '100%' }}>
     <AsyncSelect
-      defaultOptions
       isClearable
       loadOptions={debounce(
         input => loadOptions(input, environment, companySearchQuery),
         150
       )}
       styles={customStyles}
-      defaultValue={{ label: router.query.companyName }}
+      defaultValue={
+        router.query.companyName && { label: router.query.companyName }
+      }
       placeholder="Ikke valgt"
       noOptionsMessage={input =>
         input.inputValue ? 'Fant ingen på bedrifter... :(' : 'Søk her!'

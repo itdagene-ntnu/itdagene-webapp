@@ -44,10 +44,14 @@ const Footer = () => (
               Webansvarlig •{' '}
               <a href="mailto:web@itdagene.no">web@itdagene.no </a>
             </li>
+            <li>
+              Github •{' '}
+              <a href="https://github.com/itdagene-ntnu">itdagene-ntnu</a>
+            </li>
           </NoBulletUl>
         </RightBorderFlex>
         <FlexItem grow={1} basis="350px">
-          <h4>Hva er itDAGENE?</h4>
+          <h4> Hva er itDAGENE?</h4>
           <p>
             itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
             fremtidige arbeidsgivere. Messen arrangeres av studenter for

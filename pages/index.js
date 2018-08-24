@@ -101,7 +101,9 @@ const Index = ({
           contentRenderer={({ props }) => (
             <>
               <BlueSection>
-                <WelcomeScreen currentMetaData={props.currentMetaData} />
+                <section>
+                  <WelcomeScreen currentMetaData={props.currentMetaData} />
+                </section>
               </BlueSection>
               <Section>
                 <AboutSection {...props} />
@@ -171,6 +173,13 @@ export default withData(Index, {
     }
   `,
   variables: {
-    slugs: ['frontpage', 'bankett', 'sommerjobbmaraton', 'stands', 'kurs']
+    slugs: [
+      'frontpage',
+      'bankett',
+      'sommerjobbmaraton',
+      'stands',
+      'kurs',
+      'om-itdagene'
+    ]
   }
 });

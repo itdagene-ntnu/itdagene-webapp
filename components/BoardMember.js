@@ -26,9 +26,9 @@ const BoardMember = ({ user: { role, fullName, photo, email } }: Props) => (
     <CenterIt text>
       <RoundHead src={photo || ''} />
       <Flex column>
-        <h4 style={{ marginBottom: 0 }}>{fullName}</h4>
+        <h4 style={{ fontSize: 15, marginBottom: 0 }}>{fullName}</h4>
         <i>{role}</i>
-        <a style={{ fontSize: '14px' }} href={`mailto:${email}`}>
+        <a style={{ fontSize: '12px' }} href={`mailto:${email}`}>
           {email}
         </a>
       </Flex>

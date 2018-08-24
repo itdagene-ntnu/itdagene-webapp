@@ -11,13 +11,15 @@ import HamburgerMenu from 'react-hamburger-menu';
 // background: #f7f9fb;
 const Header = styled('header')`
   #border-bottom: 1px solid #e2e9f1;
-  border-bottom: 3px solid #027cb5;
+  #border-bottom: 3px solid #027cb5;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background: white;
 `;
 
 const StyledMenuItem = styled('span')`
   color: #232323;
-  font-size: 16px;
+  font-size: 20px;
 
   padding: 0 10px;
   ${({ active = false }: { active?: boolean }) =>

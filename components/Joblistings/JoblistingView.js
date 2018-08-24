@@ -11,6 +11,15 @@ import dayjs from 'dayjs';
 type Props = {
   joblisting: JoblistingView_joblisting
 };
+export const Title = styled('div')`
+  text-align: center;
+  font-size: 4rem;
+  font-family: Raleway;
+  margin: 0 0 40px;
+  @media only screen and (max-width: 767px) {
+    font-size: 2.4rem;
+  }
+`;
 
 const Sidebar = styled('div')`
   display: flex;
@@ -33,7 +42,7 @@ const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
             <span
               style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
             >
-              {key}:
+              <i>{key}</i>:
             </span>
             <strong style={{ textAlign: 'right' }}>{value}</strong>
           </Flex>
@@ -73,7 +82,11 @@ const onlyOneYear = ({ fromYear, toYear }) => fromYear === toYear;
 const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   {
     key: 'Bedrift',
-    value: joblisting.company.name
+    value: joblisting.company.url ? (
+      <a href={joblisting.company.url}>{joblisting.company.name}</a>
+    ) : (
+      joblisting.company.url
+    )
   },
   {
     key: 'Frist',
@@ -89,13 +102,17 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
   },
   {
     key: 'Klassetrinn',
-    value: onlyOneYear(joblisting)
-      ? joblisting.fromYear
-      : `${joblisting.fromYear}. - ` + `${joblisting.toYear}. trinn`
+    value:
+      (onlyOneYear(joblisting) ? '' : `${joblisting.fromYear}. - `) +
+      `${joblisting.toYear}. trinn`
   },
   {
     key: 'Sted',
     value: joinValues(joblisting.towns.map(({ name }) => name))
+  },
+  {
+    key: 'Publisert',
+    value: dayjs(joblisting.dateCreated).format('D. MMMM YYYY')
   }
 ];
 const GrayText = styled('div')`
@@ -109,10 +126,19 @@ const CompanyDesc = styled(GrayText)`
 
 const Joblisting = ({ joblisting }: Props) => (
   <>
-    <h1>{joblisting.title}</h1>
-    <GrayText>
-      Publisert: {dayjs(joblisting.dateCreated).format('D. MMMM YYYY')}
-    </GrayText>
+    <div style={{ maxWidth: 800, margin: 'auto' }}>
+      <img
+        src={joblisting.company.logo}
+        style={{ display: 'block', margin: '25px auto 45px' }}
+        alt={`Logo til ${joblisting.company.name}`}
+      />
+    </div>
+    <div style={{ maxWidth: 1000, margin: 'auto' }}>
+      <Title>{joblisting.title}</Title>
+    </div>
+    <CompanyDesc style={{ maxWith: 960, fontSize: '1.3rem' }}>
+      <ReactMarkdown source={joblisting.company.description} />
+    </CompanyDesc>
     <Flex wrapReverse>
       <FlexItem basis="600px" grow={3}>
         <Flex column>
@@ -122,10 +148,6 @@ const Joblisting = ({ joblisting }: Props) => (
       <FlexItem center basis="300px" grow={1}>
         <Sidebar>
           <div style={{ width: '100%' }}>
-            <img
-              src={joblisting.company.logo}
-              alt={`Logo til ${joblisting.company.name}`}
-            />
             <List joblisting={joblisting} />
             {joblisting.url && (
               <a href={joblisting.url}>
@@ -133,10 +155,6 @@ const Joblisting = ({ joblisting }: Props) => (
               </a>
             )}
           </div>
-
-          <CompanyDesc>
-            <ReactMarkdown source={joblisting.company.description} />
-          </CompanyDesc>
         </Sidebar>
       </FlexItem>
     </Flex>
@@ -150,7 +168,7 @@ export default createFragmentContainer(
       id
       company {
         name
-        logo(width: 800, height: 260)
+        logo(width: 1127, height: 260)
         description
         url
         id

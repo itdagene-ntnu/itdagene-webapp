@@ -19,7 +19,7 @@ export default class Default extends Document {
 
   render() {
     return (
-      <html>
+      <html lang="nb">
         <Head>
           <title>itDAGENE</title>
           <meta
@@ -27,7 +27,7 @@ export default class Default extends Document {
             content="width=device-width, initial-scale=1, maximum-scale=1"
           />
           <link
-            href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin"
+            href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700,400italic,700italic&subset=latin"
             rel="stylesheet"
           />
           <style>{`
@@ -38,6 +38,7 @@ export default class Default extends Document {
               color: rgba(0, 0, 0, 0.87);
               font-smoothing: antialiased;
               word-break: break-word;
+              font-family: Raleway;
             }
             img {
               max-width: 100%;
@@ -54,10 +55,9 @@ export default class Default extends Document {
               color: #1e70bf;
               text-decoration: none;
             }
-            h1 {
-              font-weight: normal;
+            h1,h2,h3,h4 {
+              font-weight: 500;
             }
-
 
           `}</style>
 
@@ -137,7 +137,7 @@ export default class Default extends Document {
 
           {this.props.styleTags}
         </Head>
-        <body style={{ fontFamily: "'Lato', sans-serif" }}>
+        <body>
           <Main />
           <NextScript />
         </body>
