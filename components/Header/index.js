@@ -18,7 +18,7 @@ const Header = styled('header')`
 `;
 
 const StyledMenuItem = styled('span')`
-  color: #232323;
+  color: #394b59;
   font-size: 20px;
 
   padding: 0 10px;
@@ -32,7 +32,7 @@ const StyledMenuItem = styled('span')`
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
   { key: 'about-us', name: 'OM itDAGENE', to: '/om-itdagene' },
-  { key: 'program', name: 'PROGRAM', to: '/info?side=program' },
+  { key: 'program', name: 'PROGRAM', to: '/program' },
   { key: 'joblistings', name: 'JOBBANNONSER', to: '/jobbannonser' }
 ];
 

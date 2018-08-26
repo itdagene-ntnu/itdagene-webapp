@@ -35,7 +35,7 @@ export default class Default extends Document {
               margin: 0;
               padding: 0;
               font-size: 16px;
-              color: rgba(0, 0, 0, 0.87);
+              color: #394b59;
               font-smoothing: antialiased;
               word-break: break-word;
               font-family: Raleway;
@@ -56,6 +56,7 @@ export default class Default extends Document {
               text-decoration: none;
             }
             h1,h2,h3,h4 {
+              color: rgba(0, 0, 0, 0.87);
               font-weight: 500;
             }
 
