@@ -35,13 +35,14 @@ const Index = ({
             props.joblisting
               ? {
                   ...props.joblisting,
-                  title:
-                    props.joblisting.company &&
-                    `${props.joblisting.company.name} | ${props.joblisting
-                      .title || ''}`,
+                  title: props.joblisting.company
+                    ? `${props.joblisting.title || ''} - ${
+                        props.joblisting.company.name
+                      }`
+                    : props.joblisting.title,
                   description:
                     props.joblisting.company &&
-                    props.joblisting.company.description
+                    `${props.joblisting.company.description || ''}`
                 }
               : null
           }

@@ -49,9 +49,7 @@ export const query = graphql`
 const JoblistingGrid = styled(Flex)`
   width: 100%;
   flex-wrap: wrap;
-  @media only screen and (max-width: 767px) {
-    justify-content: center;
-  }
+  justify-content: space-around;
 `;
 const CompanyElement = styled('div')`
   flex-grow: 1;
@@ -124,26 +122,27 @@ const ListRenderer = props => (
     {!props.root && <LoadingIndicator />}
     {props.relay.hasMore() &&
       !props.loading && (
-        <h3 style={{ textAlign: 'center' }}>
-          <a
-            href="/#"
-            onClick={e => {
-              if (!props.relay.hasMore() || props.relay.isLoading()) {
-                return;
-              }
+        <h3
+          style={{
+            textAlign: 'center',
+            cursor: 'pointer',
+            color: '#037bb4'
+          }}
+          onClick={() => {
+            if (!props.relay.hasMore() || props.relay.isLoading()) {
+              return;
+            }
 
-              props.loadingStart();
-              props.relay.loadMore(
-                9, // Fetch the next 9 feed items
-                error => {
-                  props.loadingEnd();
-                }
-              );
-              e.preventDefault();
-            }}
-          >
-            Hent flere
-          </a>
+            props.loadingStart();
+            props.relay.loadMore(
+              9, // Fetch the next 9 feed items
+              error => {
+                props.loadingEnd();
+              }
+            );
+          }}
+        >
+          Hent flere
         </h3>
       )}
   </>
