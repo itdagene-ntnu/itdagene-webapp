@@ -153,7 +153,7 @@ const TownSelector = withRouter(({ router, environment }) => (
         input.inputValue ? 'Fant ingen steder... :(' : 'Søk her!'
       }
       styles={customStyles}
-      defaultValue={parseTowns(router.query.towns)}
+      defaultValue={parseTowns(router.query)}
       filterOptions={(options, filter, currentValues) => options}
       onChange={el =>
         onQueryChange({
