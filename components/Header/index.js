@@ -12,8 +12,8 @@ import HamburgerMenu from 'react-hamburger-menu';
 const Header = styled('header')`
   #border-bottom: 1px solid #e2e9f1;
   #border-bottom: 3px solid #027cb5;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   background: white;
 `;
 
@@ -85,7 +85,7 @@ class StatefulDropdown extends React.Component<{||}, State> {
               <Link href="/">
                 <a>
                   <img
-                    style={{ height: '35px' }}
+                    style={{ height: '60px' }}
                     src="/static/itdagene-gray2.png"
                     alt="Hvit itDAGENE logo"
                   />
