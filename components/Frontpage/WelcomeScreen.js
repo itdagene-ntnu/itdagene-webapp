@@ -43,7 +43,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
             <b>it</b>DAGENE {currentMetaData.year}
           </Header>
           <SubHeader>10. & 11. september 2018</SubHeader>
-          <h3>NTNU//Glassgården</h3>
+          <h3>NTNU // Glassgården</h3>
         </FlexItem>
         <FlexItem>
           <Countdown currentMetaData={currentMetaData} />
