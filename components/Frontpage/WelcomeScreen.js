@@ -73,7 +73,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
       className="cover-video"
       loop
       muted
-      src="/static/odinerkul2.mp4"
+      src="https://odinugedal.no/itdagene.mp4"
     />
     <MainContainer text>
       <Flex column spaceBetween>
