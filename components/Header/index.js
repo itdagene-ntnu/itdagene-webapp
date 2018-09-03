@@ -34,7 +34,7 @@ const StyledMenuItem = styled('span')`
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
   { key: 'about-us', name: 'OM itDAGENE', to: '/om-itdagene' },
-  { key: 'program', name: 'PROGRAM', to: '/program' },
+  { key: 'program', name: 'PROGRAM', to: '/info?side=program' },
   { key: 'joblistings', name: 'JOBBANNONSER', to: '/jobbannonser' }
 ];
 

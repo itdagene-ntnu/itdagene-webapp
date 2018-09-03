@@ -51,13 +51,18 @@ const Footer = () => (
           </NoBulletUl>
         </RightBorderFlex>
         <FlexItem grow={1} basis="350px">
-          <h4> Hva er itDAGENE?</h4>
+          <h4 style={{ marginBottom: 0 }}> Hva er itDAGENE?</h4>
           <p>
             itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
             fremtidige arbeidsgivere. Messen arrangeres av studenter for
             studenter, overskuddet går til studentenes ekskursjon i
             tredjeklasse. itDAGENE arrangeres en gang i året av data- og
             kommunikasjonsteknologi ved NTNU i Trondheim.
+          </p>
+          <h4 style={{ marginBottom: 0 }}>Hovedsamarbeidspartner</h4>
+          <p>
+            Årets hovedsamarbeidspartner er{' '}
+            <a href="http://itverket.no">ITverket.</a>
           </p>
         </FlexItem>
       </Flex>
