@@ -140,7 +140,6 @@ const parseTowns = query => {
 const TownSelector = withRouter(({ router, environment }) => (
   <div style={{ width: '100%' }}>
     <AsyncSelect
-      defaultOptions
       isClearable
       isMulti
       loadOptions={debounce(
