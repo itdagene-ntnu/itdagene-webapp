@@ -100,11 +100,9 @@ const Index = ({
           {...{ error, props }}
           contentRenderer={({ props }) => (
             <>
-              <BlueSection>
-                <section>
-                  <WelcomeScreen currentMetaData={props.currentMetaData} />
-                </section>
-              </BlueSection>
+              <section>
+                <WelcomeScreen currentMetaData={props.currentMetaData} />
+              </section>
               <Section>
                 <AboutSection {...props} />
               </Section>

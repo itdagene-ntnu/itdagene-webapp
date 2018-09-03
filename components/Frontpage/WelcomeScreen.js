@@ -3,6 +3,7 @@ import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { type WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
+import { itdageneBlue } from '../../utils/colors';
 import Link from 'next/link';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
@@ -56,6 +57,7 @@ const Video = styled('video')`
 const RootContainer = styled('div')`
   max-height: 800px;
   @media only screen and (max-width: 800px) {
+    background: ${itdageneBlue};
     min-height: 700px;
   }
   height: 75%;
