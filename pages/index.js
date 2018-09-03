@@ -14,7 +14,7 @@ import styled from 'styled-components';
 import HSP from '../components/Frontpage/HSP';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import withData, { type WithDataProps } from '../lib/withData';
-import Layout, { BlueSection } from '../components/Layout';
+import Layout from '../components/Layout';
 import PageView from '../components/PageView';
 
 type RenderProps = {
