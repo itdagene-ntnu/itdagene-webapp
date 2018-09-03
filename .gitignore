@@ -5,3 +5,4 @@ schema/schema.graphql
 yarn-error.log
 node_modules/
 bundles/
+*.mp4
