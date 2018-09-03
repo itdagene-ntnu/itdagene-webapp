@@ -18,6 +18,7 @@ export default class Default extends Document {
   }
 
   render() {
+    const { GA_TRACKING_ID } = process.env;
     return (
       <html lang="nb">
         <Head>
@@ -136,6 +137,26 @@ export default class Default extends Document {
           <link rel="stylesheet" href="/_next/static/style.css" key="css" />
 
           {this.props.styleTags}
+
+          {GA_TRACKING_ID && (
+            <>
+              <script
+                async
+                src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+              />
+              <script
+                dangerouslySetInnerHTML={{
+                  __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}');
+            window.__GA_TRACKING_ID__ = '${GA_TRACKING_ID}';
+          `
+                }}
+              />
+            </>
+          )}
         </Head>
         <body>
           <Main />

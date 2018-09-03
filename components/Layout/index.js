@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components';
 import LoadingIndicator from '../LoadingIndicator';
 import { HeaderMenu } from '../Header';
 import { itdageneBlue } from '../../utils/colors';
+import Router from 'next/router';
 
 import Footer from '../Footer';
 
@@ -87,6 +88,14 @@ const OpengraphRenderer = ({
     </Head>
   );
 };
+const pageview = url => {
+  window.__GA_TRACKING_ID__ &&
+    window.gtag('config', window.__GA_TRACKING_ID__, {
+      page_location: url
+    });
+};
+
+Router.onRouteChangeComplete = url => pageview(url);
 
 export const Layout = <T>({
   props,
