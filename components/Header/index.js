@@ -18,21 +18,23 @@ const Header = styled('header')`
 `;
 
 const StyledMenuItem = styled('span')`
-  color: #232323;
+  color: #394b59;
   font-size: 20px;
-
   padding: 0 10px;
   ${({ active = false }: { active?: boolean }) =>
     active &&
     css`
       font-weight: bold;
     `};
+  :hover {
+    font-weight: bold;
+  }
 `;
 
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
   { key: 'about-us', name: 'OM itDAGENE', to: '/om-itdagene' },
-  { key: 'program', name: 'PROGRAM', to: '/info?side=program' },
+  { key: 'program', name: 'PROGRAM', to: '/program' },
   { key: 'joblistings', name: 'JOBBANNONSER', to: '/jobbannonser' }
 ];
 
@@ -67,6 +69,12 @@ export const OnMobile = styled('div')`
     display: block;
   }
 `;
+const ItdageneLogo = styled('img')`
+  height: 60px;
+  @media only screen and (max-width: 767px) {
+    height: 35px;
+  }
+`;
 class StatefulDropdown extends React.Component<{||}, State> {
   state = {
     open: false
@@ -84,8 +92,7 @@ class StatefulDropdown extends React.Component<{||}, State> {
             <FlexItem>
               <Link href="/">
                 <a>
-                  <img
-                    style={{ height: '60px' }}
+                  <ItdageneLogo
                     src="/static/itdagene-gray2.png"
                     alt="Hvit itDAGENE logo"
                   />

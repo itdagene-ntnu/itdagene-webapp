@@ -10,7 +10,9 @@ import dayjs from 'dayjs';
 
 type Props = {
   page: PageView_page,
-  hideDate?: boolean
+  hideDate?: boolean,
+  hideContent?: boolean,
+  hideTitle?: boolean
 };
 
 const GrayText = styled('div')`
@@ -30,18 +32,19 @@ const LinkRenderer = ({ href, children }) => {
 
 const renderers = { link: LinkRenderer };
 
-const PageView = ({ page, hideDate }: Props) => (
+const PageView = ({ page, hideDate, hideContent, hideTitle }: Props) => (
   <>
-    <h1>{page.title}</h1>
+    {!hideTitle && <h1>{page.title}</h1>}
     {!hideDate && (
       <GrayText>
         Sist oppdatert: {dayjs(page.dateSaved).format(`D. MMMM YYYY`)}
       </GrayText>
     )}
-
-    <Flex column>
-      <ReactMarkdown renderers={renderers} source={page.content} />
-    </Flex>
+    {!hideContent && (
+      <Flex column>
+        <ReactMarkdown renderers={renderers} source={page.content} />
+      </Flex>
+    )}
   </>
 );
 

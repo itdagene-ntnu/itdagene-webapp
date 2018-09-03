@@ -49,10 +49,12 @@ const HSP = () => (
       </CenterIt>
     </FlexItem>
     <FlexItem>
-      <HSPLogo src="static/itverket.png" alt="ITverket logo" />
+      <a href="http://www.itverket.no/">
+        <HSPLogo src="static/itverket.png" alt="ITverket logo" />
+      </a>
       <MiscPhoto
         src="http://www.itverket.no/wp-content/themes/itverket/assets/images/dummy_1.jpg"
-        alt="Bilde av mann og dame ved pc"
+        alt="Bilde av mann"
       />
     </FlexItem>
   </Flex>

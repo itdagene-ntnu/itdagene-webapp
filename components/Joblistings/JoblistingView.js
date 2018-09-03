@@ -11,9 +11,10 @@ import dayjs from 'dayjs';
 type Props = {
   joblisting: JoblistingView_joblisting
 };
-export const Title = styled('div')`
+export const Title = styled('h1')`
   text-align: center;
   font-size: 4rem;
+  font-weight: 400;
   font-family: Raleway;
   margin: 0 0 40px;
   @media only screen and (max-width: 767px) {

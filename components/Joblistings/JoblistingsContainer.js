@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import type { JoblistingsContainer_root } from './__generated__/JoblistingsContainer_root.graphql';
 import LoadingIndicator from '../LoadingIndicator';
 import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
+import InfiniteScroll from 'react-infinite-scroller';
 
 const CompanyImage = styled(Image)`
   width: 95%;
@@ -72,79 +73,73 @@ type Props = {
 
 const ListRenderer = props => (
   <>
-    <JoblistingGrid>
-      {props.root &&
-        props.root.joblistings.edges.map(({ node }) => (
-          <CompanyElement key={node.id}>
-            <Link
-              key={node.id}
-              href={{
-                pathname: '/jobbannonse',
-                query: { id: node.id }
-              }}
-            >
-              <a>
-                <CompanyImage
-                  src={node.company.logo || '/static/itdagene-gray.png'}
-                />
-                <h3
-                  style={{
-                    fontWeight: 'normal',
-                    fontSize: 20,
-                    lineHeight: '24px',
-                    color: 'black',
-                    // minHeight: 48,
-                    margin: '5px 0',
-                    textAlign: 'center'
-                  }}
-                >
-                  {node.title}
-                </h3>
-                <div style={{ color: 'gray', textAlign: 'center' }}>
-                  {
-                    jobTypeOptions.find(
-                      el => el.value === node.type.toLowerCase()
-                    ).label
-                  }{' '}
-                  @ {node.company.name}
-                </div>
-              </a>
-            </Link>
-          </CompanyElement>
-        ))}
-
-      {props.root &&
-        props.root.joblistings.edges.length === 0 && (
-          <h2> Fant ingen annonser med søket ditt :( </h2>
-        )}
-    </JoblistingGrid>
-    {props.loading && <LoadingIndicator hideText noMargin />}
     {!props.root && <LoadingIndicator />}
-    {props.relay.hasMore() &&
-      !props.loading && (
-        <h3
-          style={{
-            textAlign: 'center',
-            cursor: 'pointer',
-            color: '#037bb4'
-          }}
-          onClick={() => {
-            if (!props.relay.hasMore() || props.relay.isLoading()) {
-              return;
-            }
+    <InfiniteScroll
+      element="div"
+      hasMore={props.relay.hasMore()}
+      loadMore={() => {
+        if (!props.relay.hasMore() || props.relay.isLoading()) {
+          return;
+        }
 
-            props.loadingStart();
-            props.relay.loadMore(
-              9, // Fetch the next 9 feed items
-              error => {
-                props.loadingEnd();
-              }
-            );
-          }}
-        >
-          Hent flere
-        </h3>
-      )}
+        props.loadingStart();
+        props.relay.loadMore(
+          9, // Fetch the next 9 feed items
+          error => {
+            props.loadingEnd();
+          }
+        );
+      }}
+      threshold={50}
+      loader={<>{props.loading && <LoadingIndicator hideText noMargin />}</>}
+    >
+      <JoblistingGrid>
+        {props.root &&
+          props.root.joblistings.edges.map(({ node }) => (
+            <CompanyElement key={node.id}>
+              <Link
+                key={node.id}
+                href={{
+                  pathname: '/jobbannonse',
+                  query: { id: node.id }
+                }}
+              >
+                <a>
+                  <CompanyImage
+                    src={node.company.logo || '/static/itdagene-gray.png'}
+                  />
+                  <h3
+                    style={{
+                      fontWeight: 'normal',
+                      fontSize: 20,
+                      lineHeight: '24px',
+                      color: 'black',
+                      // minHeight: 48,
+                      margin: '5px 0',
+                      textAlign: 'center'
+                    }}
+                  >
+                    {node.title}
+                  </h3>
+                  <div style={{ color: 'gray', textAlign: 'center' }}>
+                    {
+                      jobTypeOptions.find(
+                        el => el.value === node.type.toLowerCase()
+                      ).label
+                    }{' '}
+                    @ {node.company.name}
+                  </div>
+                </a>
+              </Link>
+            </CompanyElement>
+          ))}
+
+        {props.root &&
+          props.root.joblistings.edges.length === 0 && (
+            <h2> Fant ingen annonser med søket ditt :( </h2>
+          )}
+      </JoblistingGrid>
+    </InfiniteScroll>
   </>
 );
 
