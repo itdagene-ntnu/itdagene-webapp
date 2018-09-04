@@ -34,7 +34,7 @@ const StyledMenuItem = styled('span')`
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
   { key: 'about-us', name: 'OM itDAGENE', to: '/om-itdagene' },
-  { key: 'program', name: 'PROGRAM', to: '/info?side=program' },
+  { key: 'program', name: 'PROGRAM', to: '/program' },
   { key: 'joblistings', name: 'JOBBANNONSER', to: '/jobbannonser' }
 ];
 
@@ -58,20 +58,20 @@ type State = {
 };
 
 export const OnOther = styled('div')`
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 991px) {
     display: none;
   }
 `;
 export const OnMobile = styled('div')`
   display: none;
 
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 991px) {
     display: block;
   }
 `;
 const ItdageneLogo = styled('img')`
   height: 60px;
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 991px) {
     height: 35px;
   }
 `;
