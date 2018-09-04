@@ -57,7 +57,7 @@ const Video = styled('video')`
 const RootContainer = styled('div')`
   max-height: 800px;
   @media only screen and (max-width: 800px) {
-    background: ${itdageneBlue};
+    background: #123962;
     min-height: 700px;
   }
   height: 75%;
