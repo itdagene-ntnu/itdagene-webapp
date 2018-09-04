@@ -13,6 +13,9 @@ const MiscPhoto = styled(Image)`
   width: 450px;
   max-width: 100%;
   padding: 25px;
+  @media only screen and (max-width: 767px) {
+    padding: 0;
+  }
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
