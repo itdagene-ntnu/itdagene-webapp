@@ -17,7 +17,7 @@ const NumberBox = styled('div')`
   height: 125px;
   text-transform: uppercase;
   font-size: 12px;
-  background: #343434;
+  background: #037bb4;
   margin: 5px;
   flex-basis: 135px;
 `;
