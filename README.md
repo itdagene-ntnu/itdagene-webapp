@@ -2,9 +2,7 @@
 
 > nextgen itDAGENE frontend
 
-<p align="center">
-  <img width="460" src="https://github.com/itdagene-ntnu/itdagene-webapp/blob/master/static/itdagene-gray2.png">
-</p>
+![Picture of the page](/static/screenshot.png)
 
 Written using [next.js](https://github.com/zeit/next.js/), [react-relay](https://github.com/facebook/relay/) and [graphql](http://graphql.org/).
 
