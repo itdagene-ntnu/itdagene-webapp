@@ -27,41 +27,31 @@ const Number = styled('div')`
   font-size: 52px;
 `;
 
-const renderer = ({ days, hours, minutes, seconds, completed }) => {
-  if (completed) {
-    // Render a completed state
-    return 'RIP';
-  } else {
-    // Render a countdown
-
-    return (
-      <Flex center wrap>
-        <NumberBox>
-          <Number>{days}</Number> dager
-        </NumberBox>{' '}
-        <NumberBox>
-          <Number>{hours}</Number> timer
-        </NumberBox>{' '}
-        <NumberBox>
-          <Number>{minutes}</Number> minutter
-        </NumberBox>{' '}
-        <NumberBox>
-          <Number>{seconds}</Number> sekunder
-        </NumberBox>{' '}
-      </Flex>
-    );
-  }
-};
+const renderer = ({ days, hours, minutes, seconds, completed }) =>
+  !completed && (
+    <Flex center wrap>
+      <NumberBox>
+        <Number>{days}</Number> dager
+      </NumberBox>{' '}
+      <NumberBox>
+        <Number>{hours}</Number> timer
+      </NumberBox>{' '}
+      <NumberBox>
+        <Number>{minutes}</Number> minutter
+      </NumberBox>{' '}
+      <NumberBox>
+        <Number>{seconds}</Number> sekunder
+      </NumberBox>{' '}
+    </Flex>
+  );
 
 const CountdownComponent = (props: Countdown_currentMetaData) => (
-  <>
-    <Countdown
-      date={dayjs(props.currentMetaData.startDate)
-        .add(9, 'hours')
-        .toDate()}
-      renderer={renderer}
-    />
-  </>
+  <Countdown
+    date={dayjs(props.currentMetaData.startDate)
+      .add(10, 'hours')
+      .toDate()}
+    renderer={renderer}
+  />
 );
 
 export default createFragmentContainer(
