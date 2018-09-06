@@ -71,6 +71,7 @@ const onQueryChange = newQuery => {
 export const orderByOptions = [
   { value: 'DEADLINE', label: 'Søknadsfrist' },
   { value: 'CREATED', label: 'Publisert' },
+  { value: 'COMPANY_NAME', label: 'Bedrift' },
   { value: 'TYPE', label: 'Type' }
 ];
 
