@@ -66,7 +66,7 @@ export default withData(withRouter(Index), {
     toYear: parseInt(router.query.toYear, 10) || 5,
     company: router.query.company || '',
     towns: parseTowns(router.query).map(el => el.value),
-    orderBy: router.query.orderBy ? [router.query.orderBy] : [],
+    orderBy: router.query.orderBy ? [router.query.orderBy, 'ID'] : [],
     count: 15
   })
 });
