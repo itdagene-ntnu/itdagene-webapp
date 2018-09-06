@@ -20,6 +20,7 @@ const Sidebar = styled('div')`
   margin: 10px;
   padding: 0 20px;
 `;
+
 const customStyles = {
   option: (base, state) => ({
     ...base
@@ -66,6 +67,27 @@ const onQueryChange = newQuery => {
     query: { ...Router.query, ...newQuery }
   });
 };
+
+export const orderByOptions = [
+  { value: 'DEADLINE', label: 'Søknadsfrist' },
+  { value: 'CREATED', label: 'Publisert' },
+  { value: 'TYPE', label: 'Type' }
+];
+
+const OrderBySelector = withRouter(({ router }) => (
+  <div style={{ width: '100%' }}>
+    <Select
+      isClearable
+      placeholder="Ikke valgt"
+      styles={customStyles}
+      defaultValue={orderByOptions.find(
+        el => el.value === router.query.orderBy
+      )}
+      onChange={el => onQueryChange({ orderBy: el && el.value })}
+      options={orderByOptions}
+    />
+  </div>
+));
 
 export const jobTypeOptions = [
   { value: '', label: 'Alle' },
@@ -198,6 +220,8 @@ const JoblistingsSidebar = ({
     <CompanySelector environment={environment} />
     <h4> Sted</h4>
     <TownSelector environment={environment} />
+    <h4> Sortér på</h4>
+    <OrderBySelector />
     <h4> Årstrinn </h4>
     <YearSelector variables={variables} />
   </Sidebar>

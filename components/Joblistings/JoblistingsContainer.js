@@ -15,6 +15,24 @@ import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
 
+function joinValues(values) {
+  if (values.length < 2) {
+    return values[0] || '';
+  }
+
+  return (
+    <span>
+      {values.map((el, i) => (
+        <span key={i}>
+          {i > 0 && i !== values.length - 1 && ', '}
+          {i === values.length - 1 && ' og '}
+          {el}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 const CompanyImage = styled(Image)`
   width: 95%;
   max-width: 232px;
@@ -34,6 +52,7 @@ export const query = graphql`
     $toYear: Float
     $company: ID
     $towns: [ID]
+    $orderBy: [OrderByJoblistingType]
   ) {
     ...JoblistingsContainer_root
       @arguments(
@@ -44,6 +63,7 @@ export const query = graphql`
         fromYear: $fromYear
         toYear: $toYear
         towns: $towns
+        orderBy: $orderBy
       )
   }
 `;
@@ -93,7 +113,7 @@ const ListRenderer = props => (
         );
       }}
       threshold={50}
-      loader={<>{props.loading && <LoadingIndicator hideText noMargin />}</>}
+      loader={<LoadingIndicator hideText noMargin />}
     >
       <JoblistingGrid>
         {props.root &&
@@ -146,7 +166,15 @@ const ListRenderer = props => (
                             isCurrentYear(node.deadline) ? '' : 'YYYY'
                           }`
                         )
-                      : 'Løpende'}
+                      : 'Løpende søknadsfrist'}
+                  </div>
+
+                  <div style={{ color: 'gray', textAlign: 'center' }}>
+                    {node.towns.length > 3
+                      ? `${node.towns[0].name}, ${
+                          node.towns[1].name
+                        }, ${node.towns[2].name.slice(0, 3)}...`
+                      : joinValues(node.towns.map(({ name }) => name))}
                   </div>
                 </a>
               </Link>
@@ -175,6 +203,7 @@ export const JoblistingsList = createPaginationContainer(
           toYear: { type: "Float" }
           company: { type: "ID" }
           towns: { type: "[ID]", defaultValue: [] }
+          orderBy: { type: "[OrderByJoblistingType]" }
         ) {
         joblistings(
           first: $count
@@ -184,10 +213,18 @@ export const JoblistingsList = createPaginationContainer(
           fromYear: $fromYear
           toYear: $toYear
           towns: $towns
+          orderBy: $orderBy
         )
           @connection(
             key: "Joblistings_joblistings"
-            filters: ["toYear", "fromYear", "company", "type", "towns"]
+            filters: [
+              "toYear"
+              "fromYear"
+              "company"
+              "type"
+              "towns"
+              "orderBy"
+            ]
           ) {
           edges {
             node {
@@ -197,6 +234,9 @@ export const JoblistingsList = createPaginationContainer(
               title
               url
               deadline
+              towns {
+                name
+              }
               company {
                 name
                 logo(width: 800, height: 260)
@@ -223,9 +263,17 @@ export const JoblistingsList = createPaginationContainer(
       };
     },
     getVariables(props, { cursor, count }, fragmentVariables) {
-      const { type, company, fromYear, toYear, towns } = fragmentVariables;
+      const {
+        type,
+        orderBy,
+        company,
+        fromYear,
+        toYear,
+        towns
+      } = fragmentVariables;
       return {
         count,
+        orderBy,
         fromYear,
         toYear,
         cursor,
