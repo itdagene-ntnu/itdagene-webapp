@@ -15,8 +15,6 @@ import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
 
-
-
 const CompanyImage = styled(Image)`
   width: 95%;
   max-width: 232px;
@@ -133,11 +131,22 @@ const ListRenderer = props => (
                     }{' '}
                     @ {node.company.name}
                   </div>
-                  <div style={{ color: 'gray', textAlign: 'center' , fontWeight: 'bold', margin: '3px'}}>
-                    {node.deadline ? 'Frist: ' + dayjs(node.deadline).format(
-                        `D. MMMM ${isCurrentYear(node.deadline) ? '' : 'YYYY'}`
-                      ):
-                    'Løpende'}
+                  <div
+                    style={{
+                      color: 'gray',
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      margin: '3px'
+                    }}
+                  >
+                    {node.deadline
+                      ? 'Frist: ' +
+                        dayjs(node.deadline).format(
+                          `D. MMMM ${
+                            isCurrentYear(node.deadline) ? '' : 'YYYY'
+                          }`
+                        )
+                      : 'Løpende'}
                   </div>
                 </a>
               </Link>
