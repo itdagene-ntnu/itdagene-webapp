@@ -25,7 +25,14 @@ class Index extends React.Component<WithDataProps, State> {
   render() {
     const { variables, query, environment } = this.props;
     return (
-      <Layout noLoading responsive>
+      <Layout
+        customOpengraphMetadata={() => ({
+          title: 'Jobbannonser'
+        })}
+        props
+        noLoading
+        responsive
+      >
         <JoblistingsContainer environment={environment} variables={variables}>
           <QueryRenderer
             query={query}

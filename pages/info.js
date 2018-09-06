@@ -31,7 +31,7 @@ const Index = ({
           responsive
           shouldCenter={!!props && !props.page}
           {...{ error, props }}
-          opengraphMetadata={({ props }) => props.page}
+          metadata={props && props.page}
           contentRenderer={({ props }) =>
             props.page ? (
               <PageView page={props.page} />
@@ -53,8 +53,7 @@ export default withData(Index, {
       page(slug: $side) {
         ... on Page {
           ...PageView_page
-          title
-          description
+          ...metadata_metadata
         }
       }
     }

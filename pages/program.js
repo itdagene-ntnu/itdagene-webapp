@@ -31,6 +31,7 @@ const Index = ({
         <Layout
           responsive
           {...{ error, props }}
+          metadata={props && props.programPage}
           contentRenderer={({ props, error }) => {
             const groupedEvents =
               props.events &&
@@ -109,6 +110,7 @@ export default withData(Index, {
       }
       programPage: page(slug: "program") {
         ...PageView_page
+        ...metadata_metadata
       }
     }
   `,

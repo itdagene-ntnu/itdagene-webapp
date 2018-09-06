@@ -42,6 +42,7 @@ const Index = ({
         <Layout
           responsive
           {...{ error, props }}
+          metadata={props && props.omItdagene}
           contentRenderer={({ props, error }) => (
             <>
               {props.omItdagene && <PageView page={props.omItdagene} />}
@@ -77,6 +78,7 @@ export default withData(Index, {
 
       omItdagene: page(slug: "om-itdagene") {
         ...PageView_page
+        ...metadata_metadata
       }
     }
   `,

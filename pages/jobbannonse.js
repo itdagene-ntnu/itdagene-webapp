@@ -31,7 +31,7 @@ const Index = ({
         <Layout
           responsive
           {...{ error, props }}
-          opengraphMetadata={({ props }) =>
+          customOpengraphMetadata={({ props }) =>
             props.joblisting
               ? {
                   ...props.joblisting,

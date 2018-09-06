@@ -17,6 +17,17 @@ describe('Page rendering', () => {
     },
     16000
   );
+
+  test(
+    'Joblistings w/filters rendering',
+    async () => {
+      const response = await page.goto(
+        baseUrl + '/jobbannonser?orderBy=DEADLINE&type=pp&fromYear=1&toYear=4'
+      );
+      expect(response.status()).toBe(200);
+    },
+    16000
+  );
   test(
     'Joblistings page rendering',
     async () => {
