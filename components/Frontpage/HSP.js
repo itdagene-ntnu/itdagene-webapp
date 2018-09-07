@@ -58,7 +58,7 @@ const HSP = () => (
       </a>
       <a href="http://www.itverket.no/">
         <MiscPhoto
-          src="https://odinugedal.no/itverket_hopper.jpg"
+          src="https://cdn.itdagene.no/itverket_hopper.jpg"
           alt="Bilde av itverket, hoppende"
         />
       </a>
