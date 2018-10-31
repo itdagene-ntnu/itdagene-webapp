@@ -70,15 +70,12 @@ export const query = graphql`
 
 const JoblistingGrid = styled(Flex)`
   width: 100%;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
+  display: grid;
 `;
 const CompanyElement = styled('div')`
-  flex-grow: 1;
   cursor: pointer;
-  flex-basis: 239px;
-  max-width: 239px;
-  padding: 60px 15px 15px 15px;
+  padding: 60px 15px 15px;
   @media only screen and (max-width: 767px) {
     max-width: none;
   }
