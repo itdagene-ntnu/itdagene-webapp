@@ -95,7 +95,17 @@ export const Layout = <T>({
   children?: React.Node,
   noLoading?: boolean
 }) => {
-  if (error) return <div>Error</div>;
+  if (error)
+    return (
+      <Wrapper>
+        <CustomOpengraphRenderer />
+        <HeaderMenu />
+        <Content center>
+          <h1>Det har skjedd en feil...</h1>
+          <h2>Dette er absolutt ikke bra :(</h2>
+        </Content>
+      </Wrapper>
+    );
 
   if (!props && !noLoading)
     return (
