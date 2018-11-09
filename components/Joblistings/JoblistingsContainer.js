@@ -97,7 +97,11 @@ const ListRenderer = props => (
       element="div"
       hasMore={props.relay.hasMore()}
       loadMore={() => {
-        if (!props.relay.hasMore() || props.relay.isLoading()) {
+        if (
+          props.loading ||
+          !props.relay.hasMore() ||
+          props.relay.isLoading()
+        ) {
           return;
         }
 
