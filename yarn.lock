@@ -964,9 +964,9 @@
     mini-css-extract-plugin "0.4.3"
     postcss-loader "3.0.0"
 
-"@zeit/next-source-maps@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@zeit/next-source-maps/-/next-source-maps-0.0.3.tgz#d62e93b4f5ccdd542c8530d21f60dd2757d98e3c"
+"@zeit/next-source-maps@^0.0.4-canary.0":
+  version "0.0.4-canary.0"
+  resolved "https://registry.yarnpkg.com/@zeit/next-source-maps/-/next-source-maps-0.0.4-canary.0.tgz#9ac36e594ed9d507162911c91b7a5e022879dff2"
 
 abab@^1.0.4:
   version "1.0.4"
@@ -6157,7 +6157,7 @@ neo-async@^2.5.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.5.1.tgz#acb909e327b1e87ec9ef15f41b8a269512ad41ee"
 
-next@^7.0.1:
+next@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/next/-/next-7.0.2.tgz#5ff6b3f0e6cf03ce539d5779a55dc1f8fb1759d7"
   dependencies:

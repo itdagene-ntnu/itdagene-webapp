@@ -1,4 +1,4 @@
-FROM node:8 as builder
+FROM node:10 as builder
 
 RUN mkdir /app
 WORKDIR /app
@@ -38,16 +38,17 @@ ENV SENTRY_URL ${SENTRY_URL}
 COPY --from=builder /app/.next .next
 
 RUN sentry-cli releases new ${RELEASE}
-RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
---rewrite --url-prefix="~/_next/$(cat .next/BUILD_ID)/page/" \
-'./.next/bundles/pages/'
 
 RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
---rewrite --url-prefix="~/_next/static/commons/" \
-'./.next/static/commons/'
+--rewrite --url-prefix="~/_next/static/" \
+"./.next/static/"
+
+RUN sentry-cli releases files ${RELEASE} upload-sourcemaps \
+--rewrite --url-prefix="/app/.next/server/" \
+'./.next/server/'
 RUN sentry-cli releases finalize ${RELEASE}
 
-FROM node:8
+FROM node:10-alpine
 MAINTAINER Odin Ugedal <odin@ugedal.com>
 RUN mkdir /app
 WORKDIR /app/
