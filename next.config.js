@@ -1,5 +1,5 @@
 const withCss = require('@zeit/next-css');
-const withSourceMaps = require('@zeit/next-source-maps');
+const withSourceMaps = require('@zeit/next-source-maps')();
 module.exports = withSourceMaps(
   withCss({
     webpack: (config, { dev }) => {
