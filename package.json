@@ -35,7 +35,7 @@
     "raven-js": "^3.24.0",
     "rc-slider": "^8.6.3",
     "react": "^16.5.2",
-    "react-countdown-now": "^2.0.1",
+    "react-countdown-now": "^2.0.2",
     "react-dom": "^16.5.2",
     "react-hamburger-menu": "^1.1.1",
     "react-infinite-scroller": "^1.2.0",
