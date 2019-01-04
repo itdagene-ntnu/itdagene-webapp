@@ -33,9 +33,14 @@ const StyledMenuItem = styled('span')`
 
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
-  { key: 'about-us', name: 'OM itDAGENE', to: '/om-itdagene' },
+  { key: 'about-us', name: 'INFO', to: '/om-itdagene' },
   { key: 'program', name: 'PROGRAM', to: '/program' },
-  { key: 'joblistings', name: 'JOBBANNONSER', to: '/jobbannonser' }
+  { key: 'joblistings', name: 'JOBB', to: '/jobbannonser' },
+  {
+    key: 'for-bedrifter',
+    name: 'FOR BEDRIFTER',
+    to: '/info?side=for-bedrifter'
+  }
 ];
 
 const MenuItem = withRouter(
