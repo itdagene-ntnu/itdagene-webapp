@@ -27,7 +27,7 @@ export default class Default extends Document {
             content="width=device-width, initial-scale=1, maximum-scale=1"
           />
           <link
-            href="https://fonts.googleapis.com/css?family=Raleway:400,500,600,700,400italic,700italic&subset=latin"
+            href="https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css"
             rel="stylesheet"
           />
           <style>{`
@@ -38,7 +38,7 @@ export default class Default extends Document {
               color: rgba(0, 0, 0, 0.87);
               font-smoothing: antialiased;
               word-break: break-word;
-              font-family: Raleway;
+              font-family: rawline;
             }
             img {
               max-width: 100%;
