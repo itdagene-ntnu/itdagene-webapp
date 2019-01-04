@@ -26,7 +26,10 @@ export default class Default extends Document {
             name="viewport"
             content="width=device-width, initial-scale=1, maximum-scale=1"
           />
-          <link href="https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css" rel="stylesheet" /> 
+          <link
+            href="https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css"
+            rel="stylesheet"
+          />
           <style>{`
             body {
               margin: 0;
