@@ -58,7 +58,7 @@ const Footer = () => (
             tredjeklasse. itDAGENE arrangeres en gang i året av data- og
             kommunikasjonsteknologi ved NTNU i Trondheim.
           </p>
-          <p style={{paddingTop: 18}}>
+          <p style={{ paddingTop: 18 }}>
             Hovedsamarbeidspartner i 2018 var{' '}
             <a href="http://itverket.no">ITverket.</a>
           </p>
