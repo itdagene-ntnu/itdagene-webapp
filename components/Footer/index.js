@@ -51,7 +51,6 @@ const Footer = () => (
           </NoBulletUl>
         </RightBorderFlex>
         <FlexItem grow={1} basis="350px">
-          <h4 style={{ marginBottom: 0 }}> Hva er itDAGENE?</h4>
           <p>
             itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
             fremtidige arbeidsgivere. Messen arrangeres av studenter for
@@ -59,9 +58,8 @@ const Footer = () => (
             tredjeklasse. itDAGENE arrangeres en gang i året av data- og
             kommunikasjonsteknologi ved NTNU i Trondheim.
           </p>
-          <h4 style={{ marginBottom: 0 }}>Hovedsamarbeidspartner</h4>
-          <p>
-            Årets hovedsamarbeidspartner er{' '}
+          <p style={{ paddingTop: 18 }}>
+            Hovedsamarbeidspartner i 2018 var{' '}
             <a href="http://itverket.no">ITverket.</a>
           </p>
         </FlexItem>
