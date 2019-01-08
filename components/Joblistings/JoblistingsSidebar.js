@@ -2,14 +2,15 @@
 import * as React from 'react';
 import { Range } from 'rc-slider';
 import { withRouter } from 'next/router';
+// $FlowFixme
 import Select from 'react-select';
+// $FlowFixme
 import AsyncSelect from 'react-select/lib/Async';
 import { fetchQuery } from 'relay-runtime';
 import Router from 'next/router';
 import { graphql, type Variables, type Environment } from 'react-relay';
 import debounce from '../../utils/debounce';
 import styled from 'styled-components';
-//import { itdageneBlue } from '../../utils/colors';
 
 const Sidebar = styled('div')`
   display: flex;
