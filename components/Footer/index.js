@@ -61,7 +61,7 @@ const Footer = () => (
               <a href="https://github.com/itdagene-ntnu">itdagene-ntnu</a>
             </li>
             <li>
-              Docs • <a href="https://docs.itdagene.no">docs.itdagene</a>
+              Docs • <a href="https://docs.itdagene.no">docs.itdagene.no</a>
             </li>
           </NoBulletUl>
         </RightBorderFlex>
