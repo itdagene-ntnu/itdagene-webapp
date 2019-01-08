@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { Range } from 'rc-slider';
 import { withRouter } from 'next/router';
-// $FlowFixme
+// $FlowFixMe
 import Select from 'react-select';
-// $FlowFixme
+// $FlowFixMe
 import AsyncSelect from 'react-select/lib/Async';
 import { fetchQuery } from 'relay-runtime';
 import Router from 'next/router';
