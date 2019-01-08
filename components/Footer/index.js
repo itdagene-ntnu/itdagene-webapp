@@ -13,17 +13,22 @@ const Container = styled('div')`
 const RightBorderFlex = styled(FlexItem)`
   border-right: 1px solid #e2e9f1;
   margin-right: 20px;
+
+  @media only screen and (max-width: 800px) {
+    border-right: 0;
+    margin-right: 10px;
+  }
 `;
 
 const Footer = () => (
   <Container>
     <ResponsiveContent>
       <Flex wrap>
-        <RightBorderFlex grow noShrink basis="280px">
+        <RightBorderFlex grow noShrink basis="300px">
           <NoBulletUl>
             <li>
               <img
-                style={{ width: 100 }}
+                style={{ width: 150 }}
                 src="/static/itdagene-gray.png"
                 alt="itDAGENE logo"
               />
@@ -32,6 +37,8 @@ const Footer = () => (
             <li>7491 Trondheim</li>
             <li>Orgnr. 912 601 625 </li>
           </NoBulletUl>
+        </RightBorderFlex>
+        <RightBorderFlex grow noShrink basis="300px">
           <NoBulletUl>
             <li>
               <strong>Kontakt</strong>
@@ -44,20 +51,33 @@ const Footer = () => (
               Webansvarlig •{' '}
               <a href="mailto:web@itdagene.no">web@itdagene.no </a>
             </li>
+          </NoBulletUl>
+          <NoBulletUl>
+            <li>
+              <strong>Teknologi</strong>
+            </li>
             <li>
               Github •{' '}
               <a href="https://github.com/itdagene-ntnu">itdagene-ntnu</a>
             </li>
+            <li>
+              Docs • <a href="https://docs.itdagene.no">docs.itdagene</a>
+            </li>
           </NoBulletUl>
         </RightBorderFlex>
         <FlexItem grow={1} basis="350px">
-          <p>
-            itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
-            fremtidige arbeidsgivere. Messen arrangeres av studenter for
-            studenter, overskuddet går til studentenes ekskursjon i
-            tredjeklasse. itDAGENE arrangeres en gang i året av data- og
-            kommunikasjonsteknologi ved NTNU i Trondheim.
-          </p>
+          <NoBulletUl>
+            <li>
+              <strong>Om</strong>
+            </li>
+            <li>
+              itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
+              fremtidige arbeidsgivere. Messen arrangeres av studenter for
+              studenter, overskuddet går til studentenes ekskursjon i
+              tredjeklasse. itDAGENE arrangeres en gang i året av data- og
+              kommunikasjonsteknologi ved NTNU i Trondheim.
+            </li>
+          </NoBulletUl>
         </FlexItem>
       </Flex>
     </ResponsiveContent>
