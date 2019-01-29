@@ -9,7 +9,7 @@
     "schema": "graphql get-schema",
     "schema:prod": "yarn schema --project=itdagene --all=false -e prod",
     "schema:dev": "yarn schema --project=itdagene --all=false -e dev",
-    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql",
+    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql --watchman false",
     "lint:prettier": "prettier '**/*.{js,css,graphql}' --list-different",
     "lint:eslint": "eslint . --ignore-path .prettierignore",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn flow",
