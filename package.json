@@ -39,7 +39,7 @@
     "react-hamburger-menu": "^1.1.1",
     "react-infinite-scroller": "^1.2.0",
     "react-markdown": "^4.0.3",
-    "react-relay": "2.0.0",
+    "react-relay": "3.0.0",
     "react-relay-network-modern": "^2.4.0",
     "react-select": "^2.2.0",
     "recompose": "^0.28.0",
