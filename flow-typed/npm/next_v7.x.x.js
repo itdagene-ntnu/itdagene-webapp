@@ -1,9 +1,9 @@
-// flow-typed signature: a27f0bb685d654276a1c5f31465274ce
-// flow-typed version: 9d82549796/next_v7.x.x/flow_>=v0.53.x
+// flow-typed signature: c2cb4bca6254c6d79d860fa177024cf6
+// flow-typed version: 67a3fa05b3/next_v7.x.x/flow_>=v0.93.x
 
 declare module "next" {
   declare type RequestHandler = (
-    req: http$IncomingMessage,
+    req: http$IncomingMessage<>,
     res: http$ServerResponse,
     parsedUrl: any
   ) => Promise<void>;
@@ -13,27 +13,27 @@ declare module "next" {
     getRequestHandler(): RequestHandler,
     setAssetPrefix(url: string): void,
     render(
-      req: http$IncomingMessage,
+      req: http$IncomingMessage<>,
       res: http$ServerResponse,
       pathname: string,
       query?: Object
     ): Promise<void>,
     renderToHTML(
-      req: http$IncomingMessage,
+      req: http$IncomingMessage<>,
       res: http$ServerResponse,
       pathname: string,
       query?: Object
     ): string,
     renderError(
       err: Error,
-      req: http$IncomingMessage,
+      req: http$IncomingMessage<>,
       res: http$ServerResponse,
       pathname: string,
       query?: Object
     ): Promise<void>,
     renderErrorToHTML(
       err: Error,
-      req: http$IncomingMessage,
+      req: http$IncomingMessage<>,
       res: http$ServerResponse,
       pathname: string,
       query?: Object
@@ -66,6 +66,13 @@ declare module "next" {
 
 declare module "next/head" {
   declare module.exports: Class<React$Component<any, any>>;
+}
+
+declare module "next/config" {
+  declare module.exports: () => {
+    publicRuntimeConfig: { [string]: string },
+    serverRuntimeConfig: { [string]: string }
+  };
 }
 
 declare type URLObject = {
