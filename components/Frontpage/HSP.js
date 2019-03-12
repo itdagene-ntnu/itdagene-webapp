@@ -4,11 +4,12 @@ import { Image, CenterIt } from '../Styled';
 import styled from 'styled-components';
 
 const HSPLogo = styled(Image)`
-  width: 350px;
+  width: 450px;
   max-width: 100%;
-  padding-bottom: 14px;
+  margin-top: 10px;
 `;
 
+/*
 const MiscPhoto = styled(Image)`
   width: 450px;
   max-width: 100%;
@@ -20,48 +21,38 @@ const MiscPhoto = styled(Image)`
   margin-left: auto;
   margin-right: auto;
 `;
+*/
 
 const HSP = () => (
-  <Flex justifyAround wrapReverse>
+  <Flex justifyAround wrap>
+    <FlexItem>
+      <h1>Hovedsamarbeidspartner</h1>
+    </FlexItem>
     <FlexItem grow={1} basis="500px">
-      <CenterIt>
-        <h1>Hovedsamarbeidspartner</h1>
+      <FlexItem>
+        <a href="http://www.bouvet.no/">
+          <HSPLogo src="static/bouvet_logo.png" alt="bouvet logo" />
+        </a>
+      </FlexItem>
+      <CenterIt text>
         <p>
-          <i>
-            Vi er stolte av å kunne presentere ITverket AS som
-            hovedsamarbeidspartner i 2018.
-          </i>
+          <b>
+            Vi er stolte av å kunne presentere Bouvet som hovedsamarbeidspartner
+            i 2019.
+          </b>
         </p>
-        <h2>Hvem er ITverket?</h2>
         <p>
+          «Dette samarbeidet er vi svært stolte av! Vi er opptatt av at
+          studenter skal få muligheten til å se hva potensielle arbeidsgivere
+          kan tilby, samt å skape en dialog med studentene, slik at de får en
+          bedre forståelse for hva som kreves av de senere. Dette er et
+          arrangement som er like positivt for bedriftene som studentene, og det
+          er nettopp dette som gjør at vi ønsket å være med som hovedsponsor»
           <i>
-            «ITverket er et konsulentselskap lokalisert i Oslo med 72 engasjerte
-            ansatte fordelt på avdelingene våre for systemutvikling (Java og
-            .NET), prosjektledelse og front-end. Hos oss har vi en god miks av
-            erfarne konsulenter og nyutdannede, fremmadstormende talenter. Vi
-            lever etter våre verdier som sier at vi skal være «pålitelige, lekne
-            og fleksible» både overfor våre kunder, men også internt. Vi setter
-            mennesket i fokus og ønsker at våre konsulenter skal utvikle seg
-            både faglig og personlig. Dette vil også kundene våre dra stor nytte
-            av. En fornøyd ansatt er en produktiv ansatt. Vi har jobbet spesielt
-            aktivt på NTNU de siste 7-8 årene for å tiltrekke oss flere gode
-            ITverkere og vi har gjort dette med stor suksess. 25 av våre ansatte
-            er ansatt etter å ha vært med på våre sommerprosjekter. »
+            <br /> - Eirik Vefsnmo, Reg. dir Bovuet Region Nord.
           </i>
-          <br /> - Tom Henrik N. Rogstad, Adm. dir.
         </p>
       </CenterIt>
-    </FlexItem>
-    <FlexItem>
-      <a href="http://www.itverket.no/">
-        <HSPLogo src="static/itverket.png" alt="ITverket logo" />
-      </a>
-      <a href="http://www.itverket.no/">
-        <MiscPhoto
-          src="https://cdn.itdagene.no/itverket_hopper.jpg"
-          alt="Bilde av itverket, hoppende"
-        />
-      </a>
     </FlexItem>
   </Flex>
 );
