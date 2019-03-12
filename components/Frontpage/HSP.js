@@ -23,10 +23,18 @@ const MiscPhoto = styled(Image)`
 `;
 */
 
+const Title = styled('h1')`
+  @media only screen and (max-width: 767px) {
+    font-size: 1.5em;
+  }
+`;
+
 const HSP = () => (
   <Flex justifyAround wrap>
     <FlexItem>
-      <h1>Hovedsamarbeidspartner</h1>
+      <CenterIt text>
+        <Title>Hovedsamarbeidspartner</Title>
+      </CenterIt>
     </FlexItem>
     <FlexItem grow={1} basis="500px">
       <FlexItem>
@@ -36,10 +44,7 @@ const HSP = () => (
       </FlexItem>
       <CenterIt text>
         <p>
-          <b>
-            Vi er stolte av å kunne presentere Bouvet som hovedsamarbeidspartner
-            i 2019.
-          </b>
+          <b>Vi er stolte av å kunne presentere Bouvet som HSP i 2019.</b>
         </p>
         <p>
           «Dette samarbeidet er vi svært stolte av! Vi er opptatt av at

@@ -66,7 +66,6 @@ export const CenterIt = styled('div')`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  height: 100%;
 
   ${({ text = false }: { text?: boolean }) =>
     text &&

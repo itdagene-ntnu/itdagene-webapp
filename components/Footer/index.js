@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import styled from 'styled-components';
-import Flex, { FlexItem } from 'styled-flex-component';
+import { FlexItem } from 'styled-flex-component';
 import { ResponsiveContent, NoBulletUl } from '../Styled';
 
 const Container = styled('div')`
@@ -10,9 +10,19 @@ const Container = styled('div')`
   background-color: #f7f9fb;
 `;
 
+const InnerContainer = styled('div')`
+  display: flex;
+  wrap: nowrap;
+
+  @media only screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+`;
+
 const RightBorderFlex = styled(FlexItem)`
   border-right: 1px solid #e2e9f1;
   margin-right: 20px;
+  padding-right: 20px;
 
   @media only screen and (max-width: 800px) {
     border-right: 0;
@@ -20,11 +30,19 @@ const RightBorderFlex = styled(FlexItem)`
   }
 `;
 
+const BottomAbout = styled('div')`
+  width: 600px;
+
+  @media only screen and (max-width: 800px) {
+    width: 100%;
+  }
+`;
+
 const Footer = () => (
   <Container>
     <ResponsiveContent>
-      <Flex wrap>
-        <RightBorderFlex grow noShrink basis="300px">
+      <InnerContainer>
+        <RightBorderFlex>
           <NoBulletUl>
             <li>
               <img
@@ -38,7 +56,7 @@ const Footer = () => (
             <li>Orgnr. 912 601 625 </li>
           </NoBulletUl>
         </RightBorderFlex>
-        <RightBorderFlex grow noShrink basis="300px">
+        <RightBorderFlex>
           <NoBulletUl>
             <li>
               <strong>Kontakt</strong>
@@ -65,7 +83,7 @@ const Footer = () => (
             </li>
           </NoBulletUl>
         </RightBorderFlex>
-        <FlexItem grow={1} basis="350px">
+        <BottomAbout>
           <NoBulletUl>
             <li>
               <strong>Om</strong>
@@ -78,8 +96,8 @@ const Footer = () => (
               kommunikasjonsteknologi ved NTNU i Trondheim.
             </li>
           </NoBulletUl>
-        </FlexItem>
-      </Flex>
+        </BottomAbout>
+      </InnerContainer>
     </ResponsiveContent>
   </Container>
 );

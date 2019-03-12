@@ -21,13 +21,16 @@ const StyledMenuItem = styled('span')`
   color: #394b59;
   font-size: 20px;
   padding: 0 10px;
+  opacity: 0.8;
   ${({ active = false }: { active?: boolean }) =>
     active &&
     css`
-      font-weight: bold;
+      text-shadow: 0px 0px 0.5px black;
+      opacity: 1;
     `};
   :hover {
-    font-weight: bold;
+    text-shadow: 0px 0px 0.5px black;
+    opacity: 1;
   }
 `;
 

@@ -81,7 +81,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
             <b>it</b>DAGENE {currentMetaData.year}
           </Header>
           <SubHeader>9. & 10. september 2019</SubHeader>
-          <h3 style={{ color: 'white' }}>NTNU</h3>
+          <h3 style={{ color: 'white' }}>NTNU // Realfagsbygget</h3>
         </FlexItem>
         <FlexItem>
           <Countdown currentMetaData={currentMetaData} />

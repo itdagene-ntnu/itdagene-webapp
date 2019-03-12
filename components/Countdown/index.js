@@ -8,7 +8,7 @@ import Flex from 'styled-flex-component';
 
 const NumberBox = styled('div')`
   position: relative;
-  border-radius: 3px;
+  border-radius: 100%;
   line-height: 1;
   letter-spacing: 2px;
   flex: 1;
@@ -27,21 +27,25 @@ const Number = styled('div')`
   font-size: 52px;
 `;
 
+const Text = styled('span')`
+  line-height: 2;
+`;
+
 const renderer = ({ days, hours, minutes, seconds, completed }) =>
   !completed && (
     <Flex center wrap>
       <NumberBox>
-        <Number>{days}</Number> dager
-      </NumberBox>{' '}
+        <Number>{days}</Number> <Text> dager </Text>
+      </NumberBox>
       <NumberBox>
-        <Number>{hours}</Number> timer
-      </NumberBox>{' '}
+        <Number>{hours}</Number> <Text> timer </Text>
+      </NumberBox>
       <NumberBox>
-        <Number>{minutes}</Number> minutter
-      </NumberBox>{' '}
+        <Number>{minutes}</Number> <Text> minutter </Text>
+      </NumberBox>
       <NumberBox>
-        <Number>{seconds}</Number> sekunder
-      </NumberBox>{' '}
+        <Number>{seconds}</Number> <Text> sekunder </Text>
+      </NumberBox>
     </Flex>
   );
 
