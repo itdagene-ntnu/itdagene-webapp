@@ -30,13 +30,13 @@ const Title = styled('h1')`
 `;
 
 const HSP = () => (
-  <Flex justifyAround wrap>
+  <Flex justifyAround column>
     <FlexItem>
       <CenterIt text>
         <Title>Hovedsamarbeidspartner</Title>
       </CenterIt>
     </FlexItem>
-    <FlexItem grow={1} basis="500px">
+    <FlexItem>
       <FlexItem>
         <a href="http://www.bouvet.no/">
           <HSPLogo src="static/bouvet_logo.png" alt="bouvet logo" />
