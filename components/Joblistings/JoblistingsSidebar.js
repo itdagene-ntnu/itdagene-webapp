@@ -64,7 +64,7 @@ const townSearchQuery = graphql`
 `;
 const onQueryChange = newQuery => {
   Router.replace({
-    pathname: '/jobbannonser',
+    pathname: '/jobb',
     query: { ...Router.query, ...newQuery }
   });
 };

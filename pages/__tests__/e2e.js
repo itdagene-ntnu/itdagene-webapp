@@ -22,7 +22,7 @@ describe('Page rendering', () => {
     'Joblistings w/filters rendering',
     async () => {
       const response = await page.goto(
-        baseUrl + '/jobbannonser?orderBy=DEADLINE&type=pp&fromYear=1&toYear=4'
+        baseUrl + '/jobb?orderBy=DEADLINE&type=pp&fromYear=1&toYear=4'
       );
       expect(response.status()).toBe(200);
     },
@@ -31,7 +31,7 @@ describe('Page rendering', () => {
   test(
     'Joblistings page rendering',
     async () => {
-      const response = await page.goto(baseUrl + '/jobbannonser');
+      const response = await page.goto(baseUrl + '/jobb');
       expect(response.status()).toBe(200);
     },
     16000
