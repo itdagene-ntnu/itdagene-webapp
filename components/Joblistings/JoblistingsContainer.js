@@ -184,7 +184,7 @@ const ListRenderer = props => (
 
         {props.root &&
           props.root.joblistings.edges.length === 0 && (
-            <h2> Fant ingen annonser med søket ditt :( </h2>
+            <h2> Ingen annonser :( </h2>
           )}
       </JoblistingGrid>
     </InfiniteScroll>
