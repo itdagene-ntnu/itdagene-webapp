@@ -43,7 +43,7 @@
     "react-relay-network-modern": "^2.4.0",
     "react-select": "^2.2.0",
     "recompose": "^0.28.0",
-    "relay-runtime": "2.0.0",
+    "relay-runtime": "4.0.0",
     "styled-components": "^4.0.3",
     "styled-flex-component": "^3.0.0",
     "url-loader": "^1.0.1"
