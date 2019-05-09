@@ -40,9 +40,9 @@ jobs:
           command: |
             yarn build
 
-      - run:
-          command: |
-            RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
+            #- run:
+            #command: |
+            #RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 
   build-docker:
     machine: true
