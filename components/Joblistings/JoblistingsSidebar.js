@@ -11,13 +11,14 @@ import Router from 'next/router';
 import { graphql, type Variables, type Environment } from 'react-relay';
 import debounce from '../../utils/debounce';
 import styled from 'styled-components';
+import { lightGrey } from '../../utils/colors';
 
 const Sidebar = styled('div')`
   display: flex;
   text-align: center;
   flex-direction: column;
   align-items: center;
-  #border-left: 1px solid #e2e9f1;
+  #border-left: 1px solid ${lightGrey};
   margin: 10px;
   padding: 0 20px;
 `;

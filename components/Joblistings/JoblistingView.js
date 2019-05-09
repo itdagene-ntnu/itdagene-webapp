@@ -7,6 +7,7 @@ import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import { NoBulletUl } from '../Styled';
 import dayjs from 'dayjs';
+import { lightGrey } from '../../utils/colors';
 
 type Props = {
   joblisting: JoblistingView_joblisting
@@ -27,7 +28,7 @@ const Sidebar = styled('div')`
   text-align: center;
   flex-direction: column;
   align-items: center;
-  #border-left: 1px solid #e2e9f1;
+  #border-left: 1px solid ${lightGrey};
   margin: 20px 20px 20px 20px;
   padding: 0 20px;
 `;

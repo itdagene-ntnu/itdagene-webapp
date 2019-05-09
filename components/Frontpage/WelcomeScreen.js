@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
+import { itdageneDarkBlue } from '../../utils/colors';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData
@@ -33,10 +34,17 @@ const Header = styled('h1')`
   color: white;
   font-weight: normal;
   margin-bottom: 0;
+  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
 `;
 
 const SubHeader = styled('h2')`
   margin: 0;
+  color: white;
+  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
+`;
+
+const Location = styled('h3')`
+  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
   color: white;
 `;
 
@@ -56,7 +64,7 @@ const Video = styled('video')`
 const RootContainer = styled('div')`
   max-height: 800px;
   @media only screen and (max-width: 800px) {
-    background: #123962;
+    background: ${itdageneDarkBlue};
     min-height: 700px;
   }
   height: 75%;
@@ -81,7 +89,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
             <b>it</b>DAGENE {currentMetaData.year}
           </Header>
           <SubHeader>9. & 10. september 2019</SubHeader>
-          <h3 style={{ color: 'white' }}>NTNU // Realfagsbygget</h3>
+          <Location>NTNU // Realfagsbygget</Location>
         </FlexItem>
         <FlexItem>
           <Countdown currentMetaData={currentMetaData} />

@@ -1,6 +1,8 @@
 //@flow
-export const itdageneBlue = '#037bb4';
-export const itdageneLightBlue = '#97D9EF';
-export const itdageneGreen = '#B8DFC4';
-export const itdageneYellow = '#F6E1A1';
-export const itdagenePurple = '#E4DCEE';
+export const itdageneBlue = '#0778BC';
+export const itdageneLightBlue = '#41C0EB';
+export const itdageneDarkBlue = '#123962';
+export const itdageneGreen = '#3AB07B';
+export const itdageneYellow = '#F4C20E';
+export const itdageneRed = '#E01E5B';
+export const lightGrey = '#e2e9f1';

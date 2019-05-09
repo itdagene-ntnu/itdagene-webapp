@@ -7,10 +7,10 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import HamburgerMenu from 'react-hamburger-menu';
+import { lightGrey } from '../../utils/colors';
 
-// background: #f7f9fb;
 const Header = styled('header')`
-  #border-bottom: 1px solid #e2e9f1;
+  #border-bottom: 1px solid ${lightGrey};
   #border-bottom: 3px solid #027cb5;
   padding-top: 10px;
   padding-bottom: 10px;

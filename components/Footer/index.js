@@ -3,10 +3,11 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { FlexItem } from 'styled-flex-component';
 import { ResponsiveContent, NoBulletUl } from '../Styled';
+import { lightGrey } from '../../utils/colors';
 
 const Container = styled('div')`
   padding: 2.5em 0em;
-  border-top: 1px solid #e2e9f1;
+  border-top: 1px solid ${lightGrey};
   background-color: #f7f9fb;
 `;
 
@@ -20,7 +21,7 @@ const InnerContainer = styled('div')`
 `;
 
 const RightBorderFlex = styled(FlexItem)`
-  border-right: 1px solid #e2e9f1;
+  border-right: 1px solid ${lightGrey};
   margin-right: 20px;
   padding-right: 20px;
 
@@ -47,7 +48,7 @@ const Footer = () => (
             <li>
               <img
                 style={{ width: 150 }}
-                src="/static/itdagene-gray.png"
+                src="https://cdn.itdagene.no/itdagene2019-logo.svg"
                 alt="itDAGENE logo"
               />
             </li>
@@ -104,6 +105,6 @@ const Footer = () => (
 
 export default styled(Footer)`
   padding: 5em 0em;
-  border-top: 1px solid #e2e9f1;
+  border-top: 1px solid ${lightGrey};
   background-color: #f7f9fb;
 `;
