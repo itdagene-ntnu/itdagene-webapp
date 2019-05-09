@@ -40,9 +40,9 @@ jobs:
           command: |
             yarn build
 
-      - run:
-          command: |
-            RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
+    #  - run:
+    #      command: |
+    #        RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 
   build-docker:
     machine: true
@@ -58,6 +58,8 @@ jobs:
           --build-arg SENTRY_PROJECT=$SENTRY_PROJECT \
           --build-arg SENTRY_URL=$SENTRY_URL \
           .
+      - run: docker tag itdagene/webapp:$CIRCLE_BRANCH itdagene/webapp:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
+      - run: docker push itdagene/webapp:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
       - run: docker push itdagene/webapp:$CIRCLE_BRANCH
 
 workflows:

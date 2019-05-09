@@ -3,6 +3,7 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
 import styled from 'styled-components';
 import { Player } from 'video-react';
+import 'video-react/dist/video-react.css';
 
 const HSPLogo = styled(Image)`
   width: 450px;
@@ -55,8 +56,8 @@ const HSP = () => (
         <h3>↓ Da anbefaler vi å ta en titt på denne filmen ↓</h3>
         <Player
           playsInline
-          poster="../../static/placeholder.png"
-          src="../../static/Bouvet.mp4"
+          poster="https://cdn.itdagene.no/placeholder.png"
+          src="https://cdn.itdagene.no/Bouvet.mp4"
         />
       </CenterIt>
     </FlexItem>
