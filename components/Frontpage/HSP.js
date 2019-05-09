@@ -2,6 +2,7 @@ import React from 'react';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
 import styled from 'styled-components';
+import { Player } from 'video-react';
 
 const HSPLogo = styled(Image)`
   width: 450px;
@@ -46,17 +47,17 @@ const HSP = () => (
         <p>
           <b>Vi er stolte av å kunne presentere Bouvet som HSP i 2019.</b>
         </p>
-        <p>
-          «Dette samarbeidet er vi svært stolte av! Vi er opptatt av at
-          studenter skal få muligheten til å se hva potensielle arbeidsgivere
-          kan tilby, samt å skape en dialog med studentene, slik at de får en
-          bedre forståelse for hva som kreves av de senere. Dette er et
-          arrangement som er like positivt for bedriftene som studentene, og det
-          er nettopp dette som gjør at vi ønsket å være med som hovedsponsor»
-          <i>
-            <br /> - Eirik Vefsnmo, Reg. dir Bovuet Region Nord.
-          </i>
-        </p>
+        <h3>
+          Er du nysgjerrig på hvorfor de egentlig heter Bouvet? Eller lurer du
+          på hva de gjør, hva de står for, hva de bidrar til for samfunnet og
+          hva som betyr litt ekstra for dem?
+        </h3>
+        <h3>↓ Da anbefaler vi å ta en titt på denne filmen ↓</h3>
+        <Player
+          playsInline
+          poster="../../static/placeholder.png"
+          src="../../static/Bouvet.mp4"
+        />
       </CenterIt>
     </FlexItem>
   </Flex>

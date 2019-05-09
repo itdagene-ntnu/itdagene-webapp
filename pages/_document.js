@@ -30,6 +30,10 @@ export default class Default extends Document {
             href="https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css"
             rel="stylesheet"
           />
+          <link
+            rel="stylesheet"
+            href="https://video-react.github.io/assets/video-react.css"
+          />
           <style>{`
             body {
               margin: 0;
