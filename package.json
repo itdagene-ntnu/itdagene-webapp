@@ -46,8 +46,7 @@
     "relay-runtime": "2.0.0",
     "styled-components": "^4.0.3",
     "styled-flex-component": "^3.0.0",
-    "url-loader": "^1.0.1",
-    "video-react": "^0.13.7"
+    "url-loader": "^1.0.1"
   },
   "browser": {
     "raven": false,
