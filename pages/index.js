@@ -16,6 +16,7 @@ import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import withData, { type WithDataProps } from '../lib/withData';
 import Layout from '../components/Layout';
 import PageView from '../components/PageView';
+import CompactProgram from '../components/CompactProgram';
 
 type RenderProps = {
   error: ?Error,
@@ -37,7 +38,7 @@ const AboutSection = (props: pages_index_QueryResponse) => {
           <CenterIt>
             <Image
               style={{ width: 350, maxWidth: '100%' }}
-              src="static/itdagene-gray2.png"
+              src="https://cdn.itdagene.no/itdagene2019-logo.svg"
               alt="itDAGENE logo"
             />
           </CenterIt>
@@ -102,6 +103,9 @@ const Index = ({
               </section>
               <Section>
                 <AboutSection {...props} />
+              </Section>
+              <Section>
+                <CompactProgram />
               </Section>
               {props.currentMetaData.mainCollaborator && (
                 <Section>
