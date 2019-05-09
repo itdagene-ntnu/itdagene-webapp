@@ -3,6 +3,12 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import { CenterIt } from '../Styled';
 import styled from 'styled-components';
 import Link from 'next/link';
+import {
+  itdageneLightBlue,
+  itdageneGreen,
+  itdageneRed,
+  itdageneYellow
+} from '../../utils/colors.js';
 
 const Title = styled('h1')`
   @media only screen and (max-width: 767px) {
@@ -44,28 +50,28 @@ const CompactProgram = () => (
       <Title>Hva skjer under itDAGENE?</Title>
     </FlexItem>
     <Flex row wrap>
-      <Tile color="#3ab07b">
+      <Tile color={itdageneGreen}>
         <Link href="/program">
           <CenterIt text>
             <StyledLink>Sommerjobb</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-      <Tile color="#e01e5b">
+      <Tile color={itdageneRed}>
         <Link href="/program">
           <CenterIt text>
             <StyledLink>Kurs</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-      <Tile color="#41c0eb">
+      <Tile color={itdageneLightBlue}>
         <Link href="/info?side=stands">
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-      <Tile color="#f4c20e">
+      <Tile color={itdageneYellow}>
         <Link href="/info?side=bankett">
           <CenterIt text>
             <StyledLink>Bankett</StyledLink>

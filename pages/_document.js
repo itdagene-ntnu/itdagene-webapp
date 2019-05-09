@@ -3,6 +3,7 @@ import Document, { Head, Main, NextScript } from 'next/document';
 import Raven from 'raven';
 import { ServerStyleSheet } from 'styled-components';
 import * as React from 'react';
+import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
 
 export default class Default extends Document {
   static getInitialProps({ renderPage, err }: Object) {
@@ -47,12 +48,12 @@ export default class Default extends Document {
               line-height: 1.4285em;
             }
             a {
-              color: #037bb4;
+              color: ${itdageneBlue};
               text-decoration: none;
             }
 
             a:hover {
-              color: #1e70bf;
+              color: ${itdageneLightBlue};
               text-decoration: none;
             }
             h1,h2,h3,h4 {
