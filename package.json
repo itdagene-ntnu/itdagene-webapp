@@ -40,7 +40,7 @@
     "react-infinite-scroller": "^1.2.0",
     "react-markdown": "^4.0.6",
     "react-relay": "2.0.0",
-    "react-relay-network-modern": "^3.0.3",
+    "react-relay-network-modern": "^3.0.4",
     "react-select": "^2.2.0",
     "recompose": "^0.28.0",
     "relay-runtime": "2.0.0",
