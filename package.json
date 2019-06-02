@@ -41,7 +41,7 @@
     "react-markdown": "^4.0.6",
     "react-relay": "2.0.0",
     "react-relay-network-modern": "^2.4.0",
-    "react-select": "^3.0.3",
+    "react-select": "^3.0.4",
     "recompose": "^0.28.0",
     "relay-runtime": "2.0.0",
     "styled-components": "^4.0.3",
