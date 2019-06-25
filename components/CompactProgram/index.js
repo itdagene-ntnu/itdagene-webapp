@@ -85,7 +85,7 @@ const CompactProgram = () => (
     </Flex>
 
     <CenterIt text>
-      <Link href="/om-itdagene">
+      <Link href="/program">
         <a>
           <ReadMore>Les mer</ReadMore>
         </a>

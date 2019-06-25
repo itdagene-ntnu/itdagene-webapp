@@ -27,13 +27,13 @@ const Interest = () => (
         <p>
           Vi gjør oppmerksom på at itDAGENE 2019 nå er <b>fylt opp</b> med over
           60 spennende bedrifter. Det betyr dessverre at alle nye henvendelser
-          havner på venteliste.
+          havner på venteliste. Ta kontakt{' '}
+          <a href="mailto:bedrift@itdagene.no">her</a> hvis dere ønsker dette.
         </p>
         <p>
           Henvendelser angående interesse for itDAGENE 2020 åpner vi etter at
           messen 2019 er over. Dvs fra og med <b>11 september</b>. Under finner
-          dere en link til et interesseskjema hvor din bedrift kan melde
-          interesse.
+          dere vårt nye interesseskjema hvor din bedrift kan melde interesse.
         </p>
       </FlexItem>
       <FlexItem>
