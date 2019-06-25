@@ -2,7 +2,7 @@
 
 > nextgen itDAGENE frontend
 
-![Picture of the page](/static/screenshot.png)
+![Picture of the page](https://cdn.itdagene.no/screenshot.png)
 
 Written using [next.js](https://github.com/zeit/next.js/), [react-relay](https://github.com/facebook/relay/) and [graphql](http://graphql.org/).
 

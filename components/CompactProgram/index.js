@@ -44,6 +44,10 @@ const StyledLink = styled.a`
   }
 `;
 
+const ReadMore = styled('h4')`
+  margin-top: 40px;
+`;
+
 const CompactProgram = () => (
   <Flex justifyAround column>
     <FlexItem>
@@ -79,6 +83,14 @@ const CompactProgram = () => (
         </Link>
       </Tile>
     </Flex>
+
+    <CenterIt text>
+      <Link href="/om-itdagene">
+        <a>
+          <ReadMore>Les mer</ReadMore>
+        </a>
+      </Link>
+    </CenterIt>
   </Flex>
 );
 export default CompactProgram;

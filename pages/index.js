@@ -13,6 +13,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import HSP from '../components/Frontpage/HSP';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
+import Interest from '../components/Frontpage/Interest';
 import withData, { type WithDataProps } from '../lib/withData';
 import Layout from '../components/Layout';
 import PageView from '../components/PageView';
@@ -98,11 +99,12 @@ const Index = ({
           {...{ error, props }}
           contentRenderer={({ props }) => (
             <>
-              <section>
-                <WelcomeScreen currentMetaData={props.currentMetaData} />
-              </section>
+              <WelcomeScreen currentMetaData={props.currentMetaData} />
               <Section>
                 <AboutSection {...props} />
+              </Section>
+              <Section>
+                <Interest />
               </Section>
               <Section>
                 <CompactProgram />
