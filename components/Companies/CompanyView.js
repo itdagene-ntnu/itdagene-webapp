@@ -28,15 +28,14 @@ const CompanyView = ({ company }: Props) =>
     </a>
   ) : null;
 
-export default createFragmentContainer(
-  CompanyView,
-  {
-    company: graphql`fragment CompanyView_company on Company {
-  id
-  name
-  logo(width: 240, height: 200)
-  name
-  url
-}`
-  }
-);
+export default createFragmentContainer(CompanyView, {
+  company: graphql`
+    fragment CompanyView_company on Company {
+      id
+      name
+      logo(width: 240, height: 200)
+      name
+      url
+    }
+  `
+});

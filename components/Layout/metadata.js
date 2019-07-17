@@ -21,8 +21,7 @@ export const CustomOpengraphRenderer = ({
     title,
     description = defaultDescription,
     sharingImage = defaultSharingImage
-  } =
-    object || {};
+  } = object || {};
   return (
     <Head>
       <title> {title || defaultTitle}</title>
@@ -52,13 +51,12 @@ const OpengraphFragmentRenderer = ({
   </Head>
 );
 
-export default createFragmentContainer(
-  OpengraphFragmentRenderer,
-  {
-    metadata: graphql`fragment metadata_metadata on OpengraphMetadata {
-  title
-  description
-  sharingImage
-}`
-  }
-);
+export default createFragmentContainer(OpengraphFragmentRenderer, {
+  metadata: graphql`
+    fragment metadata_metadata on OpengraphMetadata {
+      title
+      description
+      sharingImage
+    }
+  `
+});

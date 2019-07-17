@@ -48,16 +48,15 @@ const PageView = ({ page, hideDate, hideContent, hideTitle }: Props) => (
   </>
 );
 
-export default createFragmentContainer(
-  PageView,
-  {
-    page: graphql`fragment PageView_page on Page {
-  id
-  content
-  slug
-  title
-  dateSaved
-  dateCreated
-}`
-  }
-);
+export default createFragmentContainer(PageView, {
+  page: graphql`
+    fragment PageView_page on Page {
+      id
+      content
+      slug
+      title
+      dateSaved
+      dateCreated
+    }
+  `
+});
