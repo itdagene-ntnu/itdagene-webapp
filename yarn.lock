@@ -1330,6 +1330,11 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.0.tgz#50c1e2260ac0ed9439a181de3725a0168d59c48a"
 
+"@restart/hooks@^0.3.1":
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/@restart/hooks/-/hooks-0.3.7.tgz#8d2768be4822260db7ce074f23ee70d19317fba1"
+  integrity sha512-6jcSoS7VIJf/KMN4AoSwWyZfvl3pFwIrZAD0krvcawnKlMQ68mFkHLjZskPnp0nP7oTMnirNIgn4flIegD+sJw==
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -8290,6 +8295,13 @@ relay-compiler@^5.0.0:
     relay-runtime "5.0.0"
     signedsource "^1.0.0"
     yargs "^9.0.0"
+
+relay-hooks@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/relay-hooks/-/relay-hooks-1.2.2.tgz#a0e34005547c4cc4f8825ed332bd4dc79fc5cd0e"
+  integrity sha512-sYUFppObfTgfo8R9TMCQQY4eXvfd8zW0749UPKUCJlzAEpXwKYKI3qmiDcrv1yHprYmv8Rk3OjhDhzakQAn/ng==
+  dependencies:
+    "@restart/hooks" "^0.3.1"
 
 relay-runtime@5.0.0, relay-runtime@^5.0.0:
   version "5.0.0"
