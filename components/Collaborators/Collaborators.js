@@ -39,7 +39,7 @@ export default createFragmentContainer(Collaborators, {
     fragment Collaborators_query on MetaData {
       collaborators {
         id
-        ...CollaboratorView_company
+        ...Collaborator_company
       }
     }
   `
