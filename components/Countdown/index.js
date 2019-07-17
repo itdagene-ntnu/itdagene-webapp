@@ -68,9 +68,9 @@ const CountdownComponent = (props: Countdown_currentMetaData) => (
 
 export default createFragmentContainer(
   CountdownComponent,
-  graphql`
-    fragment Countdown_currentMetaData on MetaData {
-      startDate
-    }
-  `
+  {
+    currentMetaData: graphql`fragment Countdown_currentMetaData on MetaData {
+  startDate
+}`
+  }
 );

@@ -37,13 +37,13 @@ const CollaboratorView = ({
 
 export default createFragmentContainer(
   CollaboratorView,
-  graphql`
-    fragment CollaboratorView_company on Company {
-      id
-      name
-      logo(width: 459, height: 170)
-      url
-      description
-    }
-  `
+  {
+    company: graphql`fragment CollaboratorView_company on Company {
+  id
+  name
+  logo(width: 459, height: 170)
+  url
+  description
+}`
+  }
 );

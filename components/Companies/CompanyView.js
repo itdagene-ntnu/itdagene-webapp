@@ -30,14 +30,13 @@ const CompanyView = ({ company }: Props) =>
 
 export default createFragmentContainer(
   CompanyView,
-  graphql`
-    fragment CompanyView_company on Company {
-      id
-      name
-      # Keep this image with an aspect ratio of 5/6. So not squared
-      logo(width: 240, height: 200)
-      name
-      url
-    }
-  `
+  {
+    company: graphql`fragment CompanyView_company on Company {
+  id
+  name
+  logo(width: 240, height: 200)
+  name
+  url
+}`
+  }
 );

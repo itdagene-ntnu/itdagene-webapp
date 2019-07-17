@@ -40,11 +40,11 @@
     "react-hamburger-menu": "^1.1.1",
     "react-infinite-scroller": "^1.2.0",
     "react-markdown": "^4.0.6",
-    "react-relay": "2.0.0",
+    "react-relay": "^5.0.0",
     "react-relay-network-modern": "^2.4.0",
     "react-select": "^2.2.0",
     "recompose": "^0.28.0",
-    "relay-runtime": "2.0.0",
+    "relay-runtime": "^5.0.0",
     "styled-components": "^4.0.3",
     "styled-flex-component": "^3.0.0",
     "url-loader": "^2.0.1",
@@ -60,7 +60,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.0.0",
-    "babel-plugin-relay": "^2.0.0",
+    "babel-plugin-relay": "^5.0.0",
     "babel-plugin-styled-components": "^1.8.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.1.1",
@@ -71,7 +71,7 @@
     "eslint-plugin-import": "^2.10.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
-    "eslint-plugin-relay": "^1.0.0",
+    "eslint-plugin-relay": "^1.3.4",
     "flow-bin": "^0.94.0",
     "get-graphql-schema": "^2.1.2",
     "jest": "^24.4.0",
@@ -79,7 +79,7 @@
     "prettier": "^1.11.1",
     "puppeteer": "^1.5.0",
     "react-test-renderer": "^16.4.1",
-    "relay-compiler": "2.0.0"
+    "relay-compiler": "^5.0.0"
   },
   "prettier": {
     "singleQuote": true

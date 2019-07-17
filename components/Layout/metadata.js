@@ -54,11 +54,11 @@ const OpengraphFragmentRenderer = ({
 
 export default createFragmentContainer(
   OpengraphFragmentRenderer,
-  graphql`
-    fragment metadata_metadata on OpengraphMetadata {
-      title
-      description
-      sharingImage
-    }
-  `
+  {
+    metadata: graphql`fragment metadata_metadata on OpengraphMetadata {
+  title
+  description
+  sharingImage
+}`
+  }
 );

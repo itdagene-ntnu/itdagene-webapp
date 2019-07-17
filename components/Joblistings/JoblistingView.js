@@ -165,27 +165,27 @@ const Joblisting = ({ joblisting }: Props) => (
 
 export default createFragmentContainer(
   Joblisting,
-  graphql`
-    fragment JoblistingView_joblisting on Joblisting {
-      id
-      company {
-        name
-        logo(width: 1127, height: 260)
-        description
-        url
-        id
-      }
-      towns {
-        name
-      }
-      deadline
-      title
-      type
-      description
-      fromYear
-      toYear
-      url
-      dateCreated
-    }
-  `
+  {
+    joblisting: graphql`fragment JoblistingView_joblisting on Joblisting {
+  id
+  company {
+    name
+    logo(width: 1127, height: 260)
+    description
+    url
+    id
+  }
+  towns {
+    name
+  }
+  deadline
+  title
+  type
+  description
+  fromYear
+  toYear
+  url
+  dateCreated
+}`
+  }
 );
