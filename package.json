@@ -13,7 +13,7 @@
     "lint:eslint": "eslint . --ignore-path .prettierignore",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn flow",
     "prettier": "prettier '**/*.{js,css,graphql}' --write",
-    "flow": "flow --quiet",
+    "flow": "flow",
     "test": "JEST_PUPPETEER_CONFIG=./testing/jest-puppeteer.config.js NODE_ENV=test jest"
   },
   "author": "Odin Ugedal <odin@ugedal.com>",
