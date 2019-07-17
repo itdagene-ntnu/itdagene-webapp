@@ -1,5 +1,5 @@
-// flow-typed signature: 833075a5cefc49eb523160a5fca9d8b6
-// flow-typed version: 325925f1b7/jest_v24.x.x/flow_>=v0.39.x
+// flow-typed signature: 06581ed8183c695a253980a047dc1b60
+// flow-typed version: 038675f680/jest_v24.x.x/flow_>=v0.39.x
 
 type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
   (...args: TArguments): TReturn,
@@ -127,8 +127,8 @@ type JestMatcherResult = {
 };
 
 type JestMatcher = (
-  actual: any,
-  expected: any
+  received: any,
+  ...actual: Array<any>
 ) => JestMatcherResult | Promise<JestMatcherResult>;
 
 type JestPromiseType = {
@@ -212,24 +212,34 @@ type EnzymeMatchersType = {
   toHaveDisplayName(name: string): void,
 };
 
-// DOM testing library extensions https://github.com/kentcdodds/dom-testing-library#custom-jest-matchers
+// DOM testing library extensions (jest-dom)
+// https://github.com/testing-library/jest-dom
 type DomTestingLibraryType = {
-  toBeDisabled(): void,
-  toBeEmpty(): void,
+  /**
+   * @deprecated
+   */
+  toBeInTheDOM(container?: HTMLElement): void,
+
   toBeInTheDocument(): void,
   toBeVisible(): void,
+  toBeEmpty(): void,
+  toBeDisabled(): void,
+  toBeEnabled(): void,
+  toBeInvalid(): void,
+  toBeRequired(): void,
+  toBeValid(): void,
   toContainElement(element: HTMLElement | null): void,
   toContainHTML(htmlText: string): void,
-  toHaveAttribute(name: string, expectedValue?: string): void,
+  toHaveAttribute(attr: string, value?: any): void,
   toHaveClass(...classNames: string[]): void,
   toHaveFocus(): void,
   toHaveFormValues(expectedValues: { [name: string]: any }): void,
   toHaveStyle(css: string): void,
   toHaveTextContent(
-    content: string | RegExp,
+    text: string | RegExp,
     options?: { normalizeWhitespace: boolean }
   ): void,
-  toBeInTheDOM(): void,
+  toHaveValue(value?: string | string[] | number): void,
 };
 
 // Jest JQuery Matchers: https://github.com/unindented/custom-jquery-matchers
@@ -707,7 +717,7 @@ interface JestExpectType {
   /**
    *
    */
-  toHaveProperty(propPath: string, value?: any): void;
+  toHaveProperty(propPath: string | $ReadOnlyArray<string>, value?: any): void;
   /**
    * Use .toMatch to check that a string matches a regular expression or string.
    */

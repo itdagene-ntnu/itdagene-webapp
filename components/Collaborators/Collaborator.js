@@ -22,11 +22,7 @@ const Image = styled(ZoomImage)`
   padding: 15px;
 `;
 
-const Collaborator = ({
-  company,
-  showDescription,
-  showJoblistings
-}: Props) => (
+const Collaborator = ({ company, showDescription, showJoblistings }: Props) => (
   <div style={{ flex: 1, maxWidth: '100%', flexBasis: 350, padding: '0 10px' }}>
     <a href={company.url}>
       <Image src={company.logo || ''} />
