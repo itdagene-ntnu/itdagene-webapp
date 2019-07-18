@@ -70,7 +70,7 @@ const pageview = url => {
 
 Router.onRouteChangeComplete = url => pageview(url);
 
-export const Layout = <T>({
+export const Layout = <T: Object>({
   props,
   error,
   shouldCenter,
@@ -136,7 +136,9 @@ export const Layout = <T>({
           <CustomOpengraphRenderer />
         )}
         <Content center={shouldCenter} responsive={responsive}>
-          {ContentRenderer ? <ContentRenderer {...{ error, props }} /> : null}
+          {props && ContentRenderer ? (
+            <ContentRenderer error={error} props={props} />
+          ) : null}
           {children ? children : null}
         </Content>
         <Footer />

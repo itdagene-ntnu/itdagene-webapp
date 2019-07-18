@@ -36,9 +36,8 @@ const BoardMember = ({ user: { role, fullName, photo, email } }: Props) => (
   </Card>
 );
 
-export default createFragmentContainer(
-  BoardMember,
-  graphql`
+export default createFragmentContainer(BoardMember, {
+  user: graphql`
     fragment BoardMember_user on User {
       id
       photo(width: 250, height: 250)
@@ -47,4 +46,4 @@ export default createFragmentContainer(
       email
     }
   `
-);
+});

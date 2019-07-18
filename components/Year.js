@@ -10,11 +10,10 @@ const Year = ({ currentMetaData }: Props) => (
   <span> {currentMetaData.year} </span>
 );
 
-export default createFragmentContainer(
-  Year,
-  graphql`
+export default createFragmentContainer(Year, {
+  currentMetaData: graphql`
     fragment Year_currentMetaData on MetaData {
       year
     }
   `
-);
+});

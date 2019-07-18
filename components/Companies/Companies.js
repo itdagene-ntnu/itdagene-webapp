@@ -45,9 +45,8 @@ const Companies = ({ query }: Props) => {
   ));
 };
 
-export default createFragmentContainer(
-  Companies,
-  graphql`
+export default createFragmentContainer(Companies, {
+  query: graphql`
     fragment Companies_query on MetaData {
       companiesFirstDay {
         id
@@ -59,4 +58,4 @@ export default createFragmentContainer(
       }
     }
   `
-);
+});

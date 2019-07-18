@@ -105,9 +105,8 @@ const WelcomeScreen = ({ currentMetaData }: Props) => (
   </RootContainer>
 );
 
-export default createFragmentContainer(
-  WelcomeScreen,
-  graphql`
+export default createFragmentContainer(WelcomeScreen, {
+  currentMetaData: graphql`
     fragment WelcomeScreen_currentMetaData on MetaData {
       year
       startDate
@@ -115,4 +114,4 @@ export default createFragmentContainer(
       endDate
     }
   `
-);
+});

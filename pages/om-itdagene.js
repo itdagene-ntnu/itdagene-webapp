@@ -52,7 +52,9 @@ const Index = ({
               <Flex wrap center>
                 {sortBy(props.currentMetaData.boardMembers, m =>
                   ROLES.indexOf(m.role)
-                ).map(user => <BoardMember key={user.id} user={user} />)}
+                ).map(user => (
+                  <BoardMember key={user.id} user={user} />
+                ))}
               </Flex>
             </>
           )}

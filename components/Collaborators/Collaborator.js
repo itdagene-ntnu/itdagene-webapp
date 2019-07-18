@@ -6,10 +6,10 @@ import { ZoomImage } from '../Styled';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import { type CollaboratorView_company } from './__generated__/CollaboratorView_company.graphql';
+import { type Collaborator_company } from './__generated__/Collaborator_company.graphql';
 
 type Props = {
-  company: CollaboratorView_company,
+  company: Collaborator_company,
   showDescription?: boolean,
   showJoblistings?: boolean
 };
@@ -22,11 +22,7 @@ const Image = styled(ZoomImage)`
   padding: 15px;
 `;
 
-const CollaboratorView = ({
-  company,
-  showDescription,
-  showJoblistings
-}: Props) => (
+const Collaborator = ({ company, showDescription, showJoblistings }: Props) => (
   <div style={{ flex: 1, maxWidth: '100%', flexBasis: 350, padding: '0 10px' }}>
     <a href={company.url}>
       <Image src={company.logo || ''} />
@@ -35,10 +31,9 @@ const CollaboratorView = ({
   </div>
 );
 
-export default createFragmentContainer(
-  CollaboratorView,
-  graphql`
-    fragment CollaboratorView_company on Company {
+export default createFragmentContainer(Collaborator, {
+  company: graphql`
+    fragment Collaborator_company on Company {
       id
       name
       logo(width: 459, height: 170)
@@ -46,4 +41,4 @@ export default createFragmentContainer(
       description
     }
   `
-);
+});

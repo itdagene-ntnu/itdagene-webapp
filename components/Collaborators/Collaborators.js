@@ -34,14 +34,13 @@ const Collaborators = ({ query, showDescription, showJoblistings }: Props) =>
     </>
   ) : null;
 
-export default createFragmentContainer(
-  Collaborators,
-  graphql`
+export default createFragmentContainer(Collaborators, {
+  query: graphql`
     fragment Collaborators_query on MetaData {
       collaborators {
         id
-        ...CollaboratorView_company
+        ...Collaborator_company
       }
     }
   `
-);
+});

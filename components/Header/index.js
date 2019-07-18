@@ -109,7 +109,9 @@ class StatefulDropdown extends React.Component<{||}, State> {
             </FlexItem>
             <Flex style={{ alignItems: 'center' }}>
               <OnOther>
-                {items.map(item => <MenuItem key={item.key} item={item} />)}
+                {items.map(item => (
+                  <MenuItem key={item.key} item={item} />
+                ))}
               </OnOther>
               <OnMobile>
                 <HamburgerMenu
