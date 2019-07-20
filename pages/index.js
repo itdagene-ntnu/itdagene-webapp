@@ -3,7 +3,7 @@ import React from 'react';
 
 import { Section } from '../components/Styled';
 import { Image, CenterIt } from '../components/Styled';
-import { QueryRenderer, graphql } from 'react-relay';
+import { graphql } from 'react-relay';
 
 import { type pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
 import Collaborators from '../components/Collaborators/Collaborators';
@@ -19,10 +19,7 @@ import Layout from '../components/Layout';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
 
-type RenderProps = {
-  error: ?Error,
-  props: ?pages_index_QueryResponse
-};
+type RenderProps = WithDataProps<pages_index_QueryResponse>;
 
 const ReadMore = styled('h4')``;
 
@@ -81,60 +78,42 @@ const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
   </>
 );
 
-const Index = ({
-  variables,
-  query,
-  environment,
-  queryProps
-}: WithDataProps) => (
-  <QueryRenderer
-    query={query}
-    environment={environment}
-    dataFrom={'STORE_THEN_NETWORK'}
-    variables={variables}
-    render={({ props, error }: RenderProps) => {
-      return (
-        <Layout
-          {...{ error, props }}
-          contentRenderer={({ props }) => (
-            <>
-              <WelcomeScreen currentMetaData={props.currentMetaData} />
-              <Section>
-                <AboutSection {...props} />
-              </Section>
-              <Section>
-                <Interest />
-              </Section>
-              <Section>
-                <CompactProgram />
-              </Section>
-              {props.currentMetaData.mainCollaborator && (
-                <Section>
-                  <HSP />
-                </Section>
-              )}
-              {props.currentMetaData.collaborators && (
-                <Section>
-                  <Collaborators
-                    showDescription
-                    query={props.currentMetaData}
-                  />
-                </Section>
-              )}
-              {(props.currentMetaData.companiesFirstDay ||
-                props.currentMetaData.companiesLastDay) && (
-                <Section>
-                  <Companies query={props.currentMetaData} />
-                </Section>
-              )}
-              <Section style={{ borderBottom: 0 }}>
-                <EventsSection query={props} />
-              </Section>
-            </>
-          )}
-        />
-      );
-    }}
+const Index = ({ props, error }: RenderProps) => (
+  <Layout
+    {...{ error, props }}
+    contentRenderer={({ props }) => (
+      <>
+        <WelcomeScreen currentMetaData={props.currentMetaData} />
+        <Section>
+          <AboutSection {...props} />
+        </Section>
+        <Section>
+          <Interest />
+        </Section>
+        <Section>
+          <CompactProgram />
+        </Section>
+        {props.currentMetaData.mainCollaborator && (
+          <Section>
+            <HSP />
+          </Section>
+        )}
+        {props.currentMetaData.collaborators && (
+          <Section>
+            <Collaborators showDescription query={props.currentMetaData} />
+          </Section>
+        )}
+        {(props.currentMetaData.companiesFirstDay ||
+          props.currentMetaData.companiesLastDay) && (
+          <Section>
+            <Companies query={props.currentMetaData} />
+          </Section>
+        )}
+        <Section style={{ borderBottom: 0 }}>
+          <EventsSection query={props} />
+        </Section>
+      </>
+    )}
   />
 );
 

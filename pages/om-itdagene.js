@@ -1,6 +1,6 @@
 //@flow
 import * as React from 'react';
-import { QueryRenderer, graphql } from 'react-relay';
+import { graphql } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 import BoardMember from '../components/BoardMember';
 import { type omItdagene_QueryResponse } from './__generated__/omItdagene_Query.graphql';
@@ -21,46 +21,26 @@ const ROLES = [
 ];
 
 const Index = ({
-  variables,
-  query,
-  environment,
-  queryProps
-}: WithDataProps) => (
-  <QueryRenderer
-    query={query}
-    environment={environment}
-    dataFrom={'STORE_THEN_NETWORK'}
-    variables={variables}
-    render={({
-      error,
-      props: props
-    }: {
-      error: ?Error,
-      props: ?omItdagene_QueryResponse
-    }) => {
-      return (
-        <Layout
-          responsive
-          {...{ error, props }}
-          metadata={props && props.omItdagene}
-          contentRenderer={({ props, error }) => (
-            <>
-              {props.omItdagene && <PageView page={props.omItdagene} />}
-              <h1>
-                Styret {props.currentMetaData && props.currentMetaData.year}
-              </h1>
-              <Flex wrap center>
-                {sortBy(props.currentMetaData.boardMembers, m =>
-                  ROLES.indexOf(m.role)
-                ).map(user => (
-                  <BoardMember key={user.id} user={user} />
-                ))}
-              </Flex>
-            </>
-          )}
-        />
-      );
-    }}
+  error,
+  props: props
+}: WithDataProps<omItdagene_QueryResponse>) => (
+  <Layout
+    responsive
+    {...{ error, props }}
+    metadata={props && props.omItdagene}
+    contentRenderer={({ props, error }) => (
+      <>
+        {props.omItdagene && <PageView page={props.omItdagene} />}
+        <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
+        <Flex wrap center>
+          {sortBy(props.currentMetaData.boardMembers, m =>
+            ROLES.indexOf(m.role)
+          ).map(user => (
+            <BoardMember key={user.id} user={user} />
+          ))}
+        </Flex>
+      </>
+    )}
   />
 );
 
