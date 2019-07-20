@@ -62,7 +62,6 @@ const Centered = styled('div')`
 
 const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
   <>
-    {/* This should be a generic graphql query */}
     <Flex wrap>
       {query.pages &&
         query.pages.filter(Boolean).map(element => (
