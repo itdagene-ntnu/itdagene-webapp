@@ -1,11 +1,14 @@
 //@flow
 import * as React from 'react';
 import { graphql } from 'react-relay';
-import withData, { type WithDataProps } from '../lib/withData';
+import {
+  withDataAndLayout,
+  type WithDataAndLayoutProps,
+  type WithDataDataProps
+} from '../lib/withData';
 import BoardMember from '../components/BoardMember';
 import { type omItdagene_QueryResponse } from './__generated__/omItdagene_Query.graphql';
 import PageView from '../components/PageView';
-import Layout from '../components/Layout';
 import Flex from 'styled-flex-component';
 import { sortBy } from 'lodash';
 
@@ -23,28 +26,21 @@ const ROLES = [
 const Index = ({
   error,
   props: props
-}: WithDataProps<omItdagene_QueryResponse>) => (
-  <Layout
-    responsive
-    {...{ error, props }}
-    metadata={props && props.omItdagene}
-    contentRenderer={({ props, error }) => (
-      <>
-        {props.omItdagene && <PageView page={props.omItdagene} />}
-        <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
-        <Flex wrap center>
-          {sortBy(props.currentMetaData.boardMembers, m =>
-            ROLES.indexOf(m.role)
-          ).map(user => (
-            <BoardMember key={user.id} user={user} />
-          ))}
-        </Flex>
-      </>
-    )}
-  />
+}: WithDataAndLayoutProps<omItdagene_QueryResponse>) => (
+  <>
+    {props.omItdagene && <PageView page={props.omItdagene} />}
+    <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
+    <Flex wrap center>
+      {sortBy(props.currentMetaData.boardMembers, m =>
+        ROLES.indexOf(m.role)
+      ).map(user => (
+        <BoardMember key={user.id} user={user} />
+      ))}
+    </Flex>
+  </>
 );
 
-export default withData(Index, {
+export default withDataAndLayout(Index, {
   query: graphql`
     query omItdagene_Query {
       currentMetaData {
@@ -64,5 +60,9 @@ export default withData(Index, {
       }
     }
   `,
-  variables: {}
+  variables: {},
+  layout: ({ props, error }: WithDataDataProps<omItdagene_QueryResponse>) => ({
+    responsive: true,
+    metadata: !!props && props.omItdagene
+  })
 });

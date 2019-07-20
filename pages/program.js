@@ -1,10 +1,12 @@
 //@flow
 import * as React from 'react';
 import { graphql } from 'react-relay';
-import withData, { type WithDataProps } from '../lib/withData';
+import {
+  withDataAndLayout,
+  type WithDataAndLayoutProps
+} from '../lib/withData';
 import { type omItdagene_QueryResponse } from './__generated__/program_Query.graphql';
 import PageView from '../components/PageView';
-import Layout from '../components/Layout';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { groupBy, sortBy } from 'lodash';
 import dayjs from 'dayjs';
@@ -12,64 +14,55 @@ import dayjs from 'dayjs';
 const Index = ({
   error,
   props: props
-}: WithDataProps<omItdagene_QueryResponse>) => (
-  <Layout
-    responsive
-    {...{ error, props }}
-    metadata={props && props.programPage}
-    contentRenderer={({ props, error }) => {
-      const groupedEvents =
-        props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
-      const sortedKeys = props.events && sortBy(Object.keys(groupedEvents));
-      return (
-        <>
-          {props.programPage && (
-            <PageView hideContent page={props.programPage} />
-          )}
-          <Flex wrap justifyCenter>
-            {sortedKeys.map(k => (
-              <FlexItem
-                grow="1"
-                style={{ padding: '20px 30px' }}
-                basis="500px"
-                key={k}
-              >
-                <h1>
-                  {dayjs(k)
-                    .format('dddd DD.MM')
-                    .toUpperCase()}
-                </h1>
-                {groupedEvents[k].map(event => (
-                  <div key={event.id}>
-                    {event.timeStart.slice(0, 5)} - {event.timeEnd.slice(0, 5)},{' '}
-                    {event.location}
-                    <h3
-                      style={{
-                        fontWeight: 600,
-                        marginTop: 0,
-                        marginBottom: 0
-                      }}
-                    >
-                      {event.title}
-                    </h3>
-                    {event.description}
-                    <br />
-                    <br />
-                  </div>
-                ))}
-              </FlexItem>
+}: WithDataAndLayoutProps<omItdagene_QueryResponse>) => {
+  const groupedEvents =
+    props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
+  const sortedKeys = props.events && sortBy(Object.keys(groupedEvents));
+  return (
+    <>
+      {props.programPage && <PageView hideContent page={props.programPage} />}
+      <Flex wrap justifyCenter>
+        {sortedKeys.map(k => (
+          <FlexItem
+            grow="1"
+            style={{ padding: '20px 30px' }}
+            basis="500px"
+            key={k}
+          >
+            <h1>
+              {dayjs(k)
+                .format('dddd DD.MM')
+                .toUpperCase()}
+            </h1>
+            {groupedEvents[k].map(event => (
+              <div key={event.id}>
+                {event.timeStart.slice(0, 5)} - {event.timeEnd.slice(0, 5)},{' '}
+                {event.location}
+                <h3
+                  style={{
+                    fontWeight: 600,
+                    marginTop: 0,
+                    marginBottom: 0
+                  }}
+                >
+                  {event.title}
+                </h3>
+                {event.description}
+                <br />
+                <br />
+              </div>
             ))}
-          </Flex>
-          {props.programPage && (
-            <PageView hideTitle hideDate page={props.programPage} />
-          )}
-        </>
-      );
-    }}
-  />
-);
+          </FlexItem>
+        ))}
+      </Flex>
+      {props.programPage && (
+        <PageView hideTitle hideDate page={props.programPage} />
+      )}
+    </>
+  );
+};
 
-export default withData(Index, {
+export default withDataAndLayout(Index, {
   query: graphql`
     query program_Query {
       events {
@@ -94,5 +87,9 @@ export default withData(Index, {
       }
     }
   `,
-  variables: {}
+  variables: {},
+  layout: ({ props, error }) => ({
+    responsive: true,
+    metadata: props && props.programPage
+  })
 });

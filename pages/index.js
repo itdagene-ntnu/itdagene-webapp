@@ -14,12 +14,14 @@ import styled from 'styled-components';
 import HSP from '../components/Frontpage/HSP';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import Interest from '../components/Frontpage/Interest';
-import withData, { type WithDataProps } from '../lib/withData';
-import Layout from '../components/Layout';
+import {
+  withDataAndLayout,
+  type WithDataAndLayoutProps
+} from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
 
-type RenderProps = WithDataProps<pages_index_QueryResponse>;
+type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
 const ReadMore = styled('h4')``;
 
@@ -79,45 +81,40 @@ const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
 );
 
 const Index = ({ props, error }: RenderProps) => (
-  <Layout
-    {...{ error, props }}
-    contentRenderer={({ props }) => (
-      <>
-        <WelcomeScreen currentMetaData={props.currentMetaData} />
-        <Section>
-          <AboutSection {...props} />
-        </Section>
-        <Section>
-          <Interest />
-        </Section>
-        <Section>
-          <CompactProgram />
-        </Section>
-        {props.currentMetaData.mainCollaborator && (
-          <Section>
-            <HSP />
-          </Section>
-        )}
-        {props.currentMetaData.collaborators && (
-          <Section>
-            <Collaborators showDescription query={props.currentMetaData} />
-          </Section>
-        )}
-        {(props.currentMetaData.companiesFirstDay ||
-          props.currentMetaData.companiesLastDay) && (
-          <Section>
-            <Companies query={props.currentMetaData} />
-          </Section>
-        )}
-        <Section style={{ borderBottom: 0 }}>
-          <EventsSection query={props} />
-        </Section>
-      </>
+  <>
+    <WelcomeScreen currentMetaData={props.currentMetaData} />
+    <Section>
+      <AboutSection {...props} />
+    </Section>
+    <Section>
+      <Interest />
+    </Section>
+    <Section>
+      <CompactProgram />
+    </Section>
+    {props.currentMetaData.mainCollaborator && (
+      <Section>
+        <HSP />
+      </Section>
     )}
-  />
+    {props.currentMetaData.collaborators && (
+      <Section>
+        <Collaborators showDescription query={props.currentMetaData} />
+      </Section>
+    )}
+    {(props.currentMetaData.companiesFirstDay ||
+      props.currentMetaData.companiesLastDay) && (
+      <Section>
+        <Companies query={props.currentMetaData} />
+      </Section>
+    )}
+    <Section style={{ borderBottom: 0 }}>
+      <EventsSection query={props} />
+    </Section>
+  </>
 );
 
-export default withData(Index, {
+export default withDataAndLayout(Index, {
   query: graphql`
     query pages_index_Query($slugs: [String!]!) {
       currentMetaData {

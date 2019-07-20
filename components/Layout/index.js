@@ -70,7 +70,27 @@ const pageview = url => {
 
 Router.onRouteChangeComplete = url => pageview(url);
 
-export const Layout = <T: Object>({
+export type LayoutSettings<T> = {
+  shouldCenter?: boolean,
+  responsive?: boolean,
+  metadata?: ?Object,
+  customOpengraphMetadata?: (props: { props: T, error: ?Error }) => ?{
+    +title?: ?string,
+    +sharingImage?: ?string,
+    +description?: ?string
+  },
+  children?: React.Node,
+  noLoading?: boolean
+};
+
+export type ContentRenererProps<T> = { props: T, error: ?Error };
+export type LayoutProps<T> = {
+  props?: ?T,
+  error?: ?Error,
+  contentRenderer?: (props: ContentRenererProps<T>) => React.Node
+};
+
+export const Layout = <T>({
   props,
   error,
   shouldCenter,
@@ -80,21 +100,7 @@ export const Layout = <T: Object>({
   customOpengraphMetadata,
   metadata,
   children
-}: {
-  props?: ?T,
-  error?: ?Error,
-  shouldCenter?: boolean,
-  responsive?: boolean,
-  contentRenderer?: (props: { props: T, error: ?Error }) => React.Node,
-  metadata?: ?Object,
-  customOpengraphMetadata?: (props: { props: T, error: ?Error }) => ?{
-    +title?: ?string,
-    +sharingImage?: ?string,
-    +description?: ?string
-  },
-  children?: React.Node,
-  noLoading?: boolean
-}) => {
+}: LayoutProps<T> & LayoutSettings<T>) => {
   if (error)
     return (
       <Wrapper>
