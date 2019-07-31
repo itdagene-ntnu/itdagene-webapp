@@ -8,23 +8,19 @@ import JoblistingsContainer, {
 } from '../components/Joblistings/JoblistingsContainer';
 import './test.css';
 import type { JoblistingsContainer_root } from '../components/Joblistings/__generated__/JoblistingsContainer_root.graphql';
-import { QueryRenderer } from 'react-relay';
 import withData, { type WithDataProps } from '../lib/withData';
 
 import Layout from '../components/Layout';
 
-type RenderProps = {
-  error: ?Error,
-  props: ?JoblistingsContainer_root
-};
+type RenderProps = WithDataProps<JoblistingsContainer_root>;
 
 type State = { loading: boolean };
-class Index extends React.Component<WithDataProps, State> {
+class Index extends React.Component<RenderProps, State> {
   state = { loading: false };
   loadingStart = () => this.setState(prevState => ({ loading: true }));
   loadingEnd = () => this.setState(prevState => ({ loading: false }));
   render() {
-    const { variables, query, environment } = this.props;
+    const { props, environment, variables } = this.props;
     return (
       <Layout
         customOpengraphMetadata={() => ({
@@ -35,22 +31,12 @@ class Index extends React.Component<WithDataProps, State> {
         responsive
       >
         <JoblistingsContainer environment={environment} variables={variables}>
-          <QueryRenderer
-            query={query}
+          <JoblistingsList
             environment={environment}
-            dataFrom={'STORE_THEN_NETWORK'}
-            variables={variables}
-            render={({ error, props }: RenderProps) => {
-              return (
-                <JoblistingsList
-                  environment={environment}
-                  loading={this.state.loading}
-                  loadingStart={this.loadingStart}
-                  loadingEnd={this.loadingEnd}
-                  root={props}
-                />
-              );
-            }}
+            loading={this.state.loading}
+            loadingStart={this.loadingStart}
+            loadingEnd={this.loadingEnd}
+            root={props}
           />
         </JoblistingsContainer>
       </Layout>
