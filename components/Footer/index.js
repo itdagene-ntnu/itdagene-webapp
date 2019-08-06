@@ -53,7 +53,7 @@ const Footer = () => (
               />
             </li>
             <li>Sem Sælands vei 7-9</li>
-            <li>7491 Trondheim</li>
+            <li>7034 Trondheim</li>
             <li>Orgnr. 912 601 625 </li>
           </NoBulletUl>
         </RightBorderFlex>
