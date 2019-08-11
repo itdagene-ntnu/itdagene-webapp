@@ -26,14 +26,14 @@ const Interest = () => (
         <Title>Interessert i å delta? </Title>
         <p>
           Vi gjør oppmerksom på at itDAGENE 2019 nå er <b>fylt opp</b> med over
-          60 spennende bedrifter. Det betyr dessverre at alle nye henvendelser
-          havner på venteliste. Ta kontakt{' '}
-          <a href="mailto:bedrift@itdagene.no">her</a> hvis dere ønsker dette.
+          70 spennende bedrifter.
         </p>
         <p>
-          Henvendelser angående interesse for itDAGENE 2020 åpner vi etter at
-          messen 2019 er over. Dvs fra og med <b>11 september</b>. Under finner
-          dere vårt nye interesseskjema hvor din bedrift kan melde interesse.
+          Henvendelser angående interesse for itDAGENE 2020 åpner samtidig som
+          messen 2019. Dvs fra og med <b>8 september</b>. Vi ønsker å påpeke at
+          dette <b>IKKE er et påmeldingskjema</b>, og det er IKKE førsteman til
+          mølla. Under finner dere en lenke til vårt nye interesseskjema hvor
+          din bedrift kan melde sin interesse for itDAGENE 2020.
         </p>
       </FlexItem>
       <FlexItem>
