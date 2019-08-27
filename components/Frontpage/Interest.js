@@ -50,7 +50,7 @@ const Interest = () => (
       <StyledLink href="https://interesse.itdagene.no" target="_blank">
         <Image
           style={{ width: 50 }}
-          src="http://cdn.onlinewebfonts.com/svg/img_193664.png"
+          src="https://cdn.onlinewebfonts.com/svg/img_193664.png"
           alt="signup"
         />
         Interesseskjema
