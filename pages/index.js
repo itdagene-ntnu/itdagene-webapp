@@ -84,6 +84,16 @@ const Index = ({ props, error }: RenderProps) => (
   <>
     <WelcomeScreen currentMetaData={props.currentMetaData} />
     <Section>
+      <img
+        alt="map"
+        src="https://cdn.itdagene.no/standkart.svg"
+        style={{
+          borderRadius: '20px',
+          boxShadow: '0px 13px 41px -19px rgba(0,0,0,0.88)'
+        }}
+      />
+    </Section>
+    <Section>
       <AboutSection {...props} />
     </Section>
     <Section>
