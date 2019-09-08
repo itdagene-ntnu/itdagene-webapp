@@ -25,15 +25,11 @@ const Interest = () => (
       <FlexItem grow={1} basis="700px">
         <Title>Interessert i å delta? </Title>
         <p>
-          Vi gjør oppmerksom på at itDAGENE 2019 nå er <b>fylt opp</b> med over
-          70 spennende bedrifter.
-        </p>
-        <p>
-          Henvendelser angående interesse for itDAGENE 2020 åpner samtidig som
-          messen 2019. Dvs fra og med <b>8 september</b>. Vi ønsker å påpeke at
-          dette <b>IKKE er et påmeldingskjema</b>, og det er IKKE førsteman til
-          mølla. Under finner dere en lenke til vårt nye interesseskjema hvor
-          din bedrift kan melde sin interesse for itDAGENE 2020.
+          Henvendelser angående interesse for itDAGENE 2020 er nå åpent. Vi
+          ønsker å påpeke at dette <b>IKKE er et påmeldingskjema</b>, og det er
+          <b>IKKE</b> førsteman til mølla. Under finner dere en lenke til vårt
+          nye interesseskjema hvor din bedrift kan melde sin interesse for
+          itDAGENE 2020.
         </p>
       </FlexItem>
       <FlexItem>
