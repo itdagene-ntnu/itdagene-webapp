@@ -21,6 +21,7 @@ const Tile = styled.div`
   width: 25%;
   height: 100px;
   transition: all 0.1s ease-in-out;
+  cursor: pointer;
 
   :hover {
     transition: 0.2s;

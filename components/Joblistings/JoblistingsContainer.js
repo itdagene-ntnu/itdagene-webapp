@@ -107,7 +107,7 @@ const ListRenderer = props => (
 
         props.loadingStart();
         props.relay.loadMore(
-          9, // Fetch the next 9 feed items
+          18, // Fetch the next 18 feed items
           error => {
             props.loadingEnd();
           }
@@ -137,7 +137,6 @@ const ListRenderer = props => (
                       fontSize: 20,
                       lineHeight: '24px',
                       color: 'black',
-                      // minHeight: 48,
                       margin: '5px 0',
                       textAlign: 'center'
                     }}

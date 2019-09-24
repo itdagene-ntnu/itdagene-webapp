@@ -27,7 +27,7 @@ const Interest = () => (
         <p>
           Henvendelser angående interesse for itDAGENE 2020 er nå åpent. Vi
           ønsker å påpeke at dette <b>IKKE er et påmeldingskjema</b>, og det er
-          <b>IKKE</b> førsteman til mølla. Under finner dere en lenke til vårt
+          <b> IKKE</b> førsteman til mølla. Under finner dere en lenke til vårt
           nye interesseskjema hvor din bedrift kan melde sin interesse for
           itDAGENE 2020.
         </p>
@@ -49,7 +49,7 @@ const Interest = () => (
           src="https://cdn.onlinewebfonts.com/svg/img_193664.png"
           alt="signup"
         />
-        Interesseskjema
+        <h3>Interesseskjema</h3>
       </StyledLink>
     </CenterIt>
   </>
