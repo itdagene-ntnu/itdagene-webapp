@@ -107,7 +107,7 @@ const ListRenderer = props => (
 
         props.loadingStart();
         props.relay.loadMore(
-          18, // Fetch the next 18 feed items
+          30, // Fetch the next 30 feed items
           error => {
             props.loadingEnd();
           }
@@ -195,7 +195,7 @@ export const JoblistingsList = createPaginationContainer(
     root: graphql`
       fragment JoblistingsContainer_root on Query
         @argumentDefinitions(
-          count: { type: "Int", defaultValue: 9 }
+          count: { type: "Int", defaultValue: 30 }
           cursor: { type: "String" }
           type: { type: "String" }
           fromYear: { type: "Float" }
