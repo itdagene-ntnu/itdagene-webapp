@@ -61,6 +61,6 @@ export default withData(withRouter(Index), {
     company: router.query.company || '',
     towns: parseTowns(router.query).map(el => el.value),
     orderBy: router.query.orderBy ? [router.query.orderBy, 'ID'] : [],
-    count: 15
+    count: 30
   })
 });
