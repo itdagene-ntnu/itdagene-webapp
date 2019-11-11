@@ -21,6 +21,10 @@ $ yarn dev
 $ # open http://localhost:8000
 $ # To run against itdagene.no:
 $ RELAY_ENDPOINT=https://itdagene.no/graphql yarn dev
+
+$ # Running tests
+$ yarn build
+$ RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 ```
 
 ## Config
