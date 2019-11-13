@@ -9,3 +9,4 @@ flow-typed/
 
 [options]
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+server.max_workers=4
