@@ -45,7 +45,7 @@
     "react-select": "^2.2.0",
     "recompose": "^0.30.0",
     "relay-hooks": "^1.2.2",
-    "relay-runtime": "^5.0.0",
+    "relay-runtime": "^7.1.0",
     "styled-components": "^4.3.2",
     "styled-flex-component": "^3.0.0",
     "url-loader": "^2.0.1",
