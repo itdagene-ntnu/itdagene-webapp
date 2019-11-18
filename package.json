@@ -29,7 +29,7 @@
     "express-http-proxy": "^1.5.1",
     "graphql": "^14.5.8",
     "isomorphic-unfetch": "^3.0.0",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.15",
     "next": "^9.0.2",
     "raven": "^2.6.4",
     "raven-js": "^3.27.2",
