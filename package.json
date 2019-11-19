@@ -33,7 +33,7 @@
     "next": "^9.0.2",
     "raven": "^2.6.4",
     "raven-js": "^3.27.2",
-    "rc-slider": "^8.6.13",
+    "rc-slider": "^8.7.1",
     "react": "^16.12.0",
     "react-countdown-now": "^2.1.1",
     "react-dom": "^16.8.6",
