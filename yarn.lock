@@ -1276,10 +1276,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@next/bundle-analyzer@^9.0.2":
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-9.0.2.tgz#b5a09f83d5bb2034675ea038a6f50ea922237f5c"
-  integrity sha512-w7lvUegqvVrsmQFTHwgeDATS0jKOxugWx5VUPqSaTUkxwF68FanbWlBZSGpDONA/pJFjR857FDyv+D22SwtBIw==
+"@next/bundle-analyzer@^9.1.4":
+  version "9.1.4"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-9.1.4.tgz#312ef4d834df2300ea8656ab64f914cc5522f82f"
+  integrity sha512-AJng0TZtClDCOAij15GDHve3m2U3MSRYRsZu16MGE2NPISION8tgWVct4w/i8h03DKr4+xJ6zYtFXvFEBAzXJw==
   dependencies:
     webpack-bundle-analyzer "3.3.2"
 
