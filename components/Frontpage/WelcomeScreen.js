@@ -8,6 +8,8 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
+import moment from 'moment';
+import 'moment/locale/nb';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData
@@ -72,38 +74,45 @@ const RootContainer = styled('div')`
   overflow: hidden;
 `;
 
-const WelcomeScreen = ({ currentMetaData }: Props) => (
-  <RootContainer>
-    <Video
-      autoPlay
-      autostart
-      className="cover-video"
-      loop
-      muted
-      src="https://cdn.itdagene.no/itdagene.mp4"
-    />
-    <MainContainer text>
-      <Flex column spaceBetween>
-        <FlexItem>
-          <Header>
-            <b>it</b>DAGENE {currentMetaData.year}
-          </Header>
-          <SubHeader>9. & 10. september 2019</SubHeader>
-          <Location>NTNU // Realfagsbygget</Location>
-        </FlexItem>
-        <FlexItem>
-          <Countdown currentMetaData={currentMetaData} />
-        </FlexItem>
-      </Flex>
+const WelcomeScreen = ({ currentMetaData }: Props) => {
+  const startDate = moment(currentMetaData.startDate);
+  const endDate = moment(currentMetaData.endDate);
 
-      <Link href="/om-itdagene">
-        <a>
-          <ReadMore>Les mer</ReadMore>
-        </a>
-      </Link>
-    </MainContainer>
-  </RootContainer>
-);
+  return (
+    <RootContainer>
+      <Video
+        autoPlay
+        autostart
+        className="cover-video"
+        loop
+        muted
+        src="https://cdn.itdagene.no/itdagene.mp4"
+      />
+      <MainContainer text>
+        <Flex column spaceBetween>
+          <FlexItem>
+            <Header>
+              <b>it</b>DAGENE {currentMetaData.year}
+            </Header>
+            <SubHeader>{`${startDate.date()}. & ${endDate.date()} ${endDate
+              .locale('NO')
+              .format('MMMM')} ${startDate.year()}`}</SubHeader>
+            <Location>NTNU // Realfagsbygget</Location>
+          </FlexItem>
+          <FlexItem>
+            <Countdown currentMetaData={currentMetaData} />
+          </FlexItem>
+        </Flex>
+
+        <Link href="/om-itdagene">
+          <a>
+            <ReadMore>Les mer</ReadMore>
+          </a>
+        </Link>
+      </MainContainer>
+    </RootContainer>
+  );
+};
 
 export default createFragmentContainer(WelcomeScreen, {
   currentMetaData: graphql`

@@ -48,7 +48,7 @@ const Footer = () => (
             <li>
               <img
                 style={{ width: 150 }}
-                src="https://cdn.itdagene.no/itdagene2019-logo.svg"
+                src="https://cdn.itdagene.no/itdagene-svart.png"
                 alt="itDAGENE logo"
               />
             </li>

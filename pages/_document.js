@@ -135,8 +135,6 @@ export default class Default extends Document {
           <meta name="apple-mobile-web-app-title" content="itDAGENE" />
           <link rel="manifest" href="/static/manifest.json" />
 
-          <base target="_blank" />
-
           {this.props.styleTags}
 
           {GA_TRACKING_ID && (

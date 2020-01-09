@@ -7,3 +7,4 @@ node_modules/
 bundles/
 *.mp4
 .DS_Store
+.vscode/

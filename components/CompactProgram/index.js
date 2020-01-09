@@ -56,7 +56,7 @@ const CompactProgram = () => (
     </FlexItem>
     <Flex row wrap>
       <Tile color={itdageneGreen}>
-        <Link href="/program">
+        <Link href="/jobb">
           <CenterIt text>
             <StyledLink>Sommerjobb</StyledLink>
           </CenterIt>
