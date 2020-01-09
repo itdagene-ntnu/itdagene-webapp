@@ -38,7 +38,7 @@ const AboutSection = (props: pages_index_QueryResponse) => {
           <CenterIt>
             <Image
               style={{ width: 350, maxWidth: '100%' }}
-              src="https://cdn.itdagene.no/itdagene2019-logo.svg"
+              src="https://cdn.itdagene.no/itdagene-svart.png"
               alt="itDAGENE logo"
             />
           </CenterIt>
