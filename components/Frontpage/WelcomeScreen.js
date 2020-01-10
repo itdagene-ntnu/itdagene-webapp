@@ -94,7 +94,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => {
             <Header>
               <b>it</b>DAGENE {currentMetaData.year}
             </Header>
-            <SubHeader>{`${startDate.date()}. & ${endDate.date()} ${endDate
+            <SubHeader>{`${startDate.date()}. & ${endDate.date()}. ${endDate
               .locale('NO')
               .format('MMMM')} ${startDate.year()}`}</SubHeader>
             <Location>NTNU // Realfagsbygget</Location>
