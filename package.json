@@ -4,7 +4,7 @@
   "description": "itDAGENE-next",
   "scripts": {
     "dev": "node server.js",
-    "build": "sed \"s/throw new Error(\\`automatic static optimization failed/new Error(\\`FUUUU: /g\" node_modules/next/dist/build/index.js  > node_modules/next.bak && mv node_modules/next.bak node_modules/next/dist/build/index.js && next build",
+    "build": "sed \"s/throw new Error(\\`Build optimization failed/new Error(\\`FUUUU: /g\" node_modules/next/dist/build/index.js  > node_modules/next.bak && mv node_modules/next.bak node_modules/next/dist/build/index.js && next build",
     "start": "NODE_ENV=production node server.js",
     "schema:prod": "mkdir -p schema && get-graphql-schema https://itdagene.no/graphql > schema/schema.graphql",
     "schema:dev": "mkdir -p schema && get-graphql-schema http://localhost:8000/graphql > schema/schema.graphql",
@@ -31,7 +31,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "next": "^9.0.2",
+    "next": "^9.1.4",
     "raven": "^2.6.4",
     "raven-js": "^3.27.2",
     "rc-slider": "^8.7.1",
