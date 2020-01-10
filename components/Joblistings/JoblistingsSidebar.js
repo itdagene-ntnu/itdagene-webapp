@@ -5,7 +5,7 @@ import { withRouter } from 'next/router';
 // $FlowFixMe
 import Select from 'react-select';
 // $FlowFixMe
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/async';
 import { fetchQuery } from 'relay-runtime';
 import Router from 'next/router';
 import { graphql, type Variables, type Environment } from 'react-relay';
