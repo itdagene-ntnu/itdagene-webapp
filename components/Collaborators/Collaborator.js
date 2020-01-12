@@ -6,7 +6,10 @@ import { ZoomImage } from '../Styled';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-import { type Collaborator_company } from './__generated__/Collaborator_company.graphql';
+import {
+  type Collaborator_company,
+  type Collaborator_company$key
+} from './__generated__/Collaborator_company.graphql';
 
 type Props = {
   company: Object,
@@ -39,7 +42,7 @@ const Collaborator = ({
 }: Props) => {
   const company: Collaborator_company = useFragment(
     fragmentSpec,
-    props.company
+    (props.company: Collaborator_company$key)
   );
   return (
     <div
