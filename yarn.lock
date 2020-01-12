@@ -1677,9 +1677,10 @@
     mini-css-extract-plugin "0.4.3"
     postcss-loader "3.0.0"
 
-"@zeit/next-source-maps@^0.0.4-canary.0":
-  version "0.0.4-canary.0"
-  resolved "https://registry.yarnpkg.com/@zeit/next-source-maps/-/next-source-maps-0.0.4-canary.0.tgz#9ac36e594ed9d507162911c91b7a5e022879dff2"
+"@zeit/next-source-maps@^0.0.4-canary.1":
+  version "0.0.4-canary.1"
+  resolved "https://registry.yarnpkg.com/@zeit/next-source-maps/-/next-source-maps-0.0.4-canary.1.tgz#5051ff8425e5f615da2d21dd08a99284fbb63d7d"
+  integrity sha512-SPQCLs7ToaqzQnqXqGSCoL7KTlnOAao+1F5hy7Hkuq85TjHsUC3eeLsmVrBIraIhXG/ARHmZ0JHOesPDtBfpzw==
 
 abab@^2.0.0:
   version "2.0.0"
