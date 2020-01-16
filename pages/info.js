@@ -1,45 +1,24 @@
-//@flow
-import React from 'react';
-import {
-  withDataAndLayout,
-  type WithDataAndLayoutProps
-} from '../lib/withData';
+import React, { useEffect } from 'react';
+import Router from 'next/router';
 
-import { graphql } from 'react-relay';
-import { type page_QueryResponse } from './__generated__/jobbannonse_Query.graphql';
+// In order to keep backward compatibility urls like /info?side=zyx
 
-import PageView from '../components/PageView';
+// For client redirects
+const Redirect = props => {
+  // some hooks here that need to be before the condition
+  useEffect(() => {
+    Router.replace(props.newLocation);
+  }, []);
+  return null;
+};
 
-type RenderProps = WithDataAndLayoutProps<page_QueryResponse>;
-
-const Index = ({ props }: RenderProps) => (
-  <>
-    {props.page ? (
-      <PageView page={props.page} />
-    ) : (
-      <>
-        <h1>Finner ikke siden :( </h1>
-        <h2>404 Errr</h2>
-      </>
-    )}
-  </>
-);
-
-export default withDataAndLayout(Index, {
-  query: graphql`
-    query info_Query($side: String!) {
-      page(slug: $side) {
-        ... on Page {
-          ...PageView_page
-          ...metadata_metadata
-        }
-      }
-    }
-  `,
-  variables: ({ query: { side = '' } }) => ({ side }),
-  layout: ({ props, error }) => ({
-    responsive: true,
-    shouldCenter: !!props && !props.page,
-    metadata: props && props.page
-  })
-});
+// For SSR redirects
+Redirect.getInitialProps = ({ res, query }) => {
+  const newLocation = `/info/${query.side}`;
+  if (res) {
+    res.writeHead(301, { Location: newLocation });
+    res.end();
+  }
+  return { newLocation };
+};
+export default Redirect;
