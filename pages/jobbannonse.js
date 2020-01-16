@@ -1,66 +1,23 @@
-//@flow
+import { useEffect } from 'react';
+import Router from 'next/router';
 
-import React from 'react';
-import withData, { type WithDataProps } from '../lib/withData';
+// In order to keep backward compatibility urls like /jobbannonse?id=zyx
 
-import { graphql } from 'react-relay';
-import { type jobbannonse_QueryResponse } from './__generated__/jobbannonse_Query.graphql';
+// For client redirects
+const Redirect = props => {
+  useEffect(() => {
+    Router.replace(props.newLocation);
+  }, [props.newLocation]);
+  return null;
+};
 
-import Layout from '../components/Layout';
-import JoblistingView from '../components/Joblistings/JoblistingView';
-
-type RenderProps = WithDataProps<jobbannonse_QueryResponse>;
-
-const Index = ({ error, props }: RenderProps) => (
-  <Layout
-    responsive
-    {...{ error, props }}
-    customOpengraphMetadata={({ props }) =>
-      props.joblisting
-        ? {
-            ...props.joblisting,
-            title: props.joblisting.company
-              ? `${props.joblisting.title || ''} - ${
-                  props.joblisting.company.name
-                }`
-              : props.joblisting.title,
-            description:
-              props.joblisting.company &&
-              `${props.joblisting.company.description || ''}`
-          }
-        : null
-    }
-    contentRenderer={({ props }) =>
-      props.joblisting ? (
-        <JoblistingView joblisting={props.joblisting} />
-      ) : (
-        <>
-          <h1>Finner ikke siden :( </h1>
-          <h2>404 Errr</h2>
-        </>
-      )
-    }
-  />
-);
-
-export default withData(Index, {
-  query: graphql`
-    query jobbannonse_Query($id: ID!) {
-      joblisting: node(id: $id) {
-        ... on Joblisting {
-          ...JoblistingView_joblisting
-          title
-          description
-          sharingImage
-          company {
-            description
-            name
-          }
-        }
-      }
-    }
-  `,
-  variables: ({ query: { id } }) => ({
-    id
-  })
-});
+// For SSR redirects
+Redirect.getInitialProps = ({ res, query }) => {
+  const newLocation = `/jobb/${query.id}`;
+  if (res) {
+    res.writeHead(301, { Location: newLocation });
+    res.end();
+  }
+  return { newLocation };
+};
+export default Redirect;
