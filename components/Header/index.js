@@ -42,7 +42,7 @@ const items = [
   {
     key: 'for-bedrifter',
     name: 'FOR BEDRIFTER',
-    to: '/info?side=for-bedrifter'
+    to: '/info/for-bedrifter'
   }
 ];
 
