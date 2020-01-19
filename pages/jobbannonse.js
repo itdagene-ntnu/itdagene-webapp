@@ -6,18 +6,19 @@ import Router from 'next/router';
 // For client redirects
 const Redirect = props => {
   useEffect(() => {
-    Router.replace(props.newLocation);
-  }, [props.newLocation]);
+    Router.replace(props.newLink, props.newLocation);
+  }, [props.newLink, props.newLocation]);
   return null;
 };
 
 // For SSR redirects
 Redirect.getInitialProps = ({ res, query }) => {
   const newLocation = `/jobb/${query.id}`;
+  const newLink = '/jobb/[id]';
   if (res) {
     res.writeHead(301, { Location: newLocation });
     res.end();
   }
-  return { newLocation };
+  return { newLocation, newLink };
 };
 export default Redirect;

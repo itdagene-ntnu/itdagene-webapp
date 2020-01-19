@@ -42,15 +42,16 @@ const items = [
   {
     key: 'for-bedrifter',
     name: 'FOR BEDRIFTER',
-    to: '/info/for-bedrifter'
+    to: '/info/[side]',
+    as: '/info/for-bedrifter'
   }
 ];
 
 const MenuItem = withRouter(
   ({ item, router }: { item: Object, router: NextRouter }) => {
-    const { to, name } = item;
+    const { to, name, as } = item;
     return (
-      <Link href={to}>
+      <Link href={to} as={as}>
         <a>
           <StyledMenuItem active={item.to === router.asPath}>
             {name}

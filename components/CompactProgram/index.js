@@ -70,14 +70,14 @@ const CompactProgram = () => (
         </Link>
       </Tile>
       <Tile color={itdageneLightBlue}>
-        <Link href="/info/stands">
+        <Link href="/info/[side]" as="/info/stands">
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={itdageneYellow}>
-        <Link href="/info/bankett">
+        <Link href="/info/[info]" as="/info/bankett">
           <CenterIt text>
             <StyledLink>Bankett</StyledLink>
           </CenterIt>
