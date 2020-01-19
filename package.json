@@ -31,7 +31,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "next": "^9.1.7",
+    "next": "^9.2.0",
     "raven": "^2.6.4",
     "raven-js": "^3.27.2",
     "rc-slider": "^8.7.1",
