@@ -38,7 +38,10 @@ const Companies = ({ query }: Props) => {
       </Flex>
       <h4 style={{ textAlign: 'center' }}>
         <Link>
-          <a href="/info/stands"> Kart over stands </a>
+          <a href="/info/[side]" as="/info/stands">
+            {' '}
+            Kart over stands{' '}
+          </a>
         </Link>
       </h4>
     </Fragment>

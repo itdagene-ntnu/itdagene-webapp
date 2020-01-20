@@ -68,7 +68,7 @@ const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
             <h2> {element.title} </h2>
             <p>{element.ingress}</p>
             <Centered>
-              <Link href={`/info/${element.slug}`}>
+              <Link href="/info/[side]" as={`/info/${element.slug}`}>
                 <a>
                   <ReadMore>Les mer</ReadMore>
                 </a>
