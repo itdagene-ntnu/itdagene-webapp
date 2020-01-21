@@ -18,6 +18,17 @@ const StyledNavbarItem = styled('div')`
   font-weight: bold;
 `;
 
+const Hr = styled('hr')`
+  background-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.1)
+  );
+  height: 1px;
+  border: 0;
+`;
+
 const NavbarItem = withRouter(({ item, router }) => {
   const isActive = router.asPath === item.as;
   return (
@@ -43,7 +54,7 @@ const Navbar = ({ items }: Props) => {
           <NavbarItem key={item.key} item={item} />
         ))}
       </Flex>
-      <hr />
+      <Hr />
     </div>
   );
 };
