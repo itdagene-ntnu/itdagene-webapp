@@ -36,13 +36,13 @@ const StyledMenuItem = styled('span')`
 
 const items = [
   { key: 'home', name: 'HJEM', to: '/' },
-  { key: 'about-us', name: 'INFO', to: '/om-itdagene' },
+  { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
   { key: 'program', name: 'PROGRAM', to: '/program' },
   { key: 'joblistings', name: 'JOBB', to: '/jobb' },
   {
-    key: 'for-bedrifter',
-    name: 'FOR BEDRIFTER',
-    to: '/info/[side]',
+    key: 'info',
+    name: 'INFO',
+    to: '/info/for-bedrifter',
     as: '/info/for-bedrifter'
   }
 ];

@@ -120,7 +120,7 @@ const ListRenderer = props => (
         {props.root &&
           props.root.joblistings.edges.map(({ node }) => (
             <CompanyElement key={node.id}>
-              <Link key={node.id} href={'/jobb/[id]'} as={`/jobb/${node.id}`}>
+              <Link key={node.id} href={'/jobb/[id]'} as={`/jobb/${node.slug}`}>
                 <a>
                   <CompanyImage
                     src={node.company.logo || '/static/itdagene-gray.png'}
@@ -221,6 +221,7 @@ export const JoblistingsList = createPaginationContainer(
           ) {
           edges {
             node {
+              slug
               id
               __typename
               type

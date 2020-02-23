@@ -4,12 +4,13 @@ import React from 'react';
 import withData, { type WithDataProps } from '../../lib/withData';
 
 import { graphql } from 'react-relay';
-import { type Id_jobbannonse_QueryResponse } from './__generated__/Id_jobbannonse_Query.graphql';
+import { type Slug_jobbannonse_QueryResponse } from './__generated__/Slug_jobbannonse_Query.graphql';
 
 import Layout from '../../components/Layout';
+import ServerError from '../../lib/ServerError';
 import JoblistingView from '../../components/Joblistings/JoblistingView';
 
-type RenderProps = WithDataProps<Id_jobbannonse_QueryResponse>;
+type RenderProps = WithDataProps<Slug_jobbannonse_QueryResponse>;
 
 const Index = ({ error, props }: RenderProps) => (
   <Layout
@@ -34,10 +35,11 @@ const Index = ({ error, props }: RenderProps) => (
       props.joblisting ? (
         <JoblistingView joblisting={props.joblisting} />
       ) : (
-        <>
-          <h1>Finner ikke siden :( </h1>
-          <h2>404 Errr</h2>
-        </>
+        <ServerError
+          errorCode="ENOENT"
+          statusCode={404}
+          title="Fant ikke jobbannonsen"
+        />
       )
     }
   />
@@ -45,22 +47,20 @@ const Index = ({ error, props }: RenderProps) => (
 
 export default withData(Index, {
   query: graphql`
-    query Id_jobbannonse_Query($id: ID!) {
-      joblisting: node(id: $id) {
-        ... on Joblisting {
-          ...JoblistingView_joblisting
-          title
+    query Slug_jobbannonse_Query($slug: String!) {
+      joblisting: joblisting(slug: $slug) {
+        ...JoblistingView_joblisting
+        title
+        description
+        sharingImage
+        company {
           description
-          sharingImage
-          company {
-            description
-            name
-          }
+          name
         }
       }
     }
   `,
-  variables: ({ query: { id } }) => ({
-    id
+  variables: ({ query: { slug } }) => ({
+    slug
   })
 });
