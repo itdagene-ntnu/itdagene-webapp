@@ -5,9 +5,8 @@ import {
   type WithDataAndLayoutProps
 } from '../../lib/withData';
 import Navbar from '../../components/Navbar';
-import { CenterIt } from '../../components/Styled';
+import ServerError from '../../lib/ServerError';
 import styled from 'styled-components';
-import Flex, { FlexItem } from 'styled-flex-component';
 
 import { graphql } from 'react-relay';
 import { type Side_info_QueryResponse } from './__generated__/Side_info_Query.graphql';
@@ -28,12 +27,17 @@ const StyledPageView = styled('div')`
 
 const Index = ({ props }: RenderProps) => {
   const { page, pages } = props;
-  const navitems = pages.map(page => ({
-    text: page.title || '',
-    href: '/info/[side]',
-    as: `/info/${page.slug}`,
-    key: page.id
-  }));
+  const navitems = pages
+    ? pages.map(
+        page =>
+          page && {
+            text: page.title || '',
+            href: '/info/[side]',
+            as: `/info/${page.slug}`,
+            key: page.id
+          }
+      )
+    : [];
   return (
     <>
       <StyledHeading>INFO</StyledHeading>
@@ -43,16 +47,7 @@ const Index = ({ props }: RenderProps) => {
           <PageView page={page} />
         </StyledPageView>
       ) : (
-        <>
-          <Flex center full>
-            <FlexItem>
-              <CenterIt text>
-                <h1>Finner ikke siden :( </h1>
-                <h2>404 Errr</h2>
-              </CenterIt>
-            </FlexItem>
-          </Flex>
-        </>
+        <ServerError statusCode={404} errorCode="ENOENT" />
       )}
     </>
   );

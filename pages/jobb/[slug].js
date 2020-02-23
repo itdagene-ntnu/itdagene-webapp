@@ -7,6 +7,7 @@ import { graphql } from 'react-relay';
 import { type Slug_jobbannonse_QueryResponse } from './__generated__/Slug_jobbannonse_Query.graphql';
 
 import Layout from '../../components/Layout';
+import ServerError from '../../lib/ServerError';
 import JoblistingView from '../../components/Joblistings/JoblistingView';
 
 type RenderProps = WithDataProps<Slug_jobbannonse_QueryResponse>;
@@ -34,10 +35,11 @@ const Index = ({ error, props }: RenderProps) => (
       props.joblisting ? (
         <JoblistingView joblisting={props.joblisting} />
       ) : (
-        <>
-          <h1>Finner ikke siden :( </h1>
-          <h2>404 Errr</h2>
-        </>
+        <ServerError
+          errorCode="ENOENT"
+          statusCode={404}
+          title="Fant ikke jobbannonsen"
+        />
       )
     }
   />
