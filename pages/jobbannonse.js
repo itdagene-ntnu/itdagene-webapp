@@ -20,7 +20,10 @@ Redirect.getInitialProps = async ({ res, queryProps }) => {
   if (!res) {
     return;
   }
-  res.writeHead(301, { Location: `/jobb/${queryProps.node.slug}` }), res.end();
+  res.writeHead(301, {
+    Location: queryProps.node ? `/jobb/${queryProps.node.slug}` : '/jobb'
+  }),
+    res.end();
 };
 export default withData(Redirect, {
   query: graphql`
@@ -32,5 +35,5 @@ export default withData(Redirect, {
       }
     }
   `,
-  variables: ({ query: { id } }: NextRouter): Variables => ({ id })
+  variables: ({ query: { id } }: NextRouter): Variables => ({ id: id || '' })
 });
