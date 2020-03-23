@@ -6,7 +6,6 @@ import {
 import { Image } from '../Styled';
 import Link from 'next/link';
 import * as React from 'react';
-import 'rc-slider/assets/index.css';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import type { JoblistingsContainer_root } from './__generated__/JoblistingsContainer_root.graphql';

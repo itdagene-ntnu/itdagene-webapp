@@ -3,7 +3,6 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
 import styled from 'styled-components';
 import { Player } from 'video-react';
-import 'video-react/dist/video-react.css';
 
 const HSPLogo = styled(Image)`
   width: 450px;

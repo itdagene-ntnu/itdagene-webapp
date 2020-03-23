@@ -1,9 +1,11 @@
 import React from 'react';
 import App from 'next/app';
 
-// Required by: https://github.com/zeit/next.js/issues/5291
-// This file (_app.js) and test.css can be removed when the issue is resolved
+// All css imports go here
 import './test.css';
+import 'video-react/dist/video-react.css';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import 'rc-slider/assets/index.css';
 
 export default class MyApp extends App {
   render() {
