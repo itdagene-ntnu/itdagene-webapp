@@ -6,7 +6,6 @@ import JoblistingsContainer, {
   query,
   JoblistingsList
 } from '../components/Joblistings/JoblistingsContainer';
-import './test.css';
 import type { JoblistingsContainer_root } from '../components/Joblistings/__generated__/JoblistingsContainer_root.graphql';
 import withData, { type WithDataProps } from '../lib/withData';
 
