@@ -1,23 +1,39 @@
+//@flow
 import { useEffect } from 'react';
 import Router from 'next/router';
+import { graphql, type Variables } from 'react-relay';
+import type { NextRouter } from '../utils/types';
+import { withData } from '../lib/withData';
 
 // In order to keep backward compatibility urls like /jobbannonse?id=zyx
 
 // For client redirects
-const Redirect = props => {
+const Redirect = () => {
   useEffect(() => {
-    Router.replace(props.newLocation);
-  }, [props.newLocation]);
+    Router.replace('/jobb');
+  }, []);
   return null;
 };
 
 // For SSR redirects
-Redirect.getInitialProps = ({ res, query }) => {
-  const newLocation = '/jobb';
-  if (res) {
-    res.writeHead(301, { Location: newLocation });
-    res.end();
+Redirect.getInitialProps = async ({ res, queryProps }) => {
+  if (!res) {
+    return;
   }
-  return { newLocation };
+  res.writeHead(301, {
+    Location: queryProps.node ? `/jobb/${queryProps.node.slug}` : '/jobb'
+  }),
+    res.end();
 };
-export default Redirect;
+export default withData(Redirect, {
+  query: graphql`
+    query jobbannonseByIdQuery($id: ID!) {
+      node(id: $id) {
+        ... on Joblisting {
+          slug
+        }
+      }
+    }
+  `,
+  variables: ({ query: { id } }: NextRouter): Variables => ({ id: id || '' })
+});
