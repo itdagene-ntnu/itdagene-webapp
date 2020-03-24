@@ -1,8 +1,10 @@
 # itDAGENE-webapp
 
+[![CircleCI](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp.svg?style=svg)](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp) ![Dependabot](https://api.dependabot.com/badges/status?host=github&repo=itdagene-ntnu/itdagene-webapp) ![Dependencies](https://david-dm.org/itdagene-ntnu/itdagene-webapp.svg)
+
 > nextgen itDAGENE frontend
 
-![Picture of the page](https://cdn.itdagene.no/screenshot.png)
+![Picture of the page](https://cdn.itdagene.no/webapp-screen.png)
 
 Written using [next.js](https://github.com/zeit/next.js/), [react-relay](https://github.com/facebook/relay/) and [graphql](http://graphql.org/).
 
