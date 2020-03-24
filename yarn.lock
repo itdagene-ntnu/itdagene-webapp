@@ -9343,10 +9343,10 @@ relay-compiler@8.0.0:
     signedsource "^1.0.0"
     yargs "^14.2.0"
 
-relay-hooks@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/relay-hooks/-/relay-hooks-2.1.0.tgz#8849f31edfab4984d7df549e83c12dd48db4b6b6"
-  integrity sha512-s+ut/4V8ethjQCE/dsJ0O9JpM1esawNRcgIimRbRSrL89gIwShDeIQOoFIj5Gb6p6VwU7z3pQb1Jx0TweSoEWg==
+relay-hooks@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/relay-hooks/-/relay-hooks-3.2.0.tgz#134a2505237030e99c588f4c20c29f788c7f97f6"
+  integrity sha512-54lHuV5WG8UlDZv5B0U4Nr+3Hc+MaZhLUtqb94E9ij/I0ntH3j3+hSTAgfIx0nSDc39CMlIU6POPnXAUN5XHMA==
   dependencies:
     "@restart/hooks" "^0.3.1"
     fbjs "^1.0.0"
