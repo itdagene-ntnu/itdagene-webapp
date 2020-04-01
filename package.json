@@ -8,7 +8,7 @@
     "start": "NODE_ENV=production next start",
     "schema:prod": "mkdir -p schema && get-graphql-schema https://itdagene.no/graphql > schema/schema.graphql",
     "schema:dev": "mkdir -p schema && get-graphql-schema http://localhost:8000/graphql > schema/schema.graphql",
-    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql --watchman false",
+    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql --language typescript --watchman false",
     "lint:prettier": "prettier '**/*.{js,css,graphql}' --list-different",
     "lint:eslint": "eslint . --ignore-path .prettierignore",
     "lint": "yarn lint:prettier && yarn lint:eslint && yarn flow",
@@ -58,6 +58,8 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-flow": "^7.9.0",
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.2.4",
@@ -73,7 +75,6 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-relay": "^1.7.0",
-    "flow-bin": "^0.121.0",
     "get-graphql-schema": "^2.1.2",
     "jest": "^25.2.6",
     "jest-puppeteer": "^4.4.0",
@@ -81,6 +82,8 @@
     "puppeteer": "^2.1.1",
     "react-test-renderer": "16.13.1",
     "relay-compiler": "9.0.0",
+    "relay-compiler-language-typescript": "^12.0.0",
+    "typescript": "^3.8.3",
     "webpack": "^4.41.5"
   },
   "prettier": {
