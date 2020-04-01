@@ -119,7 +119,11 @@ const ListRenderer = props => (
         {props.root &&
           props.root.joblistings.edges.map(({ node }) => (
             <CompanyElement key={node.id}>
-              <Link key={node.id} href={'/jobb/[id]'} as={`/jobb/${node.slug}`}>
+              <Link
+                key={node.id}
+                href={'/jobb/[slug]'}
+                as={`/jobb/${node.slug}`}
+              >
                 <a>
                   <CompanyImage
                     src={node.company.logo || '/static/itdagene-gray.png'}
