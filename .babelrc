@@ -4,7 +4,7 @@
     "@babel/flow",
   ],
   "plugins": [
-    "relay",
+    ["relay", {"artifactDirectory": "./__generated__"}],
     [
       "styled-components",
       {
