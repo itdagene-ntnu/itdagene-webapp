@@ -10,7 +10,7 @@ import styled from 'styled-components';
 type Props = {
   query: Collaborators_query,
   showDescription?: boolean,
-  showJoblistings?: boolean
+  showJoblistings?: boolean,
 };
 
 const Title = styled('h1')`
@@ -22,7 +22,7 @@ const Collaborators = ({ query, showDescription, showJoblistings }: Props) =>
     <>
       <Title>Våre samarbeidspartnere</Title>
       <Flex wrap justifyCenter>
-        {query.collaborators.map(company => (
+        {query.collaborators.map((company) => (
           <CollaboratorView
             showJoblistings={showJoblistings}
             showDescription={showDescription}
@@ -42,5 +42,5 @@ export default createFragmentContainer(Collaborators, {
         ...Collaborator_company
       }
     }
-  `
+  `,
 });

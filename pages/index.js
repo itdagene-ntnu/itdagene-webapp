@@ -16,7 +16,7 @@ import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import Interest from '../components/Frontpage/Interest';
 import {
   withDataAndLayout,
-  type WithDataAndLayoutProps
+  type WithDataAndLayoutProps,
 } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
@@ -27,7 +27,7 @@ const ReadMore = styled('h4')``;
 
 const AboutSection = (props: pages_index_QueryResponse) => {
   const frontpage =
-    props.pages && props.pages.find(el => el && el.slug === 'frontpage');
+    props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
   return (
     <>
       <Flex justifyAround wrapReverse>
@@ -63,7 +63,7 @@ const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
   <>
     <Flex wrap>
       {query.pages &&
-        query.pages.filter(Boolean).map(element => (
+        query.pages.filter(Boolean).map((element) => (
           <FlexItem key={element.slug} basis={'400px'} grow={1}>
             <h2> {element.title} </h2>
             <p>{element.ingress}</p>
@@ -155,7 +155,7 @@ export default withDataAndLayout(Index, {
       'sommerjobbmaraton',
       'stands',
       'kurs',
-      'om-itdagene'
-    ]
-  }
+      'om-itdagene',
+    ],
+  },
 });

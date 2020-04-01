@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { type CompanyView_company } from './__generated__/CompanyView_company.graphql';
 
 type Props = {
-  company: CompanyView_company
+  company: CompanyView_company,
 };
 const Image = styled(ZoomImage)`
   width: 156px;
@@ -37,5 +37,5 @@ export default createFragmentContainer(CompanyView, {
       name
       url
     }
-  `
+  `,
 });

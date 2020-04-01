@@ -8,7 +8,7 @@ import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
 export default class Default extends Document {
   static getInitialProps({ renderPage, err }: Object) {
     const sheet = new ServerStyleSheet();
-    const page = renderPage(App => props =>
+    const page = renderPage((App) => (props) =>
       sheet.collectStyles(<App {...props} />)
     );
     if (page.err) {
@@ -151,7 +151,7 @@ export default class Default extends Document {
             gtag('js', new Date());
             gtag('config', '${GA_TRACKING_ID}');
             window.__GA_TRACKING_ID__ = '${GA_TRACKING_ID}';
-          `
+          `,
                 }}
               />
             </>

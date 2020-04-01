@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import { lightGrey } from '../../utils/colors';
 
 type Props = {
-  joblisting: JoblistingView_joblisting
+  joblisting: JoblistingView_joblisting,
 };
 export const Title = styled('h1')`
   text-align: center;
@@ -37,7 +37,7 @@ const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
   <NoBulletUl style={{ width: '100%' }}>
     {metaExtractor(joblisting)
       .filter(Boolean)
-      .filter(e => !!e.value)
+      .filter((e) => !!e.value)
       .map(({ key, value }) => (
         <li key={key}>
           <Flex justifyBetween>
@@ -78,7 +78,7 @@ function joinValues(values) {
   );
 }
 
-const isCurrentYear = day => dayjs(day).year() === dayjs().year();
+const isCurrentYear = (day) => dayjs(day).year() === dayjs().year();
 const onlyOneYear = ({ fromYear, toYear }) => fromYear === toYear;
 
 const metaExtractor = (joblisting: JoblistingView_joblisting) => [
@@ -88,7 +88,7 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
       <a href={joblisting.company.url}>{joblisting.company.name}</a>
     ) : (
       joblisting.company.url
-    )
+    ),
   },
   {
     key: 'Frist',
@@ -96,26 +96,26 @@ const metaExtractor = (joblisting: JoblistingView_joblisting) => [
       ? dayjs(joblisting.deadline).format(
           `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
         )
-      : 'Løpende'
+      : 'Løpende',
   },
   {
     key: 'Type',
-    value: typeExtractor(joblisting.type)
+    value: typeExtractor(joblisting.type),
   },
   {
     key: 'Klassetrinn',
     value:
       (onlyOneYear(joblisting) ? '' : `${joblisting.fromYear}. - `) +
-      `${joblisting.toYear}. trinn`
+      `${joblisting.toYear}. trinn`,
   },
   {
     key: 'Sted',
-    value: joinValues(joblisting.towns.map(({ name }) => name))
+    value: joinValues(joblisting.towns.map(({ name }) => name)),
   },
   {
     key: 'Publisert',
-    value: dayjs(joblisting.dateCreated).format('D. MMMM YYYY')
-  }
+    value: dayjs(joblisting.dateCreated).format('D. MMMM YYYY'),
+  },
 ];
 const GrayText = styled('div')`
   color: gray;
@@ -186,5 +186,5 @@ export default createFragmentContainer(Joblisting, {
       url
       dateCreated
     }
-  `
+  `,
 });

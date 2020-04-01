@@ -52,10 +52,10 @@ const Base = styled('div')`
 
 const LoadingIndicator = ({
   noMargin = false,
-  hideText = false
+  hideText = false,
 }: {
   noMargin?: boolean,
-  hideText?: boolean
+  hideText?: boolean,
 }) => (
   <Base {...{ noMargin }}>
     <Spinner>

@@ -6,7 +6,7 @@ import { HeaderMenu } from '../Header';
 import { itdageneBlue } from '../../utils/colors';
 import Router from 'next/router';
 import OpengraphFragmentRenderer, {
-  CustomOpengraphRenderer
+  CustomOpengraphRenderer,
 } from './metadata.js';
 
 import Footer from '../Footer';
@@ -61,14 +61,14 @@ export const BlueSection = styled.div`
 
 export const Wrapper = (props: any) => <MainFlex {...props} />;
 
-const pageview = url => {
+const pageview = (url) => {
   window.__GA_TRACKING_ID__ &&
     window.gtag('config', window.__GA_TRACKING_ID__, {
-      page_location: url
+      page_location: url,
     });
 };
 
-Router.onRouteChangeComplete = url => pageview(url);
+Router.onRouteChangeComplete = (url) => pageview(url);
 
 export type LayoutSettings<T> = {
   shouldCenter?: boolean,
@@ -77,17 +77,17 @@ export type LayoutSettings<T> = {
   customOpengraphMetadata?: (props: { props: T, error: ?Error }) => ?{
     +title?: ?string,
     +sharingImage?: ?string,
-    +description?: ?string
+    +description?: ?string,
   },
   children?: React.Node,
-  noLoading?: boolean
+  noLoading?: boolean,
 };
 
 export type ContentRenererProps<T> = { props: T, error: ?Error };
 export type LayoutProps<T> = {
   props?: ?T,
   error?: ?Error,
-  contentRenderer?: (props: ContentRenererProps<T>) => React.Node
+  contentRenderer?: (props: ContentRenererProps<T>) => React.Node,
 };
 
 export const Layout = <T>({
@@ -99,7 +99,7 @@ export const Layout = <T>({
   contentRenderer: ContentRenderer,
   customOpengraphMetadata,
   metadata,
-  children
+  children,
 }: LayoutProps<T> & LayoutSettings<T>) => {
   if (error)
     return (

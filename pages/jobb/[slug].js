@@ -27,7 +27,7 @@ const Index = ({ error, props }: RenderProps) => (
               : props.joblisting.title,
             description:
               props.joblisting.company &&
-              `${props.joblisting.company.description || ''}`
+              `${props.joblisting.company.description || ''}`,
           }
         : null
     }
@@ -61,6 +61,6 @@ export default withData(Index, {
     }
   `,
   variables: ({ query: { slug } }) => ({
-    slug
-  })
+    slug,
+  }),
 });

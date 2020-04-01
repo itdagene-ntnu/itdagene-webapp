@@ -12,7 +12,7 @@ type Props = {
   page: PageView_page,
   hideDate?: boolean,
   hideContent?: boolean,
-  hideTitle?: boolean
+  hideTitle?: boolean,
 };
 
 const GrayText = styled('div')`
@@ -58,5 +58,5 @@ export default createFragmentContainer(PageView, {
       dateSaved
       dateCreated
     }
-  `
+  `,
 });

@@ -26,7 +26,7 @@ describe('Page rendering', () => {
       deadline: 'DEADLINE',
       created: 'CREATED',
       company_name: 'COMPANY_NAME',
-      type: 'TYPE'
+      type: 'TYPE',
     };
 
     const deadline = await page.goto(
@@ -49,7 +49,7 @@ describe('Page rendering', () => {
     const types = {
       empty: '',
       fulltime: 'pp',
-      summerintership: 'si'
+      summerintership: 'si',
     };
 
     const empty = await page.goto(`${baseUrl}/jobb?type=${types.empty}`);

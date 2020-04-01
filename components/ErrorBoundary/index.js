@@ -7,18 +7,18 @@ type Props = {
   children: any,
   hidden?: boolean,
   /* Reset error when this prop changes */
-  resetOnChange?: any
+  resetOnChange?: any,
 };
 
 type State = {
   error: ?Error,
-  resetOnChange: any
+  resetOnChange: any,
 };
 
 class ErrorBoundary extends React.Component<Props, State> {
   state = {
     error: null,
-    resetOnChange: this.props.resetOnChange
+    resetOnChange: this.props.resetOnChange,
   };
 
   openDialog = () => {
@@ -31,7 +31,7 @@ class ErrorBoundary extends React.Component<Props, State> {
       return {
         ...prevState,
         resetOnChange,
-        error: null
+        error: null,
       };
     }
     return null;
@@ -49,7 +49,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     const { openReportDialog, hidden = false, children, ...rest } = this.props;
 
     if (!this.state.error) {
-      return React.Children.map(children, child =>
+      return React.Children.map(children, (child) =>
         React.cloneElement(child, { ...rest })
       );
     }

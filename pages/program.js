@@ -3,7 +3,7 @@ import * as React from 'react';
 import { graphql } from 'react-relay';
 import {
   withDataAndLayout,
-  type WithDataAndLayoutProps
+  type WithDataAndLayoutProps,
 } from '../lib/withData';
 import { type omItdagene_QueryResponse } from './__generated__/program_Query.graphql';
 import PageView from '../components/PageView';
@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 
 const Index = ({
   error,
-  props: props
+  props: props,
 }: WithDataAndLayoutProps<omItdagene_QueryResponse>) => {
   const groupedEvents =
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
@@ -22,19 +22,15 @@ const Index = ({
     <>
       {props.programPage && <PageView hideContent page={props.programPage} />}
       <Flex wrap justifyCenter>
-        {sortedKeys.map(k => (
+        {sortedKeys.map((k) => (
           <FlexItem
             grow="1"
             style={{ padding: '20px 30px' }}
             basis="500px"
             key={k}
           >
-            <h1>
-              {dayjs(k)
-                .format('dddd DD.MM')
-                .toUpperCase()}
-            </h1>
-            {groupedEvents[k].map(event => (
+            <h1>{dayjs(k).format('dddd DD.MM').toUpperCase()}</h1>
+            {groupedEvents[k].map((event) => (
               <div key={event.id}>
                 {event.timeStart.slice(0, 5)} - {event.timeEnd.slice(0, 5)},{' '}
                 {event.location}
@@ -42,7 +38,7 @@ const Index = ({
                   style={{
                     fontWeight: 600,
                     marginTop: 0,
-                    marginBottom: 0
+                    marginBottom: 0,
                   }}
                 >
                   {event.title}
@@ -90,6 +86,6 @@ export default withDataAndLayout(Index, {
   variables: {},
   layout: ({ props, error }) => ({
     responsive: true,
-    metadata: props && props.programPage
-  })
+    metadata: props && props.programPage,
+  }),
 });

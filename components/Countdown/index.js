@@ -9,7 +9,7 @@ import {
   itdageneLightBlue,
   itdageneGreen,
   itdageneRed,
-  itdageneYellow
+  itdageneYellow,
 } from '../../utils/colors.js';
 
 const NumberBox = styled('div')`
@@ -22,7 +22,7 @@ const NumberBox = styled('div')`
   height: 125px;
   text-transform: uppercase;
   font-size: 12px;
-  background: ${props => props.color};
+  background: ${(props) => props.color};
   margin: 5px;
   flex-basis: 135px;
 `;
@@ -59,9 +59,7 @@ const renderer = ({ days, hours, minutes, seconds, completed }) =>
 
 const CountdownComponent = (props: Countdown_currentMetaData) => (
   <Countdown
-    date={dayjs(props.currentMetaData.startDate)
-      .add(10, 'hours')
-      .toDate()}
+    date={dayjs(props.currentMetaData.startDate).add(10, 'hours').toDate()}
     renderer={renderer}
   />
 );
@@ -71,5 +69,5 @@ export default createFragmentContainer(CountdownComponent, {
     fragment Countdown_currentMetaData on MetaData {
       startDate
     }
-  `
+  `,
 });
