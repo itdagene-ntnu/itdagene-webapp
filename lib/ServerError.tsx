@@ -1,11 +1,7 @@
-import React from "react";
-import Error from "next/error";
+import React from 'react';
+import Error from 'next/error';
 
-const ServerError = ({
-  statusCode,
-  title,
-  errorCode
-}) => {
+const ServerError = ({ statusCode, title, errorCode }) => {
   if (process.browser) {
     return <Error statusCode={statusCode} title={title} />;
   }

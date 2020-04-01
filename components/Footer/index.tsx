@@ -1,9 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
-import styled from "styled-components";
-import { FlexItem } from "styled-flex-component";
-import { ResponsiveContent, NoBulletUl } from "../Styled";
-import { lightGrey } from "../../utils/colors";
+import styled from 'styled-components';
+import { FlexItem } from 'styled-flex-component';
+import { ResponsiveContent, NoBulletUl } from '../Styled';
+import { lightGrey } from '../../utils/colors';
 
 const Container = styled('div')`
   padding: 2.5em 0em;
@@ -39,13 +39,18 @@ const BottomAbout = styled('div')`
   }
 `;
 
-const Footer = () => <Container>
+const Footer = () => (
+  <Container>
     <ResponsiveContent>
       <InnerContainer>
         <RightBorderFlex>
           <NoBulletUl>
             <li>
-              <img style={{ width: 150 }} src="https://cdn.itdagene.no/itdagene-svart.png" alt="itDAGENE logo" />
+              <img
+                style={{ width: 150 }}
+                src="https://cdn.itdagene.no/itdagene-svart.png"
+                alt="itDAGENE logo"
+              />
             </li>
             <li>Sem Sælands vei 7-9</li>
             <li>7034 Trondheim</li>
@@ -95,7 +100,8 @@ const Footer = () => <Container>
         </BottomAbout>
       </InnerContainer>
     </ResponsiveContent>
-  </Container>;
+  </Container>
+);
 
 export default styled(Footer)`
   padding: 5em 0em;

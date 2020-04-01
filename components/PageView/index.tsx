@@ -1,12 +1,11 @@
-
-import React from "react";
-import { createFragmentContainer, graphql } from "react-relay";
-import Link from "next/link";
-import { PageView_page } from "./__generated__/PageView_page.graphql";
-import Flex from "styled-flex-component";
-import ReactMarkdown from "react-markdown";
-import styled from "styled-components";
-import dayjs from "dayjs";
+import React from 'react';
+import { createFragmentContainer, graphql } from 'react-relay';
+import Link from 'next/link';
+import { PageView_page } from './__generated__/PageView_page.graphql';
+import Flex from 'styled-flex-component';
+import ReactMarkdown from 'react-markdown';
+import styled from 'styled-components';
+import dayjs from 'dayjs';
 
 type Props = {
   page: PageView_page;
@@ -18,35 +17,35 @@ type Props = {
 const GrayText = styled('div')`
   color: gray;
 `;
-const LinkRenderer = ({
-  href,
-  children
-}) => {
+const LinkRenderer = ({ href, children }) => {
   // Use next.js router for internal urls
   if (href.startsWith('/')) {
-    return <Link href={href}>
+    return (
+      <Link href={href}>
         <a> {children}</a>
-      </Link>;
+      </Link>
+    );
   }
   return <a href={href}> {children}</a>;
 };
 
 const renderers = { link: LinkRenderer };
 
-const PageView = ({
-  page,
-  hideDate,
-  hideContent,
-  hideTitle
-}: Props) => <>
+const PageView = ({ page, hideDate, hideContent, hideTitle }: Props) => (
+  <>
     {!hideTitle && <h1>{page.title}</h1>}
-    {!hideDate && <GrayText>
+    {!hideDate && (
+      <GrayText>
         Sist oppdatert: {dayjs(page.dateSaved).format(`D. MMMM YYYY`)}
-      </GrayText>}
-    {!hideContent && <Flex column>
+      </GrayText>
+    )}
+    {!hideContent && (
+      <Flex column>
         <ReactMarkdown renderers={renderers} source={page.content} />
-      </Flex>}
-  </>;
+      </Flex>
+    )}
+  </>
+);
 
 export default createFragmentContainer(PageView, {
   page: graphql`
@@ -58,5 +57,5 @@ export default createFragmentContainer(PageView, {
       dateSaved
       dateCreated
     }
-  `
+  `,
 });

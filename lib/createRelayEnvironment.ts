@@ -1,33 +1,45 @@
-
-import { Environment, Network, RecordSource, Store } from "relay-runtime";
-import { Environment as EnvironmentType, Record } from "react-relay";
-import Raven from "raven-js";
-import fetch from "isomorphic-unfetch";
+import { Environment, Network, RecordSource, Store } from 'relay-runtime';
+import { Environment as EnvironmentType, Record } from 'react-relay';
+import Raven from 'raven-js';
+import fetch from 'isomorphic-unfetch';
 
 let relayEnvironment = null;
 
 // Define a function that fetches the results of an operation (query/mutation/etc)
 // and returns its results as a Promise:
-function fetchQuery(operation, variables, cacheConfig, uploadables, envSettings: EnvSettings) {
+function fetchQuery(
+  operation,
+  variables,
+  cacheConfig,
+  uploadables,
+  envSettings: EnvSettings
+) {
   return fetch(envSettings.relayEndpoint, {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     }, // Add authentication and other headers here
     body: JSON.stringify({
       query: operation.text, // GraphQL text from input
-      variables
-    })
-  }).then(response => response.json());
+      variables,
+    }),
+  }).then((response) => response.json());
 }
 
 function fetchQueryWithSentry(envSettings: EnvSettings) {
-  return (operation, variables, cacheConfig, uploadables) => fetchQuery(operation, variables, cacheConfig, uploadables, envSettings).catch(err => {
-    Raven.captureException(err);
-    throw err;
-  });
+  return (operation, variables, cacheConfig, uploadables) =>
+    fetchQuery(
+      operation,
+      variables,
+      cacheConfig,
+      uploadables,
+      envSettings
+    ).catch((err) => {
+      Raven.captureException(err);
+      throw err;
+    });
 }
 
 export type EnvSettings = {
@@ -38,7 +50,7 @@ export type EnvSettings = {
 
 export default function initEnvironment({
   records = {},
-  envSettings
+  envSettings,
 }: {
   records?: Record;
   envSettings: EnvSettings;
@@ -52,7 +64,7 @@ export default function initEnvironment({
   const store = new Store(new RecordSource(records));
   const localRelayEnvironment = new Environment({
     network,
-    store
+    store,
   });
   // $FlowFixMe
   if (!process.browser) {
@@ -61,14 +73,15 @@ export default function initEnvironment({
 
   // reuse Relay environment on client-side
   Raven.config(envSettings.ravenPublicDsn, {
-    release: envSettings.release
+    release: envSettings.release,
   }).install();
   relayEnvironment = localRelayEnvironment;
   // TODO FIXME this is just an internal API.
   // Our state is so small, so this should be no problem.. :upsidedown-face:
   try {
     store._gcHoldCounter = 1000;
-  } catch (err) {//
+  } catch (err) {
+    //
   }
   return relayEnvironment;
 }

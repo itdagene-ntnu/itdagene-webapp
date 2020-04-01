@@ -1,7 +1,5 @@
-
-
-import React from "react";
-import styled, { css } from "styled-components";
+import React from 'react';
+import styled, { css } from 'styled-components';
 
 export const ResponsiveContent = styled('div')`
   @media only screen and (min-width: 1200px) {
@@ -43,9 +41,11 @@ export const BottomBorder = styled('div')`
   border-bottom: 1px solid rgba(34, 36, 38, 0.15);
 `;
 
-export const Section = (props: any) => <BottomBorder>
+export const Section = (props: any) => (
+  <BottomBorder>
     <BorderlessSection {...props} />
-  </BottomBorder>;
+  </BottomBorder>
+);
 
 export const Image = styled('img')`
   display: block;
@@ -65,9 +65,9 @@ export const CenterIt = styled('div')`
   justify-content: center;
   flex-direction: column;
 
-  ${({
-  text = false
-}: {text?: boolean;}) => text && css`
+  ${({ text = false }: { text?: boolean }) =>
+    text &&
+    css`
       align-items: center;
       text-align: center;
     `};

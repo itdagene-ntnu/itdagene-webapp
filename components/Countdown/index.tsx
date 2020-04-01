@@ -1,11 +1,16 @@
-import React from "react";
-import Countdown from "react-countdown-now";
-import { createFragmentContainer, graphql } from "react-relay";
-import { Countdown_currentMetaData } from "./__generated__/Countdown_currentMetaData.graphql";
-import dayjs from "dayjs";
-import styled from "styled-components";
-import Flex from "styled-flex-component";
-import { itdageneLightBlue, itdageneGreen, itdageneRed, itdageneYellow } from "../../utils/colors";
+import React from 'react';
+import Countdown from 'react-countdown-now';
+import { createFragmentContainer, graphql } from 'react-relay';
+import { Countdown_currentMetaData } from './__generated__/Countdown_currentMetaData.graphql';
+import dayjs from 'dayjs';
+import styled from 'styled-components';
+import Flex from 'styled-flex-component';
+import {
+  itdageneLightBlue,
+  itdageneGreen,
+  itdageneRed,
+  itdageneYellow,
+} from '../../utils/colors';
 
 const NumberBox = styled('div')`
   position: relative;
@@ -17,7 +22,7 @@ const NumberBox = styled('div')`
   height: 125px;
   text-transform: uppercase;
   font-size: 12px;
-  background: ${props => props.color};
+  background: ${(props) => props.color};
   margin: 5px;
   flex-basis: 135px;
 `;
@@ -34,13 +39,9 @@ const Text = styled('span')`
   line-height: 2;
 `;
 
-const renderer = ({
-  days,
-  hours,
-  minutes,
-  seconds,
-  completed
-}) => !completed && <Flex center wrap>
+const renderer = ({ days, hours, minutes, seconds, completed }) =>
+  !completed && (
+    <Flex center wrap>
       <NumberBox color={itdageneGreen}>
         <Number>{days}</Number> <Text> dager </Text>
       </NumberBox>
@@ -53,14 +54,20 @@ const renderer = ({
       <NumberBox color={itdageneYellow}>
         <Number>{seconds}</Number> <Text> sekunder </Text>
       </NumberBox>
-    </Flex>;
+    </Flex>
+  );
 
-const CountdownComponent = (props: Countdown_currentMetaData) => <Countdown date={dayjs(props.currentMetaData.startDate).add(10, 'hours').toDate()} renderer={renderer} />;
+const CountdownComponent = (props: Countdown_currentMetaData) => (
+  <Countdown
+    date={dayjs(props.currentMetaData.startDate).add(10, 'hours').toDate()}
+    renderer={renderer}
+  />
+);
 
 export default createFragmentContainer(CountdownComponent, {
   currentMetaData: graphql`
     fragment Countdown_currentMetaData on MetaData {
       startDate
     }
-  `
+  `,
 });

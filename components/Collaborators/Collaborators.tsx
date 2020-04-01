@@ -1,11 +1,10 @@
+import { createFragmentContainer, graphql } from 'react-relay';
+import React from 'react';
 
-import { createFragmentContainer, graphql } from "react-relay";
-import React from "react";
-
-import { Collaborators_query } from "./__generated__/Collaborators_query.graphql";
-import CollaboratorView from "./Collaborator";
-import Flex from "styled-flex-component";
-import styled from "styled-components";
+import { Collaborators_query } from './__generated__/Collaborators_query.graphql';
+import CollaboratorView from './Collaborator';
+import Flex from 'styled-flex-component';
+import styled from 'styled-components';
 
 type Props = {
   query: Collaborators_query;
@@ -17,16 +16,22 @@ const Title = styled('h1')`
   text-align: center;
 `;
 
-const Collaborators = ({
-  query,
-  showDescription,
-  showJoblistings
-}: Props) => query.collaborators ? <>
+const Collaborators = ({ query, showDescription, showJoblistings }: Props) =>
+  query.collaborators ? (
+    <>
       <Title>Våre samarbeidspartnere</Title>
       <Flex wrap justifyCenter>
-        {query.collaborators.map(company => <CollaboratorView showJoblistings={showJoblistings} showDescription={showDescription} key={company.id} company={company} />)}
+        {query.collaborators.map((company) => (
+          <CollaboratorView
+            showJoblistings={showJoblistings}
+            showDescription={showDescription}
+            key={company.id}
+            company={company}
+          />
+        ))}
       </Flex>
-    </> : null;
+    </>
+  ) : null;
 
 export default createFragmentContainer(Collaborators, {
   query: graphql`
@@ -36,5 +41,5 @@ export default createFragmentContainer(Collaborators, {
         ...Collaborator_company
       }
     }
-  `
+  `,
 });

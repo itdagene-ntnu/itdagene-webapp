@@ -1,42 +1,57 @@
-
-import * as React from "react";
-import { graphql } from "react-relay";
-import { withDataAndLayout, WithDataAndLayoutProps } from "../lib/withData";
-import { omItdagene_QueryResponse } from "./__generated__/program_Query.graphql";
-import PageView from "../components/PageView";
-import Flex, { FlexItem } from "styled-flex-component";
-import { groupBy, sortBy } from "lodash";
-import dayjs from "dayjs";
+import * as React from 'react';
+import { graphql } from 'react-relay';
+import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
+import { omItdagene_QueryResponse } from './__generated__/program_Query.graphql';
+import PageView from '../components/PageView';
+import Flex, { FlexItem } from 'styled-flex-component';
+import { groupBy, sortBy } from 'lodash';
+import dayjs from 'dayjs';
 
 const Index = ({
   error,
-  props: props
+  props: props,
 }: WithDataAndLayoutProps<omItdagene_QueryResponse>) => {
-  const groupedEvents = props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
+  const groupedEvents =
+    props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents));
-  return <>
+  return (
+    <>
       {props.programPage && <PageView hideContent page={props.programPage} />}
       <Flex wrap justifyCenter>
-        {sortedKeys.map(k => <FlexItem grow="1" style={{ padding: '20px 30px' }} basis="500px" key={k}>
+        {sortedKeys.map((k) => (
+          <FlexItem
+            grow="1"
+            style={{ padding: '20px 30px' }}
+            basis="500px"
+            key={k}
+          >
             <h1>{dayjs(k).format('dddd DD.MM').toUpperCase()}</h1>
-            {groupedEvents[k].map(event => <div key={event.id}>
+            {groupedEvents[k].map((event) => (
+              <div key={event.id}>
                 {event.timeStart.slice(0, 5)} - {event.timeEnd.slice(0, 5)},{' '}
                 {event.location}
-                <h3 style={{
-            fontWeight: 600,
-            marginTop: 0,
-            marginBottom: 0
-          }}>
+                <h3
+                  style={{
+                    fontWeight: 600,
+                    marginTop: 0,
+                    marginBottom: 0,
+                  }}
+                >
                   {event.title}
                 </h3>
                 {event.description}
                 <br />
                 <br />
-              </div>)}
-          </FlexItem>)}
+              </div>
+            ))}
+          </FlexItem>
+        ))}
       </Flex>
-      {props.programPage && <PageView hideTitle hideDate page={props.programPage} />}
-    </>;
+      {props.programPage && (
+        <PageView hideTitle hideDate page={props.programPage} />
+      )}
+    </>
+  );
 };
 
 export default withDataAndLayout(Index, {
@@ -65,11 +80,8 @@ export default withDataAndLayout(Index, {
     }
   `,
   variables: {},
-  layout: ({
-    props,
-    error
-  }) => ({
+  layout: ({ props, error }) => ({
     responsive: true,
-    metadata: props && props.programPage
-  })
+    metadata: props && props.programPage,
+  }),
 });

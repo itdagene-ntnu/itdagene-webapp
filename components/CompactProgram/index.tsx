@@ -1,9 +1,14 @@
-import React from "react";
-import Flex, { FlexItem } from "styled-flex-component";
-import { CenterIt } from "../Styled";
-import styled from "styled-components";
-import Link from "next/link";
-import { itdageneLightBlue, itdageneGreen, itdageneRed, itdageneYellow } from "../../utils/colors";
+import React from 'react';
+import Flex, { FlexItem } from 'styled-flex-component';
+import { CenterIt } from '../Styled';
+import styled from 'styled-components';
+import Link from 'next/link';
+import {
+  itdageneLightBlue,
+  itdageneGreen,
+  itdageneRed,
+  itdageneYellow,
+} from '../../utils/colors';
 
 const Title = styled('h1')`
   @media only screen and (max-width: 767px) {
@@ -12,7 +17,7 @@ const Title = styled('h1')`
 `;
 
 const Tile = styled.div`
-  background: ${props => props.color};
+  background: ${(props) => props.color};
   width: 25%;
   height: 100px;
   transition: all 0.1s ease-in-out;
@@ -44,7 +49,8 @@ const ReadMore = styled('h4')`
   margin-top: 40px;
 `;
 
-const CompactProgram = () => <Flex justifyAround column>
+const CompactProgram = () => (
+  <Flex justifyAround column>
     <FlexItem>
       <Title>Hva skjer under itDAGENE?</Title>
     </FlexItem>
@@ -86,5 +92,6 @@ const CompactProgram = () => <Flex justifyAround column>
         </a>
       </Link>
     </CenterIt>
-  </Flex>;
+  </Flex>
+);
 export default CompactProgram;

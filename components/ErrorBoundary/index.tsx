@@ -1,6 +1,5 @@
-
-import * as React from "react";
-import Raven from "raven-js";
+import * as React from 'react';
+import Raven from 'raven-js';
 
 type Props = {
   openReportDialog?: boolean;
@@ -17,10 +16,9 @@ type State = {
 };
 
 class ErrorBoundary extends React.Component<Props, State> {
-
   state = {
     error: null,
-    resetOnChange: this.props.resetOnChange
+    resetOnChange: this.props.resetOnChange,
   };
 
   openDialog = () => {
@@ -28,14 +26,12 @@ class ErrorBoundary extends React.Component<Props, State> {
   };
 
   static getDerivedStateFromProps(nextProps: Props, prevState: State) {
-    const {
-      resetOnChange
-    } = prevState;
+    const { resetOnChange } = prevState;
     if (nextProps.resetOnChange !== resetOnChange) {
       return {
         ...prevState,
         resetOnChange,
-        error: null
+        error: null,
       };
     }
     return null;
@@ -50,33 +46,34 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   render() {
-    const {
-      openReportDialog,
-      hidden = false,
-      children,
-      ...rest
-    } = this.props;
+    const { openReportDialog, hidden = false, children, ...rest } = this.props;
 
     if (!this.state.error) {
-      return React.Children.map(children, child => React.cloneElement(child, { ...rest }));
+      return React.Children.map(children, (child) =>
+        React.cloneElement(child, { ...rest })
+      );
     }
     if (hidden) {
       return null;
     }
 
-    return <div>
+    return (
+      <div>
         <div onClick={() => !openReportDialog && this.openDialog()}>
           <div>
             <h3>En feil har oppstått</h3>
             <p>
               Webansvarling har fått beskjed om feilen.{' '}
-              {!openReportDialog && Raven.lastEventId() && <span>
+              {!openReportDialog && Raven.lastEventId() && (
+                <span>
                   Klikk <b>her</b> for å sende en rapport.
-                </span>}
+                </span>
+              )}
             </p>
           </div>
         </div>
-      </div>;
+      </div>
+    );
   }
 }
 

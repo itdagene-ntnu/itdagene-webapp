@@ -1,37 +1,42 @@
+import React from 'react';
 
-import React from "react";
+import { Section } from '../components/Styled';
+import { Image, CenterIt } from '../components/Styled';
+import { graphql } from 'react-relay';
 
-import { Section } from "../components/Styled";
-import { Image, CenterIt } from "../components/Styled";
-import { graphql } from "react-relay";
-
-import { pages_index_QueryResponse } from "./__generated__/pages_index_Query.graphql";
-import Collaborators from "../components/Collaborators/Collaborators";
-import Companies from "../components/Companies/Companies";
-import Flex, { FlexItem } from "styled-flex-component";
-import Link from "next/link";
-import styled from "styled-components";
-import HSP from "../components/Frontpage/HSP";
-import WelcomeScreen from "../components/Frontpage/WelcomeScreen";
-import Interest from "../components/Frontpage/Interest";
-import { withDataAndLayout, WithDataAndLayoutProps } from "../lib/withData";
-import PageView from "../components/PageView";
-import CompactProgram from "../components/CompactProgram";
+import { pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
+import Collaborators from '../components/Collaborators/Collaborators';
+import Companies from '../components/Companies/Companies';
+import Flex, { FlexItem } from 'styled-flex-component';
+import Link from 'next/link';
+import styled from 'styled-components';
+import HSP from '../components/Frontpage/HSP';
+import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
+import Interest from '../components/Frontpage/Interest';
+import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
+import PageView from '../components/PageView';
+import CompactProgram from '../components/CompactProgram';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
 const ReadMore = styled('h4')``;
 
 const AboutSection = (props: pages_index_QueryResponse) => {
-  const frontpage = props.pages && props.pages.find(el => el && el.slug === 'frontpage');
-  return <>
+  const frontpage =
+    props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
+  return (
+    <>
       <Flex justifyAround wrapReverse>
         <FlexItem grow={1} basis="700px">
           {frontpage && <PageView hideDate page={frontpage} />}
         </FlexItem>
         <FlexItem>
           <CenterIt>
-            <Image style={{ width: 350, maxWidth: '100%' }} src="https://cdn.itdagene.no/itdagene-svart.png" alt="itDAGENE logo" />
+            <Image
+              style={{ width: 350, maxWidth: '100%' }}
+              src="https://cdn.itdagene.no/itdagene-svart.png"
+              alt="itDAGENE logo"
+            />
           </CenterIt>
         </FlexItem>
       </Flex>
@@ -42,18 +47,20 @@ const AboutSection = (props: pages_index_QueryResponse) => {
           </a>
         </Link>
       </CenterIt>
-    </>;
+    </>
+  );
 };
 
 const Centered = styled('div')`
   text-align: center;
 `;
 
-const EventsSection = ({
-  query
-}: {query: pages_index_QueryResponse;}) => <>
+const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
+  <>
     <Flex wrap>
-      {query.pages && query.pages.filter(Boolean).map(element => <FlexItem key={element.slug} basis={'400px'} grow={1}>
+      {query.pages &&
+        query.pages.filter(Boolean).map((element) => (
+          <FlexItem key={element.slug} basis={'400px'} grow={1}>
             <h2> {element.title} </h2>
             <p>{element.ingress}</p>
             <Centered>
@@ -63,14 +70,14 @@ const EventsSection = ({
                 </a>
               </Link>
             </Centered>
-          </FlexItem>)}
+          </FlexItem>
+        ))}
     </Flex>
-  </>;
+  </>
+);
 
-const Index = ({
-  props,
-  error
-}: RenderProps) => <>
+const Index = ({ props, error }: RenderProps) => (
+  <>
     <WelcomeScreen currentMetaData={props.currentMetaData} />
     <Section>
       <AboutSection {...props} />
@@ -81,19 +88,27 @@ const Index = ({
     <Section>
       <CompactProgram />
     </Section>
-    {props.currentMetaData.mainCollaborator && <Section>
+    {props.currentMetaData.mainCollaborator && (
+      <Section>
         <HSP />
-      </Section>}
-    {props.currentMetaData.collaborators && <Section>
+      </Section>
+    )}
+    {props.currentMetaData.collaborators && (
+      <Section>
         <Collaborators showDescription query={props.currentMetaData} />
-      </Section>}
-    {(props.currentMetaData.companiesFirstDay || props.currentMetaData.companiesLastDay) && <Section>
+      </Section>
+    )}
+    {(props.currentMetaData.companiesFirstDay ||
+      props.currentMetaData.companiesLastDay) && (
+      <Section>
         <Companies query={props.currentMetaData} />
-      </Section>}
+      </Section>
+    )}
     <Section style={{ borderBottom: 0 }}>
       <EventsSection query={props} />
     </Section>
-  </>;
+  </>
+);
 
 export default withDataAndLayout(Index, {
   query: graphql`
@@ -130,6 +145,13 @@ export default withDataAndLayout(Index, {
     }
   `,
   variables: {
-    slugs: ['frontpage', 'bankett', 'sommerjobbmaraton', 'stands', 'kurs', 'om-itdagene']
-  }
+    slugs: [
+      'frontpage',
+      'bankett',
+      'sommerjobbmaraton',
+      'stands',
+      'kurs',
+      'om-itdagene',
+    ],
+  },
 });

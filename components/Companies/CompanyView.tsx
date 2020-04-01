@@ -1,9 +1,8 @@
-
-import React from "react";
-import { createFragmentContainer, graphql } from "react-relay";
-import { ZoomImage } from "../Styled";
-import styled from "styled-components";
-import { CompanyView_company } from "./__generated__/CompanyView_company.graphql";
+import React from 'react';
+import { createFragmentContainer, graphql } from 'react-relay';
+import { ZoomImage } from '../Styled';
+import styled from 'styled-components';
+import { CompanyView_company } from './__generated__/CompanyView_company.graphql';
 
 type Props = {
   company: CompanyView_company;
@@ -21,11 +20,12 @@ const Image = styled(ZoomImage)`
   }
 `;
 
-const CompanyView = ({
-  company
-}: Props) => company.logo ? <a href={company.url}>
+const CompanyView = ({ company }: Props) =>
+  company.logo ? (
+    <a href={company.url}>
       <Image src={company.logo || ''} />
-    </a> : null;
+    </a>
+  ) : null;
 
 export default createFragmentContainer(CompanyView, {
   company: graphql`
@@ -36,5 +36,5 @@ export default createFragmentContainer(CompanyView, {
       name
       url
     }
-  `
+  `,
 });

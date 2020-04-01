@@ -1,9 +1,8 @@
-
-import React from "react";
-import Layout from "../components/Layout";
-import { CenterIt } from "../components/Styled";
-import Flex, { FlexItem } from "styled-flex-component";
-import styled from "styled-components";
+import React from 'react';
+import Layout from '../components/Layout';
+import { CenterIt } from '../components/Styled';
+import Flex, { FlexItem } from 'styled-flex-component';
+import styled from 'styled-components';
 
 type Props = {
   statusCode: number;
@@ -12,7 +11,7 @@ type Props = {
 
 const ERROR_TITLES = {
   '404': 'Fant ikke siden :(',
-  '500': 'Noe har gått fryktelig galt.'
+  '500': 'Noe har gått fryktelig galt.',
 };
 
 const H1 = styled('h1')`
@@ -21,11 +20,9 @@ const H1 = styled('h1')`
   font-weight: 100;
 `;
 
-const Error = ({
-  statusCode,
-  title
-}: Props) => {
-  return <Layout noLoading>
+const Error = ({ statusCode, title }: Props) => {
+  return (
+    <Layout noLoading>
       <Flex center full>
         <FlexItem>
           <CenterIt text>
@@ -34,13 +31,11 @@ const Error = ({
           </CenterIt>
         </FlexItem>
       </Flex>
-    </Layout>;
+    </Layout>
+  );
 };
 
-Error.getInitialProps = ({
-  res,
-  err
-}) => {
+Error.getInitialProps = ({ res, err }) => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
   return { statusCode };
 };

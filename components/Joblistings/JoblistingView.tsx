@@ -1,13 +1,12 @@
-
-import React from "react";
-import { createFragmentContainer, graphql } from "react-relay";
-import { JoblistingView_joblisting } from "./__generated__/JoblistingView_joblisting.graphql";
-import Flex, { FlexItem } from "styled-flex-component";
-import ReactMarkdown from "react-markdown";
-import styled from "styled-components";
-import { NoBulletUl } from "../Styled";
-import dayjs from "dayjs";
-import { lightGrey } from "../../utils/colors";
+import React from 'react';
+import { createFragmentContainer, graphql } from 'react-relay';
+import { JoblistingView_joblisting } from './__generated__/JoblistingView_joblisting.graphql';
+import Flex, { FlexItem } from 'styled-flex-component';
+import ReactMarkdown from 'react-markdown';
+import styled from 'styled-components';
+import { NoBulletUl } from '../Styled';
+import dayjs from 'dayjs';
+import { lightGrey } from '../../utils/colors';
 
 type Props = {
   joblisting: JoblistingView_joblisting;
@@ -33,28 +32,31 @@ const Sidebar = styled('div')`
   padding: 0 20px;
 `;
 
-const List = ({
-  joblisting
-}: {joblisting: JoblistingView_joblisting;}) => <NoBulletUl style={{ width: '100%' }}>
-    {metaExtractor(joblisting).filter(Boolean).filter(e => !!e.value).map(({
-    key,
-    value
-  }) => <li key={key}>
+const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
+  <NoBulletUl style={{ width: '100%' }}>
+    {metaExtractor(joblisting)
+      .filter(Boolean)
+      .filter((e) => !!e.value)
+      .map(({ key, value }) => (
+        <li key={key}>
           <Flex justifyBetween>
-            <span style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}>
+            <span
+              style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
+            >
               <i>{key}</i>:
             </span>
             <strong style={{ textAlign: 'right' }}>{value}</strong>
           </Flex>
-        </li>)}
-  </NoBulletUl>;
+        </li>
+      ))}
+  </NoBulletUl>
+);
 const typeExtractor = (type: string) => {
   switch (type) {
     case 'SI':
       return 'Sommerjobb';
     case 'PP':
       return 'Fast stilling';
-
   }
 };
 function joinValues(values) {
@@ -62,42 +64,58 @@ function joinValues(values) {
     return values[0] || '';
   }
 
-  return <span>
-      {values.map((el, i) => <span key={i}>
+  return (
+    <span>
+      {values.map((el, i) => (
+        <span key={i}>
           {i > 0 && i !== values.length - 1 && ', '}
           {i === values.length - 1 && ' og '}
           {el}
-        </span>)}
-    </span>;
+        </span>
+      ))}
+    </span>
+  );
 }
 
-const isCurrentYear = day => dayjs(day).year() === dayjs().year();
-const onlyOneYear = ({
-  fromYear,
-  toYear
-}) => fromYear === toYear;
+const isCurrentYear = (day) => dayjs(day).year() === dayjs().year();
+const onlyOneYear = ({ fromYear, toYear }) => fromYear === toYear;
 
-const metaExtractor = (joblisting: JoblistingView_joblisting) => [{
-  key: 'Bedrift',
-  value: joblisting.company.url ? <a href={joblisting.company.url}>{joblisting.company.name}</a> : joblisting.company.url
-}, {
-  key: 'Frist',
-  value: joblisting.deadline ? dayjs(joblisting.deadline).format(`D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`) : 'Løpende'
-}, {
-  key: 'Type',
-  value: typeExtractor(joblisting.type)
-}, {
-  key: 'Klassetrinn',
-  value: (onlyOneYear(joblisting) ? '' : `${joblisting.fromYear}. - `) + `${joblisting.toYear}. trinn`
-}, {
-  key: 'Sted',
-  value: joinValues(joblisting.towns.map(({
-    name
-  }) => name))
-}, {
-  key: 'Publisert',
-  value: dayjs(joblisting.dateCreated).format('D. MMMM YYYY')
-}];
+const metaExtractor = (joblisting: JoblistingView_joblisting) => [
+  {
+    key: 'Bedrift',
+    value: joblisting.company.url ? (
+      <a href={joblisting.company.url}>{joblisting.company.name}</a>
+    ) : (
+      joblisting.company.url
+    ),
+  },
+  {
+    key: 'Frist',
+    value: joblisting.deadline
+      ? dayjs(joblisting.deadline).format(
+          `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
+        )
+      : 'Løpende',
+  },
+  {
+    key: 'Type',
+    value: typeExtractor(joblisting.type),
+  },
+  {
+    key: 'Klassetrinn',
+    value:
+      (onlyOneYear(joblisting) ? '' : `${joblisting.fromYear}. - `) +
+      `${joblisting.toYear}. trinn`,
+  },
+  {
+    key: 'Sted',
+    value: joinValues(joblisting.towns.map(({ name }) => name)),
+  },
+  {
+    key: 'Publisert',
+    value: dayjs(joblisting.dateCreated).format('D. MMMM YYYY'),
+  },
+];
 const GrayText = styled('div')`
   color: gray;
 `;
@@ -107,11 +125,14 @@ const CompanyDesc = styled(GrayText)`
   text-align: left;
 `;
 
-const Joblisting = ({
-  joblisting
-}: Props) => <>
+const Joblisting = ({ joblisting }: Props) => (
+  <>
     <div style={{ maxWidth: 800, margin: 'auto' }}>
-      <img src={joblisting.company.logo} style={{ display: 'block', margin: '25px auto 45px' }} alt={`Logo til ${joblisting.company.name}`} />
+      <img
+        src={joblisting.company.logo}
+        style={{ display: 'block', margin: '25px auto 45px' }}
+        alt={`Logo til ${joblisting.company.name}`}
+      />
     </div>
     <div style={{ maxWidth: 1000, margin: 'auto' }}>
       <Title>{joblisting.title}</Title>
@@ -129,14 +150,17 @@ const Joblisting = ({
         <Sidebar>
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />
-            {joblisting.url && <a href={joblisting.url}>
+            {joblisting.url && (
+              <a href={joblisting.url}>
                 <h3>Søk her</h3>
-              </a>}
+              </a>
+            )}
           </div>
         </Sidebar>
       </FlexItem>
     </Flex>
-  </>;
+  </>
+);
 
 export default createFragmentContainer(Joblisting, {
   joblisting: graphql`
@@ -161,5 +185,5 @@ export default createFragmentContainer(Joblisting, {
       url
       dateCreated
     }
-  `
+  `,
 });

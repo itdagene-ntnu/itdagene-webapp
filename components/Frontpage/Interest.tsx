@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import Flex, { FlexItem } from "styled-flex-component";
-import { Image, CenterIt } from "../Styled";
+import React from 'react';
+import styled from 'styled-components';
+import Flex, { FlexItem } from 'styled-flex-component';
+import { Image, CenterIt } from '../Styled';
 
 const Title = styled('h1')`
   @media only screen and (max-width: 767px) {
@@ -19,7 +19,8 @@ const StyledLink = styled.a`
   }
 `;
 
-const Interest = () => <>
+const Interest = () => (
+  <>
     <Flex justifyAround wrapReverse>
       <FlexItem grow={1} basis="700px">
         <Title>Interessert i å delta? </Title>
@@ -33,16 +34,25 @@ const Interest = () => <>
       </FlexItem>
       <FlexItem>
         <CenterIt>
-          <Image style={{ width: 350, maxWidth: '100%' }} src="https://cdn.itdagene.no/exhibit.png" alt="itDAGENE logo" />
+          <Image
+            style={{ width: 350, maxWidth: '100%' }}
+            src="https://cdn.itdagene.no/exhibit.png"
+            alt="itDAGENE logo"
+          />
         </CenterIt>
       </FlexItem>
     </Flex>
     <CenterIt text>
       <StyledLink href="https://interesse.itdagene.no" target="_blank">
-        <Image style={{ width: 50 }} src="https://cdn.onlinewebfonts.com/svg/img_193664.png" alt="signup" />
+        <Image
+          style={{ width: 50 }}
+          src="https://cdn.onlinewebfonts.com/svg/img_193664.png"
+          alt="signup"
+        />
         <h3>Interesseskjema</h3>
       </StyledLink>
     </CenterIt>
-  </>;
+  </>
+);
 
 export default Interest;

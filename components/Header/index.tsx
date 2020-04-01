@@ -1,13 +1,12 @@
-
-import * as React from "react";
-import { withRouter } from "next/router";
-import { NextRouter } from "../../utils/types";
-import { ResponsiveContent } from "../Styled";
-import Flex, { FlexItem } from "styled-flex-component";
-import Link from "next/link";
-import styled, { css } from "styled-components";
-import HamburgerMenu from "react-hamburger-menu";
-import { lightGrey } from "../../utils/colors";
+import * as React from 'react';
+import { withRouter } from 'next/router';
+import { NextRouter } from '../../utils/types';
+import { ResponsiveContent } from '../Styled';
+import Flex, { FlexItem } from 'styled-flex-component';
+import Link from 'next/link';
+import styled, { css } from 'styled-components';
+import HamburgerMenu from 'react-hamburger-menu';
+import { lightGrey } from '../../utils/colors';
 
 const Header = styled('header')`
   #border-bottom: 1px solid ${lightGrey};
@@ -22,9 +21,9 @@ const StyledMenuItem = styled('span')`
   font-size: 20px;
   padding: 0 10px;
   opacity: 0.8;
-  ${({
-  active = false
-}: {active?: boolean;}) => active && css`
+  ${({ active = false }: { active?: boolean }) =>
+    active &&
+    css`
       text-shadow: 0px 0px 0.5px black;
       opacity: 1;
     `};
@@ -34,30 +33,33 @@ const StyledMenuItem = styled('span')`
   }
 `;
 
-const items = [{ key: 'home', name: 'HJEM', to: '/' }, { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' }, { key: 'program', name: 'PROGRAM', to: '/program' }, { key: 'joblistings', name: 'JOBB', to: '/jobb' }, {
-  key: 'info',
-  name: 'INFO',
-  to: '/info/for-bedrifter',
-  as: '/info/for-bedrifter'
-}];
+const items = [
+  { key: 'home', name: 'HJEM', to: '/' },
+  { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
+  { key: 'program', name: 'PROGRAM', to: '/program' },
+  { key: 'joblistings', name: 'JOBB', to: '/jobb' },
+  {
+    key: 'info',
+    name: 'INFO',
+    to: '/info/for-bedrifter',
+    as: '/info/for-bedrifter',
+  },
+];
 
-const MenuItem = withRouter(({
-  item,
-  router
-}: {item: Object;router: NextRouter;}) => {
-  const {
-    to,
-    name,
-    as
-  } = item;
-  return <Link href={to} as={as}>
+const MenuItem = withRouter(
+  ({ item, router }: { item: Object; router: NextRouter }) => {
+    const { to, name, as } = item;
+    return (
+      <Link href={to} as={as}>
         <a>
           <StyledMenuItem active={item.to === router.asPath}>
             {name}
           </StyledMenuItem>
         </a>
-      </Link>;
-});
+      </Link>
+    );
+  }
+);
 
 type State = {
   open: boolean;
@@ -82,41 +84,60 @@ const ItdageneLogo = styled('img')`
   }
 `;
 class StatefulDropdown extends React.Component<{}, State> {
-
   state = {
-    open: false
+    open: false,
   };
-  onMenuClicked = () => this.setState(prevState => ({
-    open: !prevState.open
-  }));
+  onMenuClicked = () =>
+    this.setState((prevState) => ({
+      open: !prevState.open,
+    }));
 
   render() {
-    return <Header>
+    return (
+      <Header>
         <ResponsiveContent>
           <Flex justifyBetween style={{ padding: '20px 0' }}>
             <FlexItem>
               <Link href="/">
                 <a>
-                  <ItdageneLogo src="/static/itdagene-gray2.png" alt="Hvit itDAGENE logo" />
+                  <ItdageneLogo
+                    src="/static/itdagene-gray2.png"
+                    alt="Hvit itDAGENE logo"
+                  />
                 </a>
               </Link>
             </FlexItem>
             <Flex style={{ alignItems: 'center' }}>
               <OnOther>
-                {items.map(item => <MenuItem key={item.key} item={item} />)}
+                {items.map((item) => (
+                  <MenuItem key={item.key} item={item} />
+                ))}
               </OnOther>
               <OnMobile>
-                <HamburgerMenu aria-label="Meny" isOpen={this.state.open} menuClicked={this.onMenuClicked} width={18} height={15} strokeWidth={2} rotate={0} color="black" borderRadius={0} animationDuration={0.5} />
+                <HamburgerMenu
+                  aria-label="Meny"
+                  isOpen={this.state.open}
+                  menuClicked={this.onMenuClicked}
+                  width={18}
+                  height={15}
+                  strokeWidth={2}
+                  rotate={0}
+                  color="black"
+                  borderRadius={0}
+                  animationDuration={0.5}
+                />
               </OnMobile>
             </Flex>
           </Flex>
           <OnMobile>
             <Flex column style={{ lineHeight: '42px' }}>
-              {this.state.open && items.map(item => <MenuItem key={item.key} item={item} />)}
+              {this.state.open &&
+                items.map((item) => <MenuItem key={item.key} item={item} />)}
             </Flex>
           </OnMobile>
         </ResponsiveContent>
-      </Header>;
+      </Header>
+    );
   }
 }
 
