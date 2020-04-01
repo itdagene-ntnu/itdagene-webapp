@@ -8,7 +8,7 @@ const slideImages = [
   'https://cdn.itdagene.no/bedrifter1.png',
   'https://cdn.itdagene.no/bedrifter2.png',
   'https://cdn.itdagene.no/program-bredt.svg',
-  'https://cdn.itdagene.no/standkart-bredt.svg'
+  'https://cdn.itdagene.no/standkart-bredt.svg',
 ];
 
 const Index = () => (

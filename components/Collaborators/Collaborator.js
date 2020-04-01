@@ -8,13 +8,13 @@ import ReactMarkdown from 'react-markdown';
 
 import {
   type Collaborator_company,
-  type Collaborator_company$key
+  type Collaborator_company$key,
 } from './__generated__/Collaborator_company.graphql';
 
 type Props = {
   company: Object,
   showDescription?: boolean,
-  showJoblistings?: boolean
+  showJoblistings?: boolean,
 };
 const Image = styled(ZoomImage)`
   width: 270px;

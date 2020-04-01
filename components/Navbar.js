@@ -9,8 +9,8 @@ type Props = {
   items: {
     text: String,
     href: String,
-    as: String
-  }
+    as: String,
+  },
 };
 
 const StyledNavbarItem = styled('div')`
@@ -50,7 +50,7 @@ const Navbar = ({ items }: Props) => {
   return (
     <div>
       <Flex>
-        {items.map(item => item && <NavbarItem key={item.key} item={item} />)}
+        {items.map((item) => item && <NavbarItem key={item.key} item={item} />)}
       </Flex>
       <Hr />
     </div>

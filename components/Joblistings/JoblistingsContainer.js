@@ -1,7 +1,7 @@
 import {
   createPaginationContainer,
   graphql,
-  type Variables
+  type Variables,
 } from 'react-relay';
 import { Image } from '../Styled';
 import Link from 'next/link';
@@ -85,11 +85,11 @@ type Props = {
   variables: Variables,
   loading: boolean,
   loadingEnd: () => void,
-  loadingStart: () => void
+  loadingStart: () => void,
 };
-const isCurrentYear = day => dayjs(day).year() === dayjs().year();
+const isCurrentYear = (day) => dayjs(day).year() === dayjs().year();
 
-const ListRenderer = props => (
+const ListRenderer = (props) => (
   <>
     {!props.root && <LoadingIndicator />}
     <InfiniteScroll
@@ -107,7 +107,7 @@ const ListRenderer = props => (
         props.loadingStart();
         props.relay.loadMore(
           30, // Fetch the next 30 feed items
-          error => {
+          (error) => {
             props.loadingEnd();
           }
         );
@@ -135,7 +135,7 @@ const ListRenderer = props => (
                       lineHeight: '24px',
                       color: 'black',
                       margin: '5px 0',
-                      textAlign: 'center'
+                      textAlign: 'center',
                     }}
                   >
                     {node.title}
@@ -143,7 +143,7 @@ const ListRenderer = props => (
                   <div style={{ color: 'gray', textAlign: 'center' }}>
                     {
                       jobTypeOptions.find(
-                        el => el.value === node.type.toLowerCase()
+                        (el) => el.value === node.type.toLowerCase()
                       ).label
                     }{' '}
                     @ {node.company.name}
@@ -153,7 +153,7 @@ const ListRenderer = props => (
                       color: 'gray',
                       textAlign: 'center',
                       fontWeight: 'bold',
-                      margin: '3px'
+                      margin: '3px',
                     }}
                   >
                     {node.deadline
@@ -246,7 +246,7 @@ export const JoblistingsList = createPaginationContainer(
           }
         }
       }
-    `
+    `,
   },
   {
     direction: 'forward',
@@ -256,7 +256,7 @@ export const JoblistingsList = createPaginationContainer(
     getFragmentVariables(prevVars, totalCount) {
       return {
         ...prevVars,
-        count: totalCount
+        count: totalCount,
       };
     },
     getVariables(props, { cursor, count }, fragmentVariables) {
@@ -266,7 +266,7 @@ export const JoblistingsList = createPaginationContainer(
         company,
         fromYear,
         toYear,
-        towns
+        towns,
       } = fragmentVariables;
       return {
         count,
@@ -276,10 +276,10 @@ export const JoblistingsList = createPaginationContainer(
         cursor,
         type,
         company,
-        towns
+        towns,
       };
     },
-    query
+    query,
   }
 );
 

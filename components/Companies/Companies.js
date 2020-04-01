@@ -10,7 +10,7 @@ import { type Companies_query } from './__generated__/Companies_query.graphql';
 import CompanyView from './CompanyView';
 
 type Props = {
-  query: Companies_query
+  query: Companies_query,
 };
 
 const Title = styled('h1')`
@@ -21,18 +21,18 @@ const Companies = ({ query }: Props) => {
   const sections = [
     {
       title: 'Bedrifter dag 1',
-      data: sortBy(query.companiesFirstDay, 'id')
+      data: sortBy(query.companiesFirstDay, 'id'),
     },
     {
       title: 'Bedrifter dag 2',
-      data: sortBy(query.companiesLastDay, 'id')
-    }
+      data: sortBy(query.companiesLastDay, 'id'),
+    },
   ];
   return sections.map(({ title, data }) => (
     <Fragment key={title}>
       <Title>{title}</Title>
       <Flex wrap justifyAround>
-        {data.map(company => (
+        {data.map((company) => (
           <CompanyView key={company.id} company={company} />
         ))}
       </Flex>
@@ -60,5 +60,5 @@ export default createFragmentContainer(Companies, {
         ...CompanyView_company
       }
     }
-  `
+  `,
 });

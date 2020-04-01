@@ -2,7 +2,7 @@
 import React from 'react';
 import {
   withDataAndLayout,
-  type WithDataAndLayoutProps
+  type WithDataAndLayoutProps,
 } from '../../lib/withData';
 import Navbar from '../../components/Navbar';
 import ServerError from '../../lib/ServerError';
@@ -29,12 +29,12 @@ const Index = ({ props }: RenderProps) => {
   const { page, pages } = props;
   const navitems = pages
     ? pages.map(
-        page =>
+        (page) =>
           page && {
             text: page.title || '',
             href: '/info/[side]',
             as: `/info/${page.slug}`,
-            key: page.id
+            key: page.id,
           }
       )
     : [];
@@ -72,6 +72,6 @@ export default withDataAndLayout(Index, {
   variables: ({ query: { side = '' } }) => ({ side }),
   layout: ({ props, error }) => ({
     responsive: true,
-    metadata: props && props.page
-  })
+    metadata: props && props.page,
+  }),
 });

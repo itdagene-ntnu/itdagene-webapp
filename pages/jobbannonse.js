@@ -21,7 +21,7 @@ Redirect.getInitialProps = async ({ res, queryProps }) => {
     return;
   }
   res.writeHead(301, {
-    Location: queryProps.node ? `/jobb/${queryProps.node.slug}` : '/jobb'
+    Location: queryProps.node ? `/jobb/${queryProps.node.slug}` : '/jobb',
   }),
     res.end();
 };
@@ -35,5 +35,5 @@ export default withData(Redirect, {
       }
     }
   `,
-  variables: ({ query: { id } }: NextRouter): Variables => ({ id: id || '' })
+  variables: ({ query: { id } }: NextRouter): Variables => ({ id: id || '' }),
 });

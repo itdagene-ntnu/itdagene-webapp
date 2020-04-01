@@ -4,7 +4,7 @@ import React from 'react';
 import { withRouter } from 'next/router';
 import JoblistingsContainer, {
   query,
-  JoblistingsList
+  JoblistingsList,
 } from '../components/Joblistings/JoblistingsContainer';
 import type { JoblistingsContainer_root } from '../components/Joblistings/__generated__/JoblistingsContainer_root.graphql';
 import withData, { type WithDataProps } from '../lib/withData';
@@ -16,14 +16,14 @@ type RenderProps = WithDataProps<JoblistingsContainer_root>;
 type State = { loading: boolean };
 class Index extends React.Component<RenderProps, State> {
   state = { loading: false };
-  loadingStart = () => this.setState(prevState => ({ loading: true }));
-  loadingEnd = () => this.setState(prevState => ({ loading: false }));
+  loadingStart = () => this.setState((prevState) => ({ loading: true }));
+  loadingEnd = () => this.setState((prevState) => ({ loading: false }));
   render() {
     const { props, environment, variables } = this.props;
     return (
       <Layout
         customOpengraphMetadata={() => ({
-          title: 'Jobbannonser'
+          title: 'Jobbannonser',
         })}
         props
         noLoading
@@ -43,7 +43,7 @@ class Index extends React.Component<RenderProps, State> {
   }
 }
 
-const parseTowns = query => {
+const parseTowns = (query) => {
   try {
     return JSON.parse(query.towns);
   } catch (e) {
@@ -53,14 +53,15 @@ const parseTowns = query => {
 
 export default withData(withRouter(Index), {
   query,
-  variables: router => ({
+  variables: (router) => ({
     type: router.query.type || '',
     fromYear: parseInt(router.query.fromYear, 10) || 1,
     toYear: parseInt(router.query.toYear, 10) || 5,
     company: router.query.company || '',
     towns:
-      parseTowns(router.query) && parseTowns(router.query).map(el => el.value),
+      parseTowns(router.query) &&
+      parseTowns(router.query).map((el) => el.value),
     orderBy: router.query.orderBy ? [router.query.orderBy, 'ID'] : [],
-    count: 30
-  })
+    count: 30,
+  }),
 });

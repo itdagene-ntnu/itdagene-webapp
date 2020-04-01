@@ -43,8 +43,8 @@ const items = [
     key: 'info',
     name: 'INFO',
     to: '/info/for-bedrifter',
-    as: '/info/for-bedrifter'
-  }
+    as: '/info/for-bedrifter',
+  },
 ];
 
 const MenuItem = withRouter(
@@ -63,7 +63,7 @@ const MenuItem = withRouter(
 );
 
 type State = {
-  open: boolean
+  open: boolean,
 };
 
 export const OnOther = styled('div')`
@@ -86,11 +86,11 @@ const ItdageneLogo = styled('img')`
 `;
 class StatefulDropdown extends React.Component<{||}, State> {
   state = {
-    open: false
+    open: false,
   };
   onMenuClicked = () =>
-    this.setState(prevState => ({
-      open: !prevState.open
+    this.setState((prevState) => ({
+      open: !prevState.open,
     }));
 
   render() {
@@ -110,7 +110,7 @@ class StatefulDropdown extends React.Component<{||}, State> {
             </FlexItem>
             <Flex style={{ alignItems: 'center' }}>
               <OnOther>
-                {items.map(item => (
+                {items.map((item) => (
                   <MenuItem key={item.key} item={item} />
                 ))}
               </OnOther>
@@ -133,7 +133,7 @@ class StatefulDropdown extends React.Component<{||}, State> {
           <OnMobile>
             <Flex column style={{ lineHeight: '42px' }}>
               {this.state.open &&
-                items.map(item => <MenuItem key={item.key} item={item} />)}
+                items.map((item) => <MenuItem key={item.key} item={item} />)}
             </Flex>
           </OnMobile>
         </ResponsiveContent>

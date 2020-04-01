@@ -7,7 +7,7 @@ import {
   itdageneLightBlue,
   itdageneGreen,
   itdageneRed,
-  itdageneYellow
+  itdageneYellow,
 } from '../../utils/colors.js';
 
 const Title = styled('h1')`
@@ -17,7 +17,7 @@ const Title = styled('h1')`
 `;
 
 const Tile = styled.div`
-  background: ${props => props.color};
+  background: ${(props) => props.color};
   width: 25%;
   height: 100px;
   transition: all 0.1s ease-in-out;

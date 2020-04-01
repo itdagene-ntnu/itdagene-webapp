@@ -9,18 +9,18 @@ const defaultSharingImage = '/static/itdagene_facebookshare.png';
 const defaultTitle = 'itDAGENE';
 
 export const CustomOpengraphRenderer = ({
-  object
+  object,
 }: {
   object?: ?{
     +title?: ?string,
     +description?: ?string,
-    +sharingImage?: ?string
-  }
+    +sharingImage?: ?string,
+  },
 }) => {
   const {
     title,
     description = defaultDescription,
-    sharingImage = defaultSharingImage
+    sharingImage = defaultSharingImage,
   } = object || {};
   return (
     <Head>
@@ -34,10 +34,10 @@ export const CustomOpengraphRenderer = ({
 };
 
 type Props = {
-  metadata: metadata_metadata
+  metadata: metadata_metadata,
 };
 const OpengraphFragmentRenderer = ({
-  metadata: { title, description, sharingImage } = {}
+  metadata: { title, description, sharingImage } = {},
 }: Props) => (
   <Head>
     <title>{title || defaultTitle}</title>
@@ -58,5 +58,5 @@ export default createFragmentContainer(OpengraphFragmentRenderer, {
       description
       sharingImage
     }
-  `
+  `,
 });

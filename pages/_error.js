@@ -7,12 +7,12 @@ import styled from 'styled-components';
 
 type Props = {
   statusCode: number,
-  title: string
+  title: string,
 };
 
 const ERROR_TITLES = {
   '404': 'Fant ikke siden :(',
-  '500': 'Noe har gått fryktelig galt.'
+  '500': 'Noe har gått fryktelig galt.',
 };
 
 const H1 = styled('h1')`

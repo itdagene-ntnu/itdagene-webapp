@@ -25,19 +25,19 @@ const Sidebar = styled('div')`
 
 const customStyles = {
   option: (base, state) => ({
-    ...base
+    ...base,
   }),
   control: (base, { isDisabled, isFocused }) => ({
-    ...base
+    ...base,
     //boxShadow: isFocused ? `0 0 0 1px ${itdageneBlue} !important` : null
   }),
-  container: base => ({ ...base, borderColor: 'pink' }),
+  container: (base) => ({ ...base, borderColor: 'pink' }),
   singleValue: (base, state) => {
     const opacity = state.isDisabled ? 0.5 : 1;
     const transition = 'opacity 300ms';
 
     return { ...base, opacity, transition };
-  }
+  },
 };
 
 const companySearchQuery = graphql`
@@ -63,10 +63,10 @@ const townSearchQuery = graphql`
     }
   }
 `;
-const onQueryChange = newQuery => {
+const onQueryChange = (newQuery) => {
   Router.replace({
     pathname: '/jobb',
-    query: { ...Router.query, ...newQuery }
+    query: { ...Router.query, ...newQuery },
   });
 };
 
@@ -74,7 +74,7 @@ export const orderByOptions = [
   { value: 'DEADLINE', label: 'Søknadsfrist' },
   { value: 'CREATED', label: 'Publisert' },
   { value: 'COMPANY_NAME', label: 'Bedrift' },
-  { value: 'TYPE', label: 'Type' }
+  { value: 'TYPE', label: 'Type' },
 ];
 
 const OrderBySelector = withRouter(({ router }) => (
@@ -84,9 +84,9 @@ const OrderBySelector = withRouter(({ router }) => (
       placeholder="Ikke valgt"
       styles={customStyles}
       defaultValue={orderByOptions.find(
-        el => el.value === router.query.orderBy
+        (el) => el.value === router.query.orderBy
       )}
-      onChange={el => onQueryChange({ orderBy: el && el.value })}
+      onChange={(el) => onQueryChange({ orderBy: el && el.value })}
       options={orderByOptions}
     />
   </div>
@@ -95,7 +95,7 @@ const OrderBySelector = withRouter(({ router }) => (
 export const jobTypeOptions = [
   { value: '', label: 'Alle' },
   { value: 'pp', label: 'Fastjobb' },
-  { value: 'si', label: 'Sommerjobb' }
+  { value: 'si', label: 'Sommerjobb' },
 ];
 
 const JobTypeSelector = withRouter(({ router }) => (
@@ -105,20 +105,20 @@ const JobTypeSelector = withRouter(({ router }) => (
       placeholder="Ikke valgt"
       styles={customStyles}
       defaultValue={jobTypeOptions.find(
-        el => el.value === (router.query.type || '')
+        (el) => el.value === (router.query.type || '')
       )}
-      onChange={el => onQueryChange({ type: el && el.value })}
+      onChange={(el) => onQueryChange({ type: el && el.value })}
       options={jobTypeOptions}
     />
   </div>
 ));
 const loadOptions = async (inputValue, environment, searchQuery) => {
   const data = await fetchQuery(environment, searchQuery, {
-    query: inputValue
+    query: inputValue,
   });
-  const options = data.search.map(result => ({
+  const options = data.search.map((result) => ({
     value: result.id,
-    label: result.name
+    label: result.name,
   }));
   return options;
 };
@@ -128,7 +128,7 @@ const CompanySelector = withRouter(({ router, environment }) => (
     <AsyncSelect
       isClearable
       loadOptions={debounce(
-        input => loadOptions(input, environment, companySearchQuery),
+        (input) => loadOptions(input, environment, companySearchQuery),
         150
       )}
       styles={customStyles}
@@ -136,7 +136,7 @@ const CompanySelector = withRouter(({ router, environment }) => (
         router.query.companyName && { label: router.query.companyName }
       }
       placeholder="Ikke valgt"
-      noOptionsMessage={input =>
+      noOptionsMessage={(input) =>
         input.inputValue ? 'Fant ingen på bedrifter... :(' : 'Søk her!'
       }
       cacheOptions
@@ -145,16 +145,16 @@ const CompanySelector = withRouter(({ router, environment }) => (
         // https://github.com/JedWatson/react-select#note-about-filtering-async-options */
         return options;
       }}
-      onChange={el =>
+      onChange={(el) =>
         onQueryChange({
           company: el && el.value,
-          companyName: el && el.label
+          companyName: el && el.label,
         })
       }
     />
   </div>
 ));
-const parseTowns = query => {
+const parseTowns = (query) => {
   try {
     return JSON.parse(query.towns);
   } catch (e) {
@@ -168,20 +168,20 @@ const TownSelector = withRouter(({ router, environment }) => (
       isClearable
       isMulti
       loadOptions={debounce(
-        input => loadOptions(input, environment, townSearchQuery),
+        (input) => loadOptions(input, environment, townSearchQuery),
         150
       )}
       cacheOptions
       placeholder="Ikke valgt"
-      noOptionsMessage={input =>
+      noOptionsMessage={(input) =>
         input.inputValue ? 'Fant ingen steder... :(' : 'Søk her!'
       }
       styles={customStyles}
       defaultValue={parseTowns(router.query)}
       filterOptions={(options, filter, currentValues) => options}
-      onChange={el =>
+      onChange={(el) =>
         onQueryChange({
-          towns: JSON.stringify(el)
+          towns: JSON.stringify(el),
         })
       }
     />
@@ -189,7 +189,7 @@ const TownSelector = withRouter(({ router, environment }) => (
 ));
 const YearSelector = ({ variables }) => (
   <Range
-    onAfterChange={el => {
+    onAfterChange={(el) => {
       const [fromYear, toYear] = el;
       onQueryChange({ fromYear, toYear });
     }}
@@ -198,23 +198,23 @@ const YearSelector = ({ variables }) => (
       '2': '2.klasse',
       '3': '3.klasse',
       '4': '4.klasse',
-      '5': '5.klasse'
+      '5': '5.klasse',
     }}
     dots
     min={1}
     max={5}
     defaultValue={[
       (variables && variables.fromYear) || 1,
-      (variables && variables.toYear) || 5
+      (variables && variables.toYear) || 5,
     ]}
   />
 );
 const JoblistingsSidebar = ({
   environment,
-  variables
+  variables,
 }: {
   environment: Environment,
-  variables: Variables
+  variables: Variables,
 }) => (
   <Sidebar>
     <h4> Type </h4>

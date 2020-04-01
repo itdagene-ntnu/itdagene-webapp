@@ -18,7 +18,7 @@ const Card = styled(FlexItem)`
 `;
 
 type Props = {
-  user: BoardMember_user
+  user: BoardMember_user,
 };
 
 const BoardMember = ({ user: { role, fullName, photo, email } }: Props) => (
@@ -45,5 +45,5 @@ export default createFragmentContainer(BoardMember, {
       role
       email
     }
-  `
+  `,
 });

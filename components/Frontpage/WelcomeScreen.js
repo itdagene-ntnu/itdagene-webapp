@@ -12,7 +12,7 @@ import moment from 'moment';
 import 'moment/locale/nb';
 
 type Props = {
-  currentMetaData: WelcomeScreen_currentMetaData
+  currentMetaData: WelcomeScreen_currentMetaData,
 };
 
 const MainContainer = styled(CenterIt)`
@@ -122,5 +122,5 @@ export default createFragmentContainer(WelcomeScreen, {
       ...Countdown_currentMetaData
       endDate
     }
-  `
+  `,
 });
