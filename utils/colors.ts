@@ -1,4 +1,3 @@
-//@flow
 export const itdageneBlue = '#0778BC';
 export const itdageneLightBlue = '#41C0EB';
 export const itdageneDarkBlue = '#123962';

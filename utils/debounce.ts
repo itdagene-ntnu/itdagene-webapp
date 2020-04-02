@@ -1,14 +1,18 @@
-export default function debounce(inner, ms = 0) {
-  let timer = null;
-  let resolves = [];
+export default function debounce(
+  inner: (...args: any[]) => any,
+  ms = 0
+): (arg0: any) => Promise<any> {
+  //TODO
+  let timer: number | null = null;
+  let resolves: any[] = [];
 
-  return function (...args) {
+  return function (...args): Promise<any> {
     // Run the function after a certain amount of time
     timer && clearTimeout(timer);
     timer = setTimeout(() => {
       // Get the result of the inner function, then apply it to the resolve function of
       // each promise that has been created since the last time the inner function was run
-      let result = inner(...args);
+      const result = inner(...args);
       resolves.forEach((r) => r(result));
       resolves = [];
     }, ms);
