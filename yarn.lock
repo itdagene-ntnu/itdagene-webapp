@@ -4496,10 +4496,10 @@ eslint-plugin-react@^7.18.0:
     prop-types "^15.7.2"
     resolve "^1.14.2"
 
-eslint-plugin-relay@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-relay/-/eslint-plugin-relay-1.5.0.tgz#3eedfdc1c192541c0149b97b898ee908171f0caa"
-  integrity sha512-dTReYJnLy0mrvhttP37KB/IYEzrPU37BSw/pLkzvK6OQ4BITffeohGWVn1LHe3e+ZMpDK3zSp8xKx0psz7JOMQ==
+eslint-plugin-relay@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-relay/-/eslint-plugin-relay-1.7.0.tgz#f6cfae681381dc96db9bd700d8c33fbe9783143e"
+  integrity sha512-JmAMQFr9CxXFLo5BppdN/sleofrE1J/cERIgkFqnYdTq0KAeUNGnz3jO41cqcp1y92/D+KJdmEKFsPfnqnDByQ==
   dependencies:
     graphql "^14.0.0 | ^15.0.0-rc.1"
 
