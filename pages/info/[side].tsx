@@ -1,15 +1,11 @@
-//@flow
 import React from 'react';
-import {
-  withDataAndLayout,
-  type WithDataAndLayoutProps,
-} from '../../lib/withData';
+import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import Navbar from '../../components/Navbar';
 import ServerError from '../../lib/ServerError';
 import styled from 'styled-components';
 
 import { graphql } from 'react-relay';
-import { type Side_info_QueryResponse } from './__generated__/Side_info_Query.graphql';
+import { Side_info_QueryResponse } from '../../__generated__/Side_info_Query.graphql';
 
 import PageView from '../../components/PageView';
 

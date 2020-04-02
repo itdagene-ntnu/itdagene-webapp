@@ -1,10 +1,8 @@
-//@flow
-
 import React from 'react';
-import withData, { type WithDataProps } from '../../lib/withData';
+import withData, { WithDataProps } from '../../lib/withData';
 
 import { graphql } from 'react-relay';
-import { type Slug_jobbannonse_QueryResponse } from './__generated__/Slug_jobbannonse_Query.graphql';
+import { Slug_jobbannonse_QueryResponse } from '../../__generated__/Slug_jobbannonse_Query.graphql';
 
 import Layout from '../../components/Layout';
 import ServerError from '../../lib/ServerError';
@@ -12,7 +10,7 @@ import JoblistingView from '../../components/Joblistings/JoblistingView';
 
 type RenderProps = WithDataProps<Slug_jobbannonse_QueryResponse>;
 
-const Index = ({ error, props }: RenderProps) => (
+const Index = ({ error, props }: RenderProps): JSX.Element => (
   <Layout
     responsive
     {...{ error, props }}

@@ -1,9 +1,9 @@
 //@Flow
-import * as React from "react";
-import styled from "styled-components";
-import Link from "next/link";
-import { withRouter } from "next/router";
-import Flex, { FlexItem } from "styled-flex-component";
+import * as React from 'react';
+import styled from 'styled-components';
+import Link from 'next/link';
+import { withRouter } from 'next/router';
+import Flex, { FlexItem } from 'styled-flex-component';
 
 type Props = {
   items: {
@@ -29,29 +29,32 @@ const Hr = styled('hr')`
   border: 0;
 `;
 
-const NavbarItem = withRouter(({
-  item,
-  router
-}) => {
+const NavbarItem = withRouter(({ item, router }) => {
   const isActive = router.asPath === item.as;
-  return <FlexItem>
-      {!isActive ? <Link href={item.href} as={item.as}>
+  return (
+    <FlexItem>
+      {!isActive ? (
+        <Link href={item.href} as={item.as}>
           <a>
             <StyledNavbarItem>{item.text}</StyledNavbarItem>
           </a>
-        </Link> : <StyledNavbarItem>{item.text}</StyledNavbarItem>}
-    </FlexItem>;
+        </Link>
+      ) : (
+        <StyledNavbarItem>{item.text}</StyledNavbarItem>
+      )}
+    </FlexItem>
+  );
 });
 
-const Navbar = ({
-  items
-}: Props) => {
-  return <div>
+const Navbar = ({ items }: Props) => {
+  return (
+    <div>
       <Flex>
-        {items.map(item => item && <NavbarItem key={item.key} item={item} />)}
+        {items.map((item) => item && <NavbarItem key={item.key} item={item} />)}
       </Flex>
       <Hr />
-    </div>;
+    </div>
+  );
 };
 
 export default Navbar;

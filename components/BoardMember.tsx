@@ -1,11 +1,10 @@
+import React from 'react';
+import { createFragmentContainer, graphql } from 'react-relay';
+import { BoardMember_user } from './__generated__/BoardMember_user.graphql';
+import Flex, { FlexItem } from 'styled-flex-component';
 
-import React from "react";
-import { createFragmentContainer, graphql } from "react-relay";
-import { BoardMember_user } from "./__generated__/BoardMember_user.graphql";
-import Flex, { FlexItem } from "styled-flex-component";
-
-import { Image, CenterIt } from "./Styled";
-import styled from "styled-components";
+import { Image, CenterIt } from './Styled';
+import styled from 'styled-components';
 
 const RoundHead = styled(Image)`
   border-radius: 2000px;
@@ -21,14 +20,8 @@ type Props = {
   user: BoardMember_user;
 };
 
-const BoardMember = ({
-  user: {
-    role,
-    fullName,
-    photo,
-    email
-  }
-}: Props) => <Card>
+const BoardMember = ({ user: { role, fullName, photo, email } }: Props) => (
+  <Card>
     <CenterIt text>
       <RoundHead src={photo || ''} />
       <Flex column>
@@ -39,7 +32,8 @@ const BoardMember = ({
         </a>
       </Flex>
     </CenterIt>
-  </Card>;
+  </Card>
+);
 
 export default createFragmentContainer(BoardMember, {
   user: graphql`
@@ -50,5 +44,5 @@ export default createFragmentContainer(BoardMember, {
       role
       email
     }
-  `
+  `,
 });
