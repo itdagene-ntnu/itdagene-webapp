@@ -19,7 +19,7 @@
   "author": "Odin Ugedal <odin@ugedal.com>",
   "license": "MIT",
   "dependencies": {
-    "@next/bundle-analyzer": "^9.3.1",
+    "@next/bundle-analyzer": "^9.3.4",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
     "babel-polyfill": "^6.26.0",
     "dayjs": "^1.8.23",
