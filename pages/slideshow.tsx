@@ -9,7 +9,7 @@ const slideImages = [
   'https://cdn.itdagene.no/standkart-bredt.svg',
 ];
 
-const Index = () => (
+const Index = (): JSX.Element => (
   <Carousel
     showArrows={false}
     showIndicators={false}

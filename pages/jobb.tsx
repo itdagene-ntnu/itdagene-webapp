@@ -1,10 +1,10 @@
 import React from 'react';
-import { withRouter } from 'next/router';
+import { withRouter, NextRouter } from 'next/router';
 import JoblistingsContainer, {
   query,
   JoblistingsList,
 } from '../components/Joblistings/JoblistingsContainer';
-import { JoblistingsContainer_root } from '../components/Joblistings/__generated__/JoblistingsContainer_root.graphql';
+import { JoblistingsContainer_root } from '../__generated__/JoblistingsContainer_root.graphql';
 import withData, { WithDataProps } from '../lib/withData';
 
 import Layout from '../components/Layout';
@@ -14,13 +14,13 @@ type RenderProps = WithDataProps<JoblistingsContainer_root>;
 type State = { loading: boolean };
 class Index extends React.Component<RenderProps, State> {
   state = { loading: false };
-  loadingStart = () => this.setState((prevState) => ({ loading: true }));
-  loadingEnd = () => this.setState((prevState) => ({ loading: false }));
-  render() {
+  loadingStart = (): void => this.setState((prevState) => ({ loading: true }));
+  loadingEnd = (): void => this.setState((prevState) => ({ loading: false }));
+  render(): JSX.Element {
     const { props, environment, variables } = this.props;
     return (
       <Layout
-        customOpengraphMetadata={() => ({
+        customOpengraphMetadata={(): { title: string } => ({
           title: 'Jobbannonser',
         })}
         props
@@ -41,9 +41,11 @@ class Index extends React.Component<RenderProps, State> {
   }
 }
 
-const parseTowns = (query) => {
+const parseTowns = (query: NextRouter['query']): string[] => {
   try {
-    return JSON.parse(query.towns);
+    return JSON.parse(
+      typeof query.towns === 'string' ? query.towns : query.towns[0]
+    );
   } catch (e) {
     return [];
   }
@@ -51,7 +53,7 @@ const parseTowns = (query) => {
 
 export default withData(withRouter(Index), {
   query,
-  variables: (router) => ({
+  variables: (router: NextRouter) => ({
     type: router.query.type || '',
     fromYear: parseInt(router.query.fromYear, 10) || 1,
     toYear: parseInt(router.query.toYear, 10) || 5,

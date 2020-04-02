@@ -6,7 +6,9 @@ import {
   WithDataDataProps,
 } from '../lib/withData';
 import BoardMember from '../components/BoardMember';
-import { omItdagene_QueryResponse } from './__generated__/omItdagene_Query.graphql';
+import {
+  omItdagene_QueryResponse,
+} from '../__generated__/omItdagene_Query.graphql';
 import PageView from '../components/PageView';
 import Flex from 'styled-flex-component';
 import { sortBy } from 'lodash';
@@ -20,18 +22,19 @@ const ROLES = [
   'Logistikk',
   'Markedsføring',
   'Web',
+  'Medlem',
 ];
 
 const Index = ({
   error,
-  props: props,
-}: WithDataAndLayoutProps<omItdagene_QueryResponse>) => (
+  props,
+}: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => (
   <>
     {props.omItdagene && <PageView page={props.omItdagene} />}
     <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
     <Flex wrap center>
       {sortBy(props.currentMetaData.boardMembers, (m) =>
-        ROLES.indexOf(m.role)
+        ROLES.indexOf(m.role || 'Medlem')
       ).map((user) => (
         <BoardMember key={user.id} user={user} />
       ))}

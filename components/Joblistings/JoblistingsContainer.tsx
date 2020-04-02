@@ -4,20 +4,20 @@ import Link from 'next/link';
 import * as React from 'react';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
-import { JoblistingsContainer_root } from './__generated__/JoblistingsContainer_root.graphql';
+import { JoblistingsContainer_root } from '../../__generated__/JoblistingsContainer_root.graphql';
 import LoadingIndicator from '../LoadingIndicator';
 import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
 
-function joinValues(values) {
+function joinValues(values): string | JSX.Element {
   if (values.length < 2) {
     return values[0] || '';
   }
 
   return (
     <span>
-      {values.map((el, i) => (
+      {values.map((el, i: number) => (
         <span key={i}>
           {i > 0 && i !== values.length - 1 && ', '}
           {i === values.length - 1 && ' og '}
@@ -279,7 +279,11 @@ export const JoblistingsList = createPaginationContainer(
   }
 );
 
-const JoblistingsContainer = ({ environment, variables, children }: Props) => (
+const JoblistingsContainer = ({
+  environment,
+  variables,
+  children,
+}: Props): JSX.Element => (
   <div>
     <Flex wrapReverse>
       <FlexItem center basis="700px" grow={26}>

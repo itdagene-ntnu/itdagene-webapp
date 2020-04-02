@@ -12,8 +12,8 @@
   ],
   "plugins": [
     "react",
-    "relay",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "relay"
   ],
   "globals": {
     "log": true,
@@ -31,7 +31,9 @@
     "relay/graphql-naming": 2,
     "relay/generated-flow-types": 1,
     "jsx-a11y/href-no-hash": "off",
-    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }]
+    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "env": {
     "jest": true,

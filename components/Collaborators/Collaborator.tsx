@@ -8,10 +8,10 @@ import ReactMarkdown from 'react-markdown';
 import {
   Collaborator_company,
   Collaborator_company$key,
-} from './__generated__/Collaborator_company.graphql';
+} from '../../__generated__/Collaborator_company.graphql';
 
 type Props = {
-  company: Object;
+  company: Collaborator_company$key;
   showDescription?: boolean;
   showJoblistings?: boolean;
 };
@@ -38,16 +38,16 @@ const Collaborator = ({
   showDescription,
   showJoblistings,
   ...props
-}: Props) => {
+}: Props): JSX.Element => {
   const company: Collaborator_company = useFragment(
     fragmentSpec,
-    props.company as Collaborator_company$key
+    props.company
   );
   return (
     <div
       style={{ flex: 1, maxWidth: '100%', flexBasis: 350, padding: '0 10px' }}
     >
-      <a href={company.url}>
+      <a href={company.url || ''}>
         <Image src={company.logo || ''} />
       </a>
       {showDescription && <ReactMarkdown source={company.description} />}

@@ -1,8 +1,12 @@
 import * as React from 'react';
 import initEnvironment, { EnvSettings } from './createRelayEnvironment';
-import { fetchQuery } from 'react-relay';
-import { Environment, GraphQLTaggedNode, Variables, Record } from 'react-relay';
-import { NextRouter } from '../utils/types';
+import {
+  Environment,
+  GraphQLTaggedNode,
+  Variables,
+  fetchQuery,
+} from 'react-relay';
+import { RecordSource, OperationType } from 'relay-runtime';
 import ErrorBoundary from '../components/ErrorBoundary';
 import {
   Layout,
@@ -10,15 +14,23 @@ import {
   ContentRenererProps,
 } from '../components/Layout';
 import { QueryRenderer } from 'react-relay';
-import { withRouter } from 'next/router';
-const dayjs = require('dayjs');
-require('dayjs/locale/nb');
+import { withRouter, NextRouter } from 'next/router';
+import { PageContext } from '../utils/types';
+import dayjs from 'dayjs';
+import 'dayjs/locale/nb';
 dayjs.locale('nb');
 
 export type DataOptions = {
-  variables?: Variables | ((arg0: NextRouter) => Variables);
-  query?: GraphQLTaggedNode;
+  variables: Variables | ((arg0: NextRouter) => Variables);
+  query: GraphQLTaggedNode;
 };
+
+export type DataOptionsFinal = {
+  variables: Variables;
+  query: GraphQLTaggedNode;
+};
+
+export type QueryProps<T extends OperationType> = T['response'];
 
 export type WithDataBaseProps = {
   variables: Variables;
@@ -28,7 +40,7 @@ export type WithDataBaseProps = {
   router: NextRouter;
 };
 export type WithDataDataProps<T> = {
-  props?: T | null | undefined;
+  props?: T | null;
   error: Error | null;
 };
 
@@ -36,13 +48,26 @@ export type WithDataProps<T> = WithDataDataProps<T> & WithDataBaseProps;
 
 type State = {};
 type Props = {
-  queryRecords: Record;
+  queryRecords: RecordSource;
   router: NextRouter;
   envSettings: EnvSettings;
   ctx: NextRouter;
 };
 
-const getOptions = (options: DataOptions, router: NextRouter): DataOptions => {
+type ComposedComponentType<T, T1 extends OperationType> = React.ComponentType<
+  WithDataProps<T>
+> & {
+  getInitialProps?: (
+    arg0: PageContext<T1>
+  ) => Promise<Record<string, any>> | Record<string, any>;
+};
+
+type WithDataComponentType = React.ComponentType<Omit<Props, 'router'>>;
+
+const getOptions = (
+  options: DataOptions,
+  router: NextRouter
+): DataOptionsFinal => {
   const { variables: localVariables, query } = options;
   const variables =
     typeof localVariables === 'function'
@@ -51,14 +76,14 @@ const getOptions = (options: DataOptions, router: NextRouter): DataOptions => {
 
   return { variables, query };
 };
-export const withData = <T extends {}>(
-  ComposedComponent: React.ComponentType<WithDataProps<T>> & {
-    getInitialProps?: (
-      arg0: Record<string, any>
-    ) => Promise<Record<string, any>> | Record<string, any>;
-  },
+
+/**
+ * HOC that wraps a component in a QueryRenderer in order to provide data.
+ */
+export const withData = <T extends {}, T1 extends OperationType>(
+  ComposedComponent: ComposedComponentType<T, T1>,
   options: DataOptions
-): JSX.Element => {
+): WithDataComponentType => {
   return withRouter(
     class WithData extends React.Component<Props, State> {
       static displayName = `WithData(${ComposedComponent.displayName})`;
@@ -66,7 +91,6 @@ export const withData = <T extends {}>(
 
       static async getInitialProps(ctx: any): Promise<WithDataProps<T> | {}> {
         const localOptions = getOptions(options, ctx);
-        // $FlowFixMe
         if (process.browser) {
           if (!ComposedComponent.getInitialProps) {
             return {};
@@ -74,7 +98,7 @@ export const withData = <T extends {}>(
           return await ComposedComponent.getInitialProps(ctx);
         }
 
-        let queryProps = {};
+        let queryProps: QueryProps<T1> = {};
         let queryRecords = {};
 
         const envSettings: EnvSettings = {
@@ -130,7 +154,7 @@ export const withData = <T extends {}>(
         const { query, variables } = getOptions(options, this.props.router);
         return (
           <ErrorBoundary resetOnChange={this.props.router}>
-            <QueryRenderer
+            <QueryRenderer<T1>
               query={query}
               environment={this.environment}
               fetchPolicy={'store-and-network'}
@@ -138,7 +162,7 @@ export const withData = <T extends {}>(
               render={({ props, error }): JSX.Element => (
                 <ComposedComponent
                   router={this.props.router}
-                  props={props}
+                  props={props as T | null}
                   error={error}
                   environment={this.environment}
                   query={query}
@@ -164,9 +188,9 @@ export type WithDataAndLayoutProps<T> = WithDataBaseProps &
 export const withDataAndLayout = <T extends {}>(
   ComposedComponent: React.ComponentType<WithDataAndLayoutProps<T>>,
   { layout = {}, ...withDataRest }: DataLayoutOptions<T>
-): JSX.Element =>
+): WithDataComponentType =>
   withData(
-    ({ props, error, ...rest }) => (
+    ({ props, error, ...rest }: WithDataProps<T>) => (
       <Layout
         {...(typeof layout === 'object' ? layout : layout({ props, error }))}
         contentRenderer={({ props, error }): JSX.Element => (
