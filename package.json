@@ -60,7 +60,7 @@
     "@babel/preset-flow": "^7.9.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^25.2.4",
+    "babel-jest": "^25.2.6",
     "babel-plugin-relay": "8.0.0",
     "babel-plugin-styled-components": "^1.10.7",
     "enzyme": "^3.11.0",
