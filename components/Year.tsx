@@ -1,11 +1,11 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { Year_currentMetaData } from './__generated__/Year_currentMetaData.graphql';
+import { Year_currentMetaData } from '../__generated__/Year_currentMetaData.graphql';
 
 type Props = {
   currentMetaData: Year_currentMetaData;
 };
-const Year = ({ currentMetaData }: Props) => (
+const Year = ({ currentMetaData }: Props): JSX.Element => (
   <span> {currentMetaData.year} </span>
 );
 

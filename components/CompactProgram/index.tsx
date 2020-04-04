@@ -17,7 +17,7 @@ const Title = styled('h1')`
 `;
 
 const Tile = styled.div`
-  background: ${(props) => props.color};
+  background: ${(props): string => props.color};
   width: 25%;
   height: 100px;
   transition: all 0.1s ease-in-out;
@@ -49,7 +49,7 @@ const ReadMore = styled('h4')`
   margin-top: 40px;
 `;
 
-const CompactProgram = () => (
+const CompactProgram = (): JSX.Element => (
   <Flex justifyAround column>
     <FlexItem>
       <Title>Hva skjer under itDAGENE?</Title>

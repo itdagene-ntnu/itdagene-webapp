@@ -1,6 +1,6 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { BoardMember_user } from './__generated__/BoardMember_user.graphql';
+import { BoardMember_user } from '../__generated__/BoardMember_user.graphql';
 import Flex, { FlexItem } from 'styled-flex-component';
 
 import { Image, CenterIt } from './Styled';
@@ -20,7 +20,9 @@ type Props = {
   user: BoardMember_user;
 };
 
-const BoardMember = ({ user: { role, fullName, photo, email } }: Props) => (
+const BoardMember = ({
+  user: { role, fullName, photo, email },
+}: Props): JSX.Element => (
   <Card>
     <CenterIt text>
       <RoundHead src={photo || ''} />

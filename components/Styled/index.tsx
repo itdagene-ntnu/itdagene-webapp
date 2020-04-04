@@ -41,7 +41,7 @@ export const BottomBorder = styled('div')`
   border-bottom: 1px solid rgba(34, 36, 38, 0.15);
 `;
 
-export const Section = (props: any) => (
+export const Section = (props: any): JSX.Element => (
   <BottomBorder>
     <BorderlessSection {...props} />
   </BottomBorder>
@@ -65,7 +65,7 @@ export const CenterIt = styled('div')`
   justify-content: center;
   flex-direction: column;
 
-  ${({ text = false }: { text?: boolean }) =>
+  ${({ text = false }: { text?: boolean }): any =>
     text &&
     css`
       align-items: center;

@@ -18,7 +18,7 @@ const MainFlex = styled('div')`
 const Content = styled('div')`
   min-height: 50vh;
   flex: 1;
-  ${({ center = false }: { center?: boolean }) =>
+  ${({ center = false }: { center?: boolean }): any =>
     center &&
     css`
       display: flex;
@@ -26,7 +26,7 @@ const Content = styled('div')`
       align-items: center;
       flex-direction: column;
     `};
-  ${({ responsive = false }: { responsive?: boolean }) =>
+  ${({ responsive = false }: { responsive?: boolean }): any =>
     responsive &&
     css`
       @media only screen and (min-width: 1200px) {
@@ -58,14 +58,23 @@ export const BlueSection = styled.div`
 
 export const Wrapper = (props: any): JSX.Element => <MainFlex {...props} />;
 
-const pageview = (url: string) => {
+// This is to make TS compile with google analytics.
+declare global {
+  interface Window {
+    __GA_TRACKING_ID__?: string;
+    gtag?: (...arg0: any) => any;
+  }
+}
+
+const pageview = (url: string): void => {
   window.__GA_TRACKING_ID__ &&
+    window.gtag &&
     window.gtag('config', window.__GA_TRACKING_ID__, {
       page_location: url,
     });
 };
 
-Router.onRouteChangeComplete = (url: string) => pageview(url);
+Router.events.on('routeChangeComplete', (url: string): void => pageview(url));
 
 export type LayoutSettings<T> = {
   shouldCenter?: boolean;
@@ -74,26 +83,29 @@ export type LayoutSettings<T> = {
   customOpengraphMetadata?: (props: {
     props: T;
     error: Error | null | undefined;
-  }) =>
-    | {
-        readonly title?: string | null | undefined;
-        readonly sharingImage?: string | null | undefined;
-        readonly description?: string | null | undefined;
-      }
-    | null
-    | undefined;
+  }) => Metadata;
   children?: React.ReactNode;
   noLoading?: boolean;
 };
 
-export type ContentRenererProps<T> = {
+type Metadata =
+  | {
+      readonly title?: string | null | undefined;
+      readonly sharingImage?: string | null | undefined;
+      readonly description?: string | null | undefined;
+      readonly ' $refType': 'metadata_metadata';
+    }
+  | null
+  | undefined;
+
+export type ContentRendererProps<T> = {
   props: T;
   error: Error | null | undefined;
 };
 export type LayoutProps<T> = {
   props?: T | null | undefined;
   error?: Error | null | undefined;
-  contentRenderer?: (props: ContentRenererProps<T>) => React.ReactNode;
+  contentRenderer?: (props: ContentRendererProps<T>) => React.ReactNode;
 };
 
 export const Layout = <T extends {}>({

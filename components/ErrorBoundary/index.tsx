@@ -21,11 +21,14 @@ class ErrorBoundary extends React.Component<Props, State> {
     resetOnChange: this.props.resetOnChange,
   };
 
-  openDialog = () => {
+  openDialog = (): void => {
     Raven.lastEventId() && Raven.showReportDialog({});
   };
 
-  static getDerivedStateFromProps(nextProps: Props, prevState: State) {
+  static getDerivedStateFromProps(
+    nextProps: Props,
+    prevState: State
+  ): State | null {
     const { resetOnChange } = prevState;
     if (nextProps.resetOnChange !== resetOnChange) {
       return {
@@ -37,7 +40,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     return null;
   }
 
-  componentDidCatch(error: Error, errorInfo: Object) {
+  componentDidCatch(error: Error, errorInfo: Record<string, any>): void {
     this.setState({ error });
     Raven.captureException(error, { extra: errorInfo });
     if (this.props.openReportDialog) {
@@ -45,7 +48,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     }
   }
 
-  render() {
+  render(): JSX.Element | null {
     const { openReportDialog, hidden = false, children, ...rest } = this.props;
 
     if (!this.state.error) {
@@ -59,7 +62,9 @@ class ErrorBoundary extends React.Component<Props, State> {
 
     return (
       <div>
-        <div onClick={() => !openReportDialog && this.openDialog()}>
+        <div
+          onClick={(): void | boolean => !openReportDialog && this.openDialog()}
+        >
           <div>
             <h3>En feil har oppstått</h3>
             <p>

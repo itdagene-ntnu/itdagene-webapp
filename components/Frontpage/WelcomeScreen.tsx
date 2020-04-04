@@ -1,14 +1,14 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { WelcomeScreen_currentMetaData } from './__generated__/WelcomeScreen_currentMetaData.graphql';
+import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
 import Link from 'next/link';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
-import moment from 'moment';
-import 'moment/locale/nb';
+import dayjs from 'dayjs';
+import 'dayjs/locale/nb';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -73,9 +73,9 @@ const RootContainer = styled('div')`
   overflow: hidden;
 `;
 
-const WelcomeScreen = ({ currentMetaData }: Props) => {
-  const startDate = moment(currentMetaData.startDate);
-  const endDate = moment(currentMetaData.endDate);
+const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
+  const startDate = dayjs(currentMetaData.startDate);
+  const endDate = dayjs(currentMetaData.endDate);
 
   return (
     <RootContainer>
@@ -94,7 +94,7 @@ const WelcomeScreen = ({ currentMetaData }: Props) => {
               <b>it</b>DAGENE {currentMetaData.year}
             </Header>
             <SubHeader>{`${startDate.date()}. & ${endDate.date()}. ${endDate
-              .locale('NO')
+              .locale('nb')
               .format('MMMM')} ${startDate.year()}`}</SubHeader>
             <Location>NTNU // Realfagsbygget</Location>
           </FlexItem>

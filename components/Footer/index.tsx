@@ -39,7 +39,7 @@ const BottomAbout = styled('div')`
   }
 `;
 
-const Footer = () => (
+const Footer = (): JSX.Element => (
   <Container>
     <ResponsiveContent>
       <InnerContainer>

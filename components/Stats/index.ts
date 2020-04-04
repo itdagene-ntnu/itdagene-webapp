@@ -1,2 +1,2 @@
-const Stats = () => null;
+const Stats = (): null => null;
 export default Stats;

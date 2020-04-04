@@ -4,7 +4,7 @@ import withData, { WithDataProps } from '../../lib/withData';
 import { graphql } from 'react-relay';
 import { Slug_jobbannonse_QueryResponse } from '../../__generated__/Slug_jobbannonse_Query.graphql';
 
-import Layout from '../../components/Layout';
+import Layout, { Metadata } from '../../components/Layout';
 import ServerError from '../../lib/ServerError';
 import JoblistingView from '../../components/Joblistings/JoblistingView';
 
@@ -14,7 +14,7 @@ const Index = ({ error, props }: RenderProps): JSX.Element => (
   <Layout
     responsive
     {...{ error, props }}
-    customOpengraphMetadata={({ props }) =>
+    customOpengraphMetadata={({ props }): Metadata =>
       props.joblisting
         ? {
             ...props.joblisting,
@@ -29,7 +29,7 @@ const Index = ({ error, props }: RenderProps): JSX.Element => (
           }
         : null
     }
-    contentRenderer={({ props }) =>
+    contentRenderer={({ props }): JSX.Element =>
       props.joblisting ? (
         <JoblistingView joblisting={props.joblisting} />
       ) : (

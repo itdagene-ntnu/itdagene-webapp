@@ -21,7 +21,7 @@ const StyledPageView = styled('div')`
   margin-left: 0;
 `;
 
-const Index = ({ props }: RenderProps) => {
+const Index = ({ props }: RenderProps): JSX.Element => {
   const { page, pages } = props;
   const navitems = pages
     ? pages.map(

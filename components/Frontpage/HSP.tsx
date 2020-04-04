@@ -29,7 +29,7 @@ const Title = styled('h1')`
   }
 `;
 
-const HSP = () => (
+const HSP = (): JSX.Element => (
   <Flex justifyAround column>
     <FlexItem>
       <CenterIt text>

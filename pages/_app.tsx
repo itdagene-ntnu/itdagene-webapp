@@ -8,7 +8,7 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import 'rc-slider/assets/index.css';
 
 export default class MyApp extends App {
-  render() {
+  render(): JSX.Element {
     const { Component, pageProps } = this.props;
 
     return <Component {...pageProps} />;

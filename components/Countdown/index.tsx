@@ -1,7 +1,7 @@
 import React from 'react';
 import Countdown from 'react-countdown-now';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { Countdown_currentMetaData } from './__generated__/Countdown_currentMetaData.graphql';
+import { Countdown_currentMetaData } from '../../__generated__/Countdown_currentMetaData.graphql';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
 import Flex from 'styled-flex-component';
@@ -22,7 +22,7 @@ const NumberBox = styled('div')`
   height: 125px;
   text-transform: uppercase;
   font-size: 12px;
-  background: ${(props) => props.color};
+  background: ${(props): any => props.color};
   margin: 5px;
   flex-basis: 135px;
 `;
@@ -39,7 +39,21 @@ const Text = styled('span')`
   line-height: 2;
 `;
 
-const renderer = ({ days, hours, minutes, seconds, completed }) =>
+type RendererProps = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+  completed: boolean;
+};
+
+const renderer = ({
+  days,
+  hours,
+  minutes,
+  seconds,
+  completed,
+}: RendererProps): JSX.Element | boolean =>
   !completed && (
     <Flex center wrap>
       <NumberBox color={itdageneGreen}>
@@ -57,7 +71,9 @@ const renderer = ({ days, hours, minutes, seconds, completed }) =>
     </Flex>
   );
 
-const CountdownComponent = (props: Countdown_currentMetaData) => (
+const CountdownComponent = (props: {
+  currentMetaData: Countdown_currentMetaData;
+}): JSX.Element => (
   <Countdown
     date={dayjs(props.currentMetaData.startDate).add(10, 'hours').toDate()}
     renderer={renderer}

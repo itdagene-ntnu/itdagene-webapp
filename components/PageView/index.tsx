@@ -1,7 +1,7 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import Link from 'next/link';
-import { PageView_page } from './__generated__/PageView_page.graphql';
+import { PageView_page } from '../../__generated__/PageView_page.graphql';
 import Flex from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
@@ -17,7 +17,13 @@ type Props = {
 const GrayText = styled('div')`
   color: gray;
 `;
-const LinkRenderer = ({ href, children }) => {
+const LinkRenderer = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}): JSX.Element => {
   // Use next.js router for internal urls
   if (href.startsWith('/')) {
     return (
@@ -31,12 +37,17 @@ const LinkRenderer = ({ href, children }) => {
 
 const renderers = { link: LinkRenderer };
 
-const PageView = ({ page, hideDate, hideContent, hideTitle }: Props) => (
+const PageView = ({
+  page,
+  hideDate,
+  hideContent,
+  hideTitle,
+}: Props): JSX.Element => (
   <>
     {!hideTitle && <h1>{page.title}</h1>}
     {!hideDate && (
       <GrayText>
-        Sist oppdatert: {dayjs(page.dateSaved).format(`D. MMMM YYYY`)}
+        Sist oppdatert: {dayjs(page.dateSaved as string).format(`D. MMMM YYYY`)}
       </GrayText>
     )}
     {!hideContent && (

@@ -42,7 +42,7 @@ const Bounce2 = styled(Bounce1)`
 const Base = styled('div')`
   text-align: center;
 
-  ${({ noMargin = false }: { noMargin?: boolean }) =>
+  ${({ noMargin = false }: { noMargin?: boolean }): any =>
     !noMargin &&
     css`
       padding-top: 150px;
@@ -55,7 +55,7 @@ const LoadingIndicator = ({
 }: {
   noMargin?: boolean;
   hideText?: boolean;
-}) => (
+}): JSX.Element => (
   <Base {...{ noMargin }}>
     <Spinner>
       <Bounce1 />

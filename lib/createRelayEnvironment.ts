@@ -1,19 +1,30 @@
-import { Environment, Network, RecordSource, Store } from 'relay-runtime';
-import { Environment as EnvironmentType, Record } from 'react-relay';
+import {
+  Environment,
+  Network,
+  RecordSource,
+  Store,
+  GraphQLResponse,
+  RecordMap,
+  RequestParameters,
+  Variables,
+  CacheConfig,
+  UploadableMap,
+} from 'relay-runtime';
+import { Environment as EnvironmentType } from 'react-relay';
 import Raven from 'raven-js';
 import fetch from 'isomorphic-unfetch';
 
-let relayEnvironment = null;
+let relayEnvironment: EnvironmentType | null = null;
 
 // Define a function that fetches the results of an operation (query/mutation/etc)
 // and returns its results as a Promise:
 function fetchQuery(
-  operation,
-  variables,
-  cacheConfig,
-  uploadables,
+  operation: RequestParameters,
+  variables: Variables,
+  cacheConfig: CacheConfig,
+  uploadables: UploadableMap | undefined | null,
   envSettings: EnvSettings
-) {
+): Promise<GraphQLResponse> {
   return fetch(envSettings.relayEndpoint, {
     method: 'POST',
     credentials: 'same-origin',
@@ -29,7 +40,12 @@ function fetchQuery(
 }
 
 function fetchQueryWithSentry(envSettings: EnvSettings) {
-  return (operation, variables, cacheConfig, uploadables) =>
+  return (
+    operation: RequestParameters,
+    variables: Variables,
+    cacheConfig: CacheConfig,
+    uploadables: UploadableMap | null | undefined
+  ): Promise<GraphQLResponse> =>
     fetchQuery(
       operation,
       variables,
@@ -52,10 +68,9 @@ export default function initEnvironment({
   records = {},
   envSettings,
 }: {
-  records?: Record;
+  records?: RecordMap;
   envSettings: EnvSettings;
-} = {}): EnvironmentType {
-  // $FlowFixMe
+}): EnvironmentType {
   if (process.browser && relayEnvironment) {
     return relayEnvironment;
   }
@@ -66,7 +81,6 @@ export default function initEnvironment({
     network,
     store,
   });
-  // $FlowFixMe
   if (!process.browser) {
     return localRelayEnvironment;
   }

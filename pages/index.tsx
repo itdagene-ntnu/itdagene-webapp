@@ -4,7 +4,7 @@ import { Section } from '../components/Styled';
 import { Image, CenterIt } from '../components/Styled';
 import { graphql } from 'react-relay';
 
-import { pages_index_QueryResponse } from './__generated__/pages_index_Query.graphql';
+import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
 import Collaborators from '../components/Collaborators/Collaborators';
 import Companies from '../components/Companies/Companies';
 import Flex, { FlexItem } from 'styled-flex-component';
@@ -21,7 +21,7 @@ type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
 const ReadMore = styled('h4')``;
 
-const AboutSection = (props: pages_index_QueryResponse) => {
+const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
   const frontpage =
     props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
   return (
@@ -55,28 +55,35 @@ const Centered = styled('div')`
   text-align: center;
 `;
 
-const EventsSection = ({ query }: { query: pages_index_QueryResponse }) => (
+const EventsSection = ({
+  query,
+}: {
+  query: pages_index_QueryResponse;
+}): JSX.Element => (
   <>
     <Flex wrap>
       {query.pages &&
-        query.pages.filter(Boolean).map((element) => (
-          <FlexItem key={element.slug} basis={'400px'} grow={1}>
-            <h2> {element.title} </h2>
-            <p>{element.ingress}</p>
-            <Centered>
-              <Link href="/info/[side]" as={`/info/${element.slug}`}>
-                <a>
-                  <ReadMore>Les mer</ReadMore>
-                </a>
-              </Link>
-            </Centered>
-          </FlexItem>
-        ))}
+        query.pages.filter(Boolean).map(
+          (element) =>
+            element && (
+              <FlexItem key={element.slug} basis={'400px'} grow={1}>
+                <h2> {element.title} </h2>
+                <p>{element.ingress}</p>
+                <Centered>
+                  <Link href="/info/[side]" as={`/info/${element.slug}`}>
+                    <a>
+                      <ReadMore>Les mer</ReadMore>
+                    </a>
+                  </Link>
+                </Centered>
+              </FlexItem>
+            )
+        )}
     </Flex>
   </>
 );
 
-const Index = ({ props, error }: RenderProps) => (
+const Index = ({ props, error }: RenderProps): JSX.Element => (
   <>
     <WelcomeScreen currentMetaData={props.currentMetaData} />
     <Section>

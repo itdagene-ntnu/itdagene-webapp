@@ -19,7 +19,7 @@ const StyledLink = styled.a`
   }
 `;
 
-const Interest = () => (
+const Interest = (): JSX.Element => (
   <>
     <Flex justifyAround wrapReverse>
       <FlexItem grow={1} basis="700px">

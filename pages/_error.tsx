@@ -1,4 +1,5 @@
 import React from 'react';
+import { NextPageContext } from 'next';
 import Layout from '../components/Layout';
 import { CenterIt } from '../components/Styled';
 import Flex, { FlexItem } from 'styled-flex-component';
@@ -9,7 +10,7 @@ type Props = {
   title: string;
 };
 
-const ERROR_TITLES = {
+const ERROR_TITLES: Record<string, string> = {
   '404': 'Fant ikke siden :(',
   '500': 'Noe har gått fryktelig galt.',
 };
@@ -20,7 +21,7 @@ const H1 = styled('h1')`
   font-weight: 100;
 `;
 
-const Error = ({ statusCode, title }: Props) => {
+const Error = ({ statusCode, title }: Props): JSX.Element => {
   return (
     <Layout noLoading>
       <Flex center full>
@@ -35,7 +36,10 @@ const Error = ({ statusCode, title }: Props) => {
   );
 };
 
-Error.getInitialProps = ({ res, err }) => {
+Error.getInitialProps = ({
+  res,
+  err,
+}: NextPageContext): { statusCode: number | undefined } => {
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
   return { statusCode };
 };

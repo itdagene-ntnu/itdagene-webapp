@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { withRouter } from 'next/router';
-import { NextRouter } from '../../utils/types';
+import { withRouter, NextRouter } from 'next/router';
 import { ResponsiveContent } from '../Styled';
 import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
@@ -21,7 +20,7 @@ const StyledMenuItem = styled('span')`
   font-size: 20px;
   padding: 0 10px;
   opacity: 0.8;
-  ${({ active = false }: { active?: boolean }) =>
+  ${({ active = false }: { active?: boolean }): any =>
     active &&
     css`
       text-shadow: 0px 0px 0.5px black;
@@ -33,7 +32,14 @@ const StyledMenuItem = styled('span')`
   }
 `;
 
-const items = [
+type MenuItem = {
+  key: string;
+  name: string;
+  to: string;
+  as?: string;
+};
+
+const items: MenuItem[] = [
   { key: 'home', name: 'HJEM', to: '/' },
   { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
   { key: 'program', name: 'PROGRAM', to: '/program' },
@@ -47,7 +53,7 @@ const items = [
 ];
 
 const MenuItem = withRouter(
-  ({ item, router }: { item: Object; router: NextRouter }) => {
+  ({ item, router }: { item: MenuItem; router: NextRouter }) => {
     const { to, name, as } = item;
     return (
       <Link href={to} as={as}>
@@ -87,12 +93,12 @@ class StatefulDropdown extends React.Component<{}, State> {
   state = {
     open: false,
   };
-  onMenuClicked = () =>
+  onMenuClicked = (): void =>
     this.setState((prevState) => ({
       open: !prevState.open,
     }));
 
-  render() {
+  render(): JSX.Element {
     return (
       <Header>
         <ResponsiveContent>
@@ -141,6 +147,6 @@ class StatefulDropdown extends React.Component<{}, State> {
   }
 }
 
-export const HeaderMenu = () => <StatefulDropdown />;
+export const HeaderMenu = (): JSX.Element => <StatefulDropdown />;
 
 export default HeaderMenu;

@@ -1,23 +1,42 @@
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, {
+  Head,
+  Main,
+  NextScript,
+  DocumentInitialProps,
+  DocumentContext,
+  RenderPageResult,
+} from 'next/document';
 import Raven from 'raven';
 import { ServerStyleSheet } from 'styled-components';
 import * as React from 'react';
 import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
 
-export default class Default extends Document {
-  static getInitialProps({ renderPage, err }: Object) {
+export default class Default extends Document<{
+  styleTags: Array<React.ReactElement<{}>>;
+}> {
+  static async getInitialProps(
+    ctx: DocumentContext
+  ): Promise<
+    DocumentInitialProps & {
+      styleTags: Array<React.ReactElement<{}>>;
+    }
+  > {
     const sheet = new ServerStyleSheet();
-    const page = renderPage((App) => (props) =>
-      sheet.collectStyles(<App {...props} />)
-    );
-    if (page.err) {
-      Raven.captureException(page.err);
+    const originalRenderPage = ctx.renderPage;
+    ctx.renderPage = (): RenderPageResult =>
+      originalRenderPage({
+        enhanceApp: (App) => (props): JSX.Element =>
+          sheet.collectStyles(<App {...props} />),
+      });
+    const initialProps = await Document.getInitialProps(ctx);
+    if (ctx.err) {
+      Raven.captureException(ctx.err);
     }
     const styleTags = sheet.getStyleElement();
-    return { ...page, styleTags };
+    return { ...initialProps, styleTags };
   }
 
-  render() {
+  render(): JSX.Element {
     const { GA_TRACKING_ID } = process.env;
     return (
       <html lang="nb">
