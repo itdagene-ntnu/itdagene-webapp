@@ -4,3 +4,4 @@ node_modules
 __generated__
 schema
 flow-typed
+next.config.js

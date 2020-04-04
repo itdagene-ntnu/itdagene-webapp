@@ -1,7 +1,6 @@
 {
   "presets": [
     "next/babel",
-    "@babel/flow",
   ],
   "plugins": [
     ["relay", {"artifactDirectory": "./__generated__"}],
@@ -23,7 +22,6 @@
             "modules": "commonjs"
           }
         }],
-        "@babel/flow",
       ]
     }
   }

@@ -29,11 +29,11 @@
     "relay/graphql-syntax": 2,
     "relay/compat-uses-vars": 1,
     "relay/graphql-naming": 2,
-    "relay/generated-flow-types": 1,
     "jsx-a11y/href-no-hash": "off",
     "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
     "@typescript-eslint/camelcase": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "env": {
     "jest": true,
