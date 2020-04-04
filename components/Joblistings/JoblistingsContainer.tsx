@@ -1,4 +1,10 @@
-import { createPaginationContainer, graphql, Variables } from 'react-relay';
+import {
+  createPaginationContainer,
+  graphql,
+  Environment,
+  Variables,
+  RelayPaginationProp,
+} from 'react-relay';
 import { Image } from '../Styled';
 import Link from 'next/link';
 import * as React from 'react';
@@ -10,7 +16,7 @@ import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
 
-function joinValues(values): string | JSX.Element {
+function joinValues(values: string[]): string | JSX.Element {
   if (values.length < 2) {
     return values[0] || '';
   }
@@ -76,22 +82,39 @@ const CompanyElement = styled('div')`
   }
 `;
 
+/**
+ * For some reason, a node in a joblistingconnection can be null, and TS is not smart enough
+ * to know that we filter it from the array, and it's
+ * too much trouble to extract the type from `JoblistingsContainer_root`, so
+ * we define the type here, without `null`.
+ */
+type JoblistingNode = Exclude<
+  Exclude<
+    Exclude<JoblistingsContainer_root['joblistings'], null>['edges'][0],
+    null
+  >['node'],
+  null
+>;
+
 type Props = {
   root: JoblistingsContainer_root;
   variables: Variables;
   loading: boolean;
   loadingEnd: () => void;
   loadingStart: () => void;
+  relay: RelayPaginationProp;
 };
-const isCurrentYear = (day) => dayjs(day).year() === dayjs().year();
 
-const ListRenderer = (props) => (
+const isCurrentYear = (day: string): boolean =>
+  dayjs(day).year() === dayjs().year();
+
+const ListRenderer = (props: Props): JSX.Element => (
   <>
     {!props.root && <LoadingIndicator />}
     <InfiniteScroll
       element="div"
       hasMore={props.relay.hasMore()}
-      loadMore={() => {
+      loadMore={(): void => {
         if (
           props.loading ||
           !props.relay.hasMore() ||
@@ -113,68 +136,73 @@ const ListRenderer = (props) => (
     >
       <JoblistingGrid>
         {props.root &&
-          props.root.joblistings.edges.map(({ node }) => (
-            <CompanyElement key={node.id}>
-              <Link
-                key={node.id}
-                href={'/jobb/[slug]'}
-                as={`/jobb/${node.slug}`}
-              >
-                <a>
-                  <CompanyImage
-                    src={node.company.logo || '/static/itdagene-gray.png'}
-                  />
-                  <h3
-                    style={{
-                      fontWeight: 'normal',
-                      fontSize: 20,
-                      lineHeight: '24px',
-                      color: 'black',
-                      margin: '5px 0',
-                      textAlign: 'center',
-                    }}
-                  >
-                    {node.title}
-                  </h3>
-                  <div style={{ color: 'gray', textAlign: 'center' }}>
-                    {
-                      jobTypeOptions.find(
-                        (el) => el.value === node.type.toLowerCase()
-                      ).label
-                    }{' '}
-                    @ {node.company.name}
-                  </div>
-                  <div
-                    style={{
-                      color: 'gray',
-                      textAlign: 'center',
-                      fontWeight: 'bold',
-                      margin: '3px',
-                    }}
-                  >
-                    {node.deadline
-                      ? 'Frist: ' +
-                        dayjs(node.deadline).format(
-                          `D. MMMM ${
-                            isCurrentYear(node.deadline) ? '' : 'YYYY'
-                          }`
-                        )
-                      : 'Løpende søknadsfrist'}
-                  </div>
+          props.root.joblistings &&
+          props.root.joblistings.edges
+            .filter((e): e is { node: JoblistingNode } => e !== null)
+            .map(({ node }) => (
+              <CompanyElement key={node.id}>
+                <Link
+                  key={node.id}
+                  href={'/jobb/[slug]'}
+                  as={`/jobb/${node.slug}`}
+                >
+                  <a>
+                    <CompanyImage
+                      src={node.company.logo || '/static/itdagene-gray.png'}
+                    />
+                    <h3
+                      style={{
+                        fontWeight: 'normal',
+                        fontSize: 20,
+                        lineHeight: '24px',
+                        color: 'black',
+                        margin: '5px 0',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {node.title}
+                    </h3>
+                    <div style={{ color: 'gray', textAlign: 'center' }}>
+                      {
+                        jobTypeOptions.find(
+                          (el) => el.value === node.type.toLowerCase()
+                        )?.label
+                      }{' '}
+                      @ {node.company.name}
+                    </div>
+                    <div
+                      style={{
+                        color: 'gray',
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        margin: '3px',
+                      }}
+                    >
+                      {node.deadline
+                        ? 'Frist: ' +
+                          dayjs(node.deadline).format(
+                            `D. MMMM ${
+                              isCurrentYear(node.deadline) ? '' : 'YYYY'
+                            }`
+                          )
+                        : 'Løpende søknadsfrist'}
+                    </div>
 
-                  <div style={{ color: 'gray', textAlign: 'center' }}>
-                    {node.towns.length > 3
-                      ? `${node.towns[0].name}, ${
-                          node.towns[1].name
-                        }, ${node.towns[2].name.slice(0, 3)}...`
-                      : joinValues(node.towns.map(({ name }) => name))}
-                  </div>
-                </a>
-              </Link>
-            </CompanyElement>
-          ))}
+                    <div style={{ color: 'gray', textAlign: 'center' }}>
+                      {node.towns.length > 3
+                        ? `${node.towns[0].name}, ${
+                            node.towns[1].name
+                          }, ${node.towns[2].name.slice(0, 3)}...`
+                        : joinValues(
+                            node.towns.map(({ name }: { name: string }) => name)
+                          )}
+                    </div>
+                  </a>
+                </Link>
+              </CompanyElement>
+            ))}
 
-        {props.root && props.root.joblistings.edges.length === 0 && (
+        {props.root?.joblistings?.edges.length === 0 && (
           <h2> Ingen annonser :( </h2>
         )}
       </JoblistingGrid>
@@ -279,11 +307,17 @@ export const JoblistingsList = createPaginationContainer(
   }
 );
 
+type ContainerProps = {
+  environment: Environment;
+  variables: Variables;
+  children: React.ReactNode;
+};
+
 const JoblistingsContainer = ({
   environment,
   variables,
   children,
-}: Props): JSX.Element => (
+}: ContainerProps): JSX.Element => (
   <div>
     <Flex wrapReverse>
       <FlexItem center basis="700px" grow={26}>

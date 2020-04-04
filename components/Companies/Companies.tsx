@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import Link from 'next/link';
 import Flex from 'styled-flex-component';
-import { Companies_query } from './__generated__/Companies_query.graphql';
+import { Companies_query } from '../../__generated__/Companies_query.graphql';
 import CompanyView from './CompanyView';
 
 type Props = {
@@ -16,7 +16,7 @@ const Title = styled('h1')`
   text-align: center;
 `;
 
-const Companies = ({ query }: Props) => {
+const Companies = ({ query }: Props): JSX.Element => {
   const sections = [
     {
       title: 'Bedrifter dag 1',
@@ -27,24 +27,25 @@ const Companies = ({ query }: Props) => {
       data: sortBy(query.companiesLastDay, 'id'),
     },
   ];
-  return sections.map(({ title, data }) => (
-    <Fragment key={title}>
-      <Title>{title}</Title>
-      <Flex wrap justifyAround>
-        {data.map((company) => (
-          <CompanyView key={company.id} company={company} />
-        ))}
-      </Flex>
-      <h4 style={{ textAlign: 'center' }}>
-        <Link>
-          <a href="/info/[side]" as="/info/stands">
-            {' '}
-            Kart over stands{' '}
-          </a>
-        </Link>
-      </h4>
-    </Fragment>
-  ));
+  return (
+    <>
+      {sections.map(({ title, data }) => (
+        <Fragment key={title}>
+          <Title>{title}</Title>
+          <Flex wrap justifyAround>
+            {data.map((company) => (
+              <CompanyView key={company.id} company={company} />
+            ))}
+          </Flex>
+          <h4 style={{ textAlign: 'center' }}>
+            <Link href="/info/[side]" as="/info/stands">
+              Kart over stands
+            </Link>
+          </h4>
+        </Fragment>
+      ))}
+    </>
+  );
 };
 
 export default createFragmentContainer(Companies, {

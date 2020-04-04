@@ -1,6 +1,6 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
-import { JoblistingView_joblisting } from './__generated__/JoblistingView_joblisting.graphql';
+import { JoblistingView_joblisting } from '../../__generated__/JoblistingView_joblisting.graphql';
 import Flex, { FlexItem } from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
@@ -32,7 +32,11 @@ const Sidebar = styled('div')`
   padding: 0 20px;
 `;
 
-const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
+const List = ({
+  joblisting,
+}: {
+  joblisting: JoblistingView_joblisting;
+}): JSX.Element => (
   <NoBulletUl style={{ width: '100%' }}>
     {metaExtractor(joblisting)
       .filter(Boolean)
@@ -51,7 +55,7 @@ const List = ({ joblisting }: { joblisting: JoblistingView_joblisting }) => (
       ))}
   </NoBulletUl>
 );
-const typeExtractor = (type: string) => {
+const typeExtractor = (type: string): string | void => {
   switch (type) {
     case 'SI':
       return 'Sommerjobb';
@@ -59,7 +63,7 @@ const typeExtractor = (type: string) => {
       return 'Fast stilling';
   }
 };
-function joinValues(values) {
+function joinValues(values: string[]): string | JSX.Element {
   if (values.length < 2) {
     return values[0] || '';
   }
@@ -77,10 +81,19 @@ function joinValues(values) {
   );
 }
 
-const isCurrentYear = (day) => dayjs(day).year() === dayjs().year();
-const onlyOneYear = ({ fromYear, toYear }) => fromYear === toYear;
+const isCurrentYear = (day: string): boolean =>
+  dayjs(day).year() === dayjs().year();
+const onlyOneYear = ({
+  fromYear,
+  toYear,
+}: {
+  fromYear: number;
+  toYear: number;
+}): boolean => fromYear === toYear;
 
-const metaExtractor = (joblisting: JoblistingView_joblisting) => [
+const metaExtractor = (
+  joblisting: JoblistingView_joblisting
+): { key: string; value: string }[] => [
   {
     key: 'Bedrift',
     value: joblisting.company.url ? (
@@ -125,11 +138,11 @@ const CompanyDesc = styled(GrayText)`
   text-align: left;
 `;
 
-const Joblisting = ({ joblisting }: Props) => (
+const Joblisting = ({ joblisting }: Props): JSX.Element => (
   <>
     <div style={{ maxWidth: 800, margin: 'auto' }}>
       <img
-        src={joblisting.company.logo}
+        src={joblisting.company.logo || undefined}
         style={{ display: 'block', margin: '25px auto 45px' }}
         alt={`Logo til ${joblisting.company.name}`}
       />
@@ -143,7 +156,7 @@ const Joblisting = ({ joblisting }: Props) => (
     <Flex wrapReverse>
       <FlexItem basis="600px" grow={3}>
         <Flex column>
-          <ReactMarkdown source={joblisting.description} />
+          <ReactMarkdown source={joblisting.description || undefined} />
         </Flex>
       </FlexItem>
       <FlexItem center basis="300px" grow={1}>
