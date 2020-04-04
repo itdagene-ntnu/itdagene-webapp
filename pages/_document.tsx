@@ -4,7 +4,6 @@ import Document, {
   NextScript,
   DocumentInitialProps,
   DocumentContext,
-  RenderPageResult,
 } from 'next/document';
 import Raven from 'raven';
 import { ServerStyleSheet } from 'styled-components';
@@ -23,7 +22,7 @@ export default class Default extends Document<{
   > {
     const sheet = new ServerStyleSheet();
     const originalRenderPage = ctx.renderPage;
-    ctx.renderPage = (): RenderPageResult =>
+    ctx.renderPage = (): ReturnType<DocumentContext['renderPage']> =>
       originalRenderPage({
         enhanceApp: (App) => (props): JSX.Element =>
           sheet.collectStyles(<App {...props} />),

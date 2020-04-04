@@ -6,9 +6,7 @@ import {
   WithDataDataProps,
 } from '../lib/withData';
 import BoardMember from '../components/BoardMember';
-import {
-  omItdagene_QueryResponse,
-} from '../__generated__/omItdagene_Query.graphql';
+import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
 import PageView from '../components/PageView';
 import Flex from 'styled-flex-component';
 import { sortBy } from 'lodash';
@@ -65,6 +63,6 @@ export default withDataAndLayout(Index, {
   variables: {},
   layout: ({ props, error }: WithDataDataProps<omItdagene_QueryResponse>) => ({
     responsive: true,
-    metadata: !!props && props.omItdagene,
+    metadata: props ? props.omItdagene : undefined,
   }),
 });

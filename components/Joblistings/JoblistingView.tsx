@@ -55,12 +55,14 @@ const List = ({
       ))}
   </NoBulletUl>
 );
-const typeExtractor = (type: string): string | void => {
+const typeExtractor = (type: string): string => {
   switch (type) {
     case 'SI':
       return 'Sommerjobb';
     case 'PP':
       return 'Fast stilling';
+    default:
+      return '';
   }
 };
 function joinValues(values: string[]): string | JSX.Element {
@@ -93,13 +95,13 @@ const onlyOneYear = ({
 
 const metaExtractor = (
   joblisting: JoblistingView_joblisting
-): { key: string; value: string }[] => [
+): { key: string; value: string | JSX.Element }[] => [
   {
     key: 'Bedrift',
     value: joblisting.company.url ? (
       <a href={joblisting.company.url}>{joblisting.company.name}</a>
     ) : (
-      joblisting.company.url
+      ''
     ),
   },
   {
@@ -159,7 +161,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
           <ReactMarkdown source={joblisting.description || undefined} />
         </Flex>
       </FlexItem>
-      <FlexItem center basis="300px" grow={1}>
+      <FlexItem basis="300px" grow={1}>
         <Sidebar>
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />

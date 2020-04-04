@@ -1,5 +1,6 @@
 import React from 'react';
-import { withRouter, NextRouter } from 'next/router';
+import { NextRouter } from 'next/router';
+import { FragmentRef } from 'react-relay';
 import JoblistingsContainer, {
   query,
   JoblistingsList,
@@ -28,35 +29,42 @@ class Index extends React.Component<RenderProps, State> {
         responsive
       >
         <JoblistingsContainer environment={environment} variables={variables}>
-          <JoblistingsList
-            environment={environment}
-            loading={this.state.loading}
-            loadingStart={this.loadingStart}
-            loadingEnd={this.loadingEnd}
-            root={props}
-          />
+          {props && (
+            <JoblistingsList
+              environment={environment}
+              variables={{}}
+              loading={this.state.loading}
+              loadingStart={this.loadingStart}
+              loadingEnd={this.loadingEnd}
+              /* TODO FIXME Fragment types are not properly handled by WithData */
+              root={(props as unknown) as FragmentRef<typeof props>}
+            />
+          )}
         </JoblistingsContainer>
       </Layout>
     );
   }
 }
 
-const parseTowns = (query: NextRouter['query']): string[] => {
+const parseTowns = (
+  query: NextRouter['query']
+): { value: string; label: string }[] => {
   try {
-    return JSON.parse(
-      typeof query.towns === 'string' ? query.towns : query.towns[0]
-    );
+    return JSON.parse(query.towns as string);
   } catch (e) {
     return [];
   }
 };
 
-export default withData(withRouter(Index), {
+const parseYear = (query: string | string[]): number | null =>
+  parseInt(query as string, 10);
+
+export default withData(Index, {
   query,
   variables: (router: NextRouter) => ({
     type: router.query.type || '',
-    fromYear: parseInt(router.query.fromYear, 10) || 1,
-    toYear: parseInt(router.query.toYear, 10) || 5,
+    fromYear: parseYear(router.query.fromYear) || 1,
+    toYear: parseYear(router.query.toYear) || 5,
     company: router.query.company || '',
     towns:
       parseTowns(router.query) &&

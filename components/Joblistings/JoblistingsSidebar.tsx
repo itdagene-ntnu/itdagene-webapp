@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Range } from 'rc-slider';
 import { withRouter, NextRouter } from 'next/router';
 
-import Select, { ValueType, Styles } from 'react-select';
+import Select, { ValueType, OptionTypeBase, Styles } from 'react-select';
 
 import AsyncSelect from 'react-select/async';
 import { fetchQuery, GraphQLTaggedNode } from 'relay-runtime';
@@ -15,7 +15,10 @@ import {
   JoblistingsSidebar_company_search_QueryResponse,
   JoblistingsSidebar_company_search_Query,
 } from '../../__generated__/JoblistingsSidebar_company_search_Query.graphql';
-import { JoblistingsSidebar_town_search_Query } from '../../__generated__/JoblistingsSidebar_town_search_Query.graphql';
+import {
+  JoblistingsSidebar_town_search_Query,
+  JoblistingsSidebar_town_search_QueryResponse,
+} from '../../__generated__/JoblistingsSidebar_town_search_Query.graphql';
 
 const Sidebar = styled('div')`
   display: flex;
@@ -74,6 +77,7 @@ const townSearchQuery = graphql`
 type JoblistingsQuery = {
   orderBy?: string;
   company?: string;
+  companyName?: string;
   type?: string;
   towns?: string;
   fromYear?: number;
@@ -108,8 +112,11 @@ const OrderBySelector = withRouter(({ router }) => (
       defaultValue={orderByOptions.find(
         (el) => el.value === router.query.orderBy
       )}
-      onChange={(el: ValueType<{ value: string; label: string }>): void =>
-        onQueryChange({ orderBy: el.value })
+      onChange={(el: ValueType<Option>): void =>
+        // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/32553
+        // and https://github.com/JedWatson/react-select/issues/2902
+        // for why we have to assert here.
+        onQueryChange({ orderBy: (el as Option)?.value })
       }
       options={orderByOptions}
     />
@@ -131,8 +138,8 @@ const JobTypeSelector = withRouter(({ router }) => (
       defaultValue={jobTypeOptions.find(
         (el) => el.value === (router.query.type || '')
       )}
-      onChange={(el: ValueType<{ value: string; label: string }>): void =>
-        onQueryChange({ type: el && el.value })
+      onChange={(el: ValueType<Option>): void =>
+        onQueryChange({ type: (el as Option)?.value })
       }
       options={jobTypeOptions}
     />
@@ -143,10 +150,16 @@ type SearchQuery =
   | JoblistingsSidebar_company_search_Query
   | JoblistingsSidebar_town_search_Query;
 
+type SearchQueryResponse =
+  | JoblistingsSidebar_town_search_QueryResponse
+  | JoblistingsSidebar_company_search_QueryResponse;
+
 type GraphQLOption = Exclude<
-  JoblistingsSidebar_company_search_QueryResponse['search'][0],
+  SearchQueryResponse['search'][0],
   null | { readonly __typename: '%other' }
 >;
+
+type SearchType = Array<SearchQueryResponse['search'][0]>;
 
 const loadOptions = async (
   inputValue: string,
@@ -156,8 +169,12 @@ const loadOptions = async (
   const data = await fetchQuery<SearchQuery>(environment, searchQuery, {
     query: inputValue,
   });
-  const options = data.search
-    .filter((result): result is GraphQLOption => result !== null)
+
+  // See https://github.com/microsoft/TypeScript/issues/33591
+  const options = (data.search as SearchType)
+    .filter(
+      (result): result is GraphQLOption => result !== null && 'name' in result
+    )
     .map((result) => ({
       value: result.id,
       label: result.name,
@@ -174,7 +191,7 @@ const CompanySelector = withRouter(
     environment: Environment;
   }) => (
     <div style={{ width: '100%' }}>
-      <AsyncSelect<Option>
+      <AsyncSelect
         isClearable
         loadOptions={debounce(
           (input) => loadOptions(input, environment, companySearchQuery),
@@ -182,7 +199,7 @@ const CompanySelector = withRouter(
         )}
         styles={customStyles}
         defaultValue={
-          router.query.companyName && { label: router.query.companyName }
+          router.query.companyName ? { label: router.query.companyName } : null
         }
         placeholder="Ikke valgt"
         noOptionsMessage={(input): string =>
@@ -196,21 +213,14 @@ const CompanySelector = withRouter(
         }}
         onChange={(el): void =>
           onQueryChange({
-            company: el && el.value,
-            companyName: el && el.label,
+            company: (el as Option)?.value,
+            companyName: (el as Option)?.label,
           })
         }
       />
     </div>
   )
 );
-const parseTowns = (query): string | [] => {
-  try {
-    return JSON.parse(query.towns);
-  } catch (e) {
-    return [];
-  }
-};
 
 const TownSelector = withRouter(
   ({
@@ -234,8 +244,14 @@ const TownSelector = withRouter(
           input.inputValue ? 'Fant ingen steder... :(' : 'Søk her!'
         }
         styles={customStyles}
-        defaultValue={parseTowns(router.query)}
-        filterOptions={(options, filter, currentValues): any => options}
+        defaultValue={
+          (router.query.towns as unknown) as ValueType<OptionTypeBase>
+        }
+        filterOptions={(
+          options: Option[],
+          filter: any,
+          currentValues: any
+        ): any => options}
         onChange={(el): void =>
           onQueryChange({
             towns: JSON.stringify(el),

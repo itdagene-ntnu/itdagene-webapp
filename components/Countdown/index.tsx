@@ -75,7 +75,7 @@ const CountdownComponent = (props: {
   currentMetaData: Countdown_currentMetaData;
 }): JSX.Element => (
   <Countdown
-    date={dayjs(props.currentMetaData.startDate).add(10, 'hours').toDate()}
+    date={dayjs(props.currentMetaData.startDate).add(10, 'hour').toDate()}
     renderer={renderer}
   />
 );

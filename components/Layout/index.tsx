@@ -1,10 +1,12 @@
 import * as React from 'react';
+import { ContainerProps } from 'react-relay';
 import styled, { css } from 'styled-components';
 import LoadingIndicator from '../LoadingIndicator';
 import { HeaderMenu } from '../Header';
 import { itdageneBlue } from '../../utils/colors';
 import Router from 'next/router';
 import OpengraphFragmentRenderer, { CustomOpengraphRenderer } from './metadata';
+import { metadata_metadata } from '../../__generated__/metadata_metadata.graphql';
 
 import Footer from '../Footer';
 
@@ -76,27 +78,20 @@ const pageview = (url: string): void => {
 
 Router.events.on('routeChangeComplete', (url: string): void => pageview(url));
 
+export type Metadata = Partial<metadata_metadata> | null;
+
 export type LayoutSettings<T> = {
   shouldCenter?: boolean;
   responsive?: boolean;
-  metadata?: Record<string, any> | null | undefined;
   customOpengraphMetadata?: (props: {
     props: T;
     error: Error | null | undefined;
   }) => Metadata;
   children?: React.ReactNode;
   noLoading?: boolean;
-};
-
-type Metadata =
-  | {
-      readonly title?: string | null | undefined;
-      readonly sharingImage?: string | null | undefined;
-      readonly description?: string | null | undefined;
-      readonly ' $refType': 'metadata_metadata';
-    }
-  | null
-  | undefined;
+} & ContainerProps<{
+  metadata?: metadata_metadata | null;
+}>;
 
 export type ContentRendererProps<T> = {
   props: T;
@@ -105,7 +100,9 @@ export type ContentRendererProps<T> = {
 export type LayoutProps<T> = {
   props?: T | null | undefined;
   error?: Error | null | undefined;
-  contentRenderer?: (props: ContentRendererProps<T>) => React.ReactNode;
+  contentRenderer?: (
+    props: ContentRendererProps<T>
+  ) => React.ReactElement<ContentRendererProps<T>>;
 };
 
 export const Layout = <T extends {}>({

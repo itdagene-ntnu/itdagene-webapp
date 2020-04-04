@@ -33,7 +33,7 @@
     "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
     "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-ignore": 0
   },
   "env": {
     "jest": true,

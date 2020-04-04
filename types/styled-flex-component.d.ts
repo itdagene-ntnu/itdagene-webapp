@@ -34,10 +34,10 @@ declare module 'styled-flex-component' {
     inlineBlock: boolean;
     inlineFlex: boolean;
     flex: boolean;
-    order: number;
+    order: number | string;
     basis: string;
-    grow: number;
-    shrink: number;
+    grow: number | string;
+    shrink: number | string;
     noShrink: boolean;
   }>;
   const Flex: React.ElementType<

@@ -3,7 +3,7 @@ import NextError from 'next/error';
 
 type Props = {
   statusCode: number;
-  title: string;
+  title?: string;
   errorCode: string;
 };
 

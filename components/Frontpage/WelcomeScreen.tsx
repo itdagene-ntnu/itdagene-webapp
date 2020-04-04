@@ -88,7 +88,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         src="https://cdn.itdagene.no/itdagene.mp4"
       />
       <MainContainer text>
-        <Flex column spaceBetween>
+        <Flex column contentSpaceBetween>
           <FlexItem>
             <Header>
               <b>it</b>DAGENE {currentMetaData.year}

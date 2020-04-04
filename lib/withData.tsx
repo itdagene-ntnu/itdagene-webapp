@@ -11,7 +11,7 @@ import ErrorBoundary from '../components/ErrorBoundary';
 import {
   Layout,
   LayoutSettings,
-  ContentRenererProps,
+  ContentRendererProps,
 } from '../components/Layout';
 import { QueryRenderer } from 'react-relay';
 import { withRouter, NextRouter } from 'next/router';
@@ -48,7 +48,7 @@ export type WithDataProps<T> = WithDataDataProps<T> & WithDataBaseProps;
 
 type State = {};
 type Props = {
-  queryRecords: RecordSource;
+  queryRecords: ConstructorParameters<typeof RecordSource>[0];
   router: NextRouter;
   envSettings: EnvSettings;
   ctx: NextRouter;
@@ -183,7 +183,7 @@ export type DataLayoutOptions<T> = DataOptions & {
     | ((props: WithDataDataProps<T>) => LayoutSettings<T>);
 };
 export type WithDataAndLayoutProps<T> = WithDataBaseProps &
-  ContentRenererProps<T>;
+  ContentRendererProps<T>;
 
 export const withDataAndLayout = <T extends {}>(
   ComposedComponent: React.ComponentType<WithDataAndLayoutProps<T>>,

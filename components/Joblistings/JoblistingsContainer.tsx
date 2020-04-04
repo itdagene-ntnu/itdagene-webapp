@@ -84,20 +84,18 @@ const CompanyElement = styled('div')`
 
 /**
  * For some reason, a node in a joblistingconnection can be null, and TS is not smart enough
- * to know that we filter it from the array, and it's
- * too much trouble to extract the type from `JoblistingsContainer_root`, so
+ * to know that we filter it from the array, so
  * we define the type here, without `null`.
  */
-type JoblistingNode = Exclude<
-  Exclude<
-    Exclude<JoblistingsContainer_root['joblistings'], null>['edges'][0],
-    null
-  >['node'],
-  null
+type JoblistingNode = NonNullable<
+  NonNullable<
+    NonNullable<JoblistingsContainer_root['joblistings']>['edges'][0]
+  >['node']
 >;
 
 type Props = {
   root: JoblistingsContainer_root;
+  environment: Environment;
   variables: Variables;
   loading: boolean;
   loadingEnd: () => void;
@@ -320,7 +318,7 @@ const JoblistingsContainer = ({
 }: ContainerProps): JSX.Element => (
   <div>
     <Flex wrapReverse>
-      <FlexItem center basis="700px" grow={26}>
+      <FlexItem basis="700px" grow={26}>
         {children}
       </FlexItem>
       <FlexItem basis="300px" grow={1}>

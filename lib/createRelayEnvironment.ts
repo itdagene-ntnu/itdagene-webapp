@@ -4,7 +4,6 @@ import {
   RecordSource,
   Store,
   GraphQLResponse,
-  RecordMap,
   RequestParameters,
   Variables,
   CacheConfig,
@@ -65,10 +64,10 @@ export type EnvSettings = {
 };
 
 export default function initEnvironment({
-  records = {},
+  records,
   envSettings,
 }: {
-  records?: RecordMap;
+  records?: ConstructorParameters<typeof RecordSource>[0];
   envSettings: EnvSettings;
 }): EnvironmentType {
   if (process.browser && relayEnvironment) {
@@ -93,6 +92,7 @@ export default function initEnvironment({
   // TODO FIXME this is just an internal API.
   // Our state is so small, so this should be no problem.. :upsidedown-face:
   try {
+    // @ts-ignore
     store._gcHoldCounter = 1000;
   } catch (err) {
     //

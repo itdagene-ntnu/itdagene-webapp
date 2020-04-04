@@ -11,6 +11,10 @@ import PageView from '../../components/PageView';
 
 type RenderProps = WithDataAndLayoutProps<Side_info_QueryResponse>;
 
+type Page = NonNullable<
+  NonNullable<NonNullable<Side_info_QueryResponse>['pages']>[0]
+>;
+
 const StyledHeading = styled('h1')`
   font-weight: 200;
   font-size: 4em;
@@ -24,15 +28,16 @@ const StyledPageView = styled('div')`
 const Index = ({ props }: RenderProps): JSX.Element => {
   const { page, pages } = props;
   const navitems = pages
-    ? pages.map(
-        (page) =>
-          page && {
-            text: page.title || '',
-            href: '/info/[side]',
-            as: `/info/${page.slug}`,
-            key: page.id,
-          }
-      )
+    ? pages
+        // GraphQL says page can be `null` so we have to manually filter out null
+        // and inform TS that `page` is not null.
+        .filter((page): page is Page => page !== null)
+        .map((page) => ({
+          text: page.title || '',
+          href: '/info/[side]',
+          as: `/info/${page.slug}`,
+          key: page.id,
+        }))
     : [];
   return (
     <>
