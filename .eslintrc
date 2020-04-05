@@ -1,16 +1,18 @@
 {
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "react-app",
     "eslint:recommended",
-    "plugin:flowtype/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "prettier",
-    "prettier/flowtype",
+    "prettier/@typescript-eslint",
     "prettier/react"
   ],
   "plugins": [
     "react",
-    "flowtype",
+    "@typescript-eslint",
     "relay"
   ],
   "globals": {
@@ -27,10 +29,11 @@
     "relay/graphql-syntax": 2,
     "relay/compat-uses-vars": 1,
     "relay/graphql-naming": 2,
-    "relay/generated-flow-types": 1,
-    "flowtype/no-types-missing-file-annotation": 0,
     "jsx-a11y/href-no-hash": "off",
-    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }]
+    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-ignore": 0
   },
   "env": {
     "jest": true,
