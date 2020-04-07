@@ -85,7 +85,7 @@
     "get-graphql-schema": "^2.1.2",
     "jest": "^25.2.6",
     "jest-puppeteer": "^4.4.0",
-    "prettier": "^2.0.2",
+    "prettier": "^2.0.4",
     "puppeteer": "^2.1.1",
     "react-test-renderer": "16.13.1",
     "relay-compiler": "9.0.0",
