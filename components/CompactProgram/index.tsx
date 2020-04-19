@@ -17,7 +17,7 @@ const Title = styled('h1')`
 `;
 
 const Tile = styled.div`
-  background: ${(props): string => props.color};
+  background: ${(props: { color: string }): string => props.color};
   width: 25%;
   height: 100px;
   transition: all 0.1s ease-in-out;
