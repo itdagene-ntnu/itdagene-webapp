@@ -5,7 +5,7 @@ import Document, {
   DocumentInitialProps,
   DocumentContext,
 } from 'next/document';
-import Raven from 'raven';
+import * as Sentry from '@sentry/node';
 import { ServerStyleSheet } from 'styled-components';
 import * as React from 'react';
 import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
@@ -29,7 +29,7 @@ export default class Default extends Document<{
       });
     const initialProps = await Document.getInitialProps(ctx);
     if (ctx.err) {
-      Raven.captureException(ctx.err);
+      Sentry.captureException(ctx.err);
     }
     const styleTags = sheet.getStyleElement();
     return { ...initialProps, styleTags };

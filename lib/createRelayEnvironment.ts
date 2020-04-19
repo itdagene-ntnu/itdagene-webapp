@@ -10,7 +10,7 @@ import {
   UploadableMap,
 } from 'relay-runtime';
 import { Environment as EnvironmentType } from 'react-relay';
-import Raven from 'raven-js';
+import * as Sentry from '@sentry/node';
 import fetch from 'isomorphic-unfetch';
 
 let relayEnvironment: EnvironmentType | null = null;
@@ -52,13 +52,13 @@ function fetchQueryWithSentry(envSettings: EnvSettings) {
       uploadables,
       envSettings
     ).catch((err) => {
-      Raven.captureException(err);
+      Sentry.captureException(err);
       throw err;
     });
 }
 
 export type EnvSettings = {
-  ravenPublicDsn: string;
+  sentryDsn: string;
   release: string;
   relayEndpoint: string;
 };
@@ -85,9 +85,6 @@ export default function initEnvironment({
   }
 
   // reuse Relay environment on client-side
-  Raven.config(envSettings.ravenPublicDsn, {
-    release: envSettings.release,
-  }).install();
   relayEnvironment = localRelayEnvironment;
   // TODO FIXME this is just an internal API.
   // Our state is so small, so this should be no problem.. :upsidedown-face:
