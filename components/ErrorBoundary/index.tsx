@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Raven from 'raven-js';
+import * as Sentry from '@sentry/browser';
 
 type Props = {
   openReportDialog?: boolean;
@@ -13,16 +13,19 @@ type Props = {
 type State = {
   error: Error | null | undefined;
   resetOnChange: any;
+  eventId?: string | null | undefined;
 };
 
 class ErrorBoundary extends React.Component<Props, State> {
-  state = {
+  state: State = {
     error: null,
     resetOnChange: this.props.resetOnChange,
+    eventId: null,
   };
 
   openDialog = (): void => {
-    Raven.lastEventId() && Raven.showReportDialog({});
+    this.state.eventId &&
+      Sentry.showReportDialog({ eventId: this.state.eventId });
   };
 
   static getDerivedStateFromProps(
@@ -42,10 +45,13 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: Record<string, any>): void {
     this.setState({ error });
-    Raven.captureException(error, { extra: errorInfo });
-    if (this.props.openReportDialog) {
-      this.openDialog();
-    }
+    Sentry.withScope((scope) => {
+      Sentry.setExtras(errorInfo);
+      const eventId = Sentry.captureException(error);
+      this.setState({ eventId }, () => {
+        this.props.openReportDialog && this.openDialog();
+      });
+    });
   }
 
   render(): JSX.Element | null {
@@ -69,7 +75,7 @@ class ErrorBoundary extends React.Component<Props, State> {
             <h3>En feil har oppstått</h3>
             <p>
               Webansvarling har fått beskjed om feilen.{' '}
-              {!openReportDialog && Raven.lastEventId() && (
+              {!openReportDialog && this.state.eventId && (
                 <span>
                   Klikk <b>her</b> for å sende en rapport.
                 </span>
