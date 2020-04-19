@@ -39,6 +39,9 @@ jobs:
           name: build
           command: |
             yarn build
+          environment:
+            SENTRY_AUTH_TOKEN: ''
+            SENTRY_DSN: ''
 
       - run:
           command: |
