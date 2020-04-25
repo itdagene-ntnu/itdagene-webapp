@@ -1,6 +1,6 @@
 const withSourceMaps = require('@zeit/next-source-maps')();
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
-const { SENTRY_DSN, SENTRY_ORG, SENTRY_PROJECT } = process.env
+const { SENTRY_ORG, SENTRY_PROJECT } = process.env
 
 module.exports = withSourceMaps({
   webpack: (config, { dev, isServer }) => {
@@ -21,7 +21,7 @@ module.exports = withSourceMaps({
     if (!isServer) {
       config.resolve.alias['@sentry/node'] = '@sentry/browser'
     }
-    if (SENTRY_DSN && SENTRY_ORG && SENTRY_PROJECT) {
+    if (SENTRY_ORG && SENTRY_PROJECT) {
       config.plugins.push(
       new SentryWebpackPlugin({
         include: '.next',
