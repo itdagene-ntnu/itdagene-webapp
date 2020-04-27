@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY package.json .
 COPY yarn.lock .
-RUN yarn --ignore-scripts
+RUN yarn
 
 ARG RELEASE
 ARG SENTRY_AUTH_TOKEN
