@@ -80,7 +80,7 @@
     "eslint-plugin-react-hooks": "^2.5.1",
     "eslint-plugin-relay": "^1.7.0",
     "get-graphql-schema": "^2.1.2",
-    "jest": "^25.3.0",
+    "jest": "^25.4.0",
     "jest-puppeteer": "^4.4.0",
     "prettier": "^2.0.4",
     "puppeteer": "^2.1.1",
