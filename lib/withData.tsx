@@ -102,7 +102,7 @@ export const withData = <T extends {}, T1 extends OperationType>(
         let queryRecords = {};
 
         const envSettings: EnvSettings = {
-          ravenPublicDsn: process.env.RAVEN_PUBLIC_DSN || '',
+          sentryDsn: process.env.SENTRY_DSN || '',
           release: process.env.RELEASE || 'dev',
           relayEndpoint:
             process.env.RELAY_ENDPOINT || 'http://localhost:8000/graphql',

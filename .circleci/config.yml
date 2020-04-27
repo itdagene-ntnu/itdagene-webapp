@@ -39,6 +39,7 @@ jobs:
           name: build
           command: |
             yarn build
+          environment:
 
       - run:
           command: |
@@ -52,11 +53,10 @@ jobs:
       - run: |
           RELEASE=${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
           docker build -t itdagene/webapp:$CIRCLE_BRANCH \
-          --build-arg=RELEASE=$RELEASE \
-          --build-arg=SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
-          --build-arg SENTRY_ORG=$SENTRY_ORG \
-          --build-arg SENTRY_PROJECT=$SENTRY_PROJECT \
-          --build-arg SENTRY_URL=$SENTRY_URL \
+          --build-arg RELEASE=$RELEASE \
+          --build-arg SENTRY_AUTH_TOKEN=$CIRCLE_SENTRY_AUTH_TOKEN \
+          --build-arg SENTRY_ORG=$CIRCLE_SENTRY_ORG \
+          --build-arg SENTRY_PROJECT=$CIRCLE_SENTRY_PROJECT \
           .
       - run: docker tag itdagene/webapp:$CIRCLE_BRANCH itdagene/webapp:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
       - run: docker push itdagene/webapp:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
