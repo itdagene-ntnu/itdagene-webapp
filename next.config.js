@@ -26,7 +26,7 @@ module.exports = withSourceMaps({
       new SentryWebpackPlugin({
         include: '.next',
         ignore: ['node_modules'],
-        urlPrefix: '~/_next',
+        urlPrefix: '/app/.next',
         release: RELEASE,
         setCommits: {
           repo: "itdagene-ntnu/itdagene-webapp",
