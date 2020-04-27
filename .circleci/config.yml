@@ -57,6 +57,7 @@ jobs:
           --build-arg SENTRY_AUTH_TOKEN=$CIRCLE_SENTRY_AUTH_TOKEN \
           --build-arg SENTRY_ORG=$CIRCLE_SENTRY_ORG \
           --build-arg SENTRY_PROJECT=$CIRCLE_SENTRY_PROJECT \
+          --build-arg COMMIT_SHA=$CIRCLE_SHA1 \
           .
       - run: docker tag itdagene/webapp:$CIRCLE_BRANCH itdagene/webapp:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
       - run: docker push itdagene/webapp:${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}

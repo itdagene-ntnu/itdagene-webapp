@@ -1,6 +1,6 @@
 const withSourceMaps = require('@zeit/next-source-maps')();
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
-const { SENTRY_ORG, SENTRY_PROJECT } = process.env
+const { SENTRY_ORG, SENTRY_PROJECT, RELEASE, COMMIT_SHA } = process.env
 
 module.exports = withSourceMaps({
   webpack: (config, { dev, isServer }) => {
@@ -26,7 +26,12 @@ module.exports = withSourceMaps({
       new SentryWebpackPlugin({
         include: '.next',
         ignore: ['node_modules'],
-        urlPrefix: '~/_next'
+        urlPrefix: '~/_next',
+        release: RELEASE,
+        setCommits: {
+          repo: "itdagene-ntnu/itdagene-webapp",
+          commit: COMMIT_SHA
+        }
       })
       )
     }
