@@ -59,7 +59,7 @@
     "@types/react-hamburger-menu": "^0.0.3",
     "@types/react-infinite-scroller": "^1.2.1",
     "@types/react-relay": "^7.0.3",
-    "@types/react-select": "^3.0.11",
+    "@types/react-select": "^3.0.12",
     "@types/styled-components": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.28.0",
