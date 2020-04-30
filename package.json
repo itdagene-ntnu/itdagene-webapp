@@ -20,7 +20,7 @@
   "dependencies": {
     "@next/bundle-analyzer": "^9.3.6",
     "@sentry/browser": "^5.15.5",
-    "@sentry/node": "^5.15.4",
+    "@sentry/node": "^5.15.5",
     "@sentry/webpack-plugin": "^1.10.0",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
     "babel-polyfill": "^6.26.0",
