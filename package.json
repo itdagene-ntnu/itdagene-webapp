@@ -24,7 +24,7 @@
     "@sentry/webpack-plugin": "^1.10.0",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
     "babel-polyfill": "^6.26.0",
-    "dayjs": "^1.8.25",
+    "dayjs": "^1.8.27",
     "express": "^4.17.1",
     "graphql": "^14.6.0",
     "isomorphic-unfetch": "^3.0.0",
