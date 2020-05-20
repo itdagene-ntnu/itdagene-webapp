@@ -9,7 +9,7 @@ import {
   CacheConfig,
   UploadableMap,
 } from 'relay-runtime';
-import { Environment as EnvironmentType } from 'react-relay';
+import { Environment as EnvironmentType } from 'relay-runtime';
 import * as Sentry from '@sentry/node';
 import fetch from 'isomorphic-unfetch';
 
