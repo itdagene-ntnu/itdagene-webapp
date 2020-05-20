@@ -1,10 +1,10 @@
 import * as React from 'react';
 import initEnvironment, { EnvSettings } from './createRelayEnvironment';
 import {
-  Environment,
   GraphQLTaggedNode,
   Variables,
   fetchQuery,
+  Environment,
 } from 'react-relay';
 import { RecordSource, OperationType } from 'relay-runtime';
 import ErrorBoundary from '../components/ErrorBoundary';
@@ -107,9 +107,12 @@ export const withData = <T extends {}, T1 extends OperationType>(
           relayEndpoint:
             process.env.RELAY_ENDPOINT || 'http://localhost:8000/graphql',
         };
-        const environment: Environment = initEnvironment({
+        // We're casting between RelayModernEnvironment and the Environment interface
+        // because fetchQuery takes an environment of the interface type, which
+        // RelayModernEnvironment implements, but fetchQuery still does not like.
+        const environment = initEnvironment({
           envSettings,
-        });
+        }) as Environment;
 
         if (localOptions.query) {
           // Provide the `url` prop data in case a graphql query uses it
@@ -144,10 +147,11 @@ export const withData = <T extends {}, T1 extends OperationType>(
       constructor(props: Props) {
         super(props);
         const { envSettings } = props;
+        // The same type casting here.
         this.environment = initEnvironment({
           records: props.queryRecords,
           envSettings,
-        });
+        }) as Environment;
       }
 
       render(): JSX.Element {
