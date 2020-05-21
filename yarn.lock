@@ -9291,10 +9291,10 @@ react-relay@9.1.0:
     nullthrows "^1.1.1"
     relay-runtime "9.1.0"
 
-react-responsive-carousel@^3.2.5:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.2.5.tgz#d8b0202286cbe83174ad96cbe0f3b8e371ef7606"
-  integrity sha512-cRhDRPP1wjW/oqmlUqGV1xx0e923Wc5rWfo+Q2k64nCTz1S7qutotq8Mfst4nHMtlN4+uyx+q0M7GKn4lBuU6g==
+react-responsive-carousel@^3.2.7:
+  version "3.2.7"
+  resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.2.7.tgz#a9a5b7efb5206f18a5de38d80826780acfc46ba0"
+  integrity sha512-uqGCnoZukU+U1relhTNe8eVX/hMT5ELh1uxHCOxR6cH+A67eG2aX68e1pJnohWqXqPj/u+Pupt1q5j8LGhDabA==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.8"
