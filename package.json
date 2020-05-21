@@ -64,7 +64,7 @@
     "@types/relay-runtime": "^8.0.10",
     "@types/styled-components": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
-    "@typescript-eslint/parser": "^2.30.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.0.1",
