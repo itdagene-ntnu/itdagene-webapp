@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
 import Flex, { FlexItem } from 'styled-flex-component';
+import { lightGrey } from '../utils/colors';
 
 type Item = {
   text: string;
@@ -18,6 +19,16 @@ type Props = {
 const StyledNavbarItem = styled('div')`
   padding-right: 20px;
   font-weight: bold;
+  @media only screen and (max-width: 767px) {
+    text-align: center;
+    border: 1px solid ${lightGrey};
+    border-radius: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 0;
+  }
 `;
 
 const Hr = styled('hr')`
@@ -29,6 +40,14 @@ const Hr = styled('hr')`
   );
   height: 1px;
   border: 0;
+`;
+
+const StyledFlex = styled(Flex)`
+  @media only screen and (max-width: 767px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 5px;
+  }
 `;
 
 const NavbarItem = withRouter(
@@ -53,11 +72,11 @@ const NavbarItem = withRouter(
 const Navbar = ({ items }: Props): JSX.Element => {
   return (
     <div>
-      <Flex>
+      <StyledFlex>
         {items.map(
           (item: Item) => item && <NavbarItem key={item.key} item={item} />
         )}
-      </Flex>
+      </StyledFlex>
       <Hr />
     </div>
   );
