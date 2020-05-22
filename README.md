@@ -22,7 +22,7 @@ $ yarn relay
 $ yarn dev
 $ # open http://localhost:8000
 $ # To run against itdagene.no:
-$ RELAY_ENDPOINT=https://itdagene.no/graphql yarn dev
+$ yarn dev:prod
 
 $ # Running tests
 $ yarn build
@@ -32,8 +32,7 @@ $ RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 ## Config
 
 - `RELAY_ENDPOINT`: graphql endpoint for relay (default: `http://localhost:8000`)
-- `RAVEN_PUBLIC_DSN`: Public Sentry Raven DSN
-- `RAVEN_DSN`: Sentry Raven DSN
+- `SENTRY_DSN`: Sentry DSN
 
 ## Code style
 
