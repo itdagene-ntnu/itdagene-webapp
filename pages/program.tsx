@@ -25,56 +25,53 @@ const Index = ({
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
   return (
-    <CenterFlex>
+    <>
       {props.programPage && <PageView hideContent page={props.programPage} />}
 
+      {props.programPage && (
+        <PageView hideTitle hideDate page={props.programPage} />
+      )}
+
       {sortedKeys && groupedEvents ? (
-        sortedKeys.map((k) => (
-          <GroupedDateEvent key={k}>
-            <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
-            <GroupedEvent>
-              {groupedEvents[k].map((event) => (
-                <EventInfo key={event.id}>
-                  <Title
-                    time={`${event.timeStart.slice(
+        <CenterFlex>
+          {sortedKeys.map((k) => (
+            <GroupedDateEvent key={k}>
+              <DateTitle>
+                {dayjs(k).format('dddd DD.MM').toUpperCase()}
+              </DateTitle>
+              <GroupedEvent>
+                {groupedEvents[k].map((event) => (
+                  <EventInfo key={event.id}>
+                    <Title>{event.title}</Title>
+                    {`${event.timeStart.slice(0, 5)} - ${event.timeEnd.slice(
                       0,
                       5
-                    )} - ${event.timeEnd.slice(0, 5)},${' '}`}
-                  >
-                    {event.title}
-                  </Title>
-                  {`${event.timeStart.slice(0, 5)} - ${event.timeEnd.slice(
-                    0,
-                    5
-                  )}, ${event.location}`}
-                  <br />
-                  <br />
-                  <ReactMarkdown
-                    source={event.description}
-                    escapeHtml={false}
-                    renderers={{
-                      heading: Heading,
-                      blockquote: Blockquote,
-                      thematicBreak: ThematicBreak,
-                      list: MarkdownList,
-                      paragraph: Paragraph,
-                    }}
-                  />
-                </EventInfo>
-              ))}
-            </GroupedEvent>
-          </GroupedDateEvent>
-        ))
+                    )}, ${event.location}`}
+                    <br />
+                    <br />
+                    <ReactMarkdown
+                      source={event.description}
+                      escapeHtml={false}
+                      renderers={{
+                        heading: Heading,
+                        blockquote: Blockquote,
+                        thematicBreak: ThematicBreak,
+                        list: MarkdownList,
+                        paragraph: Paragraph,
+                      }}
+                    />
+                  </EventInfo>
+                ))}
+              </GroupedEvent>
+            </GroupedDateEvent>
+          ))}
+        </CenterFlex>
       ) : (
         <FlexItem>
           <h1>Programmet er tomt</h1>
         </FlexItem>
       )}
-
-      {props.programPage && (
-        <PageView hideTitle hideDate page={props.programPage} />
-      )}
-    </CenterFlex>
+    </>
   );
 };
 
@@ -110,11 +107,7 @@ export default withDataAndLayout(Index, {
   }),
 });
 
-interface TitleProps {
-  title: string;
-}
-
-const Title = styled.h1<TitleProps>`
+const Title = styled.h1`
   position: relative;
   margin: 0px;
   &::after {
@@ -132,7 +125,7 @@ const Title = styled.h1<TitleProps>`
 `;
 
 const DateTitle = styled.h1`
-  margin: 0px 0px 0px 0px;
+  margin: 0px 0px 5px 0px;
   font-weight: 300;
 `;
 
@@ -154,7 +147,6 @@ const CenterFlex = styled.div`
   justify-content: space-evenly;
   margin-top: 50px;
   @media only screen and (max-width: 991px) {
-    /* flex-direction: column; */
     padding: 0px;
     margin: 0px;
   }
