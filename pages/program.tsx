@@ -3,12 +3,19 @@ import { graphql } from 'react-relay';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { program_QueryResponse } from '../__generated__/program_Query.graphql';
 import PageView from '../components/PageView';
-import Flex, { FlexItem } from 'styled-flex-component';
+import { FlexItem } from 'styled-flex-component';
 import { groupBy, sortBy } from 'lodash';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
-
 import ReactMarkdown from 'react-markdown';
+
+import {
+  Heading,
+  Blockquote,
+  ThematicBreak,
+  MarkdownList,
+  Paragraph,
+} from '../components/MarkdownRenderer';
 
 const Index = ({
   error,
@@ -23,11 +30,11 @@ const Index = ({
 
       {sortedKeys && groupedEvents ? (
         sortedKeys.map((k) => (
-          <DateGroupedEvent key={k}>
+          <GroupedDateEvent key={k}>
             <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
             <GroupedEvent>
               {groupedEvents[k].map((event) => (
-                <InfoContainer key={event.id}>
+                <EventInfo key={event.id}>
                   <Title
                     time={`${event.timeStart.slice(
                       0,
@@ -40,12 +47,23 @@ const Index = ({
                     0,
                     5
                   )}, ${event.location}`}
-                  <p>{event.description}</p>
-                  {/* <ReactMarkdown source={event.description} /> */}
-                </InfoContainer>
+                  <br />
+                  <br />
+                  <ReactMarkdown
+                    source={event.description}
+                    escapeHtml={false}
+                    renderers={{
+                      heading: Heading,
+                      blockquote: Blockquote,
+                      thematicBreak: ThematicBreak,
+                      list: MarkdownList,
+                      paragraph: Paragraph,
+                    }}
+                  />
+                </EventInfo>
               ))}
             </GroupedEvent>
-          </DateGroupedEvent>
+          </GroupedDateEvent>
         ))
       ) : (
         <FlexItem>
@@ -98,7 +116,7 @@ interface TitleProps {
 
 const Title = styled.h1<TitleProps>`
   position: relative;
-  margin: 0;
+  margin: 0px;
   &::after {
     content: ' ';
     position: absolute;
@@ -114,28 +132,31 @@ const Title = styled.h1<TitleProps>`
 `;
 
 const DateTitle = styled.h1`
-  margin: 0px 0px 5px 0px;
+  margin: 0px 0px 0px 0px;
   font-weight: 300;
 `;
 
-const DateGroupedEvent = styled.div`
+const GroupedDateEvent = styled.div`
   display: flex;
   margin: 0px 20px 40px;
   flex-direction: column;
   flex: 1 1 500px;
+  @media only screen and (max-width: 991px) {
+    flex-direction: column;
+    padding: 0px 0px;
+    margin: 0px 20px 10px;
+  }
 `;
 
 const CenterFlex = styled.div`
-  /* border: 2px dotted pink; */
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   margin-top: 50px;
-  /* padding: 0px 100px; */
   @media only screen and (max-width: 991px) {
-    flex-direction: column;
-    padding: 0px 0px;
-    margin: 0px 0px;
+    /* flex-direction: column; */
+    padding: 0px;
+    margin: 0px;
   }
 `;
 
@@ -145,15 +166,16 @@ const GroupedEvent = styled.div`
   flex-direction: column;
   box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
   border-radius: 0px 10px 10px 0px;
-  padding: 30px 50px 30px 50px;
+  padding: 0px 50px 30px 50px;
   border-left: 4px solid #0d7bb4;
   @media only screen and (max-width: 991px) {
     margin-bottom: 50px;
   }
 `;
 
-const InfoContainer = styled.div`
+const EventInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-top: 30px;
 `;
