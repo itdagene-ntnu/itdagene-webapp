@@ -6,6 +6,9 @@ import PageView from '../components/PageView';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { groupBy, sortBy } from 'lodash';
 import dayjs from 'dayjs';
+import styled from 'styled-components';
+
+import ReactMarkdown from 'react-markdown';
 
 const Index = ({
   error,
@@ -15,48 +18,45 @@ const Index = ({
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
   return (
-    <>
+    <CenterFlex>
       {props.programPage && <PageView hideContent page={props.programPage} />}
-      <Flex wrap justifyCenter>
-        {sortedKeys && groupedEvents ? (
-          sortedKeys.map((k) => (
-            <FlexItem
-              grow="1"
-              style={{ padding: '20px 30px' }}
-              basis="500px"
-              key={k}
-            >
-              <h1>{dayjs(k).format('dddd DD.MM').toUpperCase()}</h1>
+
+      {sortedKeys && groupedEvents ? (
+        sortedKeys.map((k) => (
+          <DateGroupedEvent key={k}>
+            <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
+            <GroupedEvent>
               {groupedEvents[k].map((event) => (
-                <div key={event.id}>
-                  {event.timeStart.slice(0, 5)} - {event.timeEnd.slice(0, 5)},{' '}
-                  {event.location}
-                  <h3
-                    style={{
-                      fontWeight: 600,
-                      marginTop: 0,
-                      marginBottom: 0,
-                    }}
+                <InfoContainer key={event.id}>
+                  <Title
+                    time={`${event.timeStart.slice(
+                      0,
+                      5
+                    )} - ${event.timeEnd.slice(0, 5)},${' '}`}
                   >
                     {event.title}
-                  </h3>
-                  {event.description}
-                  <br />
-                  <br />
-                </div>
+                  </Title>
+                  {`${event.timeStart.slice(0, 5)} - ${event.timeEnd.slice(
+                    0,
+                    5
+                  )}, ${event.location}`}
+                  <p>{event.description}</p>
+                  {/* <ReactMarkdown source={event.description} /> */}
+                </InfoContainer>
               ))}
-            </FlexItem>
-          ))
-        ) : (
-          <FlexItem>
-            <h1>Programmet er tomt</h1>
-          </FlexItem>
-        )}
-      </Flex>
+            </GroupedEvent>
+          </DateGroupedEvent>
+        ))
+      ) : (
+        <FlexItem>
+          <h1>Programmet er tomt</h1>
+        </FlexItem>
+      )}
+
       {props.programPage && (
         <PageView hideTitle hideDate page={props.programPage} />
       )}
-    </>
+    </CenterFlex>
   );
 };
 
@@ -91,3 +91,69 @@ export default withDataAndLayout(Index, {
     metadata: props && props.programPage,
   }),
 });
+
+interface TitleProps {
+  title: string;
+}
+
+const Title = styled.h1<TitleProps>`
+  position: relative;
+  margin: 0;
+  &::after {
+    content: ' ';
+    position: absolute;
+    background-color: #f5f5f5;
+    border: 3.5px solid #0d7bb4;
+    width: 15px;
+    height: 15px;
+    bottom: 9px;
+    left: -63.2px;
+    box-shadow: -2px 0px 5px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+  }
+`;
+
+const DateTitle = styled.h1`
+  margin: 0px 0px 5px 0px;
+  font-weight: 300;
+`;
+
+const DateGroupedEvent = styled.div`
+  display: flex;
+  margin: 0px 20px 40px;
+  flex-direction: column;
+  flex: 1 1 500px;
+`;
+
+const CenterFlex = styled.div`
+  /* border: 2px dotted pink; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 50px;
+  /* padding: 0px 100px; */
+  @media only screen and (max-width: 991px) {
+    flex-direction: column;
+    padding: 0px 0px;
+    margin: 0px 0px;
+  }
+`;
+
+const GroupedEvent = styled.div`
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 10px 10px 0px;
+  padding: 30px 50px 30px 50px;
+  border-left: 4px solid #0d7bb4;
+  @media only screen and (max-width: 991px) {
+    margin-bottom: 50px;
+  }
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
