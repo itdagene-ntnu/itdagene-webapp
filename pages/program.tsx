@@ -43,11 +43,13 @@ const Index = ({
                 {groupedEvents[k].map((event) => (
                   <EventInfo key={event.id}>
                     <Title>{event.title}</Title>
-                    {`${event.timeStart.slice(0, 5)} - ${event.timeEnd.slice(
-                      0,
-                      5
-                    )}, ${event.location}`}
-                    <br />
+                    <EventTimePlaceInfo>
+                      <InfoElement>{`🕐 ${event.timeStart.slice(
+                        0,
+                        5
+                      )} - ${event.timeEnd.slice(0, 5)}`}</InfoElement>
+                      <InfoElement>{`\t\r📍 ${event.location}`}</InfoElement>
+                    </EventTimePlaceInfo>
                     <br />
                     <ReactMarkdown
                       source={event.description}
@@ -122,6 +124,13 @@ const Title = styled.h1`
     box-shadow: -2px 0px 5px 2px rgba(0, 0, 0, 0.2);
     border-radius: 50%;
   }
+  @media only screen and (max-width: 991px) {
+    font-size: 1.7em;
+
+    &::after {
+      bottom: 2px;
+    }
+  }
 `;
 
 const DateTitle = styled.h1`
@@ -163,6 +172,16 @@ const GroupedEvent = styled.div`
   @media only screen and (max-width: 991px) {
     margin-bottom: 50px;
   }
+`;
+
+const EventTimePlaceInfo = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+`;
+
+const InfoElement = styled.div`
+  margin-right: 15px;
 `;
 
 const EventInfo = styled.div`
