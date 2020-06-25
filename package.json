@@ -19,7 +19,7 @@
   "author": "Odin Ugedal <odin@ugedal.com>",
   "license": "MIT",
   "dependencies": {
-    "@next/bundle-analyzer": "^9.4.2",
+    "@next/bundle-analyzer": "^9.4.4",
     "@sentry/browser": "^5.18.0",
     "@sentry/node": "^5.18.0",
     "@sentry/webpack-plugin": "^1.11.1",
