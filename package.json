@@ -45,7 +45,7 @@
     "relay-hooks": "3.5.0",
     "relay-runtime": "9.1.0",
     "styled-components": "^4.4.1",
-    "styled-flex-component": "^3.0.0",
+    "styled-flex-component": "^3.0.2",
     "trim-right": "^1.0.1",
     "video-react": "^0.14.1"
   },
