@@ -93,13 +93,16 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
             <Header>
               <b>it</b>DAGENE {currentMetaData.year}
             </Header>
-            <SubHeader>{`${startDate.date()}. & ${endDate.date()}. ${endDate
+            <SubHeader>
+              Ny dato annonseres fortløpende
+              {/* {`${startDate.date()}. & ${endDate.date()}. ${endDate
               .locale('nb')
-              .format('MMMM')} ${startDate.year()}`}</SubHeader>
+              .format('MMMM')} ${startDate.year()}`} */}
+            </SubHeader>
             <Location>NTNU // Realfagsbygget</Location>
           </FlexItem>
           <FlexItem>
-            <Countdown currentMetaData={currentMetaData} />
+            {/* <Countdown currentMetaData={currentMetaData} /> */}
           </FlexItem>
         </Flex>
 
