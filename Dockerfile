@@ -1,4 +1,4 @@
-FROM node:10 as builder
+FROM node:12 as builder
 
 RUN mkdir /app
 WORKDIR /app
@@ -27,7 +27,7 @@ RUN yarn schema:prod
 RUN yarn relay
 RUN yarn build
 
-FROM node:10-alpine
+FROM node:12-alpine
 MAINTAINER Odin Ugedal <odin@ugedal.com>
 RUN mkdir /app
 WORKDIR /app/
