@@ -16,6 +16,7 @@ import Interest from '../components/Frontpage/Interest';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
+import AnnouncementBanner from '../components/Frontpage/AnnouncementBanner';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
@@ -85,6 +86,7 @@ const EventsSection = ({
 
 const Index = ({ props, error }: RenderProps): JSX.Element => (
   <>
+    <AnnouncementBanner />
     <WelcomeScreen currentMetaData={props.currentMetaData} />
     <Section>
       <AboutSection {...props} />
