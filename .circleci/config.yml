@@ -16,7 +16,8 @@ jobs:
 
       - save_cache:
           paths:
-            - ./node_modules/
+            - ./node_modules
+            - ./.next/cache
           key: deps-{{ checksum "yarn.lock" }}
 
       - run:
@@ -39,9 +40,9 @@ jobs:
           name: build
           command: |
             yarn build
-          environment:
 
       - run:
+          name: test
           command: |
             RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 
