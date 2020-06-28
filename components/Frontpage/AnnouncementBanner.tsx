@@ -19,17 +19,22 @@ const AnnouncementBanner = () => {
           </Svg>
           <Info>
             <StyledHeader>
-              itDAGENE 2020 er dessverre utsatt grunnet Covid-19
+              itDAGENE 2020 er dessverre utsatt til{' '}
+              <StyledSpan>18. & 19. januar</StyledSpan> grunnet Covid-19
             </StyledHeader>
           </Info>
         </StyledRow>
-        <Link href="/info/covid-19">
+        <Link href="/info/[side]" as="info/covid-19">
           <StyledLink>Les mer</StyledLink>
         </Link>
       </InfoContainer>
     </AnnouncementContainer>
   );
 };
+
+const StyledSpan = styled.span`
+  text-decoration: underline;
+`;
 
 const StyledRow = styled.div`
   display: flex;
