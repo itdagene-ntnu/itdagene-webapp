@@ -1,6 +1,6 @@
 # itDAGENE-webapp
 
-[![CircleCI](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp.svg?style=svg)](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp) ![Dependabot](https://api.dependabot.com/badges/status?host=github&repo=itdagene-ntnu/itdagene-webapp) ![Dependencies](https://david-dm.org/itdagene-ntnu/itdagene-webapp.svg)
+[![CircleCI](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp.svg?style=svg)](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp) ![Dependencies](https://david-dm.org/itdagene-ntnu/itdagene-webapp.svg)
 
 > nextgen itDAGENE frontend
 
