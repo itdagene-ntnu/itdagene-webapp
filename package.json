@@ -21,7 +21,7 @@
   "dependencies": {
     "@next/bundle-analyzer": "^9.4.4",
     "@sentry/browser": "^5.21.1",
-    "@sentry/node": "^5.18.1",
+    "@sentry/node": "^5.22.0",
     "@sentry/webpack-plugin": "^1.11.1",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
     "babel-polyfill": "^6.26.0",
