@@ -127,6 +127,7 @@ export const jobTypeOptions = [
   { value: '', label: 'Alle' },
   { value: 'pp', label: 'Fastjobb' },
   { value: 'si', label: 'Sommerjobb' },
+  { value: 'ot', label: 'Andre' },
 ];
 
 const JobTypeSelector = withRouter(({ router }) => (
