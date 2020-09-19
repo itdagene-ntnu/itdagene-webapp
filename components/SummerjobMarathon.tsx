@@ -13,27 +13,6 @@ import styled from 'styled-components';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import LoadingIndicator from './LoadingIndicator';
 import InfiniteScroll from 'react-infinite-scroller';
-import dayjs from 'dayjs';
-
-import { jobTypeOptions } from './Joblistings/JoblistingsSidebar';
-
-function joinValues(values: string[]): string | JSX.Element {
-  if (values.length < 2) {
-    return values[0] || '';
-  }
-
-  return (
-    <span>
-      {values.map((el, i: number) => (
-        <span key={i}>
-          {i > 0 && i !== values.length - 1 && ', '}
-          {i === values.length - 1 && ' og '}
-          {el}
-        </span>
-      ))}
-    </span>
-  );
-}
 
 const CompanyImage = styled(Image)`
   width: 95%;
@@ -56,6 +35,7 @@ const JoblistingGrid = styled(Flex)`
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
   display: grid;
 `;
+
 const CompanyElement = styled('div')`
   cursor: pointer;
   padding: 60px 15px 15px;
@@ -64,12 +44,19 @@ const CompanyElement = styled('div')`
   }
 `;
 
+const NudgeDiv = styled('div')`
+  transition: 0.3s;
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
 /**
  * For some reason, a node in a joblistingconnection can be null, and TS is not smart enough
  * to know that we filter it from the array, so
  * we define the type here, without `null`.
  */
-type JoblistingNode = NonNullable<
+export type JoblistingNode = NonNullable<
   NonNullable<
     NonNullable<SummerjobMarathon_root['joblistings']>['edges'][0]
   >['node']
@@ -82,11 +69,9 @@ type Props = {
   loading: boolean;
   loadingEnd: () => void;
   loadingStart: () => void;
+  setCurrentNode: (open: JoblistingNode | null) => void;
   relay: RelayPaginationProp;
 };
-
-const isCurrentYear = (day: string): boolean =>
-  dayjs(day).year() === dayjs().year();
 
 const ListRenderer = (props: Props): JSX.Element => (
   <>
@@ -121,15 +106,17 @@ const ListRenderer = (props: Props): JSX.Element => (
             .filter((e): e is { node: JoblistingNode } => e !== null)
             .map(({ node }) => (
               <CompanyElement key={node.id}>
+                <NudgeDiv onClick={(): void => props.setCurrentNode(node)}>
+                  <CompanyImage
+                    src={node.company.logo || '/static/itdagene-gray.png'}
+                  />
+                </NudgeDiv>
                 <Link
                   key={node.id}
                   href={'/jobb/[slug]'}
                   as={`/jobb/${node.slug}`}
                 >
                   <a>
-                    <CompanyImage
-                      src={node.company.logo || '/static/itdagene-gray.png'}
-                    />
                     <h3
                       style={{
                         fontWeight: 'normal',
@@ -140,43 +127,8 @@ const ListRenderer = (props: Props): JSX.Element => (
                         textAlign: 'center',
                       }}
                     >
-                      {node.title}
+                      {`👨‍🎓 ${node.company.name}`}
                     </h3>
-                    <div style={{ color: 'gray', textAlign: 'center' }}>
-                      {
-                        jobTypeOptions.find(
-                          (el) => el.value === node.type.toLowerCase()
-                        )?.label
-                      }{' '}
-                      @ {node.company.name}
-                    </div>
-                    <div
-                      style={{
-                        color: 'gray',
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                        margin: '3px',
-                      }}
-                    >
-                      {node.deadline
-                        ? 'Frist: ' +
-                          dayjs(node.deadline).format(
-                            `D. MMMM ${
-                              isCurrentYear(node.deadline) ? '' : 'YYYY'
-                            }`
-                          )
-                        : 'Løpende søknadsfrist'}
-                    </div>
-
-                    <div style={{ color: 'gray', textAlign: 'center' }}>
-                      {node.towns.length > 3
-                        ? `${node.towns[0].name}, ${
-                            node.towns[1].name
-                          }, ${node.towns[2].name.slice(0, 3)}...`
-                        : joinValues(
-                            node.towns.map(({ name }: { name: string }) => name)
-                          )}
-                    </div>
                   </a>
                 </Link>
               </CompanyElement>
@@ -210,6 +162,7 @@ export const SummerjobMarathon = createPaginationContainer(
               title
               url
               deadline
+              videoUrl
               towns {
                 name
               }
@@ -264,7 +217,6 @@ const SummerjobMarathonContainer = ({
       <FlexItem basis="700px" grow={26}>
         {children}
       </FlexItem>
-      <FlexItem basis="300px" grow={1}></FlexItem>
     </Flex>
   </div>
 );
