@@ -2,6 +2,7 @@ import React from 'react';
 import { FragmentRef } from 'react-relay';
 import SummerjobMarathonContainer, {
   SummerjobMarathon,
+  query,
 } from '../components/SummerjobMarathon';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import withData, { WithDataProps } from '../lib/withData';
@@ -33,7 +34,7 @@ class Index extends React.Component<RenderProps, State> {
           {props && (
             <SummerjobMarathon
               environment={environment}
-              variables={{}}
+              variables={variables}
               loading={this.state.loading}
               loadingStart={this.loadingStart}
               loadingEnd={this.loadingEnd}
@@ -48,6 +49,7 @@ class Index extends React.Component<RenderProps, State> {
 }
 
 export default withData(Index, {
+  query,
   variables: {
     count: 30,
   },
