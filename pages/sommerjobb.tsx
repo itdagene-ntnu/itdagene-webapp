@@ -8,10 +8,13 @@ import SummerjobMarathonContainer, {
   JoblistingNode,
 } from '../components/SummerjobMarathon';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
+import { SummerjobMarathon_other } from '../__generated__/SummerjobMarathon_other.graphql';
 import withData, { WithDataProps } from '../lib/withData';
 import Layout from '../components/Layout';
 
-type RenderProps = WithDataProps<SummerjobMarathon_root>;
+type RenderProps = WithDataProps<
+  SummerjobMarathon_root & SummerjobMarathon_other
+>;
 
 type State = {
   loading: boolean;
@@ -46,16 +49,19 @@ const customStyles = {
 };
 
 class Index extends React.Component<RenderProps, State> {
-  state = { loading: false, currentNode: null };
+  state: State = { loading: false, currentNode: null };
+  player: React.Ref<any> = null;
 
   loadingStart = (): void =>
     this.setState((prevState) => ({ ...prevState, loading: true }));
   loadingEnd = (): void =>
     this.setState((prevState) => ({ ...prevState, loading: false }));
-  setCurrentNode = (open: JoblistingNode | null): void =>
+  setCurrentNode = (open: JoblistingNode | null): void => {
     this.setState((prevState) => ({ ...prevState, currentNode: open }));
+    setTimeout(() => this.player?.play(), 500);
+  };
 
-  componentDidMount() {
+  componentDidMount(): void {
     Modal.setAppElement('body');
   }
 
@@ -64,14 +70,22 @@ class Index extends React.Component<RenderProps, State> {
     return (
       <Layout
         customOpengraphMetadata={(): { title: string } => ({
-          title: 'Jobbannonser',
+          title: 'Sommerjob maraton',
         })}
         props
         noLoading
         responsive
       >
         <div>
-          <h1>Velkommen til sommerjobb-maraton 2020🏃‍♀️🏃‍♂️</h1>
+          <h1>
+            Velkommen til sommerjobb-maraton 2020
+            <span aria-label="Running woman" role="img">
+              🏃‍♀️
+            </span>
+            <span aria-label="Running man" role="img">
+              🏃‍♂️
+            </span>
+          </h1>
           <p>
             Ta deg tid til å se gjennom videoene de ulike bedriftene har sendt
             inn. Bedriftene har selv valgt hva de ønsker å legge vekt på, men de
@@ -88,15 +102,17 @@ class Index extends React.Component<RenderProps, State> {
         >
           <Modal
             isOpen={this.state.currentNode !== null}
-            onRequestClose={() => this.setCurrentNode(null)}
+            onRequestClose={(): void => this.setCurrentNode(null)}
             style={customStyles}
             contentLabel="Example Modal"
           >
-            {this.state.currentNode !== null && (
+            {this.state.currentNode && (
               <Player
-                autoplay={true}
-                playsInline
+                autoplay
                 src={this.state.currentNode.videoUrl}
+                ref={(player): void => {
+                  this.player = player;
+                }}
               />
             )}
           </Modal>
@@ -110,6 +126,7 @@ class Index extends React.Component<RenderProps, State> {
               setCurrentNode={this.setCurrentNode}
               /* TODO FIXME Fragment types are not properly handled by WithData */
               root={(props as unknown) as FragmentRef<typeof props>}
+              other={props as FragmentRef<typeof props>}
             />
           )}
         </SummerjobMarathonContainer>

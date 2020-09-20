@@ -11,6 +11,7 @@ import * as React from 'react';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
+import { SummerjobMarathon_other } from '../__generated__/SummerjobMarathon_other.graphql';
 import LoadingIndicator from './LoadingIndicator';
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -41,6 +42,7 @@ const CompanyName = styled('h3')`
 export const query = graphql`
   query SummerjobMarathon_Query($count: Int, $cursor: String) {
     ...SummerjobMarathon_root @arguments(count: $count, cursor: $cursor)
+    ...SummerjobMarathon_other
   }
 `;
 
@@ -78,6 +80,7 @@ export type JoblistingNode = NonNullable<
 
 type Props = {
   root: SummerjobMarathon_root;
+  other: SummerjobMarathon_other;
   environment: Environment;
   variables: Variables;
   loading: boolean;
@@ -117,28 +120,51 @@ const ListRenderer = (props: Props): JSX.Element => (
         {props.root &&
           props.root.joblistings &&
           props.root.joblistings.edges
-            .filter((e): e is { node: JoblistingNode } => e !== null)
-            .map(({ node }) => (
+            .filter(
+              (e): e is { node: JoblistingNode; noListing: boolean } =>
+                e !== null
+            )
+            .concat(
+              props.other
+                ? (props.other.nodes as (JoblistingNode & {
+                    noListing: boolean;
+                  })[]).map((e) => ({
+                    node: e,
+                    noListing: true,
+                  }))
+                : []
+            )
+            .map(({ node, noListing }) => (
               <CompanyElement key={node.id}>
                 <NudgeDiv onClick={(): void => props.setCurrentNode(node)}>
                   <CompanyImage
                     src={node.company.logo || '/static/itdagene-gray.png'}
                   />
                 </NudgeDiv>
-                <Link
-                  key={node.id}
-                  href={{
-                    pathname: '/jobb',
-                    query: {
-                      company: node.company.id,
-                      companyName: node.company.name,
-                    },
-                  }}
-                >
-                  <a>
+                {noListing ? (
+                  <a
+                    href={node.company.url || ''}
+                    target="_blank"
+                    rel="nolink noreferrer"
+                  >
                     <CompanyName>{node.company.name}</CompanyName>
                   </a>
-                </Link>
+                ) : (
+                  <Link
+                    key={node.id}
+                    href={{
+                      pathname: '/jobb',
+                      query: {
+                        company: node.company.id,
+                        companyName: node.company.name,
+                      },
+                    }}
+                  >
+                    <a>
+                      <CompanyName>{node.company.name}</CompanyName>
+                    </a>
+                  </Link>
+                )}
               </CompanyElement>
             ))}
 
@@ -176,6 +202,7 @@ export const SummerjobMarathon = createPaginationContainer(
               }
               company {
                 name
+                url
                 id
                 logo(width: 800, height: 260)
               }
@@ -184,6 +211,36 @@ export const SummerjobMarathon = createPaginationContainer(
           pageInfo {
             hasNextPage
             endCursor
+          }
+        }
+      }
+    `,
+    other: graphql`
+      fragment SummerjobMarathon_other on Query {
+        nodes(
+          ids: [
+            "Sm9ibGlzdGluZzo1MjQ="
+            "Sm9ibGlzdGluZzo1MjU="
+            "Sm9ibGlzdGluZzo1MjY="
+          ]
+        ) {
+          ... on Joblisting {
+            id
+            __typename
+            type
+            title
+            url
+            deadline
+            videoUrl
+            towns {
+              name
+            }
+            company {
+              url
+              name
+              id
+              logo(width: 800, height: 260)
+            }
           }
         }
       }
