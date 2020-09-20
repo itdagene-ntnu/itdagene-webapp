@@ -33,7 +33,9 @@ const Sidebar = styled('div')`
   padding: 0 20px;
 `;
 
-const PlayerHeading = styled('h3')``;
+const PlayerView = styled('div')`
+  margin-bottom: 30px;
+`;
 
 const List = ({
   joblisting,
@@ -164,12 +166,12 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
           <ReactMarkdown source={joblisting.description || undefined} />
 
           {joblisting.videoUrl && (
-            <>
+            <PlayerView>
               <h3>
-                {joblisting.company.name} sin video fra sommerjobb-maratonnet
+                {joblisting.company.name} sin video fra sommerjobb-maraton 2020
               </h3>
               <Player playsInline src={joblisting.videoUrl} />
-            </>
+            </PlayerView>
           )}
         </Flex>
       </FlexItem>

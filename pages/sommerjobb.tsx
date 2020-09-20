@@ -70,6 +70,18 @@ class Index extends React.Component<RenderProps, State> {
         noLoading
         responsive
       >
+        <div>
+          <h1>Velkommen til sommerjobb-maraton 2020🏃‍♀️🏃‍♂️</h1>
+          <p>
+            Ta deg tid til å se gjennom videoene de ulike bedriftene har sendt
+            inn. Bedriftene har selv valgt hva de ønsker å legge vekt på, men de
+            fleste har stort fokus på tidligere -og neste års sommerjobber.
+          </p>
+          <p>
+            Fant du en interessant video? Trykk deg videre på linken under for å
+            se hvilke jobbutlysninger bedriften har!
+          </p>
+        </div>
         <SummerjobMarathonContainer
           environment={environment}
           variables={variables}

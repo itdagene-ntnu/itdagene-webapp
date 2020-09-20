@@ -4,22 +4,24 @@ import Link from 'next/link';
 
 const AnnouncementBanner = () => {
   return (
-    <AnnouncementContainer>
-      <InfoContainer>
-        <StyledRow>
-          <StyledImg src="/static/GraduationHat.svg" />
-          <Info>
-            <StyledHeader>
-              Få en introduksjon til neste års sommerjobber i
-              sommmerjobb-maratonnet
-            </StyledHeader>
-          </Info>
-        </StyledRow>
-        <Link href="/sommerjobb" as="/sommerjobb">
-          <StyledLink>Les mer</StyledLink>
-        </Link>
-      </InfoContainer>
-    </AnnouncementContainer>
+    <Link href="/sommerjobb" as="/sommerjobb">
+      <AnnouncementContainer>
+        <a>
+          <InfoContainer>
+            <StyledRow>
+              <StyledImg src="/static/GraduationHat.svg" />
+              <Info>
+                <StyledHeader>
+                  Få en introduksjon til neste års sommerjobber gjennom årets
+                  sommmerjobb-maraton
+                </StyledHeader>
+              </Info>
+            </StyledRow>
+            <StyledLink>Trykk for å se mer</StyledLink>
+          </InfoContainer>
+        </a>
+      </AnnouncementContainer>
+    </Link>
   );
 };
 
@@ -43,6 +45,7 @@ const AnnouncementContainer = styled.div`
   justify-content: center;
   flex-wrap: wrap;
   box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
   background-image: repeating-linear-gradient(
     -45deg,
     #007bb4,
@@ -50,6 +53,10 @@ const AnnouncementContainer = styled.div`
     #008fd1 35px,
     #008fd1 70px
   );
+  transition: 0.2s;
+  &:hover {
+    transform: scale(1.01);
+  }
 `;
 
 const Info = styled.div`
@@ -72,6 +79,10 @@ const StyledLink = styled.a`
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
+  text-decoration: none;
+  &:hover {
+    color: white;
+  }
 `;
 
 const StyledHeader = styled.h1`

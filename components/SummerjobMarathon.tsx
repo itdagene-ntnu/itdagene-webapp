@@ -24,6 +24,20 @@ const CompanyImage = styled(Image)`
   }
 `;
 
+const CompanyName = styled('h3')`
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 24px;
+  color: black;
+  margin: 5px 0;
+  text-align: center;
+  padding: 0;
+  text-decoration: underline;
+  &:hover {
+    color: #007bb4;
+  }
+`;
+
 export const query = graphql`
   query SummerjobMarathon_Query($count: Int, $cursor: String) {
     ...SummerjobMarathon_root @arguments(count: $count, cursor: $cursor)
@@ -113,24 +127,16 @@ const ListRenderer = (props: Props): JSX.Element => (
                 </NudgeDiv>
                 <Link
                   key={node.id}
-                  href={'/jobb/[slug]'}
-                  as={`/jobb/${node.slug}`}
+                  href={{
+                    pathname: '/jobb',
+                    query: {
+                      company: node.company.id,
+                      companyName: node.company.name,
+                    },
+                  }}
                 >
                   <a>
-                    <h3
-                      style={{
-                        fontWeight: 'normal',
-                        fontSize: 20,
-                        lineHeight: '24px',
-                        color: 'black',
-                        margin: '5px 0',
-                        textAlign: 'center',
-                        padding: 0,
-                        textDecoration: 'underline',
-                      }}
-                    >
-                      {node.company.name}
-                    </h3>
+                    <CompanyName>{node.company.name}</CompanyName>
                   </a>
                 </Link>
               </CompanyElement>
@@ -170,6 +176,7 @@ export const SummerjobMarathon = createPaginationContainer(
               }
               company {
                 name
+                id
                 logo(width: 800, height: 260)
               }
             }
