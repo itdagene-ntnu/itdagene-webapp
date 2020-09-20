@@ -1,5 +1,7 @@
 import React from 'react';
 import { FragmentRef } from 'react-relay';
+import { Player } from 'video-react';
+import Modal from 'react-modal';
 import SummerjobMarathonContainer, {
   SummerjobMarathon,
   query,
@@ -7,13 +9,7 @@ import SummerjobMarathonContainer, {
 } from '../components/SummerjobMarathon';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import withData, { WithDataProps } from '../lib/withData';
-
-import { Player } from 'video-react';
-import Modal from 'react-modal';
-
 import Layout from '../components/Layout';
-
-import styled from 'styled-components';
 
 type RenderProps = WithDataProps<SummerjobMarathon_root>;
 
@@ -45,6 +41,7 @@ const customStyles = {
     minWidth: '20rem',
     width: '80%',
     maxWidth: '60rem',
+    overflow: 'hidden',
   },
 };
 
@@ -79,7 +76,6 @@ class Index extends React.Component<RenderProps, State> {
         >
           <Modal
             isOpen={this.state.currentNode !== null}
-            // onAfterOpen={afterOpenModal}
             onRequestClose={() => this.setCurrentNode(null)}
             style={customStyles}
             contentLabel="Example Modal"

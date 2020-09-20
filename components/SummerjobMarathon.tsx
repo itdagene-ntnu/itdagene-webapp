@@ -125,9 +125,11 @@ const ListRenderer = (props: Props): JSX.Element => (
                         color: 'black',
                         margin: '5px 0',
                         textAlign: 'center',
+                        padding: 0,
+                        textDecoration: 'underline',
                       }}
                     >
-                      {`👨‍🎓 ${node.company.name}`}
+                      {node.company.name}
                     </h3>
                   </a>
                 </Link>

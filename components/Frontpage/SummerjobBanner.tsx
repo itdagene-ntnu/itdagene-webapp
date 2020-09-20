@@ -7,20 +7,11 @@ const AnnouncementBanner = () => {
     <AnnouncementContainer>
       <InfoContainer>
         <StyledRow>
-          <Svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="white"
-            width="150px"
-            height="90px"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-          </Svg>
+          <StyledImg src="/static/GraduationHat.svg" />
           <Info>
             <StyledHeader>
               Få en introduksjon til neste års sommerjobber i
-              sommmerjobb-maratonnet her🏃‍♂️
+              sommmerjobb-maratonnet
             </StyledHeader>
           </Info>
         </StyledRow>
@@ -32,19 +23,20 @@ const AnnouncementBanner = () => {
   );
 };
 
-const StyledSpan = styled.span`
-  text-decoration: underline;
+const StyledImg = styled.img`
+  max-width: 130px;
+  flex-grow: 1;
 `;
 
 const StyledRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const AnnouncementContainer = styled.div`
   display: flex;
-  /* width: 100%; */
   border-radius: 15px;
   margin: 20px;
   align-items: center;
@@ -55,8 +47,8 @@ const AnnouncementContainer = styled.div`
     -45deg,
     #007bb4,
     #007bb4 35px,
-    #407bb4 35px,
-    #407bb4 70px
+    #008fd1 35px,
+    #008fd1 70px
   );
 `;
 
@@ -66,10 +58,6 @@ const Info = styled.div`
   justify-content: center;
   flex-grow: 10;
   text-align: center;
-`;
-
-const Svg = styled.svg`
-  flex-grow: 1;
 `;
 
 const InfoContainer = styled.div`
