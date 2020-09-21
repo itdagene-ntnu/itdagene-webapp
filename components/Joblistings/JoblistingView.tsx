@@ -168,7 +168,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
           {joblisting.videoUrl && (
             <PlayerView>
               <h3>
-                {joblisting.company.name} sin video fra sommerjobb-maraton 2020
+                {joblisting.company.name} sin video fra sommerjobbmaraton 2020
               </h3>
               <Player playsInline src={joblisting.videoUrl} />
             </PlayerView>
