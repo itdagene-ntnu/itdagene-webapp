@@ -143,11 +143,13 @@ class Index extends React.Component<RenderProps, State> {
             se hvilke jobbutlysninger bedriften har!
           </p>
         </div>
+        {/*
         <Flex row justifyCenter>
           <FlexItem>
             <PlayButton onClick={this.playNext}>Spill av alle</PlayButton>
           </FlexItem>
         </Flex>
+          */}
         <SummerjobMarathonContainer
           environment={environment}
           variables={variables}
