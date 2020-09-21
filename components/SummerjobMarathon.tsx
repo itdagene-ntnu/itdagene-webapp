@@ -12,6 +12,7 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import { SummerjobMarathon_other } from '../__generated__/SummerjobMarathon_other.graphql';
+import { SummerjobMarathon_collaborators } from '../__generated__/SummerjobMarathon_collaborators.graphql';
 import LoadingIndicator from './LoadingIndicator';
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -43,13 +44,14 @@ export const query = graphql`
   query SummerjobMarathon_Query($count: Int, $cursor: String) {
     ...SummerjobMarathon_root @arguments(count: $count, cursor: $cursor)
     ...SummerjobMarathon_other
+    ...SummerjobMarathon_collaborators
   }
 `;
 
 const JoblistingGrid = styled(Flex)`
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
-  display: grid;
+  display: ${(props): string => (props.center ? 'flex' : 'grid')};
 `;
 
 const CompanyElement = styled('div')`
@@ -67,10 +69,17 @@ const NudgeDiv = styled('div')`
   }
 `;
 
+const Spacing = styled('div')`
+  margin-top: 20px;
+  border-top: 1px solid #ccc;
+  height: 30px;
+  width: 100%;
+`;
+
 /**
  * For some reason, a node in a joblistingconnection can be null, and TS is not smart enough
  * to know that we filter it from the array, so
- * we define the type here, without `null`.
+ * we define the type here, without `null`.Fant du en interessant video?
  */
 export type JoblistingNode = NonNullable<
   NonNullable<
@@ -81,100 +90,164 @@ export type JoblistingNode = NonNullable<
 type Props = {
   root: SummerjobMarathon_root;
   other: SummerjobMarathon_other;
+  collaborators: SummerjobMarathon_collaborators;
   environment: Environment;
   variables: Variables;
   loading: boolean;
   loadingEnd: () => void;
   loadingStart: () => void;
   setCurrentNode: (open: JoblistingNode | null) => void;
+  setAllListings: (listings: Listing[] | null) => void;
   relay: RelayPaginationProp;
 };
 
-const ListRenderer = (props: Props): JSX.Element => (
-  <>
-    {!props.root && <LoadingIndicator />}
-    <InfiniteScroll
-      element="div"
-      hasMore={props.relay.hasMore()}
-      loadMore={(): void => {
-        if (
-          props.loading ||
-          !props.relay.hasMore() ||
-          props.relay.isLoading()
-        ) {
-          return;
-        }
+export type Listing = {
+  node: JoblistingNode;
+  noListing: boolean;
+};
 
-        props.loadingStart();
-        props.relay.loadMore(
-          30, // Fetch the next 30 feed items
-          (error) => {
-            props.loadingEnd();
+type GridProps = {
+  listings: Listing[];
+  setCurrentNode: Props['setCurrentNode'];
+  center?: boolean;
+};
+
+const GridRenderer = ({
+  listings,
+  setCurrentNode,
+  center,
+}: GridProps): JSX.Element => (
+  <JoblistingGrid center={center}>
+    {listings.map(({ node, noListing }) => (
+      <CompanyElement key={node.id}>
+        <NudgeDiv onClick={(): void => setCurrentNode(node)}>
+          <CompanyImage
+            src={node.company.logo || '/static/itdagene-gray.png'}
+          />
+        </NudgeDiv>
+        {noListing ? (
+          <a
+            href={node.company.url || ''}
+            target="_blank"
+            rel="nolink noreferrer"
+          >
+            <CompanyName>{node.company.name}</CompanyName>
+          </a>
+        ) : (
+          <Link
+            key={node.id}
+            href={{
+              pathname: '/jobb',
+              query: {
+                company: node.company.id,
+                companyName: node.company.name,
+              },
+            }}
+          >
+            <a>
+              <CompanyName>{node.company.name}</CompanyName>
+            </a>
+          </Link>
+        )}
+      </CompanyElement>
+    ))}
+  </JoblistingGrid>
+);
+
+const ListRenderer = (props: Props): JSX.Element => {
+  const allListings =
+    props.root &&
+    props.root.joblistings &&
+    props.root.joblistings.edges
+      .filter(
+        (e): e is { node: JoblistingNode; noListing: boolean } => e !== null
+      )
+      .concat(
+        props.other
+          ? (props.other.nodes as (JoblistingNode & {
+              noListing: boolean;
+            })[]).map((e) => ({
+              node: e,
+              noListing: true,
+            }))
+          : []
+      );
+
+  const mainCollaboratorListings = allListings?.filter(
+    (e) =>
+      e.node.company.id ===
+      props.collaborators.currentMetaData?.mainCollaborator?.id
+  );
+  const collaboratorListings = allListings?.filter((e) =>
+    props.collaborators.currentMetaData.collaborators?.some(
+      (c) => c.id === e.node.company.id
+    )
+  );
+
+  const restListings = allListings?.filter(
+    (e) =>
+      !mainCollaboratorListings?.concat(collaboratorListings || []).includes(e)
+  );
+
+  const { setAllListings } = props;
+
+  React.useEffect(() => setAllListings(allListings), [props.root, props.other]);
+
+  return (
+    <>
+      {!props.root && <LoadingIndicator />}
+      <InfiniteScroll
+        element="div"
+        hasMore={props.relay.hasMore()}
+        loadMore={(): void => {
+          if (
+            props.loading ||
+            !props.relay.hasMore() ||
+            props.relay.isLoading()
+          ) {
+            return;
           }
-        );
-      }}
-      threshold={50}
-      loader={<LoadingIndicator hideText noMargin />}
-    >
-      <JoblistingGrid>
-        {props.root &&
-          props.root.joblistings &&
-          props.root.joblistings.edges
-            .filter(
-              (e): e is { node: JoblistingNode; noListing: boolean } =>
-                e !== null
-            )
-            .concat(
-              props.other
-                ? (props.other.nodes as (JoblistingNode & {
-                    noListing: boolean;
-                  })[]).map((e) => ({
-                    node: e,
-                    noListing: true,
-                  }))
-                : []
-            )
-            .map(({ node, noListing }) => (
-              <CompanyElement key={node.id}>
-                <NudgeDiv onClick={(): void => props.setCurrentNode(node)}>
-                  <CompanyImage
-                    src={node.company.logo || '/static/itdagene-gray.png'}
-                  />
-                </NudgeDiv>
-                {noListing ? (
-                  <a
-                    href={node.company.url || ''}
-                    target="_blank"
-                    rel="nolink noreferrer"
-                  >
-                    <CompanyName>{node.company.name}</CompanyName>
-                  </a>
-                ) : (
-                  <Link
-                    key={node.id}
-                    href={{
-                      pathname: '/jobb',
-                      query: {
-                        company: node.company.id,
-                        companyName: node.company.name,
-                      },
-                    }}
-                  >
-                    <a>
-                      <CompanyName>{node.company.name}</CompanyName>
-                    </a>
-                  </Link>
-                )}
-              </CompanyElement>
-            ))}
 
+          props.loadingStart();
+          props.relay.loadMore(
+            30, // Fetch the next 30 feed items
+            (error) => {
+              props.loadingEnd();
+            }
+          );
+        }}
+        threshold={50}
+        loader={<LoadingIndicator hideText noMargin />}
+      >
+        {mainCollaboratorListings && (
+          <GridRenderer
+            center
+            listings={mainCollaboratorListings}
+            setCurrentNode={props.setCurrentNode}
+          />
+        )}
+        {collaboratorListings && (
+          <>
+            <GridRenderer
+              listings={collaboratorListings}
+              setCurrentNode={props.setCurrentNode}
+            />
+            <Spacing />
+          </>
+        )}
+        {restListings && (
+          <GridRenderer
+            listings={restListings}
+            setCurrentNode={props.setCurrentNode}
+          />
+        )}
         {props.root?.joblistings?.edges.length === 0 && (
           <h2> Ingen annonser :( </h2>
         )}
-      </JoblistingGrid>
-    </InfiniteScroll>
-  </>
-);
+      </InfiniteScroll>
+    </>
+  );
+};
 
 export const SummerjobMarathon = createPaginationContainer(
   ListRenderer,
@@ -241,6 +314,18 @@ export const SummerjobMarathon = createPaginationContainer(
               id
               logo(width: 800, height: 260)
             }
+          }
+        }
+      }
+    `,
+    collaborators: graphql`
+      fragment SummerjobMarathon_collaborators on Query {
+        currentMetaData {
+          collaborators {
+            id
+          }
+          mainCollaborator {
+            id
           }
         }
       }

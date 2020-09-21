@@ -6,11 +6,15 @@ import SummerjobMarathonContainer, {
   SummerjobMarathon,
   query,
   JoblistingNode,
+  Listing,
 } from '../components/SummerjobMarathon';
+import Flex, { FlexItem } from 'styled-flex-component';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import { SummerjobMarathon_other } from '../__generated__/SummerjobMarathon_other.graphql';
 import withData, { WithDataProps } from '../lib/withData';
 import Layout from '../components/Layout';
+import styled from 'styled-components';
+import { itdageneBlue } from '../utils/colors';
 
 type RenderProps = WithDataProps<
   SummerjobMarathon_root & SummerjobMarathon_other
@@ -19,6 +23,7 @@ type RenderProps = WithDataProps<
 type State = {
   loading: boolean;
   currentNode: JoblistingNode | null;
+  listings: Listing[] | null;
 };
 
 const customStyles = {
@@ -48,8 +53,17 @@ const customStyles = {
   },
 };
 
+const PlayButton = styled('div')`
+  padding: 8px;
+  background-color: ${itdageneBlue};
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+`;
+
 class Index extends React.Component<RenderProps, State> {
-  state: State = { loading: false, currentNode: null };
+  state: State = { loading: false, currentNode: null, listings: null };
   player: React.Ref<any> = null;
 
   loadingStart = (): void =>
@@ -58,7 +72,37 @@ class Index extends React.Component<RenderProps, State> {
     this.setState((prevState) => ({ ...prevState, loading: false }));
   setCurrentNode = (open: JoblistingNode | null): void => {
     this.setState((prevState) => ({ ...prevState, currentNode: open }));
-    setTimeout(() => this.player?.play(), 500);
+    setTimeout(() => {
+      this.player?.play();
+      this.player?.subscribeToStateChange(this.handleVideoState.bind(this));
+    }, 500);
+  };
+
+  playNext = (currentSrc: string): void => {
+    if (this.state.listings) {
+      const currentIndex = -1;
+      if (currentSrc) {
+        const currentIndex = this.state.listings.findIndex(
+          (l) => l.node.videoUrl === currentSrc
+        );
+        if (currentIndex === this.state.listings.length - 1) {
+          return;
+        }
+      }
+      const next = this.state.listings[currentIndex + 1];
+      this.setState({ currentNode: next.node });
+      setTimeout(() => this.player?.play(), 500);
+    }
+  };
+
+  handleVideoState = (state: any) => {
+    if (state.ended) {
+      this.playNext(state.currentSrc);
+    }
+  };
+
+  setAllListings = (listings: Listing[] | null): void => {
+    this.setState({ listings });
   };
 
   componentDidMount(): void {
@@ -96,6 +140,11 @@ class Index extends React.Component<RenderProps, State> {
             se hvilke jobbutlysninger bedriften har!
           </p>
         </div>
+        <Flex row justifyCenter>
+          <FlexItem>
+            <PlayButton onClick={this.playNext}>Spill av alle</PlayButton>
+          </FlexItem>
+        </Flex>
         <SummerjobMarathonContainer
           environment={environment}
           variables={variables}
@@ -124,9 +173,11 @@ class Index extends React.Component<RenderProps, State> {
               loadingStart={this.loadingStart}
               loadingEnd={this.loadingEnd}
               setCurrentNode={this.setCurrentNode}
+              setAllListings={this.setAllListings}
               /* TODO FIXME Fragment types are not properly handled by WithData */
               root={(props as unknown) as FragmentRef<typeof props>}
               other={props as FragmentRef<typeof props>}
+              collaborators={props as FragmentRef<typeof props>}
             />
           )}
         </SummerjobMarathonContainer>
