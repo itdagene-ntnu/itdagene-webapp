@@ -73,16 +73,18 @@ class Index extends React.Component<RenderProps, State> {
   setCurrentNode = (open: JoblistingNode | null): void => {
     this.setState((prevState) => ({ ...prevState, currentNode: open }));
     setTimeout(() => {
+      // @ts-ignore
       this.player?.play();
+      // @ts-ignore
       this.player?.subscribeToStateChange(this.handleVideoState.bind(this));
     }, 500);
   };
 
   playNext = (currentSrc: string): void => {
     if (this.state.listings) {
-      const currentIndex = -1;
+      let currentIndex = -1;
       if (currentSrc) {
-        const currentIndex = this.state.listings.findIndex(
+        currentIndex = this.state.listings.findIndex(
           (l) => l.node.videoUrl === currentSrc
         );
         if (currentIndex === this.state.listings.length - 1) {
@@ -91,6 +93,7 @@ class Index extends React.Component<RenderProps, State> {
       }
       const next = this.state.listings[currentIndex + 1];
       this.setState({ currentNode: next.node });
+      // @ts-ignore
       setTimeout(() => this.player?.play(), 500);
     }
   };
@@ -152,6 +155,7 @@ class Index extends React.Component<RenderProps, State> {
           <Modal
             isOpen={this.state.currentNode !== null}
             onRequestClose={(): void => this.setCurrentNode(null)}
+            // @ts-ignore
             style={customStyles}
             contentLabel="Example Modal"
           >
@@ -159,7 +163,7 @@ class Index extends React.Component<RenderProps, State> {
               <Player
                 autoplay
                 src={this.state.currentNode.videoUrl}
-                ref={(player): void => {
+                ref={(player: any): void => {
                   this.player = player;
                 }}
               />
