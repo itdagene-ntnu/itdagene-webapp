@@ -13,7 +13,7 @@ const AnnouncementBanner = (): JSX.Element => {
               <Info>
                 <StyledHeader>
                   Få en introduksjon til neste års sommerjobber gjennom årets
-                  sommmerjobb-maraton
+                  sommmerjobbmaraton
                 </StyledHeader>
               </Info>
             </StyledRow>

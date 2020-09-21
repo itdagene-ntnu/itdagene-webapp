@@ -117,7 +117,7 @@ class Index extends React.Component<RenderProps, State> {
     return (
       <Layout
         customOpengraphMetadata={(): { title: string } => ({
-          title: 'Sommerjob maraton',
+          title: 'Sommerjobbmaraton',
         })}
         props
         noLoading
@@ -125,7 +125,7 @@ class Index extends React.Component<RenderProps, State> {
       >
         <div>
           <h1>
-            Velkommen til sommerjobb-maraton 2020
+            Velkommen til sommerjobbmaraton 2020
             <span aria-label="Running woman" role="img">
               🏃‍♀️
             </span>
