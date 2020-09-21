@@ -27,6 +27,7 @@ const AnnouncementBanner = (): JSX.Element => {
 
 const StyledImg = styled.img`
   max-width: 130px;
+  max-height: 130px;
   flex-grow: 1;
 `;
 
