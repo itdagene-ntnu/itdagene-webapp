@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 
-const AnnouncementBanner = () => {
+const AnnouncementBanner = (): JSX.Element => {
   return (
     <AnnouncementContainer>
       <InfoContainer>

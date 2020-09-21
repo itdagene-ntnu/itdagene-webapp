@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { NoBulletUl } from '../Styled';
 import dayjs from 'dayjs';
 import { lightGrey } from '../../utils/colors';
+import { Player } from 'video-react';
 
 type Props = {
   joblisting: JoblistingView_joblisting;
@@ -30,6 +31,10 @@ const Sidebar = styled('div')`
   #border-left: 1px solid ${lightGrey};
   margin: 20px 20px 20px 20px;
   padding: 0 20px;
+`;
+
+const PlayerView = styled('div')`
+  margin-bottom: 30px;
 `;
 
 const List = ({
@@ -159,6 +164,15 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
       <FlexItem basis="600px" grow={3}>
         <Flex column>
           <ReactMarkdown source={joblisting.description || undefined} />
+
+          {joblisting.videoUrl && (
+            <PlayerView>
+              <h3>
+                {joblisting.company.name} sin video fra sommerjobb-maraton 2020
+              </h3>
+              <Player playsInline src={joblisting.videoUrl} />
+            </PlayerView>
+          )}
         </Flex>
       </FlexItem>
       <FlexItem basis="300px" grow={1}>
@@ -199,6 +213,7 @@ export default createFragmentContainer(Joblisting, {
       toYear
       url
       dateCreated
+      videoUrl
     }
   `,
 });
