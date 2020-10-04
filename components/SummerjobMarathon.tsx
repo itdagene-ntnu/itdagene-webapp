@@ -127,7 +127,7 @@ const GridRenderer = ({
         </NudgeDiv>
         {noListing ? (
           <a
-            href={node.company.url || ''}
+            href={node.url || node.company.url || ''}
             target="_blank"
             rel="nolink noreferrer"
           >
