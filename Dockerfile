@@ -22,7 +22,6 @@ ENV COMMIT_SHA ${COMMIT_SHA}
 
 COPY . /app
 
-RUN mkdir schema
 RUN yarn schema:prod
 RUN yarn relay
 RUN yarn build
