@@ -1,4 +1,5 @@
 import Document, {
+  Html,
   Head,
   Main,
   NextScript,
@@ -38,12 +39,8 @@ export default class Default extends Document<{
   render(): JSX.Element {
     const { GA_TRACKING_ID } = process.env;
     return (
-      <html lang="nb">
+      <Html lang="nb">
         <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1"
-          />
           <link
             href="https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css"
             rel="stylesheet"
@@ -178,7 +175,7 @@ export default class Default extends Document<{
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }
