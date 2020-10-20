@@ -51,7 +51,8 @@ export const query = graphql`
 const JoblistingGrid = styled(Flex)`
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
-  display: ${(props): string => (props.center ? 'flex' : 'grid')};
+  display: ${(props: { center?: boolean }): string =>
+    props.center ? 'flex' : 'grid'};
 `;
 
 const CompanyElement = styled('div')`

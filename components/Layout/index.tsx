@@ -20,7 +20,7 @@ const MainFlex = styled('div')`
 const Content = styled('div')`
   min-height: 50vh;
   flex: 1;
-  ${({ center = false }: { center?: boolean }): any =>
+  ${({ center = false }: { center?: boolean; responsive?: boolean }): any =>
     center &&
     css`
       display: flex;
@@ -28,7 +28,7 @@ const Content = styled('div')`
       align-items: center;
       flex-direction: column;
     `};
-  ${({ responsive = false }: { responsive?: boolean }): any =>
+  ${({ responsive = false }: { center?: boolean; responsive?: boolean }): any =>
     responsive &&
     css`
       @media only screen and (min-width: 1200px) {
