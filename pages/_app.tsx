@@ -1,5 +1,6 @@
 import React from 'react';
 import App from 'next/app';
+import Head from 'next/head';
 import * as Sentry from '@sentry/node';
 
 // All css imports go here
@@ -22,6 +23,16 @@ export default class MyApp extends App {
     const { err } = this.props;
     const modifiedPageProps = { ...pageProps, err };
 
-    return <Component {...modifiedPageProps} />;
+    return (
+      <>
+        <Head>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1"
+          />
+        </Head>
+        <Component {...modifiedPageProps} />
+      </>
+    );
   }
 }
