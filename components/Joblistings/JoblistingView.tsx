@@ -157,7 +157,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <div style={{ maxWidth: 1000, margin: 'auto' }}>
       <Title>{joblisting.title}</Title>
     </div>
-    <CompanyDesc style={{ maxWith: 960, fontSize: '1.3rem' }}>
+    <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
       <ReactMarkdown source={joblisting.company.description} />
     </CompanyDesc>
     <Flex wrapReverse>
