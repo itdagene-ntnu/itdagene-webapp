@@ -81,7 +81,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
     <RootContainer>
       <Video
         autoPlay
-        autostart
+        preload="auto"
         className="cover-video"
         loop
         muted
