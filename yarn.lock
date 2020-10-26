@@ -2218,10 +2218,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-relay@^7.0.12":
-  version "7.0.12"
-  resolved "https://registry.yarnpkg.com/@types/react-relay/-/react-relay-7.0.12.tgz#ed4a16c5855e0e3e0faa05f2be78c037ce6a8bcc"
-  integrity sha512-kae/QCWcF4K0y+RAR9oz1KdXIr9ElUXjCkTJXQgKGTYSbuyjHCJwiV04ChVfZb7/vaV6xv8Vr7XkK7E7cht2EQ==
+"@types/react-relay@^7.0.15":
+  version "7.0.15"
+  resolved "https://registry.yarnpkg.com/@types/react-relay/-/react-relay-7.0.15.tgz#89f95559942a5096d8f2ebe92da7ed55705ff142"
+  integrity sha512-NdZZJ1Cc6iWXOYp+Zf45krHDqZwJpn2BTu3F1zRxDefYBqKwEOPaCVFOYLsQb/O325eJVW3RHrLoBEYO0Y+yyQ==
   dependencies:
     "@types/react" "*"
     "@types/relay-runtime" "*"
