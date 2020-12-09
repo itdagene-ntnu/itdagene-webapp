@@ -163,7 +163,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <Flex wrapReverse>
       <FlexItem basis="600px" grow={3}>
         <Flex column>
-          <ReactMarkdown source={joblisting.description || undefined} />
+          <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
 
           {joblisting.videoUrl && (
             <PlayerView>
