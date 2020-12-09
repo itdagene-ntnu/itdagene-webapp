@@ -9055,10 +9055,10 @@ relay-compiler@9.1.0:
     signedsource "^1.0.0"
     yargs "^14.2.0"
 
-relay-hooks@3.5.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/relay-hooks/-/relay-hooks-3.5.0.tgz#31828b064518fdbd728f785386b280e2d405d997"
-  integrity sha512-bnaNqdIC2KTRWQgAWnC0AqgidZULRk7fwwmvC4zkAAO3/vfD2SrgsK62Pq5FYQK3lknbWHPxR6uBH7F6QCXUBw==
+relay-hooks@3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/relay-hooks/-/relay-hooks-3.7.0.tgz#4ed95494c5bfb82142507d1dc66d856288bc7e2e"
+  integrity sha512-tZnS2rjeOvWpMAKIGS0w09InX//yigtyNg2ic43aAAZaLnjnp6iCJyn7HXwPx3SO/5tCymjgF/hMBicipZJnTw==
   dependencies:
     "@restart/hooks" "^0.3.1"
     fbjs "^1.0.0"
