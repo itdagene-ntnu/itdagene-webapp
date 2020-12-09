@@ -27,7 +27,7 @@
     "babel-polyfill": "^6.26.0",
     "dayjs": "^1.9.3",
     "graphql": "^14.6.0",
-    "isomorphic-unfetch": "^3.0.0",
+    "isomorphic-unfetch": "^3.1.0",
     "lodash": "^4.17.20",
     "next": "^9.5.5",
     "rc-slider": "^9.5.3",
