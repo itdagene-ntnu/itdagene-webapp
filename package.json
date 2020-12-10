@@ -54,7 +54,7 @@
     "@babel/core": "^7.11.1",
     "@types/lodash": "^4.14.161",
     "@types/rc-slider": "^8.6.6",
-    "@types/react": "^16.9.49",
+    "@types/react": "^17.0.0",
     "@types/react-hamburger-menu": "^0.0.3",
     "@types/react-infinite-scroller": "^1.2.1",
     "@types/react-modal": "^3.10.6",
