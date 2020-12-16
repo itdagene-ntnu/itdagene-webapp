@@ -5,7 +5,7 @@ import {
   Variables,
   RelayPaginationProp,
 } from 'react-relay';
-import { Image } from './Styled';
+import { Image, NudgeDiv } from './Styled';
 import Link from 'next/link';
 import * as React from 'react';
 import Flex, { FlexItem } from 'styled-flex-component';
@@ -63,12 +63,6 @@ const CompanyElement = styled('div')`
   }
 `;
 
-const NudgeDiv = styled('div')`
-  transition: 0.3s;
-  &:hover {
-    transform: scale(1.1);
-  }
-`;
 
 const Spacing = styled('div')`
   margin-top: 20px;
@@ -121,7 +115,7 @@ const GridRenderer = ({
   <JoblistingGrid center={center}>
     {listings.map(({ node, noListing }) => (
       <CompanyElement key={node.id}>
-        <NudgeDiv onClick={(): void => setCurrentNode(node)}>
+        <NudgeDiv scale={1.1} onClick={(): void => setCurrentNode(node)}>
           <CompanyImage
             src={node.company.logo || '/static/itdagene-gray.png'}
           />

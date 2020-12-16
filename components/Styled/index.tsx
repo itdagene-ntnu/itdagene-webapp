@@ -95,3 +95,10 @@ export const Divider = styled.hr`
   background-color: #f1f1f1;
   flex-shrink: 0;
 `;
+
+export const NudgeDiv = styled('div')<{ scale: number }>`
+  transition: 0.1s;
+  &:hover {
+    transform: scale(${(props) => props.scale});
+  }
+`;
