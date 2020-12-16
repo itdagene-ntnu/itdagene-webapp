@@ -123,7 +123,10 @@ export const Layout = <T extends {}>({
         <HeaderMenu />
         <Content center>
           <h1>Det har skjedd en feil...</h1>
-          <h2>Dette er absolutt ikke bra :(</h2>
+          <h2>
+            Forsøk å refreshe siden eller ta kontakt med <b>web@itdagene.no</b>{' '}
+            dersom feilen vedvarer
+          </h2>
         </Content>
       </Wrapper>
     );
