@@ -2,21 +2,21 @@ import * as React from 'react';
 import { graphql } from 'react-relay';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import PageView from '../../components/PageView';
-import Flex, { FlexItem } from 'styled-flex-component';
-import { groupBy, sortBy } from 'lodash';
-import { program_QueryResponse } from '../../__generated__/program_Query.graphql';
 import styled from 'styled-components';
 
 import stands from '../../testing/companyMock';
 import StandCard from '../../components/Stands/StandCard';
+import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 
 const Index = ({
   error,
   props,
-}: WithDataAndLayoutProps<program_QueryResponse>): JSX.Element => {
+}: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
   return (
     <>
-      {props.programPage && <PageView hideContent page={props.programPage} />}
+      {props.stands && (
+        <PageView hideContent hideDate hideTitle page={props.stands} />
+      )}
 
       <StandGrid>
         {stands.map((stand) => (
@@ -34,33 +34,17 @@ const Index = ({
 
 const StandGrid = styled('div')`
   display: grid;
-  /* justify-content: flex-start; */
   margin: 50px 0;
   width: 100%;
   gap: 25px;
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
 `;
 
+// TODO: This query will need to be changed to reflect the new stands-query
 export default withDataAndLayout(Index, {
   query: graphql`
-    query program_Query {
-      events {
-        title
-        id
-        timeStart
-        timeEnd
-        description
-        location
-        date
-        type
-        company {
-          id
-          name
-        }
-        usesTickets
-        maxParticipants
-      }
-      programPage: page(slug: "program") {
+    query stands_Query {
+      stands: page(slug: "stands") {
         ...PageView_page
         ...metadata_metadata
       }
@@ -69,6 +53,6 @@ export default withDataAndLayout(Index, {
   variables: {},
   layout: ({ props, error }) => ({
     responsive: true,
-    metadata: props && props.programPage,
+    metadata: props && props.stands,
   }),
 });
