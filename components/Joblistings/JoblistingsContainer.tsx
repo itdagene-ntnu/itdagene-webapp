@@ -213,16 +213,16 @@ export const JoblistingsList = createPaginationContainer(
   {
     root: graphql`
       fragment JoblistingsContainer_root on Query
-        @argumentDefinitions(
-          count: { type: "Int", defaultValue: 30 }
-          cursor: { type: "String" }
-          type: { type: "String" }
-          fromYear: { type: "Float" }
-          toYear: { type: "Float" }
-          company: { type: "ID" }
-          towns: { type: "[ID]", defaultValue: [] }
-          orderBy: { type: "[OrderByJoblistingType]" }
-        ) {
+      @argumentDefinitions(
+        count: { type: "Int", defaultValue: 30 }
+        cursor: { type: "String" }
+        type: { type: "String" }
+        fromYear: { type: "Float" }
+        toYear: { type: "Float" }
+        company: { type: "ID" }
+        towns: { type: "[ID]", defaultValue: [] }
+        orderBy: { type: "[OrderByJoblistingType]" }
+      ) {
         joblistings(
           first: $count
           after: $cursor
