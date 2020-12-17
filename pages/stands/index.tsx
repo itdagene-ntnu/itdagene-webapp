@@ -25,6 +25,14 @@ const Index = ({
             active={stand.active}
             company={stand.company}
             id={stand.id}
+            // TODO: Decide if it's better to perform an independant query
+            events={
+              !props.events
+                ? []
+                : props.events.filter((event) => {
+                    return event.company?.name == stand.company.name;
+                  })
+            }
           />
         ))}
       </StandGrid>
@@ -44,6 +52,22 @@ const StandGrid = styled('div')`
 export default withDataAndLayout(Index, {
   query: graphql`
     query stands_Query {
+      events {
+        title
+        id
+        timeStart
+        timeEnd
+        description
+        location
+        date
+        type
+        company {
+          id
+          name
+        }
+        usesTickets
+        maxParticipants
+      }
       stands: page(slug: "stands") {
         ...PageView_page
         ...metadata_metadata
