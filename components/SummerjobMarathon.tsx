@@ -255,10 +255,10 @@ export const SummerjobMarathon = createPaginationContainer(
   {
     root: graphql`
       fragment SummerjobMarathon_root on Query
-        @argumentDefinitions(
-          count: { type: "Int", defaultValue: 50 }
-          cursor: { type: "String" }
-        ) {
+      @argumentDefinitions(
+        count: { type: "Int", defaultValue: 50 }
+        cursor: { type: "String" }
+      ) {
         joblistings(first: $count, after: $cursor, isSummerjobMarathon: true)
           @connection(key: "Joblistings_joblistings") {
           edges {
