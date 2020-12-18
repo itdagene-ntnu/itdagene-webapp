@@ -10,6 +10,8 @@ type Item = {
   href: string;
   as: string;
   key: any;
+  active?: (key: any) => boolean;
+  onClick?: (key: any) => void;
 };
 
 type Props = {
@@ -52,7 +54,7 @@ const StyledFlex = styled(Flex)`
 
 const NavbarItem = withRouter(
   ({ item, router }: { item: Item; router: NextRouter }) => {
-    const isActive = router.asPath === item.as;
+    const isActive = item.active? item.active(item.key) :  router.asPath === item.as;
     return (
       <FlexItem>
         {!isActive ? (
