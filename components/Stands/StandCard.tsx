@@ -10,13 +10,15 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
 
+type Package = "standard" | "sp" | "hsp";
 interface IStandCard {
   active: boolean;
-  company: Company;
+  company: any;
   id: string;
   // TODO: Import the Event-type
-  events: any[];
+  events: any;
   time: number;
+  type: Package;
 }
 
 interface ILive {
@@ -48,7 +50,7 @@ const eventTime = (event: any) => {
     ? `${event.timeStart.slice(0, 5)} - ${event.timeEnd.slice(0, 5)}`
     : '';
   const eventTitle = _.truncate(event ? event.title : '💁🏼‍♀️', {
-    length: 24,
+    length: 50,
   });
   return {
     timeRange,
@@ -56,7 +58,7 @@ const eventTime = (event: any) => {
   };
 };
 
-const StandCard = ({ active, company, id, events, time }: IStandCard) => {
+const StandCard = ({ active, company, id, events, time, type }: IStandCard) => {
   const [currentEvent, setCurrentEvent] = useState();
   const router = useRouter();
 
@@ -70,7 +72,8 @@ const StandCard = ({ active, company, id, events, time }: IStandCard) => {
   }, [time]);
 
   return (
-    <CardContainer scale={1.03} onClick={handleRedirect}>
+    type === "standard" ?
+    <StandardContainer scale={1.03} onClick={handleRedirect}>
       <FirstRow>
         <CompanyImgContainer>
           <CompanyImg src={company.logo} />
@@ -82,10 +85,26 @@ const StandCard = ({ active, company, id, events, time }: IStandCard) => {
         <SubHeader>{company.name}</SubHeader>
         <CurrentEvent>
           <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
-          <span>{eventTime(currentEvent).eventTitle}</span>
+          <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
         </CurrentEvent>
       </CompanyInfo>
-    </CardContainer>
+    </StandardContainer> :
+    <SPContainer scale={1.03} onClick={handleRedirect}>
+      <FirstRow>
+        <CompanyImgContainer>
+          <CompanyImg src={company.logo} />
+        </CompanyImgContainer>
+        <Live active={active} />
+      </FirstRow>
+      <Divider />
+      <CompanyInfo>
+        <SubHeader>{company.name}</SubHeader>
+        <CurrentEvent>
+          <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
+          <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
+        </CurrentEvent>
+      </CompanyInfo>
+    </SPContainer>
   );
 };
 
@@ -101,11 +120,26 @@ const Divider = styled.hr`
   flex-shrink: 0;
 `;
 
-const CardContainer = styled(NudgeDiv)`
+const EventTitle = styled.span`
+`;
+
+const StandardContainer = styled(NudgeDiv)`
   display: flex;
   flex-direction: column;
   max-width: 293px;
-  height: 155px;
+  height: 180px;
+
+  background: #ffffff;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 7px;
+  padding: 15px;
+`;
+
+const SPContainer = styled(StandardContainer)`
+  display: flex;
+  flex-direction: column;
+  max-width: 100vw;
+  height: 180px;
 
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
@@ -154,6 +188,7 @@ const LiveContainer = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #ffffff;
 
   height: 40%;
 
