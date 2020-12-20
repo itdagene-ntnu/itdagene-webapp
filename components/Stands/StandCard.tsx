@@ -1,25 +1,63 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Company } from '../../testing/companyMock';
 import * as _ from 'lodash';
 import { NudgeDiv } from '../Styled';
 import { useRouter } from 'next/router';
+import dayjs from 'dayjs';
+
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 interface IStandCard {
   active: boolean;
   company: Company;
   id: string;
-  events?: any[]
+  // TODO: Import the Event-type
+  events: any[];
+  time: number;
 }
 
 interface ILive {
   active: boolean;
 }
 
-const StandCard = (
-  { active, company, id, events }: IStandCard,
-  // { props, error }: WithDataProps<StandCard_QueryResponse>
+const timeIsBetween = (
+  time: number,
+  start: string,
+  end: string,
+  date: string
 ) => {
+  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
+  const e = dayjs(`${end} ${date}`, 'HH:mm:ss YYYY-MM-DD');
+  const now = dayjs(time);
+
+  return s.isBefore(now) && e.isAfter(now);
+};
+
+const getCurrentEvent = (events: any[], time: number) => {
+  const currentEvent = events.find((event) =>
+    timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
+  );
+  return currentEvent ?? null;
+};
+
+const eventTime = (event: any) => {
+  const timeRange = event
+    ? `${event.timeStart.slice(0, 5)} - ${event.timeEnd.slice(0, 5)}`
+    : '';
+  const eventTitle = _.truncate(event ? event.title : '💁🏼‍♀️', {
+    length: 24,
+  });
+  return {
+    timeRange,
+    eventTitle,
+  };
+};
+
+const StandCard = ({ active, company, id, events, time }: IStandCard) => {
+  const [currentEvent, setCurrentEvent] = useState();
   const router = useRouter();
 
   const handleRedirect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -27,13 +65,12 @@ const StandCard = (
     router.push(`/stands/[id]`, `/stands/${id}`);
   };
 
-  // TODO: Create a utility-function to find the event between timeStart - timeEnd
-  const currentEvent = events!.length !== 0 ? events!.find(event => event.timeEnd === "13:15:00") : null
+  useEffect(() => {
+    setCurrentEvent(() => getCurrentEvent(events, time));
+  }, [time]);
 
   return (
-    <CardContainer scale={1.03} 
-    onClick={handleRedirect}
-    >
+    <CardContainer scale={1.03} onClick={handleRedirect}>
       <FirstRow>
         <CompanyImgContainer>
           <CompanyImg src={company.logo} />
@@ -44,15 +81,8 @@ const StandCard = (
       <CompanyInfo>
         <SubHeader>{company.name}</SubHeader>
         <CurrentEvent>
-          <TimeSlot>{currentEvent ? `${currentEvent.timeStart.slice(
-                        0,
-                        5
-                      )} - ${currentEvent.timeEnd.slice(0, 5)}` : ""}</TimeSlot>
-          <span>
-            {_.truncate(currentEvent ? currentEvent.title : "💁🏼‍♀️", {
-              length: 24,
-            })}
-          </span>
+          <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
+          <span>{eventTime(currentEvent).eventTitle}</span>
         </CurrentEvent>
       </CompanyInfo>
     </CardContainer>
@@ -137,31 +167,4 @@ const LiveContainer = styled.div<{ active: boolean }>`
   text-decoration: ${(props) => (props.active ? 'none' : 'line-through')};
 `;
 
-export default StandCard
-
-// export default withData(StandCard, {
-//   query: graphql`
-//     query StandCard_Query($companyName: String) {
-//       events(companyName: $companyName) {
-//         title
-//         id
-//         timeStart
-//         timeEnd
-//         description
-//         location
-//         date
-//         type
-//         company {
-//           id
-//           name
-//         }
-//         usesTickets
-//         maxParticipants
-//       }
-//     }
-//   `,
-//   variables: ({company}: IStandCard) => ({
-//     "companyName": company
-//   }),
-// });
-
+export default StandCard;
