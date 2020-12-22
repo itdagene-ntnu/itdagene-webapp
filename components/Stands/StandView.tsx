@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandView_stand } from '../../__generated__/StandView_stand.graphql';
@@ -25,8 +25,8 @@ export const Title = styled('h1')`
 `;
 
 const LiveContainer = styled.div`
-display: flex;
-`
+  display: flex;
+`;
 
 const PlayerView = styled('div')`
   margin-bottom: 30px;
@@ -44,7 +44,7 @@ const QAView = styled.div`
   background-color: #222;
   border: 1px solid #ddd;
   color: white;
-`
+`;
 
 const GrayText = styled('div')`
   color: gray;
@@ -70,50 +70,63 @@ const Back = (): JSX.Element => (
   </Flex>
 );
 
-const navBarItems = (stand: StandView_stand) => [
-  {
-    text: `Om ${stand.company.name}`,
-    href: "",
-    as: "",
-    key: "om",
-  }
-]
+const Stand = ({ stand }: Props): JSX.Element => {
+  const commonItemObj = {
+    active: (key: string): boolean => currentPage === key,
+    onClick: (key: string): void => setCurrentPage(key),
+  };
 
-const Stand = ({ stand }: Props): JSX.Element => (
-  <>
-    <Back />
-    <div>
-      <img
-        src={stand.company.logo || undefined}
-        style={{ display: 'block', margin: '25px 0 25px' }}
-        alt={`${stand.company.name} logo`}
-      />
-    </div>
-    <LiveContainer>
-      <PlayerView>
-        <h3>{stand.company.name}</h3>
-        {/*<Player playsInline src={stand.videoUrl} />*/}
-      </PlayerView>
-    <QAView>
-      {/*TODO: Slido here*/}
-      Slido
-      </QAView>
+  const navBarItems: React.ComponentProps<typeof NavBar>['items'] = [
+    {
+      text: `Om ${stand.company.name}`,
+      key: 'om',
+      ...commonItemObj,
+    },
+    {
+      text: `Programmet til ${stand.company.name}`,
+      key: 'program',
+      ...commonItemObj,
+    },
+  ];
+
+  const [currentPage, setCurrentPage] = useState(navBarItems[0].key);
+
+  return (
+    <>
+      <Back />
+      <div>
+        <img
+          src={stand.company.logo || undefined}
+          style={{ display: 'block', margin: '25px 0 25px' }}
+          alt={`${stand.company.name} logo`}
+        />
+      </div>
+      <LiveContainer>
+        <PlayerView>
+          <h3>{stand.company.name}</h3>
+          {/*<Player playsInline src={stand.videoUrl} />*/}
+        </PlayerView>
+        <QAView>
+          {/*TODO: Slido here*/}
+          Slido
+        </QAView>
       </LiveContainer>
-    <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
-      <ReactMarkdown source={stand.description} />
-    </CompanyDesc>
+      <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
+        <ReactMarkdown source={stand.description} />
+      </CompanyDesc>
 
-    <NavBar items={navBarItems(stand)}/>
+      <NavBar items={navBarItems} />
 
-    <Flex wrapReverse>
-      <FlexItem basis="600px" grow={3}>
-        <Flex column>
-          <ReactMarkdown>{stand.description || ''}</ReactMarkdown>
-        </Flex>
-      </FlexItem>
-    </Flex>
-  </>
-);
+      <Flex wrapReverse>
+        <FlexItem basis="600px" grow={3}>
+          <Flex column>
+            <ReactMarkdown>{stand.description || ''}</ReactMarkdown>
+          </Flex>
+        </FlexItem>
+      </Flex>
+    </>
+  );
+};
 
 export default createFragmentContainer(Stand, {
   stand: graphql`

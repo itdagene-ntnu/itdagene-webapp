@@ -5,14 +5,21 @@ import { withRouter, NextRouter } from 'next/router';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { lightGrey } from '../utils/colors';
 
-type Item = {
+type ItemProps = {
   text: string;
+  key: any;
+};
+
+type LinkItem = {
   href: string;
   as: string;
-  key: any;
-  active?: (key: any) => boolean;
-  onClick?: (key: any) => void;
-};
+} & ItemProps;
+type HandledItem = {
+  active: (key: any) => boolean;
+  onClick: (key: any) => void;
+} & ItemProps;
+
+type Item = LinkItem | HandledItem;
 
 type Props = {
   items: Item[];
@@ -52,17 +59,42 @@ const StyledFlex = styled(Flex)`
   }
 `;
 
+const Item = styled.div`
+  cursor: pointer;
+  color: #0778bc;
+  &:hover {
+    color: #41c0eb;
+  }
+`;
+
+const ItemWrapper = ({
+  item,
+  children,
+}: React.PropsWithChildren<{ item: Item }>): JSX.Element => {
+  const isLink = (item as LinkItem).href !== undefined;
+  return isLink ? (
+    <Link href={(item as LinkItem).href} as={(item as LinkItem).as}>
+      <a>{children}</a>
+    </Link>
+  ) : (
+    <Item onClick={(): void => (item as HandledItem).onClick(item.key)}>
+      {children}
+    </Item>
+  );
+};
+
 const NavbarItem = withRouter(
   ({ item, router }: { item: Item; router: NextRouter }) => {
-    const isActive = item.active? item.active(item.key) :  router.asPath === item.as;
+    const isLink = (item as LinkItem).href !== undefined;
+    const isActive = isLink
+      ? router.asPath === (item as LinkItem).as
+      : (item as HandledItem).active(item.key);
     return (
       <FlexItem>
         {!isActive ? (
-          <Link href={item.href} as={item.as}>
-            <a>
-              <StyledNavbarItem>{item.text}</StyledNavbarItem>
-            </a>
-          </Link>
+          <ItemWrapper item={item}>
+            <StyledNavbarItem>{item.text}</StyledNavbarItem>
+          </ItemWrapper>
         ) : (
           <StyledNavbarItem>{item.text}</StyledNavbarItem>
         )}
