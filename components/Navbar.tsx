@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
 import Flex, { FlexItem } from 'styled-flex-component';
-import { lightGrey } from '../utils/colors';
+import { lightGrey, itdageneBlue, itdageneLightBlue } from '../utils/colors';
 
 type ItemProps = {
   text: string;
@@ -61,9 +61,9 @@ const StyledFlex = styled(Flex)`
 
 const Item = styled.div`
   cursor: pointer;
-  color: #0778bc;
+  color: ${itdageneBlue};
   &:hover {
-    color: #41c0eb;
+    color: ${itdageneLightBlue};
   }
 `;
 

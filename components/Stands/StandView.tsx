@@ -3,12 +3,10 @@ import Link from 'next/link';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandView_stand } from '../../__generated__/StandView_stand.graphql';
 import Flex, { FlexItem } from 'styled-flex-component';
-import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
-import { lightGrey } from '../../utils/colors';
-import { Player } from 'video-react';
-
 import NavBar from '../Navbar';
+import AboutPage from './AboutStand';
+import ProgramPage from './StandProgram';
 
 type Props = {
   stand: StandView_stand;
@@ -46,15 +44,6 @@ const QAView = styled.div`
   color: white;
 `;
 
-const GrayText = styled('div')`
-  color: gray;
-`;
-
-const CompanyDesc = styled(GrayText)`
-  font-style: italic;
-  text-align: left;
-`;
-
 const BackLink = styled.a`
   font-size: 25px;
   cursor: pointer;
@@ -69,6 +58,23 @@ const Back = (): JSX.Element => (
     </FlexItem>
   </Flex>
 );
+
+const SubPage = ({
+  page,
+  stand,
+}: {
+  page: string;
+  stand: StandView_stand;
+}): JSX.Element => {
+  switch (page) {
+    case 'om':
+      return <AboutPage stand={stand} />;
+    case 'program':
+      return <ProgramPage stand={stand} />;
+    default:
+      return <div>Noe gikk galt. Forsøk å refresh siden</div>;
+  }
+};
 
 const Stand = ({ stand }: Props): JSX.Element => {
   const commonItemObj = {
@@ -111,16 +117,12 @@ const Stand = ({ stand }: Props): JSX.Element => {
           Slido
         </QAView>
       </LiveContainer>
-      <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
-        <ReactMarkdown source={stand.description} />
-      </CompanyDesc>
 
       <NavBar items={navBarItems} />
-
       <Flex wrapReverse>
         <FlexItem basis="600px" grow={3}>
           <Flex column>
-            <ReactMarkdown>{stand.description || ''}</ReactMarkdown>
+            <SubPage stand={stand} page={currentPage} />
           </Flex>
         </FlexItem>
       </Flex>
@@ -134,7 +136,7 @@ export default createFragmentContainer(Stand, {
       id
       company {
         name
-        logo(width: 300, height: 100)
+        logo(width: 300, height: 100, padding: false)
         description
         url
         keyInformation {
@@ -142,10 +144,11 @@ export default createFragmentContainer(Stand, {
           value
         }
       }
-      description
       livestreamUrl
       qaUrl
       chatUrl
+      ...AboutStand_stand
+      ...StandProgram_stand
     }
   `,
 });
