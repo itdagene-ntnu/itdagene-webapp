@@ -26,7 +26,7 @@ const LiveContainer = styled.div`
   display: flex;
 `;
 
-const PlayerView = styled('div')`
+const Player = styled('div')`
   margin-bottom: 30px;
   height: 500px;
   width: 800px;
@@ -34,13 +34,13 @@ const PlayerView = styled('div')`
   color: white;
   text-align: center;
   vertical-align: middle;
+  position: relative;
 `;
 
 const QAView = styled.div`
   height: 500px;
   width: 400px;
   background-color: #222;
-  border: 1px solid #ddd;
   color: white;
 `;
 
@@ -108,13 +108,30 @@ const Stand = ({ stand }: Props): JSX.Element => {
         />
       </div>
       <LiveContainer>
-        <PlayerView>
-          <h3>{stand.company.name}</h3>
-          {/*<Player playsInline src={stand.videoUrl} />*/}
-        </PlayerView>
+        <Player>
+          {stand.livestreamUrl ? (
+            <iframe
+              title="livestreamEmbed"
+              src={`${stand.livestreamUrl}?autoplay=true`}
+              style={{ position: 'absolute', top: '0', left: '0' }}
+              allowFullScreen
+              frameBorder="no"
+              width="100%"
+              height="100%"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          ) : (
+            <h3>Ingen stream for øyeblikket</h3>
+          )}
+        </Player>
         <QAView>
-          {/*TODO: Slido here*/}
-          Slido
+          <iframe
+            title="slidoEmbed"
+            src={stand.qaUrl}
+            height="100%"
+            width="100%"
+            frameBorder="0"
+          ></iframe>
         </QAView>
       </LiveContainer>
 
