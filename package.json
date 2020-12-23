@@ -51,7 +51,7 @@
     "puppeteer": false
   },
   "devDependencies": {
-    "@babel/core": "^7.11.1",
+    "@babel/core": "^7.12.10",
     "@types/lodash": "^4.14.165",
     "@types/rc-slider": "^8.6.6",
     "@types/react": "^17.0.0",
