@@ -86,7 +86,6 @@ const EventsSection = ({
 
 const Index = ({ props, error }: RenderProps): JSX.Element => (
   <>
-    <SummerjobBanner />
     <WelcomeScreen currentMetaData={props.currentMetaData} />
     <Section>
       <AboutSection {...props} />

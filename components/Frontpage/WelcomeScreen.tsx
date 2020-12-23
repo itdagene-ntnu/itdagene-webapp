@@ -98,7 +98,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
                 .locale('nb')
                 .format('MMMM')} ${startDate.year()}`}
             </SubHeader>
-            <Location>NTNU // Realfagsbygget</Location>
+            <Location>Digitalt // itdagene.no</Location>
           </FlexItem>
           <FlexItem>
             <Countdown currentMetaData={currentMetaData} />
