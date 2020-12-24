@@ -1417,15 +1417,10 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/relay-runtime@*":
-  version "10.1.4"
-  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.4.tgz#bc667ca4898ab3512bcf0b047ba009c08bac34dc"
-  integrity sha512-0Y8Xri8ycFzVpujBLAabYaOxZujzkpcYZsi/sSjHn3E6INeS4l3DEN21uzrW7xQKhbma/g5yYRqnlnZsM8K1Uw==
-
-"@types/relay-runtime@^10.1.5":
-  version "10.1.5"
-  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.5.tgz#723a730f165639282b427c95013e8308dec53904"
-  integrity sha512-Sjm1Z3WZsDY3CeS2ypq7bz8X4U7h7tup3Gh1zPFaF2n4nKW+zzH9YKu+GgYC/IxwOJcdv1g3GPKsRovRf+OdPw==
+"@types/relay-runtime@*", "@types/relay-runtime@^10.1.6":
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.6.tgz#fba34fdb5ce836de6522d1502ff68657408bce74"
+  integrity sha512-B5REuBaGMlsXTAyX15D9NawGywVDzNAGPhsU74/gWNDzKEXRCO2rI0Pd1mtSpBVISHCe8SQlrO8qpXfLt3ZdXA==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
