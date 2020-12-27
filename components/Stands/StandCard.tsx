@@ -1,45 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Company } from '../../testing/companyMock';
 import * as _ from 'lodash';
 import { NudgeDiv } from '../Styled';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { timeIsBetween } from '../../utils/time';
+import { createFragmentContainer, graphql } from 'react-relay';
+import { StandCard_company } from '../../__generated__/StandCard_company.graphql';
 
 dayjs.extend(customParseFormat);
 
-type Package = "standard" | "sp" | "hsp";
-interface IStandCard {
-  active: boolean;
-  company: any;
-  id: string;
-  // TODO: Import the Event-type
-  events: any;
-  time: number;
+type Package = 'standard' | 'sp' | 'hsp';
+interface IStandCard {  
   type: Package;
+  time: number;
+  company: StandCard_company;
 }
 
 interface ILive {
   active: boolean;
 }
 
-const timeIsBetween = (
-  time: number,
-  start: string,
-  end: string,
-  date: string
-) => {
-  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
-  const e = dayjs(`${end} ${date}`, 'HH:mm:ss YYYY-MM-DD');
-  const now = dayjs(time);
-
-  return s.isBefore(now) && e.isAfter(now);
-};
-
-const getCurrentEvent = (events: any[], time: number) => {
-  const currentEvent = events.find((event) =>
+const getCurrentEvent = (events: any, time: number) => {
+  const currentEvent = events.find((event: any) =>
     timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
   );
   return currentEvent ?? null;
@@ -58,27 +43,26 @@ const eventTime = (event: any) => {
   };
 };
 
-const StandCard = ({ active, company, id, events, time, type }: IStandCard) => {
+const StandCard = ({ company, time, type }: IStandCard) => {
   const [currentEvent, setCurrentEvent] = useState();
   const router = useRouter();
 
   const handleRedirect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
-    router.push(`/stands/[id]`, `/stands/${id}`);
+    router.push(`/stands/[id]`, `/stands/${company.id}`);
   };
 
   useEffect(() => {
-    setCurrentEvent(() => getCurrentEvent(events, time));
+    setCurrentEvent(() => getCurrentEvent(company.stand?.events ?? [], time));
   }, [time]);
 
-  return (
-    type === "standard" ?
-    <StandardContainer scale={1.03} onClick={handleRedirect}>
+  const CompanyCardContent = (
+    <>
       <FirstRow>
         <CompanyImgContainer>
-          <CompanyImg src={company.logo} />
+          <CompanyImg src={company.logo ?? ""} />
         </CompanyImgContainer>
-        <Live active={active} />
+        <Live active={company.stand?.active ?? false} />
       </FirstRow>
       <Divider />
       <CompanyInfo>
@@ -88,23 +72,21 @@ const StandCard = ({ active, company, id, events, time, type }: IStandCard) => {
           <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
         </CurrentEvent>
       </CompanyInfo>
-    </StandardContainer> :
+    </>
+  );
+
+  return type === 'hsp' ? (
+    <HSPContainer scale={1.03} onClick={handleRedirect}>
+      {CompanyCardContent}
+    </HSPContainer>
+  ) : type === 'sp' ? (
     <SPContainer scale={1.03} onClick={handleRedirect}>
-      <FirstRow>
-        <CompanyImgContainer>
-          <CompanyImg src={company.logo} />
-        </CompanyImgContainer>
-        <Live active={active} />
-      </FirstRow>
-      <Divider />
-      <CompanyInfo>
-        <SubHeader>{company.name}</SubHeader>
-        <CurrentEvent>
-          <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
-          <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
-        </CurrentEvent>
-      </CompanyInfo>
+      {CompanyCardContent}
     </SPContainer>
+  ) : (
+    <StandardContainer scale={1.03} onClick={handleRedirect}>
+      {CompanyCardContent}
+    </StandardContainer>
   );
 };
 
@@ -120,13 +102,12 @@ const Divider = styled.hr`
   flex-shrink: 0;
 `;
 
-const EventTitle = styled.span`
-`;
+const EventTitle = styled.span``;
 
 const StandardContainer = styled(NudgeDiv)`
   display: flex;
   flex-direction: column;
-  max-width: 293px;
+  max-width: 100vw;
   height: 180px;
 
   background: #ffffff;
@@ -139,12 +120,17 @@ const SPContainer = styled(StandardContainer)`
   display: flex;
   flex-direction: column;
   max-width: 100vw;
+  flex: 1 1 300px;
   height: 180px;
 
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
   padding: 15px;
+`;
+
+const HSPContainer = styled(SPContainer)`
+  grid-column: -1/1;
 `;
 
 const FirstRow = styled.div`
@@ -202,4 +188,28 @@ const LiveContainer = styled.div<{ active: boolean }>`
   text-decoration: ${(props) => (props.active ? 'none' : 'line-through')};
 `;
 
-export default StandCard;
+export default createFragmentContainer(StandCard, {
+  company: graphql`
+    fragment StandCard_company on Company {
+      name
+      id
+      description
+      url
+      logo
+      stand {
+        active
+        description
+        events {
+          id
+          title
+          date
+          timeStart
+          timeEnd
+          description
+          type
+          location
+        }
+      }
+    }
+  `,
+});
