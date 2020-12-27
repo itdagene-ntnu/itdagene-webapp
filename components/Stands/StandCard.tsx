@@ -13,13 +13,13 @@ import { StandCard_company } from '../../__generated__/StandCard_company.graphql
 dayjs.extend(customParseFormat);
 
 type Package = 'standard' | 'sp' | 'hsp';
-interface IStandCard {  
+interface StandCardProps {
   type: Package;
   time: number;
   company: StandCard_company;
 }
 
-interface ILive {
+interface LiveProps {
   active: boolean;
 }
 
@@ -43,13 +43,13 @@ const eventTime = (event: any) => {
   };
 };
 
-const StandCard = ({ company, time, type }: IStandCard) => {
+const StandCard = ({ company, time, type }: StandCardProps) => {
   const [currentEvent, setCurrentEvent] = useState();
   const router = useRouter();
 
   const handleRedirect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
-    router.push(`/stands/[id]`, `/stands/${company.id}`);
+    router.push(`/stands/[id]`, `/stands/${company.stand?.slug}`);
   };
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const StandCard = ({ company, time, type }: IStandCard) => {
     <>
       <FirstRow>
         <CompanyImgContainer>
-          <CompanyImg src={company.logo ?? ""} />
+          <CompanyImg src={company.logo ?? ''} />
         </CompanyImgContainer>
         <Live active={company.stand?.active ?? false} />
       </FirstRow>
@@ -90,7 +90,7 @@ const StandCard = ({ company, time, type }: IStandCard) => {
   );
 };
 
-const Live: React.FC<ILive> = ({ active }) => (
+const Live: React.FC<LiveProps> = ({ active }) => (
   <LiveContainer active={active}>LIVE</LiveContainer>
 );
 
@@ -141,12 +141,15 @@ const FirstRow = styled.div`
 
 const CompanyImgContainer = styled.div`
   display: flex;
+  justify-content: flex-start;
   height: 60px;
   width: 70%;
 `;
 
 const CompanyImg = styled.img`
   object-fit: contain;
+  width: auto;
+  height: 100%;
 `;
 
 const CompanyInfo = styled.div`
@@ -176,6 +179,8 @@ const LiveContainer = styled.div<{ active: boolean }>`
   justify-content: center;
   background-color: #ffffff;
 
+  flex: 0 1 50px;
+
   height: 40%;
 
   padding: 4px;
@@ -197,6 +202,7 @@ export default createFragmentContainer(StandCard, {
       url
       logo
       stand {
+        slug
         active
         description
         events {
