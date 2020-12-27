@@ -63,7 +63,6 @@ const CompanyElement = styled('div')`
   }
 `;
 
-
 const Spacing = styled('div')`
   margin-top: 20px;
   border-top: 1px solid #ccc;
