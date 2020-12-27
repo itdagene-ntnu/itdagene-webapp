@@ -79,7 +79,6 @@ export const NoBulletUl = styled('ul')`
   -webkit-padding-start: 0px;
 `;
 
-
 export const NudgeDiv = styled('div')<{ scale: number }>`
   transition: 0.1s;
   &:hover {

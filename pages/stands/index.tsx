@@ -60,6 +60,7 @@ const Index = ({
       <StandGrid>
         {props.currentMetaData.companiesFirstDay
           ?.filter((comp) => !collaboratorsId.includes(comp.id))
+          .sort((a, b) => a.name.localeCompare(b.name))
           .map((comp) => (
             <StandCard
               key={comp.id}
@@ -81,6 +82,7 @@ const StandGrid = styled('div')`
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
 `;
 
+// TODO: Safari doesn't support grid-gap in flex-layout. Fix it
 const SPGrid = styled(StandGrid)`
   display: flex;
   flex-wrap: wrap;
@@ -96,15 +98,16 @@ export default withDataAndLayout(Index, {
     query stands_Query {
       currentMetaData {
         mainCollaborator {
-          id,
+          id
           ...StandCard_company
         }
         collaborators {
-          id,
+          id
           ...StandCard_company
         }
         companiesFirstDay {
-          id,
+          id
+          name
           ...StandCard_company
         }
       }

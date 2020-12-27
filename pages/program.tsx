@@ -16,6 +16,7 @@ import {
   MarkdownList,
   Paragraph,
 } from '../components/MarkdownRenderer';
+import Link from 'next/link';
 
 const Index = ({
   error,
@@ -24,6 +25,16 @@ const Index = ({
   const groupedEvents =
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
+
+  const renderHostingCompany = (company: any) => {
+    if (company) {
+      return (
+        <Link href={`stands/${company.stand?.slug}`}>
+          <HostingCompany>{`🏢 ${company?.name}`}</HostingCompany>
+        </Link>
+      );
+    }
+  };
   return (
     <>
       {props.programPage && <PageView hideContent page={props.programPage} />}
@@ -48,7 +59,8 @@ const Index = ({
                         0,
                         5
                       )} - ${event.timeEnd.slice(0, 5)}`}</InfoElement>
-                      <InfoElement>{`\t\r📍 ${event.location}`}</InfoElement>
+                      <InfoElement>{`📍${event.location}`}</InfoElement>
+                      {renderHostingCompany(event.company)}
                     </EventTimePlaceInfo>
                     <br />
                     <ReactMarkdown
@@ -92,6 +104,9 @@ export default withDataAndLayout(Index, {
         company {
           id
           name
+          stand {
+            slug
+          }
         }
         usesTickets
         maxParticipants
@@ -109,7 +124,7 @@ export default withDataAndLayout(Index, {
   }),
 });
 
-const Title = styled.h1`
+const Title = styled.h2`
   position: relative;
   margin: 0px;
   &::after {
@@ -182,6 +197,11 @@ const EventTimePlaceInfo = styled.div`
 
 const InfoElement = styled.div`
   margin-right: 15px;
+`;
+
+const HostingCompany = styled.a`
+  font-weight: 500;
+  cursor: pointer;
 `;
 
 const EventInfo = styled.div`
