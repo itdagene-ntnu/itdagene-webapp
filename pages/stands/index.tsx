@@ -4,10 +4,9 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import PageView from '../../components/PageView';
 import styled from 'styled-components';
 
-import stands from '../../testing/companyMock';
-import StandCard from '../../components/Stands/StandCard';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import { useEffect, useState } from 'react';
+import StandCard from '../../components/Stands/StandCard';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -27,42 +26,48 @@ const Index = ({
     ? props.currentMetaData.collaborators.map((c) => c.id)
     : [];
 
+  const { mainCollaborator } = props.currentMetaData;
+
   return (
     <>
       {props.stands && (
         <PageView hideContent hideDate hideTitle page={props.stands} />
       )}
+      {mainCollaborator ? (
+        <HSPGrid>
+          <StandCard
+            company={mainCollaborator}
+            key={mainCollaborator.id}
+            time={time}
+            type={'hsp'}
+          />
+        </HSPGrid>
+      ) : (
+        <></>
+      )}
+
       <SPGrid>
-        {props.currentMetaData.collaborators?.map((comp) => {
-          return (
-            <StandCard
-              key={comp.id}
-              id={comp.id}
-              company={comp}
-              time={time}
-              active={comp.stand?.active ?? false}
-              events={comp.stand?.events ?? []}
-              type={collaboratorsId.includes(comp.id) ? 'sp' : 'standard'}
-            />
-          );
-        })}
+        {props.currentMetaData.collaborators?.map((comp) => (
+          <StandCard
+            key={comp.id}
+            company={comp}
+            time={time}
+            type={collaboratorsId.includes(comp.id) ? 'sp' : 'standard'}
+          />
+        ))}
       </SPGrid>
 
-
       <StandGrid>
-        {props.currentMetaData.companiesFirstDay?.filter((comp) => !collaboratorsId.includes(comp.id)).map((comp) => {
-          return (
+        {props.currentMetaData.companiesFirstDay
+          ?.filter((comp) => !collaboratorsId.includes(comp.id))
+          .map((comp) => (
             <StandCard
               key={comp.id}
-              id={comp.id}
               company={comp}
               time={time}
-              active={comp.stand?.active ?? false}
-              events={comp.stand?.events ?? []}
               type={collaboratorsId.includes(comp.id) ? 'sp' : 'standard'}
             />
-          );
-        })}
+          ))}
       </StandGrid>
     </>
   );
@@ -77,49 +82,30 @@ const StandGrid = styled('div')`
 `;
 
 const SPGrid = styled(StandGrid)`
-  grid-template-columns: repeat(auto-fit, minmax(239px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+`;
 
-`
+const HSPGrid = styled(SPGrid)`
+  grid-column: 1 / -1;
+`;
 
 // TODO: Implement a fragment
 export default withDataAndLayout(Index, {
   query: graphql`
     query stands_Query {
       currentMetaData {
+        mainCollaborator {
+          id,
+          ...StandCard_company
+        }
         collaborators {
-          name
-          id
-          description
-          url
-          logo
-          stand {
-            active
-            description
-            events {
-              id
-            }
-          }
+          id,
+          ...StandCard_company
         }
         companiesFirstDay {
-          name
-          id
-          description
-          url
-          logo
-          stand {
-            active
-            description
-            events {
-              id
-              title
-              date
-              timeStart
-              timeEnd
-              description
-              type
-              location
-            }
-          }
+          id,
+          ...StandCard_company
         }
       }
       stands: page(slug: "stands") {
