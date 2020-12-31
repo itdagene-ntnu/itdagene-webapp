@@ -1393,10 +1393,10 @@
     "@types/react" "*"
     "@types/relay-runtime" "*"
 
-"@types/react-select@^3.0.22":
-  version "3.0.22"
-  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.0.22.tgz#b88306365e99fa86809a5c0ce0f1b4e8d0b626bf"
-  integrity sha512-fqgmC979JPr/6476Pau6QnmI9zVV664R7Q92Ld1rgTn+umtUXT5X3+PO/x6O4imCZnh7XCqZcouabWAlAQJNpQ==
+"@types/react-select@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-select/-/react-select-3.1.0.tgz#6d63bb0d8d44a71a0d5fa984a77c61ce3805d296"
+  integrity sha512-INfN1SkxmmhQxwHizPck2sBmdh7rEe0WrP4bMf1t7HAoQAX0G0nEqVrgX67h56hoaeA6+OImj/caIKEhwPkViQ==
   dependencies:
     "@types/react" "*"
     "@types/react-dom" "*"
