@@ -1,10 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
 import Loading from '../LoadingIndicator';
 import { graphql, useFragment } from 'relay-hooks';
 import { StandProgram_stand$key } from '../../__generated__/StandProgram_stand.graphql';
 import Flex, { FlexItem } from 'styled-flex-component';
-
 import Program from '../ProgramView';
+
+const StyledH1 = styled.h1`
+  font-style: italic;
+  font-weight: 100;
+`;
 
 type Props = {
   stand: StandProgram_stand$key;
@@ -25,12 +30,12 @@ const StandProgram = (props: Props): JSX.Element => {
   console.log(program);
 
   return program ? (
-    program.events ? (
+    program.events && program.events.length > 0 ? (
       <Program events={program.events} />
     ) : (
-      <Flex>
+      <Flex center>
         <FlexItem>
-          <h1>Programmet er tomt</h1>
+          <StyledH1>Programmet er tomt</StyledH1>
         </FlexItem>
       </Flex>
     )

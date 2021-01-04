@@ -47,7 +47,7 @@ const Hr = styled('hr')`
     rgba(0, 0, 0, 0.7),
     rgba(0, 0, 0, 0.1)
   );
-  height: 1px;
+  height: 2px;
   border: 0;
 `;
 

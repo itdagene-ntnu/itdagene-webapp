@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import NavBar from '../Navbar';
 import AboutPage from './AboutStand';
 import ProgramPage from './StandProgram';
+import JobListingsPage from './StandJoblistings';
 
 type Props = {
   stand: StandView_stand;
@@ -24,24 +25,40 @@ export const Title = styled('h1')`
 
 const LiveContainer = styled.div`
   display: flex;
+  margin-bottom: 30px;
+  @media only screen and (max-width: 993px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Player = styled('div')`
-  margin-bottom: 30px;
-  height: 500px;
-  width: 800px;
+  height: 400px;
+  width: 70%;
   background-color: #222;
   color: white;
   text-align: center;
   vertical-align: middle;
   position: relative;
+  @media only screen and (max-width: 993px) {
+    width: 100%;
+    height: 400px;
+  }
+  @media only screen and (max-width: 767px) {
+    height: 250px;
+  }
 `;
 
 const QAView = styled.div`
-  height: 500px;
-  width: 400px;
+  height: 400px;
+  width: 30%;
   background-color: #222;
   color: white;
+  @media only screen and (max-width: 993px) {
+    width: 100%;
+    height: 300px;
+  }
 `;
 
 const BackLink = styled.a`
@@ -71,6 +88,8 @@ const SubPage = ({
       return <AboutPage stand={stand} />;
     case 'program':
       return <ProgramPage stand={stand} />;
+    case 'joblistings':
+      return <JobListingsPage company={stand.company} />;
     default:
       return <div>Noe gikk galt. Forsøk å refresh siden</div>;
   }
@@ -91,6 +110,11 @@ const Stand = ({ stand }: Props): JSX.Element => {
     {
       text: `Programmet til ${stand.company.name}`,
       key: 'program',
+      ...commonItemObj,
+    },
+    {
+      text: `Jobb i ${stand.company.name}`,
+      key: 'joblistings',
       ...commonItemObj,
     },
   ];
@@ -125,13 +149,17 @@ const Stand = ({ stand }: Props): JSX.Element => {
           )}
         </Player>
         <QAView>
-          <iframe
-            title="slidoEmbed"
-            src={stand.qaUrl}
-            height="100%"
-            width="100%"
-            frameBorder="0"
-          ></iframe>
+          {stand.qaUrl ? (
+            <iframe
+              title="slidoEmbed"
+              src={stand.qaUrl}
+              height="100%"
+              width="100%"
+              frameBorder="0"
+            ></iframe>
+          ) : (
+            <h3>Ingen Q&A for øyeblikket</h3>
+          )}
         </QAView>
       </LiveContainer>
 
@@ -160,6 +188,7 @@ export default createFragmentContainer(Stand, {
           name
           value
         }
+        ...StandJoblistings_joblistings
       }
       livestreamUrl
       qaUrl
