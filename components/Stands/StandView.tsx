@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandView_stand } from '../../__generated__/StandView_stand.graphql';
@@ -84,6 +84,31 @@ const Stand = ({ stand }: Props): JSX.Element => {
   ];
 
   const [currentPage, setCurrentPage] = useState(navBarItems[0].key);
+
+  useEffect(() => {
+    if (window) {
+      window.chatwootSettings = {
+        type: 'expanded_bubble',
+        launcherTitle: `Chat med bedriften`,
+        showPopoutButton: true,
+      };
+      if (window.$chatwoot) {
+        window.$chatwoot.websiteToken = stand.chatUrl;
+        window.$chatwoot.reload();
+      } else {
+        console.log(window.$chatwoot);
+        window.chatwootSDK &&
+          window.chatwootSDK.run({
+            websiteToken: stand.chatUrl,
+            baseUrl: 'https://chatwoot-itdagene.herokuapp.com',
+          });
+      }
+      window.$chatwoot.show();
+    }
+    return (): void => {
+      window.$chatwoot.hide();
+    };
+  }, [stand.chatUrl, stand.company.name]);
 
   return (
     <>
