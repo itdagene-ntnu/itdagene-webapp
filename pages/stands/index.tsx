@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import { useEffect, useState } from 'react';
 import StandCard from '../../components/Stands/StandCard';
+import { currentDayCompanies } from '../../utils/time';
+import LivePlayer from '../../components/Stands/LivePlayer';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -22,17 +24,18 @@ const Index = ({
     return () => clearInterval(interval);
   }, []);
 
+  const { mainCollaborator } = props.currentMetaData;
   const collaboratorsId = props.currentMetaData.collaborators
     ? props.currentMetaData.collaborators.map((c) => c.id)
     : [];
-
-  const { mainCollaborator } = props.currentMetaData;
 
   return (
     <>
       {props.stands && (
         <PageView hideContent hideDate hideTitle page={props.stands} />
       )}
+      {/* TODO: Complete technical implementation of the LivePlayer */}
+      <LivePlayer stand={{}} />
       {mainCollaborator ? (
         <HSPGrid>
           <StandCard
@@ -47,18 +50,15 @@ const Index = ({
       )}
 
       <SPGrid>
-        {props.currentMetaData.collaborators?.filter((comp) => collaboratorsId.includes(comp.id)).map((comp) => (
-          <StandCard
-            key={comp.id}
-            company={comp}
-            time={time}
-            type={'sp'}
-          />
-        ))}
+        {props.currentMetaData.collaborators
+          ?.filter((comp) => collaboratorsId.includes(comp.id))
+          .map((comp) => (
+            <StandCard key={comp.id} company={comp} time={time} type={'sp'} />
+          ))}
       </SPGrid>
 
       <StandGrid>
-        {props.currentMetaData.companiesFirstDay
+        {props.currentMetaData[currentDayCompanies()]
           ?.filter((comp) => !collaboratorsId.includes(comp.id))
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((comp) => (
@@ -98,7 +98,6 @@ const HSPGrid = styled(SPGrid)`
   grid-column: 1 / -1;
 `;
 
-// TODO: Implement a fragment
 export default withDataAndLayout(Index, {
   query: graphql`
     query stands_Query {
@@ -112,6 +111,11 @@ export default withDataAndLayout(Index, {
           ...StandCard_company
         }
         companiesFirstDay {
+          id
+          name
+          ...StandCard_company
+        }
+        companiesLastDay {
           id
           name
           ...StandCard_company
