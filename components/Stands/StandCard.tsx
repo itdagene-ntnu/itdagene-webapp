@@ -46,7 +46,6 @@ const eventTime = (event: any, truncLength = 50) => {
 const StandCard = ({ company, time, type }: StandCardProps) => {
   const [currentEvent, setCurrentEvent] = useState();
   const router = useRouter();
-  const [width, setWidth] = React.useState(0);
   const [shouldBreak, setShouldBreak] = React.useState(false);
 
   useEffect(() => {
@@ -57,16 +56,19 @@ const StandCard = ({ company, time, type }: StandCardProps) => {
         setShouldBreak(false);
       }
     }
+
+    window.innerWidth > 1199 ? setShouldBreak(false) : setShouldBreak(true);
+
     window.addEventListener('resize', onWidthChange);
     return () => {
       window.removeEventListener('resize', onWidthChange);
     };
   });
-  
+
   useEffect(() => {
     setCurrentEvent(() => getCurrentEvent(company.stand?.events ?? [], time));
   }, [time]);
-  
+
   const handleRedirect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     router.push(`/stands/[id]`, `/stands/${company.stand?.slug}`);
@@ -77,6 +79,16 @@ const StandCard = ({ company, time, type }: StandCardProps) => {
       (event) => event != null && timeIsAfter(time, event.timeStart, event.date)
     );
 
+    const renderRelevantEvents = () =>
+      relevantEvents
+        ?.slice(Math.max(relevantEvents.length - 3, 0))
+        .map((event) => (
+          <EventGrid>
+            <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
+            <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
+          </EventGrid>
+        ));
+
     return currentEvent ? (
       <>
         <EventGrid>
@@ -85,24 +97,10 @@ const StandCard = ({ company, time, type }: StandCardProps) => {
           </TimeSlot>
           <EventTitle>{eventTime(currentEvent, 200).eventTitle}</EventTitle>
         </EventGrid>
-        {relevantEvents
-          ?.slice(Math.max(relevantEvents.length - 3, 0))
-          .map((event) => (
-            <EventGrid>
-              <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
-              <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
-            </EventGrid>
-          ))}
+        {renderRelevantEvents()}
       </>
     ) : (
-      relevantEvents
-        ?.slice(Math.max(relevantEvents.length - 3, 0))
-        .map((event) => (
-          <EventGrid>
-            <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
-            <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
-          </EventGrid>
-        ))
+      renderRelevantEvents()
     );
   };
 
@@ -131,22 +129,15 @@ const StandCard = ({ company, time, type }: StandCardProps) => {
         <HSPCompanyImgContainer>
           <HSPCompanyImg src={company.logo ?? ''} />
         </HSPCompanyImgContainer>
-        {/* <HSPCompanyInfo>
-        <SubHeader>{company.name}</SubHeader>
-        <CurrentEvent>
-          <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
-          <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
-        </CurrentEvent>
-      </HSPCompanyInfo> */}
         <FlexContainer>
           <CompanyEvents>{renderHSPEvents()}</CompanyEvents>
           <Live active={company.stand?.active ?? false} />
         </FlexContainer>
       </HSPContainer>
     ) : (
-      <SPContainer scale={1.03} onClick={handleRedirect}>
+      <HSPContainer scale={1.03} onClick={handleRedirect}>
         {CompanyCardContent}
-      </SPContainer>
+      </HSPContainer>
     )
   ) : type === 'sp' ? (
     <SPContainer scale={1.03} onClick={handleRedirect}>
@@ -190,7 +181,7 @@ const SPContainer = styled(StandardContainer)`
   max-width: 100vw;
   flex: 1 1 300px;
   height: 180px;
-
+  margin: var(--gap) 0 0 var(--gap);
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
@@ -198,9 +189,13 @@ const SPContainer = styled(StandardContainer)`
 `;
 
 const HSPContainer = styled(SPContainer)`
+  margin-bottom: 25px;
   grid-column: -1/1;
   display: grid;
   grid-template-columns: 40% 60%;
+  @media only screen and (max-width: 1199px) {
+    display: flex;
+  }  ;
 `;
 
 const CompanyEvents = styled.div`
@@ -231,10 +226,6 @@ const FlexContainer = styled.div`
   display: flex;
 `;
 
-const HSPEventListItem = styled.li`
-  list-style-type: none;
-`;
-
 const EventGrid = styled.div`
   display: grid;
   grid-template-columns: 20% 80%;
@@ -254,11 +245,6 @@ const CompanyInfo = styled.div`
   height: 100%;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const HSPCompanyInfo = styled(CompanyInfo)`
-  padding-left: 20px;
-  border-right: 1.5px solid #f1f1f1;
 `;
 
 const CurrentEvent = styled.div`

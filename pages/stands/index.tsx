@@ -82,10 +82,16 @@ const StandGrid = styled('div')`
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
 `;
 
-// TODO: Safari doesn't support grid-gap in flex-layout. Fix it
+// Safari doesn't support gap with flexbox. The given solution is a workaround
 const SPGrid = styled(StandGrid)`
   display: flex;
   flex-wrap: wrap;
+  gap: 0;
+  --gap: 25px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
+  width: calc(100% + var(--gap));
 `;
 
 const HSPGrid = styled(SPGrid)`
