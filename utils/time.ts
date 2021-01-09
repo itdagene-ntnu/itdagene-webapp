@@ -37,3 +37,11 @@ export const timeIsAfter = (time: number, start: string, date: string) => {
 
   return s.isAfter(now);
 };
+
+// TODO: This date-check should probably be implemented backend
+export const currentDayCompanies = () => {
+  const second_day = dayjs('2021-01-19 00:00').tz('Europe/Oslo');
+  return dayjs().tz('Europe/Oslo').isBefore(second_day)
+    ? 'companiesFirstDay'
+    : 'companiesLastDay';
+};
