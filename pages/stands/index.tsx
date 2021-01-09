@@ -47,12 +47,12 @@ const Index = ({
       )}
 
       <SPGrid>
-        {props.currentMetaData.collaborators?.map((comp) => (
+        {props.currentMetaData.collaborators?.filter((comp) => collaboratorsId.includes(comp.id)).map((comp) => (
           <StandCard
             key={comp.id}
             company={comp}
             time={time}
-            type={collaboratorsId.includes(comp.id) ? 'sp' : 'standard'}
+            type={'sp'}
           />
         ))}
       </SPGrid>
@@ -66,7 +66,7 @@ const Index = ({
               key={comp.id}
               company={comp}
               time={time}
-              type={collaboratorsId.includes(comp.id) ? 'sp' : 'standard'}
+              type={'standard'}
             />
           ))}
       </StandGrid>

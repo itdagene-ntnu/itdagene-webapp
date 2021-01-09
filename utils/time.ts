@@ -29,3 +29,11 @@ export const eventTime = (start: Dayjs, end: Dayjs): string =>
 
 export const toDayjs = (date: string, time: string): Dayjs =>
   dayjs(date + time);
+
+// TODO: Change to Dayjs input
+export const timeIsAfter = (time: number, start: string, date: string) => {
+  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
+  const now = dayjs(time);
+
+  return s.isAfter(now);
+};
