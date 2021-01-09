@@ -12,3 +12,10 @@ export const timeIsBetween = (
 
   return s.isBefore(now) && e.isAfter(now);
 };
+
+export const timeIsAfter = (time: number, start: string, date: string) => {
+  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
+  const now = dayjs(time);
+
+  return s.isAfter(now);
+};
