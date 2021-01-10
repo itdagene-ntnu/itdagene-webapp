@@ -34,7 +34,7 @@ const LiveContainer = styled.div`
 `;
 
 const Player = styled('div')`
-  height: 400px;
+  height: 600px;
   width: 70%;
   background-color: #222;
   color: white;
@@ -51,7 +51,7 @@ const Player = styled('div')`
 `;
 
 const QAView = styled.div`
-  height: 400px;
+  height: 600px;
   width: 30%;
   background-color: #222;
   color: white;
