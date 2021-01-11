@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandView_stand } from '../../__generated__/StandView_stand.graphql';
+import { ChatwootSDK, Chatwoot, ChatwootSettings } from '../../types/chatwoot';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { BorderlessSection } from '../Styled';
@@ -10,6 +11,14 @@ import AboutPage from './AboutStand';
 import ProgramPage from './StandProgram';
 import JobListingsPage from './StandJoblistings';
 import LivePlayer from './LivePlayer';
+
+declare global {
+  interface Window {
+    chatwootSDK?: ChatwootSDK;
+    $chatwoot?: Chatwoot;
+    chatwootSettings?: ChatwootSettings;
+  }
+}
 
 type Props = {
   stand: StandView_stand;
@@ -86,27 +95,29 @@ const Stand = ({ stand }: Props): JSX.Element => {
   const [currentPage, setCurrentPage] = useState(navBarItems[0].key);
 
   useEffect(() => {
-    if (window) {
+    if (window && stand.chatUrl) {
       window.chatwootSettings = {
         type: 'expanded_bubble',
         launcherTitle: `Chat med bedriften`,
         showPopoutButton: true,
       };
-      if (window.$chatwoot) {
+      console.log(window.$chatwoot);
+      console.log(window.$chatwoot?.isInitialized);
+      if (window.$chatwoot?.isInitialized) {
         window.$chatwoot.websiteToken = stand.chatUrl;
         window.$chatwoot.reload();
       } else {
-        console.log(window.$chatwoot);
+        console.log('Running init');
         window.chatwootSDK &&
           window.chatwootSDK.run({
             websiteToken: stand.chatUrl,
             baseUrl: 'https://chatwoot-itdagene.herokuapp.com',
           });
       }
-      window.$chatwoot.show();
+      window.$chatwoot?.show();
     }
     return (): void => {
-      window.$chatwoot.hide();
+      window.$chatwoot?.hide();
     };
   }, [stand.chatUrl, stand.company.name]);
 
