@@ -12,7 +12,6 @@ type RenderProps = WithDataProps<Slug_stand_QueryResponse>;
 
 const Index = ({ error, props }: RenderProps): JSX.Element => (
   <Layout
-    responsive
     {...{ error, props }}
     customOpengraphMetadata={({ props }): Metadata =>
       props.stand

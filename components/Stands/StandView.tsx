@@ -4,6 +4,7 @@ import { createFragmentContainer, graphql } from 'react-relay';
 import { StandView_stand } from '../../__generated__/StandView_stand.graphql';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
+import { BorderlessSection } from '../Styled';
 import NavBar from '../Navbar';
 import AboutPage from './AboutStand';
 import ProgramPage from './StandProgram';
@@ -26,6 +27,8 @@ export const Title = styled('h1')`
 const LiveContainer = styled.div`
   display: flex;
   margin-bottom: 30px;
+  max-width: 2000px;
+  margin: auto;
   @media only screen and (max-width: 993px) {
     flex-direction: column;
     justify-content: center;
@@ -34,7 +37,7 @@ const LiveContainer = styled.div`
 `;
 
 const Player = styled('div')`
-  height: 600px;
+  height: 800px;
   width: 70%;
   background-color: #222;
   color: white;
@@ -51,7 +54,7 @@ const Player = styled('div')`
 `;
 
 const QAView = styled.div`
-  height: 600px;
+  height: 800px;
   width: 30%;
   background-color: #222;
   color: white;
@@ -123,14 +126,16 @@ const Stand = ({ stand }: Props): JSX.Element => {
 
   return (
     <>
-      <Back />
-      <div>
-        <img
-          src={stand.company.logo || undefined}
-          style={{ display: 'block', margin: '25px 0 25px' }}
-          alt={`${stand.company.name} logo`}
-        />
-      </div>
+      <BorderlessSection noPadding>
+        <Back />
+        <div>
+          <img
+            src={stand.company.logo || undefined}
+            style={{ display: 'block', margin: '25px 0 25px' }}
+            alt={`${stand.company.name} logo`}
+          />
+        </div>
+      </BorderlessSection>
       <LiveContainer>
         <Player>
           {stand.livestreamUrl ? (
@@ -163,14 +168,16 @@ const Stand = ({ stand }: Props): JSX.Element => {
         </QAView>
       </LiveContainer>
 
-      <NavBar items={navBarItems} />
-      <Flex wrapReverse>
-        <FlexItem basis="600px" grow={3}>
-          <Flex column>
-            <SubPage stand={stand} page={currentPage} />
-          </Flex>
-        </FlexItem>
-      </Flex>
+      <BorderlessSection noPadding>
+        <NavBar items={navBarItems} />
+        <Flex wrapReverse>
+          <FlexItem basis="600px" grow={3}>
+            <Flex column>
+              <SubPage stand={stand} page={currentPage} />
+            </Flex>
+          </FlexItem>
+        </Flex>
+      </BorderlessSection>
     </>
   );
 };
