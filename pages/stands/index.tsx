@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import StandCard from '../../components/Stands/StandCard';
 import { currentDayCompanies } from '../../utils/time';
 import LivePlayer from '../../components/Stands/LivePlayer';
+import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -18,53 +19,77 @@ const Index = ({
   props,
 }: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(Date.now());
+  const [collaboratorsId, setCollaboratorsId] = useState<string[]>([]);
+  const [currentDayCompanyIds, setCurrentDayCompanyIds] = useState<string[]>(
+    []
+  );
 
   useEffect(() => {
     const interval = setInterval(() => setTime(Date.now()), intervalLength);
+    if (props.currentMetaData.collaborators) {
+      const mappedCollIds = props.currentMetaData.collaborators.map(
+        (c) => c.id
+      );
+      setCollaboratorsId(mappedCollIds);
+    }
+
+    if (props.currentMetaData[currentDayCompanies()]) {
+      const mappedCompIds = props.currentMetaData[currentDayCompanies()]!.map(
+        (c) => c.id
+      );
+      setCurrentDayCompanyIds(mappedCompIds);
+    }
     return () => clearInterval(interval);
   }, []);
 
   const { mainCollaborator } = props.currentMetaData;
-  const collaboratorsId = props.currentMetaData.collaborators
-    ? props.currentMetaData.collaborators.map((c) => c.id)
-    : [];
 
   return (
     <>
-      {props.stands && (
-        <PageView hideContent hideDate hideTitle page={props.stands} />
+      {props.stands_page && (
+        <PageView hideContent hideDate hideTitle page={props.stands_page} />
       )}
+      
       {/* TODO: Complete technical implementation of the LivePlayer */}
       <LivePlayer stand={{}} />
-      {mainCollaborator ? (
+      {mainCollaborator && (
         <HSPGrid>
-          <StandCard
-            company={mainCollaborator}
-            key={mainCollaborator.id}
-            time={time}
-            type={'hsp'}
-          />
+          {props.stands
+            ?.filter(
+              (stand) =>
+                stand != null && stand.company.id == mainCollaborator.id
+            )
+            .map((stand) => (
+              <StandCard
+                stand={stand}
+                key={mainCollaborator.id}
+                time={time}
+                type={'hsp'}
+              />
+            ))}
         </HSPGrid>
-      ) : (
-        <></>
       )}
-
       <SPGrid>
-        {props.currentMetaData.collaborators
-          ?.filter((comp) => collaboratorsId.includes(comp.id))
-          .map((comp) => (
-            <StandCard key={comp.id} company={comp} time={time} type={'sp'} />
+        {props.stands
+          ?.filter(
+            (stand) =>
+              stand != null && collaboratorsId.includes(stand.company.id)
+          )
+          .map((stand) => (
+            <StandCard key={stand?.id} stand={stand} time={time} type={'sp'} />
           ))}
       </SPGrid>
 
       <StandGrid>
-        {props.currentMetaData[currentDayCompanies()]
-          ?.filter((comp) => !collaboratorsId.includes(comp.id))
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((comp) => (
+        {props.stands
+          ?.filter(
+            (stand) =>
+              stand != null && currentDayCompanyIds.includes(stand.company.id)
+          )
+          .map((stand) => (
             <StandCard
-              key={comp.id}
-              company={comp}
+              key={stand?.id}
+              stand={stand}
               time={time}
               type={'standard'}
             />
@@ -101,27 +126,31 @@ const HSPGrid = styled(SPGrid)`
 export default withDataAndLayout(Index, {
   query: graphql`
     query stands_Query {
+      stands {
+        id
+        company {
+          id
+        }
+        ...StandCard_stand
+      }
       currentMetaData {
         mainCollaborator {
           id
-          ...StandCard_company
         }
         collaborators {
           id
-          ...StandCard_company
         }
         companiesFirstDay {
           id
           name
-          ...StandCard_company
         }
         companiesLastDay {
           id
           name
-          ...StandCard_company
         }
       }
-      stands: page(slug: "stands") {
+
+      stands_page: page(slug: "stands") {
         ...PageView_page
         ...metadata_metadata
       }
@@ -130,6 +159,6 @@ export default withDataAndLayout(Index, {
   variables: {},
   layout: ({ props, error }) => ({
     responsive: true,
-    metadata: props && props.stands,
+    metadata: props && props.stands_page,
   }),
 });
