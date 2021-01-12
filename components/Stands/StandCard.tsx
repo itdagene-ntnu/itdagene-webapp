@@ -9,23 +9,21 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { timeIsBetween, timeIsAfter } from '../../utils/time';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
+import HSPEvents from './HSPEvents';
+import CompanyCardContent from './CompanyCardInfo';
+import LiveIndicator from './LiveIndicator';
 
 dayjs.extend(customParseFormat);
 
 type Package = 'standard' | 'sp' | 'hsp';
-type standEvents = StandCard_stand["events"];
+type standEvents = StandCard_stand['events'];
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
-
+export type standEvent = ArrayElement<standEvents>;
 interface StandCardProps {
   type: Package;
   time: number;
-  stand: StandCard_stand | null;
+  stand: StandCard_stand;
 }
-
-interface LiveProps {
-  active: boolean;
-}
-
 
 const getCurrentEvent = (events: standEvents, time: number) => {
   const currentEvent = events.find(
@@ -36,13 +34,11 @@ const getCurrentEvent = (events: standEvents, time: number) => {
   return currentEvent ?? null;
 };
 
-const eventTime = (event: ArrayElement<standEvents>, truncLength = 50) => {
-  const dayTimeStart = dayjs(event?.timeStart, "HH:mm:ss").format("HH:mm");
-  const dayTimeEnd = dayjs(event?.timeEnd, "HH:mm:ss").format("HH:mm");
+export const eventTime = (event: standEvent, truncLength = 50) => {
+  const dayTimeStart = dayjs(event?.timeStart, 'HH:mm:ss').format('HH:mm');
+  const dayTimeEnd = dayjs(event?.timeEnd, 'HH:mm:ss').format('HH:mm');
 
-  const timeRange = event
-    ? `${dayTimeStart} - ${dayTimeEnd}`
-    : '';
+  const timeRange = event ? `${dayTimeStart} - ${dayTimeEnd}` : '';
 
   const eventTitle = _.truncate(event ? event.title : '💁🏼‍♀️', {
     length: truncLength,
@@ -54,7 +50,7 @@ const eventTime = (event: ArrayElement<standEvents>, truncLength = 50) => {
 };
 
 const StandCard = ({ stand, time, type }: StandCardProps) => {
-  const [currentEvent, setCurrentEvent] = useState<any | null>();
+  const [currentEvent, setCurrentEvent] = useState<standEvent | null>();
   const router = useRouter();
   const [shouldBreak, setShouldBreak] = React.useState(false);
 
@@ -66,9 +62,7 @@ const StandCard = ({ stand, time, type }: StandCardProps) => {
         setShouldBreak(false);
       }
     }
-
     window.innerWidth > 1199 ? setShouldBreak(false) : setShouldBreak(true);
-
     window.addEventListener('resize', onWidthChange);
     return () => {
       window.removeEventListener('resize', onWidthChange);
@@ -85,95 +79,54 @@ const StandCard = ({ stand, time, type }: StandCardProps) => {
     router.push(`/stands/[id]`, `/stands/${stand?.slug}`);
   };
 
-  const renderHSPEvents = () => {
-    const relevantEvents = stand?.events.filter(
-      (event) => event != null && timeIsAfter(time, event.timeStart, event.date)
-    );
+  switch (type) {
+    case 'hsp':
+      return !shouldBreak ? (
+        <HSPContainer scale={1.03} onClick={handleRedirect}>
+          <HSPCompanyImgContainer>
+            <HSPCompanyImg src={stand?.company.logo ?? ''} />
+          </HSPCompanyImgContainer>
+          <FlexContainer>
+            <CompanyEvents>
+              <HSPEvents
+                stand={stand}
+                time={time}
+                currentEvent={currentEvent ?? null}
+              />
+            </CompanyEvents>
+            <LiveIndicator active={stand?.active ?? false} />
+          </FlexContainer>
+        </HSPContainer>
+      ) : (
+        <HSPContainer scale={1.03} onClick={handleRedirect}>
+          <CompanyCardContent 
+          stand={stand} 
+          currentEvent={currentEvent ?? null} 
+          />
+        </HSPContainer>
+      );
+    case 'sp':
+      return (
+        <SPContainer scale={1.03} onClick={handleRedirect}>
+          <CompanyCardContent stand={stand} currentEvent={currentEvent ?? null} />
+        </SPContainer>
+      );
+    case 'standard':
+      return (
+        <StandardContainer scale={1.03} onClick={handleRedirect}>
+          <CompanyCardContent stand={stand} currentEvent={currentEvent ?? null} />
+        </StandardContainer>
+      );
 
-    const renderRelevantEvents = () =>
-      relevantEvents
-        ?.slice(Math.max(relevantEvents.length - 3, 0))
-        .map((event) => (
-          <EventGrid>
-            <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
-            <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
-          </EventGrid>
-        ));
-
-    return currentEvent ? (
-      <>
-        <EventGrid>
-          <TimeSlot current={true}>
-            {eventTime(currentEvent).timeRange}
-          </TimeSlot>
-          <EventTitle>{eventTime(currentEvent, 200).eventTitle}</EventTitle>
-        </EventGrid>
-        {renderRelevantEvents()}
-      </>
-    ) : (
-      renderRelevantEvents()
-    );
-  };
-
-  const CompanyCardContent = (
-    <>
-      <FirstRow>
-        <CompanyImgContainer>
-          <CompanyImg src={stand?.company.logo ?? ''} />
-        </CompanyImgContainer>
-        <Live active={stand?.active ?? false} />
-      </FirstRow>
-      <Divider />
-      <CompanyInfo>
-        <SubHeader>{stand?.company.name}</SubHeader>
-        <CurrentEvent>
-          <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
-          <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
-        </CurrentEvent>
-      </CompanyInfo>
-    </>
-  );
-
-  return type === 'hsp' ? (
-    !shouldBreak ? (
-      <HSPContainer scale={1.03} onClick={handleRedirect}>
-        <HSPCompanyImgContainer>
-          <HSPCompanyImg src={stand?.company.logo ?? ''} />
-        </HSPCompanyImgContainer>
-        <FlexContainer>
-          <CompanyEvents>{renderHSPEvents()}</CompanyEvents>
-          <Live active={stand?.active ?? false} />
-        </FlexContainer>
-      </HSPContainer>
-    ) : (
-      <HSPContainer scale={1.03} onClick={handleRedirect}>
-        {CompanyCardContent}
-      </HSPContainer>
-    )
-  ) : type === 'sp' ? (
-    <SPContainer scale={1.03} onClick={handleRedirect}>
-      {CompanyCardContent}
-    </SPContainer>
-  ) : (
-    <StandardContainer scale={1.03} onClick={handleRedirect}>
-      {CompanyCardContent}
-    </StandardContainer>
-  );
+    default:
+      return (
+        <StandardContainer scale={1.03} onClick={handleRedirect}>
+          <CompanyCardContent stand={stand} currentEvent={currentEvent ?? null} />
+        </StandardContainer>
+      );
+  }
 };
 
-const Live: React.FC<LiveProps> = ({ active }) => (
-  <LiveContainer active={active}>LIVE</LiveContainer>
-);
-
-const Divider = styled.hr`
-  width: 100%;
-  border: none;
-  height: 1.5px;
-  background-color: #f1f1f1;
-  flex-shrink: 0;
-`;
-
-const EventTitle = styled.span``;
 
 const StandardContainer = styled(NudgeDiv)`
   display: flex;
@@ -215,19 +168,6 @@ const CompanyEvents = styled.div`
   padding: 0 20px 0 20px;
 `;
 
-const FirstRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CompanyImgContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  height: 60px;
-  width: 70%;
-`;
-
 const HSPCompanyImgContainer = styled.div`
   display: flex;
   padding: 20px;
@@ -239,13 +179,9 @@ const FlexContainer = styled.div`
   justify-content: space-between;
 `;
 
-const EventGrid = styled.div`
-  display: grid;
-  grid-template-columns: 20% 80%;
-  padding-bottom: 8px;
-`;
 
-const CompanyImg = styled.img`
+
+export const CompanyImg = styled.img`
   object-fit: contain;
   width: auto;
   height: 100%;
@@ -253,41 +189,11 @@ const CompanyImg = styled.img`
 
 const HSPCompanyImg = styled(CompanyImg)``;
 
-const CompanyInfo = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  justify-content: space-between;
-`;
+export const EventTitle = styled.span``;
 
-const CurrentEvent = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: #555;
-`;
 
-const SubHeader = styled.span`
-  font-weight: 600;
-`;
-
-const TimeSlot = styled.span<{ current?: boolean }>`
+export const TimeSlot = styled.span<{ current?: boolean }>`
   font-weight: ${(props) => (props.current ? 600 : 200)};
-`;
-
-const LiveContainer = styled.div<{ active: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  flex: 0 0 50px;
-  height: 25px;
-  padding: 4px;
-  border-radius: 3px;
-  text-align: center;
-  stroke: 2px;
-  border: 1px solid ${(props) => (props.active ? 'red' : 'grey')};
-  color: ${(props) => (props.active ? 'red' : 'grey')};
-  text-decoration: ${(props) => (props.active ? 'none' : 'line-through')};
 `;
 
 export default createFragmentContainer(StandCard, {
@@ -314,7 +220,7 @@ export default createFragmentContainer(StandCard, {
       }
       company {
         id
-        logo 
+        logo
         name
       }
     }
