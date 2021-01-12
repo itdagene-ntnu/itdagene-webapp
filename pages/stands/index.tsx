@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { graphql } from 'react-relay';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import PageView from '../../components/PageView';
@@ -7,9 +7,8 @@ import styled from 'styled-components';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import { useEffect, useState } from 'react';
 import StandCard from '../../components/Stands/StandCard';
-import { currentDayCompanies } from '../../utils/time';
+import { currentDayCompanies, timeIsAfterNow } from '../../utils/time';
 import LivePlayer from '../../components/Stands/LivePlayer';
-import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -33,10 +32,12 @@ const Index = ({
       setCollaboratorsId(mappedCollIds);
     }
 
-    if (props.currentMetaData[currentDayCompanies()]) {
-      const mappedCompIds = props.currentMetaData[currentDayCompanies()]!.map(
-        (c) => c.id
-      );
+    if (
+      props.currentMetaData[currentDayCompanies(props.currentMetaData.endDate)]
+    ) {
+      const mappedCompIds = props.currentMetaData[
+        currentDayCompanies(props.currentMetaData.endDate)
+      ]!.map((c) => c.id);
       setCurrentDayCompanyIds(mappedCompIds);
     }
     return () => clearInterval(interval);
@@ -44,24 +45,25 @@ const Index = ({
 
   const { mainCollaborator } = props.currentMetaData;
 
-  return (
+  return timeIsAfterNow(time, '00:00:00', props.currentMetaData.startDate) ? (
+    <h1>Stands åpner om: </h1>
+  ) : (
     <>
       {props.stands_page && (
         <PageView hideContent hideDate hideTitle page={props.stands_page} />
       )}
-      
+
       {/* TODO: Complete technical implementation of the LivePlayer */}
       <LivePlayer stand={{}} />
       {mainCollaborator && (
         <HSPGrid>
           {props.stands
             ?.filter(
-              (stand) =>
-                stand != null && stand.company.id == mainCollaborator.id
+              (stand) => stand && stand.company.id == mainCollaborator.id
             )
             .map((stand) => (
               <StandCard
-                stand={stand}
+                stand={stand!}
                 key={mainCollaborator.id}
                 time={time}
                 type={'hsp'}
@@ -72,11 +74,10 @@ const Index = ({
       <SPGrid>
         {props.stands
           ?.filter(
-            (stand) =>
-              stand != null && collaboratorsId.includes(stand.company.id)
+            (stand) => stand && collaboratorsId.includes(stand.company.id)
           )
           .map((stand) => (
-            <StandCard key={stand?.id} stand={stand} time={time} type={'sp'} />
+            <StandCard key={stand?.id} stand={stand!} time={time} type={'sp'} />
           ))}
       </SPGrid>
 
@@ -84,12 +85,15 @@ const Index = ({
         {props.stands
           ?.filter(
             (stand) =>
-              stand != null && currentDayCompanyIds.includes(stand.company.id)
+              stand &&
+              currentDayCompanyIds.includes(stand.company.id) &&
+              !collaboratorsId.includes(stand.company.id) &&
+              stand.company.id != mainCollaborator?.id
           )
           .map((stand) => (
             <StandCard
               key={stand?.id}
-              stand={stand}
+              stand={stand!}
               time={time}
               type={'standard'}
             />
@@ -134,6 +138,8 @@ export default withDataAndLayout(Index, {
         ...StandCard_stand
       }
       currentMetaData {
+        startDate
+        endDate
         mainCollaborator {
           id
         }
