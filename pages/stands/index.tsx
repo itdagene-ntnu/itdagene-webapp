@@ -18,35 +18,30 @@ const Index = ({
   props,
 }: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(Date.now());
-  const [collaboratorsId, setCollaboratorsId] = useState<string[]>([]);
-  const [currentDayCompanyIds, setCurrentDayCompanyIds] = useState<string[]>(
-    []
-  );
+  const {
+    mainCollaborator,
+    collaborators,
+    startDate,
+    endDate,
+  } = props.currentMetaData;
 
   useEffect(() => {
     const interval = setInterval(() => setTime(Date.now()), intervalLength);
-    if (props.currentMetaData.collaborators) {
-      const mappedCollIds = props.currentMetaData.collaborators.map(
-        (c) => c.id
-      );
-      setCollaboratorsId(mappedCollIds);
-    }
+    return (): void => clearInterval(interval);
+  }, [props.currentMetaData]);
 
-    if (
-      props.currentMetaData[currentDayCompanies(props.currentMetaData.endDate)]
-    ) {
-      const mappedCompIds = props.currentMetaData[
-        currentDayCompanies(props.currentMetaData.endDate)
-      ]!.map((c) => c.id);
-      setCurrentDayCompanyIds(mappedCompIds);
-    }
-    return () => clearInterval(interval);
-  }, []);
+  const currentDayCompaniesIds = (): string[] => {
+    return props.currentMetaData[currentDayCompanies(endDate)]
+      ? props.currentMetaData[currentDayCompanies(endDate)]!.map((c) => c.id)
+      : [];
+  };
 
-  const { mainCollaborator } = props.currentMetaData;
+  const collaboratorsIds = (): string[] => {
+    return collaborators ? collaborators.map((c) => c.id) : [];
+  };
 
-  return timeIsAfterNow(time, '00:00:00', props.currentMetaData.startDate) ? (
-    <h1>Stands åpner om: </h1>
+  return timeIsAfterNow(time, '00:00:00', startDate) ? (
+    <h1>Stands blir tilgjengelige ved arrangementsstart</h1>
   ) : (
     <>
       {props.stands_page && (
@@ -59,7 +54,7 @@ const Index = ({
         <HSPGrid>
           {props.stands
             ?.filter(
-              (stand) => stand && stand.company.id == mainCollaborator.id
+              (stand) => stand && stand.company.id === mainCollaborator.id
             )
             .map((stand) => (
               <StandCard
@@ -74,7 +69,7 @@ const Index = ({
       <SPGrid>
         {props.stands
           ?.filter(
-            (stand) => stand && collaboratorsId.includes(stand.company.id)
+            (stand) => stand && collaboratorsIds().includes(stand.company.id)
           )
           .map((stand) => (
             <StandCard key={stand?.id} stand={stand!} time={time} type={'sp'} />
@@ -86,9 +81,9 @@ const Index = ({
           ?.filter(
             (stand) =>
               stand &&
-              currentDayCompanyIds.includes(stand.company.id) &&
-              !collaboratorsId.includes(stand.company.id) &&
-              stand.company.id != mainCollaborator?.id
+              currentDayCompaniesIds().includes(stand.company.id) &&
+              !collaboratorsIds().includes(stand.company.id) &&
+              stand.company.id !== mainCollaborator?.id
           )
           .map((stand) => (
             <StandCard

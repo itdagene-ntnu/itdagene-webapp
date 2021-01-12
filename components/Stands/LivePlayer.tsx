@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 // Copied from 'stand-detail'
 
-const LivePlayer = ({ stand }: any) => {
+const LivePlayer = ({ stand }: any): JSX.Element => {
   return (
     <LiveContainer>
       <Player>

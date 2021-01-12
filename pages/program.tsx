@@ -26,7 +26,7 @@ const Index = ({
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
 
-  const renderHostingCompany = (company: any) => {
+  const renderHostingCompany = (company: any): JSX.Element | void => {
     if (company) {
       return (
         <Link href={`stands/${company.stand?.slug}`}>
