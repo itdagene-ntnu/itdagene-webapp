@@ -27,8 +27,6 @@ const StandProgram = (props: Props): JSX.Element => {
     props.stand
   );
 
-  console.log(program);
-
   return program ? (
     program.events && program.events.length > 0 ? (
       <Program events={program.events} />
