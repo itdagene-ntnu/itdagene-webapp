@@ -18,7 +18,7 @@ export const timeIsBetween = (
   return s.isBefore(now) && e.isAfter(now);
 };
 
-export const timeIsAfter = (time: number, start: string, date: string) => {
+export const timeIsAfterNow = (time: number, start: string, date: string) => {
   const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
   const now = dayjs(time);
 
@@ -26,8 +26,17 @@ export const timeIsAfter = (time: number, start: string, date: string) => {
 };
 
 // TODO: This date-check should probably be implemented backend
-export const currentDayCompanies = () => {
-  const second_day = dayjs('2021-01-19 00:00').tz('Europe/Oslo');
+export const currentDayCompanies = (endDate: string) => {
+  const second_day = dayjs(`${endDate} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').tz(
+    'Europe/Oslo'
+  );
+
+  // Keeping this for test-cases
+  // const second_day = dayjs(
+  //   `${'2021-01-15'} 00:00:00`,
+  //   'YYYY-MM-DD HH:mm:ss'
+  // ).tz('Europe/Oslo');
+
   return dayjs().tz('Europe/Oslo').isBefore(second_day)
     ? 'companiesFirstDay'
     : 'companiesLastDay';
