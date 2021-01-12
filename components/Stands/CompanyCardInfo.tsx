@@ -18,7 +18,7 @@ interface CompanyCardContentProps {
 const CompanyCardContent = ({
   stand,
   currentEvent,
-}: CompanyCardContentProps) => (
+}: CompanyCardContentProps): JSX.Element => (
   <>
     <FirstRow>
       <CompanyImgContainer>

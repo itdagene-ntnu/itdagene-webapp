@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { timeIsBetween, timeIsAfter } from '../../utils/time';
+import { timeIsBetween } from '../../utils/time';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 import HSPEvents from './HSPEvents';
@@ -16,7 +16,7 @@ import LiveIndicator from './LiveIndicator';
 dayjs.extend(customParseFormat);
 
 type Package = 'standard' | 'sp' | 'hsp';
-type standEvents = StandCard_stand['events'];
+export type standEvents = StandCard_stand['events'];
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 export type standEvent = ArrayElement<standEvents>;
 interface StandCardProps {
@@ -25,16 +25,23 @@ interface StandCardProps {
   stand: StandCard_stand;
 }
 
-const getCurrentEvent = (events: standEvents, time: number) => {
+const getCurrentEvent = (
+  events: standEvents,
+  time: number
+): standEvent | null => {
   const currentEvent = events.find(
     (event) =>
-      event != null &&
-      timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
+      event && timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
   );
   return currentEvent ?? null;
 };
 
-export const eventTime = (event: standEvent, truncLength = 50) => {
+interface EventInfo {
+  timeRange: string;
+  eventTitle: string;
+}
+
+export const eventTime = (event: standEvent, truncLength = 50): EventInfo => {
   const dayTimeStart = dayjs(event?.timeStart, 'HH:mm:ss').format('HH:mm');
   const dayTimeEnd = dayjs(event?.timeEnd, 'HH:mm:ss').format('HH:mm');
 
@@ -49,13 +56,13 @@ export const eventTime = (event: standEvent, truncLength = 50) => {
   };
 };
 
-const StandCard = ({ stand, time, type }: StandCardProps) => {
+const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
   const [currentEvent, setCurrentEvent] = useState<standEvent | null>();
   const router = useRouter();
   const [shouldBreak, setShouldBreak] = React.useState(false);
 
   useEffect(() => {
-    function onWidthChange(e: any) {
+    function onWidthChange(e: any): void {
       if (!shouldBreak && e.target.innerWidth <= 1199) {
         setShouldBreak(true);
       } else if (shouldBreak && e.target.innerWidth > 1199) {
@@ -64,17 +71,19 @@ const StandCard = ({ stand, time, type }: StandCardProps) => {
     }
     window.innerWidth > 1199 ? setShouldBreak(false) : setShouldBreak(true);
     window.addEventListener('resize', onWidthChange);
-    return () => {
+    return (): void => {
       window.removeEventListener('resize', onWidthChange);
     };
-  });
+  }, [shouldBreak]);
 
   useEffect(() => {
-    let newCurrentEvent = getCurrentEvent(stand?.events ?? [], time);
+    const newCurrentEvent = getCurrentEvent(stand?.events ?? [], time);
     setCurrentEvent(newCurrentEvent);
-  }, [time]);
+  }, [time, stand]);
 
-  const handleRedirect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleRedirect = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ): void => {
     e.preventDefault();
     router.push(`/stands/[id]`, `/stands/${stand?.slug}`);
   };
@@ -99,34 +108,42 @@ const StandCard = ({ stand, time, type }: StandCardProps) => {
         </HSPContainer>
       ) : (
         <HSPContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent 
-          stand={stand} 
-          currentEvent={currentEvent ?? null} 
+          <CompanyCardContent
+            stand={stand}
+            currentEvent={currentEvent ?? null}
           />
         </HSPContainer>
       );
     case 'sp':
       return (
         <SPContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent stand={stand} currentEvent={currentEvent ?? null} />
+          <CompanyCardContent
+            stand={stand}
+            currentEvent={currentEvent ?? null}
+          />
         </SPContainer>
       );
     case 'standard':
       return (
         <StandardContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent stand={stand} currentEvent={currentEvent ?? null} />
+          <CompanyCardContent
+            stand={stand}
+            currentEvent={currentEvent ?? null}
+          />
         </StandardContainer>
       );
 
     default:
       return (
         <StandardContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent stand={stand} currentEvent={currentEvent ?? null} />
+          <CompanyCardContent
+            stand={stand}
+            currentEvent={currentEvent ?? null}
+          />
         </StandardContainer>
       );
   }
 };
-
 
 const StandardContainer = styled(NudgeDiv)`
   display: flex;
@@ -179,8 +196,6 @@ const FlexContainer = styled.div`
   justify-content: space-between;
 `;
 
-
-
 export const CompanyImg = styled.img`
   object-fit: contain;
   width: auto;
@@ -191,9 +206,8 @@ const HSPCompanyImg = styled(CompanyImg)``;
 
 export const EventTitle = styled.span``;
 
-
 export const TimeSlot = styled.span<{ current?: boolean }>`
-  font-weight: ${(props) => (props.current ? 600 : 200)};
+  font-weight: ${(props): number => (props.current ? 600 : 200)};
 `;
 
 export default createFragmentContainer(StandCard, {
@@ -201,9 +215,6 @@ export default createFragmentContainer(StandCard, {
     fragment StandCard_stand on Stand {
       id
       slug
-      livestreamUrl
-      qaUrl
-      chatUrl
       active
       description
       events {
@@ -214,14 +225,10 @@ export default createFragmentContainer(StandCard, {
         timeEnd
         description
         type
-        location
-        usesTickets
-        maxParticipants
       }
       company {
         id
         logo
-        name
       }
     }
   `,
