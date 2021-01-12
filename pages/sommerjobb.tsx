@@ -8,13 +8,10 @@ import SummerjobMarathonContainer, {
   JoblistingNode,
   Listing,
 } from '../components/SummerjobMarathon';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import { SummerjobMarathon_other } from '../__generated__/SummerjobMarathon_other.graphql';
 import withData, { WithDataProps } from '../lib/withData';
 import Layout from '../components/Layout';
-import styled from 'styled-components';
-import { itdageneBlue } from '../utils/colors';
 
 type RenderProps = WithDataProps<
   SummerjobMarathon_root & SummerjobMarathon_other
@@ -53,15 +50,6 @@ const customStyles = {
   },
 };
 
-const PlayButton = styled('div')`
-  padding: 8px;
-  background-color: ${itdageneBlue};
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1.2em;
-`;
-
 class Index extends React.Component<RenderProps, State> {
   state: State = { loading: false, currentNode: null, listings: null };
   player: React.Ref<any> = null;
@@ -98,7 +86,7 @@ class Index extends React.Component<RenderProps, State> {
     }
   };
 
-  handleVideoState = (state: any) => {
+  handleVideoState = (state: any): void => {
     if (state.ended) {
       this.playNext(state.currentSrc);
     }

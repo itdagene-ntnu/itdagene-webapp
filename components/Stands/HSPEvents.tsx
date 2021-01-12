@@ -2,7 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { timeIsAfterNow } from '../../utils/time';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
-import { eventTime, EventTitle, standEvent, TimeSlot } from './StandCard';
+import {
+  eventTime,
+  EventTitle,
+  standEvent,
+  standEvents,
+  TimeSlot,
+} from './StandCard';
 
 interface HSPEventsProps {
   stand: StandCard_stand;
@@ -10,21 +16,29 @@ interface HSPEventsProps {
   currentEvent: standEvent | null;
 }
 
-const HSPEvents = ({ stand, time, currentEvent }: HSPEventsProps) => {
-  const relevantEvents = stand?.events.filter(
-    (event) =>
-      event != null && timeIsAfterNow(time, event.timeStart, event.date)
-  );
+interface RelevantEventsProps {
+  events: standEvents;
+}
 
-  const renderRelevantEvents = () =>
-    relevantEvents
-      ?.slice(Math.max(relevantEvents.length - 3, 0))
-      .map((event) => (
-        <EventGrid>
-          <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
-          <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
-        </EventGrid>
-      ));
+const RelevantEvents = ({ events }: RelevantEventsProps): JSX.Element => (
+  <>
+    {events!.slice(Math.max(events.length - 3, 0)).map((event) => (
+      <EventGrid key={event?.id}>
+        <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
+        <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
+      </EventGrid>
+    ))}
+  </>
+);
+
+const HSPEvents = ({
+  stand,
+  time,
+  currentEvent,
+}: HSPEventsProps): JSX.Element => {
+  const relevantEvents = stand?.events.filter(
+    (event) => event && timeIsAfterNow(time, event.timeStart, event.date)
+  );
 
   return currentEvent ? (
     <>
@@ -32,10 +46,10 @@ const HSPEvents = ({ stand, time, currentEvent }: HSPEventsProps) => {
         <TimeSlot current={true}>{eventTime(currentEvent).timeRange}</TimeSlot>
         <EventTitle>{eventTime(currentEvent, 200).eventTitle}</EventTitle>
       </EventGrid>
-      {renderRelevantEvents()}
+      <RelevantEvents events={relevantEvents} />
     </>
   ) : (
-    <>{renderRelevantEvents()}</>
+    <RelevantEvents events={relevantEvents} />
   );
 };
 
