@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import React from 'react';
 import styled from 'styled-components';
 import { timeIsAfterNow } from '../../utils/time';
@@ -12,7 +13,7 @@ import {
 
 interface HSPEventsProps {
   stand: StandCard_stand;
-  time: number;
+  time: Dayjs;
   currentEvent: standEvent | null;
 }
 
@@ -36,7 +37,7 @@ const HSPEvents = ({
   time,
   currentEvent,
 }: HSPEventsProps): JSX.Element => {
-  const relevantEvents = stand?.events.filter(
+  const relevantEvents = stand?.events!.filter(
     (event) => event && timeIsAfterNow(time, event.timeStart, event.date)
   );
 

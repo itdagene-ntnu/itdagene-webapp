@@ -6,19 +6,55 @@ import styled from 'styled-components';
 
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import { useEffect, useState } from 'react';
-import StandCard from '../../components/Stands/StandCard';
-import { currentDayCompanies, timeIsAfterNow } from '../../utils/time';
+import StandCard, { ArrayElement } from '../../components/Stands/StandCard';
+import {
+  currentDayCompanies,
+  timeIsAfterNow,
+  timeIsBetween,
+} from '../../utils/time';
 import LivePlayer from '../../components/Stands/LivePlayer';
 import FeaturedEvents from '../../components/Stands/FeaturedEvents';
+import dayjs, { Dayjs } from 'dayjs';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
+
+const featuredEventStands = (
+  time: Dayjs,
+  stands: stands_QueryResponse['stands']
+): stands_QueryResponse['stands'] | [] => {
+  const featuredStands = stands?.filter(
+    (stand) => stand && currentFeaturedEvent(time, stand)
+  );
+  return featuredStands ?? [];
+};
+
+type FeaturedEvent = ArrayElement<
+  NonNullable<
+    NonNullable<
+      ArrayElement<NonNullable<stands_QueryResponse['stands']>>
+    >['events']
+  >
+>;
+
+export const currentFeaturedEvent = (
+  time: Dayjs,
+  stand: ArrayElement<NonNullable<stands_QueryResponse['stands']>>
+): FeaturedEvent | null => {
+  const featuredEvent = stand?.events?.find(
+    (event) =>
+      event.type === 'A_7' &&
+      timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
+  );
+
+  return featuredEvent ?? null;
+};
 
 const Index = ({
   error,
   props,
 }: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
-  const [time, setTime] = useState(Date.now());
+  const [time, setTime] = useState(dayjs());
   const {
     mainCollaborator,
     collaborators,
@@ -27,7 +63,7 @@ const Index = ({
   } = props.currentMetaData;
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(Date.now()), intervalLength);
+    const interval = setInterval(() => setTime(dayjs()), intervalLength);
     return (): void => clearInterval(interval);
   }, [props.currentMetaData]);
 
@@ -52,9 +88,12 @@ const Index = ({
       {/* TODO: Complete technical implementation of the LivePlayer */}
       <LivePlayer stand={{}} />
 
-      {/* TODO: Pass the stands who have a featured stand-event at given time */}
-      {props.stands && <FeaturedEvents stands={props.stands}/>}
-
+      {props.stands && (
+        <FeaturedEvents
+          time={time}
+          stands={featuredEventStands(time, props.stands) ?? []}
+        />
+      )}
 
       {mainCollaborator && (
         <HSPGrid>
@@ -72,7 +111,7 @@ const Index = ({
             ))}
         </HSPGrid>
       )}
-    
+
       <SPGrid>
         {props.stands
           ?.filter(
@@ -134,6 +173,13 @@ export default withDataAndLayout(Index, {
     query stands_Query {
       stands {
         id
+        events {
+          title
+          date
+          timeStart
+          timeEnd
+          type
+        }
         company {
           id
         }

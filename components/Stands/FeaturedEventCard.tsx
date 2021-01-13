@@ -1,29 +1,42 @@
+import { Dayjs } from 'dayjs';
+import Link from 'next/link';
 import React from 'react';
 import { createFragmentContainer } from 'react-relay';
 import { graphql } from 'relay-hooks';
 import styled from 'styled-components';
 import { FeaturedEventCard_stand } from '../../__generated__/FeaturedEventCard_stand.graphql';
 import { CompanyInfo, Divider, SubHeader } from './CompanyCardInfo';
-import { CompanyImg, EventTitle, StandardContainer } from './StandCard';
+import {
+  CompanyImg,
+  eventTime,
+  EventTitle,
+  getCurrentEvent,
+  StandardContainer,
+} from './StandCard';
 
 interface FeaturedEventCard {
   stand: FeaturedEventCard_stand;
+  time: Dayjs;
 }
 
-const FeaturedEventCard = ({ stand }: FeaturedEventCard): JSX.Element => {
+const FeaturedEventCard = ({ stand, time }: FeaturedEventCard): JSX.Element => {
   return (
-    <StandardContainer scale={1.03}>
-      <FeatCompanyImgContainer>
-        <CompanyImg src={stand?.company.logo ?? ''} />
-      </FeatCompanyImgContainer>
-      <Divider />
-      <CompanyInfo>
-        <SubHeader>Tema:</SubHeader>
-        <EventTitle>
-          Open Source i Equinor (diskusjon/debatt med ansatte i Equinor) Open
-        </EventTitle>
-      </CompanyInfo>
-    </StandardContainer>
+    <Link href={`/stands/${stand.slug}`}>
+      <StandardContainer scale={1.03}>
+        <FeatCompanyImgContainer>
+          <CompanyImg src={stand?.company.logo ?? ''} />
+        </FeatCompanyImgContainer>
+        <Divider />
+        <CompanyInfo>
+          <SubHeader>
+            {eventTime(getCurrentEvent(stand.events, time)).eventTitle}
+          </SubHeader>
+          <EventTitle>
+            {eventTime(getCurrentEvent(stand.events, time)).eventDescription}
+          </EventTitle>
+        </CompanyInfo>
+      </StandardContainer>
+    </Link>
   );
 };
 
@@ -42,6 +55,7 @@ export default createFragmentContainer(FeaturedEventCard, {
       events {
         id
         title
+        description
         date
         timeStart
         timeEnd

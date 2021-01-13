@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // dependent on utc plugin
 import timezone from 'dayjs/plugin/timezone';
 
@@ -6,7 +6,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export const timeIsBetween = (
-  time: number,
+  time: Dayjs,
   start: string,
   end: string,
   date: string
@@ -19,7 +19,7 @@ export const timeIsBetween = (
 };
 
 export const timeIsAfterNow = (
-  time: number,
+  time: Dayjs,
   start: string,
   date: string
 ): boolean => {
@@ -46,4 +46,11 @@ export const currentDayCompanies = (endDate: string): currentDay => {
   return dayjs().tz('Europe/Oslo').isBefore(second_day)
     ? 'companiesFirstDay'
     : 'companiesLastDay';
+};
+
+export const currentHalfhour = (time: Dayjs): string => {
+  const nextHour = time.add(1, 'hour');
+  return time.minute() < 30
+    ? `${time.format('HH')}:00 - ${time.format('HH')}:30`
+    : `${time.format('HH')}:30 - ${nextHour.format('HH')}:00`;
 };

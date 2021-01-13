@@ -7,19 +7,22 @@ import FeaturedEventCard from './FeaturedEventCard';
 
 import { itdageneBlue } from '../../utils/colors';
 import Link from 'next/link';
+import { currentHalfhour } from '../../utils/time';
+import { Dayjs } from 'dayjs';
 
 interface FeaturedEventsProps {
-  stands: NonNullable<stands_QueryResponse['stands']>;
+  stands: NonNullable<stands_QueryResponse['stands']> | [];
+  time: Dayjs;
 }
 
-const FeaturedEvents = ({ stands }: FeaturedEventsProps) => {
+const FeaturedEvents = ({ stands, time }: FeaturedEventsProps) => {
   return (
     <div>
       <Flex justifyBetween wrap>
         <Flex column>
           <Flex wrap>
             <Header>Halvtimens bedrifter:</Header>
-            <Time>10:30-11:00</Time>
+            <Time>{currentHalfhour(time)}</Time>
           </Flex>
           <SubHeader>
             Trykk på bedriftene under for å se hva de har forberedt for sin
@@ -33,9 +36,12 @@ const FeaturedEvents = ({ stands }: FeaturedEventsProps) => {
         </Link>
       </Flex>
       <FeatStandGrid>
+        {/* Show a maximum of 5 featured stands */}
         {stands
           .slice(Math.max(stands.length - 5, 0))
-          .map((stand) => stand && <FeaturedEventCard stand={stand} />)}
+          .map(
+            (stand) => stand && <FeaturedEventCard stand={stand} time={time} />
+          )}
       </FeatStandGrid>
       <PaddedDivider />
     </div>
