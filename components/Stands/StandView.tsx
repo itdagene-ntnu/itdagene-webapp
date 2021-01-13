@@ -101,17 +101,14 @@ const Stand = ({ stand }: Props): JSX.Element => {
         launcherTitle: `Chat med bedriften`,
         showPopoutButton: true,
       };
-      console.log(window.$chatwoot);
-      console.log(window.$chatwoot?.isInitialized);
       if (window.$chatwoot?.isInitialized) {
         window.$chatwoot.websiteToken = stand.chatUrl;
         window.$chatwoot.reload();
       } else {
-        console.log('Running init');
         window.chatwootSDK &&
           window.chatwootSDK.run({
             websiteToken: stand.chatUrl,
-            baseUrl: 'https://chatwoot-itdagene.herokuapp.com',
+            baseUrl: 'https://chat.itdagene.no',
           });
       }
       window.$chatwoot?.show();
