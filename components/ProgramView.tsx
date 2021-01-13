@@ -114,6 +114,7 @@ const ProgramView = (props: Props): JSX.Element => {
               <EventInfo key={event.id}>
                 <Title>{event.title}</Title>
                 <EventTimePlaceInfo>
+                  {/* FIXME: Use utility func for formatting once implemented*/}
                   <InfoElement>{`🕐 ${event.timeStart.slice(
                     0,
                     5
