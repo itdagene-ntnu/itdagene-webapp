@@ -31,7 +31,11 @@ export const BorderlessSection = styled(ResponsiveContent)`
   -webkit-box-shadow: none;
   box-shadow: none;
   border: none;
-  padding: 6em 0;
+  ${({ noPadding = false }: { noPadding?: boolean }): any =>
+    !noPadding &&
+    css`
+      padding: 6em 0;
+    `};
   @media only screen and (max-width: 767px) {
     padding: 2em 0;
   }

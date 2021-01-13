@@ -3,14 +3,23 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
 import Flex, { FlexItem } from 'styled-flex-component';
-import { lightGrey } from '../utils/colors';
+import { lightGrey, itdageneBlue, itdageneLightBlue } from '../utils/colors';
 
-type Item = {
+type ItemProps = {
   text: string;
-  href: string;
-  as: string;
   key: any;
 };
+
+type LinkItem = {
+  href: string;
+  as: string;
+} & ItemProps;
+type HandledItem = {
+  active: (key: any) => boolean;
+  onClick: (key: any) => void;
+} & ItemProps;
+
+type Item = LinkItem | HandledItem;
 
 type Props = {
   items: Item[];
@@ -38,7 +47,7 @@ const Hr = styled('hr')`
     rgba(0, 0, 0, 0.7),
     rgba(0, 0, 0, 0.1)
   );
-  height: 1px;
+  height: 2px;
   border: 0;
 `;
 
@@ -50,17 +59,42 @@ const StyledFlex = styled(Flex)`
   }
 `;
 
+const Item = styled.div`
+  cursor: pointer;
+  color: ${itdageneBlue};
+  &:hover {
+    color: ${itdageneLightBlue};
+  }
+`;
+
+const ItemWrapper = ({
+  item,
+  children,
+}: React.PropsWithChildren<{ item: Item }>): JSX.Element => {
+  const isLink = (item as LinkItem).href !== undefined;
+  return isLink ? (
+    <Link href={(item as LinkItem).href} as={(item as LinkItem).as}>
+      <a>{children}</a>
+    </Link>
+  ) : (
+    <Item onClick={(): void => (item as HandledItem).onClick(item.key)}>
+      {children}
+    </Item>
+  );
+};
+
 const NavbarItem = withRouter(
   ({ item, router }: { item: Item; router: NextRouter }) => {
-    const isActive = router.asPath === item.as;
+    const isLink = (item as LinkItem).href !== undefined;
+    const isActive = isLink
+      ? router.asPath === (item as LinkItem).as
+      : (item as HandledItem).active(item.key);
     return (
       <FlexItem>
         {!isActive ? (
-          <Link href={item.href} as={item.as}>
-            <a>
-              <StyledNavbarItem>{item.text}</StyledNavbarItem>
-            </a>
-          </Link>
+          <ItemWrapper item={item}>
+            <StyledNavbarItem>{item.text}</StyledNavbarItem>
+          </ItemWrapper>
         ) : (
           <StyledNavbarItem>{item.text}</StyledNavbarItem>
         )}
