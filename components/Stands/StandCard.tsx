@@ -135,7 +135,7 @@ const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
   }
 };
 
-const StandardContainer = styled(NudgeDiv)`
+export const StandardContainer = styled(NudgeDiv)`
   display: flex;
   flex-direction: column;
   max-width: 100vw;
@@ -202,7 +202,10 @@ export const CompanyImg = styled.img`
   width: auto;
   height: 100%;
 `;
-export const EventTitle = styled.span``;
+export const EventTitle = styled.span`
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
 
 export const TimeSlot = styled.span<{ current?: boolean }>`
   font-weight: ${(props): number => (props.current ? 600 : 200)};
@@ -227,6 +230,7 @@ export default createFragmentContainer(StandCard, {
       company {
         id
         logo
+        name
       }
     }
   `,

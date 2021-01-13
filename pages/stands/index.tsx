@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import StandCard from '../../components/Stands/StandCard';
 import { currentDayCompanies, timeIsAfterNow } from '../../utils/time';
 import LivePlayer from '../../components/Stands/LivePlayer';
+import FeaturedEvents from '../../components/Stands/FeaturedEvents';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -50,6 +51,11 @@ const Index = ({
 
       {/* TODO: Complete technical implementation of the LivePlayer */}
       <LivePlayer stand={{}} />
+
+      {/* TODO: Pass the stands who have a featured stand-event at given time */}
+      {props.stands && <FeaturedEvents stands={props.stands}/>}
+
+
       {mainCollaborator && (
         <HSPGrid>
           {props.stands
@@ -66,6 +72,7 @@ const Index = ({
             ))}
         </HSPGrid>
       )}
+    
       <SPGrid>
         {props.stands
           ?.filter(
@@ -98,7 +105,7 @@ const Index = ({
   );
 };
 
-const StandGrid = styled('div')`
+export const StandGrid = styled('div')`
   display: grid;
   margin: 25px 0;
   width: 100%;
@@ -131,6 +138,7 @@ export default withDataAndLayout(Index, {
           id
         }
         ...StandCard_stand
+        ...FeaturedEventCard_stand
       }
       currentMetaData {
         startDate

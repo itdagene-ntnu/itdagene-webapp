@@ -45,7 +45,6 @@ const FirstRow = styled.div`
 
 const CompanyImgContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
   height: 60px;
   width: 70%;
 `;
@@ -56,18 +55,19 @@ const CurrentEvent = styled.div`
   color: #555;
 `;
 
-const SubHeader = styled.span`
+export const SubHeader = styled.span`
   font-weight: 600;
 `;
 
-const CompanyInfo = styled.div`
+export const CompanyInfo = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
 `;
 
-const Divider = styled.hr`
+export const Divider = styled.hr`
   width: 100%;
   border: none;
   height: 1.5px;
