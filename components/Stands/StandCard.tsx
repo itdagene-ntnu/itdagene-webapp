@@ -15,9 +15,11 @@ import LiveIndicator from './LiveIndicator';
 
 dayjs.extend(customParseFormat);
 
+export type ArrayElement<
+  ArrayType extends readonly unknown[]
+> = ArrayType[number];
 type Package = 'standard' | 'sp' | 'hsp';
-export type standEvents = StandCard_stand['events'];
-type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
+export type standEvents = NonNullable<StandCard_stand['events']> | [];
 export type standEvent = ArrayElement<standEvents>;
 interface StandCardProps {
   type: Package;
@@ -29,7 +31,7 @@ const getCurrentEvent = (
   events: standEvents,
   time: number
 ): standEvent | null => {
-  const currentEvent = events.find(
+  const currentEvent = events?.find(
     (event) =>
       event && timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
   );
@@ -41,7 +43,10 @@ interface EventInfo {
   eventTitle: string;
 }
 
-export const eventTime = (event: standEvent, truncLength = 50): EventInfo => {
+export const eventTime = (
+  event: standEvent | null,
+  truncLength = 50
+): EventInfo => {
   const dayTimeStart = dayjs(event?.timeStart, 'HH:mm:ss').format('HH:mm');
   const dayTimeEnd = dayjs(event?.timeEnd, 'HH:mm:ss').format('HH:mm');
 

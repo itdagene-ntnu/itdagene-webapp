@@ -18,6 +18,11 @@ import {
   Paragraph,
 } from '../components/MarkdownRenderer';
 import Link from 'next/link';
+import { ArrayElement, eventTime } from '../components/Stands/StandCard';
+
+type CompanyType = NonNullable<
+  ArrayElement<NonNullable<program_QueryResponse['events']>>['company']
+>;
 
 const Index = ({
   error,
@@ -66,9 +71,6 @@ export default withDataAndLayout(Index, {
         company {
           id
           name
-          stand {
-            slug
-          }
         }
         usesTickets
         maxParticipants
@@ -161,7 +163,7 @@ const InfoElement = styled.div`
   margin-right: 15px;
 `;
 
-const HostingCompany = styled.a`
+const HostingCompanyLink = styled.a`
   font-weight: 500;
   cursor: pointer;
 `;
