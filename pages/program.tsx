@@ -18,6 +18,11 @@ import {
   Paragraph,
 } from '../components/MarkdownRenderer';
 import Link from 'next/link';
+import { ArrayElement, eventTime } from '../components/Stands/StandCard';
+
+type CompanyType = NonNullable<
+  ArrayElement<NonNullable<program_QueryResponse['events']>>['company']
+>;
 
 const Index = ({
   error,
@@ -27,15 +32,22 @@ const Index = ({
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
 
-  const renderHostingCompany = (company: any): JSX.Element | void => {
-    if (company) {
+  const renderHostingCompany = (
+    company: CompanyType | null,
+    stands: program_QueryResponse['stands']
+  ): JSX.Element | void => {
+    const standSlug =
+      stands &&
+      stands.find((stand) => stand && stand.company.id == company?.id)?.slug;
+    if (standSlug) {
       return (
-        <Link href={`stands/${company.stand?.slug}`}>
-          <HostingCompany>{`🏢 ${company?.name}`}</HostingCompany>
+        <Link href={`stands/${standSlug}`}>
+          <HostingCompanyLink>{`🏢 ${company?.name}`}</HostingCompanyLink>
         </Link>
       );
     }
   };
+
   return (
     <>
       {props.programPage && <PageView hideContent page={props.programPage} />}
@@ -58,12 +70,11 @@ const Index = ({
                   <EventInfo key={event.id}>
                     <Title>{event.title}</Title>
                     <EventTimePlaceInfo>
-                      <InfoElement>{`🕐 ${event.timeStart.slice(
-                        0,
-                        5
-                      )} - ${event.timeEnd.slice(0, 5)}`}</InfoElement>
+                      <InfoElement>{`🕐 ${
+                        eventTime(event).timeRange
+                      }`}</InfoElement>
                       <InfoElement>{`📍${event.location}`}</InfoElement>
-                      {renderHostingCompany(event.company)}
+                      {renderHostingCompany(event.company, props.stands)}
                     </EventTimePlaceInfo>
                     <br />
                     <ReactMarkdown
@@ -97,7 +108,13 @@ const Index = ({
 export default withDataAndLayout(Index, {
   query: graphql`
     query program_Query {
-      events {
+      stands {
+        slug
+        company {
+          id
+        }
+      }
+      events(type: A_0) {
         ...ProgramView_events
         title
         id
@@ -110,9 +127,6 @@ export default withDataAndLayout(Index, {
         company {
           id
           name
-          stand {
-            slug
-          }
         }
         usesTickets
         maxParticipants
@@ -205,7 +219,7 @@ const InfoElement = styled.div`
   margin-right: 15px;
 `;
 
-const HostingCompany = styled.a`
+const HostingCompanyLink = styled.a`
   font-weight: 500;
   cursor: pointer;
 `;
