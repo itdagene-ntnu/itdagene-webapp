@@ -59,22 +59,6 @@ export const eventTime = (event: standEvent, truncLength = 50): EventInfo => {
 const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
   const [currentEvent, setCurrentEvent] = useState<standEvent | null>();
   const router = useRouter();
-  const [shouldBreak, setShouldBreak] = React.useState(false);
-
-  useEffect(() => {
-    function onWidthChange(e: any): void {
-      if (!shouldBreak && e.target.innerWidth <= 1199) {
-        setShouldBreak(true);
-      } else if (shouldBreak && e.target.innerWidth > 1199) {
-        setShouldBreak(false);
-      }
-    }
-    window.innerWidth > 1199 ? setShouldBreak(false) : setShouldBreak(true);
-    window.addEventListener('resize', onWidthChange);
-    return (): void => {
-      window.removeEventListener('resize', onWidthChange);
-    };
-  }, [shouldBreak]);
 
   useEffect(() => {
     const newCurrentEvent = getCurrentEvent(stand?.events ?? [], time);
@@ -90,29 +74,30 @@ const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
 
   switch (type) {
     case 'hsp':
-      return !shouldBreak ? (
-        <HSPContainer scale={1.03} onClick={handleRedirect}>
-          <HSPCompanyImgContainer>
-            <HSPCompanyImg src={stand?.company.logo ?? ''} />
-          </HSPCompanyImgContainer>
-          <FlexContainer>
-            <CompanyEvents>
-              <HSPEvents
-                stand={stand}
-                time={time}
-                currentEvent={currentEvent ?? null}
-              />
-            </CompanyEvents>
-            <LiveIndicator active={stand?.active ?? false} />
-          </FlexContainer>
-        </HSPContainer>
-      ) : (
-        <HSPContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent
-            stand={stand}
-            currentEvent={currentEvent ?? null}
-          />
-        </HSPContainer>
+      return (
+        <>
+          <HSPContainerDesktop scale={1.03} onClick={handleRedirect}>
+            <HSPCompanyImgContainer>
+              <CompanyImg src={stand?.company.logo ?? ''} />
+            </HSPCompanyImgContainer>
+            <FlexContainer>
+              <CompanyEvents>
+                <HSPEvents
+                  stand={stand}
+                  time={time}
+                  currentEvent={currentEvent ?? null}
+                />
+              </CompanyEvents>
+              <LiveIndicator active={stand?.active ?? false} />
+            </FlexContainer>
+          </HSPContainerDesktop>
+          <HSPContainerMobile scale={1.03} onClick={handleRedirect}>
+            <CompanyCardContent
+              stand={stand}
+              currentEvent={currentEvent ?? null}
+            />
+          </HSPContainerMobile>
+        </>
       );
     case 'sp':
       return (
@@ -170,12 +155,23 @@ const SPContainer = styled(StandardContainer)`
 `;
 
 const HSPContainer = styled(SPContainer)`
+  display: grid;
   margin-bottom: 25px;
   grid-column: -1/1;
-  display: grid;
   grid-template-columns: 40% 60%;
+`;
+
+const HSPContainerMobile = styled(HSPContainer)`
+  display: flex;
+  @media only screen and (min-width: 1200px) {
+    display: none;
+  } ;
+`;
+
+const HSPContainerDesktop = styled(HSPContainer)`
+  display: grid;
   @media only screen and (max-width: 1199px) {
-    display: flex;
+    display: none;
   } ;
 `;
 
@@ -201,9 +197,6 @@ export const CompanyImg = styled.img`
   width: auto;
   height: 100%;
 `;
-
-const HSPCompanyImg = styled(CompanyImg)``;
-
 export const EventTitle = styled.span``;
 
 export const TimeSlot = styled.span<{ current?: boolean }>`
