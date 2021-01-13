@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as _ from 'lodash';
 import { NudgeDiv } from '../Styled';
 import { useRouter } from 'next/router';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { timeIsBetween } from '../../utils/time';
@@ -23,13 +23,13 @@ export type standEvents = NonNullable<StandCard_stand['events']> | [];
 export type standEvent = ArrayElement<standEvents>;
 interface StandCardProps {
   type: Package;
-  time: number;
+  time: Dayjs;
   stand: StandCard_stand;
 }
 
-const getCurrentEvent = (
-  events: standEvents,
-  time: number
+export const getCurrentEvent = (
+  events: standEvents | null,
+  time: Dayjs
 ): standEvent | null => {
   const currentEvent = events?.find(
     (event) =>
@@ -41,6 +41,7 @@ const getCurrentEvent = (
 interface EventInfo {
   timeRange: string;
   eventTitle: string;
+  eventDescription: string;
 }
 
 export const eventTime = (
@@ -52,12 +53,12 @@ export const eventTime = (
 
   const timeRange = event ? `${dayTimeStart} - ${dayTimeEnd}` : '';
 
-  const eventTitle = _.truncate(event ? event.title : '💁🏼‍♀️', {
-    length: truncLength,
-  });
+  const eventTitle = event ? event.title : '💁🏼‍♀️';
+  const eventDescription = event ? event.description : '';
   return {
     timeRange,
     eventTitle,
+    eventDescription,
   };
 };
 
