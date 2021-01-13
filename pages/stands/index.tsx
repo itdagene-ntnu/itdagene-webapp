@@ -15,6 +15,9 @@ import {
 import LivePlayer from '../../components/Stands/LivePlayer';
 import FeaturedEvents from '../../components/Stands/FeaturedEvents';
 import dayjs, { Dayjs } from 'dayjs';
+import Flex, { FlexItem } from 'styled-flex-component';
+import Countdown from '../../components/Countdown';
+import { CenterIt } from '../../components/Styled';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -88,8 +91,14 @@ const Index = ({
     return collaborators ? collaborators.map((c) => c.id) : [];
   };
 
-  return timeIsAfterNow(time, '00:00:00', startDate) ? (
-    <h1>Stands blir tilgjengelige ved arrangementsstart</h1>
+  return !timeIsAfterNow(time, '00:00:00', startDate) ? (
+    <CountDownContainer>
+      <Flex column contentSpaceBetween>
+        <FlexItem>
+          <Countdown currentMetaData={props.currentMetaData} />
+        </FlexItem>
+      </Flex>
+    </CountDownContainer>
   ) : (
     <>
       {props.stands_page && (
@@ -154,6 +163,17 @@ const Index = ({
   );
 };
 
+const CountDownContainer = styled(CenterIt)`
+  @media only screen and (min-width: 800px) {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  height: 100%;
+  min-height: 400px;
+  width: 100%;
+  padding-bottom: 170px;
+  color: white;
+`;
+
 export const StandGrid = styled('div')`
   display: grid;
   margin: 25px 0;
@@ -197,6 +217,7 @@ export default withDataAndLayout(Index, {
         ...FeaturedEventCard_stand
       }
       currentMetaData {
+        ...Countdown_currentMetaData
         startDate
         endDate
         mainCollaborator {
