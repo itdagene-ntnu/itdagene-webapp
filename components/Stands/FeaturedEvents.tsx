@@ -11,11 +11,11 @@ import { currentHalfhour } from '../../utils/time';
 import { Dayjs } from 'dayjs';
 
 interface FeaturedEventsProps {
-  stands: NonNullable<stands_QueryResponse['stands']> | [];
+  stands: NonNullable<stands_QueryResponse['stands']>;
   time: Dayjs;
 }
 
-const FeaturedEvents = ({ stands, time }: FeaturedEventsProps) => {
+const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   return (
     <div>
       <Flex justifyBetween wrap>
@@ -40,7 +40,10 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps) => {
         {stands
           .slice(Math.max(stands.length - 5, 0))
           .map(
-            (stand) => stand && <FeaturedEventCard stand={stand} time={time} />
+            (stand) =>
+              stand && (
+                <FeaturedEventCard key={stand.id} stand={stand} time={time} />
+              )
           )}
       </FeatStandGrid>
       <PaddedDivider />
@@ -103,7 +106,8 @@ const SubHeader = styled.h3`
 `;
 
 const PaddedDivider = styled(Divider)`
-  margin: 50px 0 50px 0;
+  background-color: #fff;
+  margin: 40px auto 40px auto;
 `;
 
 const FeatStandGrid = styled('div')`

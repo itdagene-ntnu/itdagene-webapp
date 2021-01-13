@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import * as _ from 'lodash';
 import { NudgeDiv } from '../Styled';
 import { useRouter } from 'next/router';
 import dayjs, { Dayjs } from 'dayjs';
@@ -19,7 +18,7 @@ export type ArrayElement<
   ArrayType extends readonly unknown[]
 > = ArrayType[number];
 type Package = 'standard' | 'sp' | 'hsp';
-export type standEvents = NonNullable<StandCard_stand['events']> | [];
+export type standEvents = NonNullable<StandCard_stand['events']>;
 export type standEvent = ArrayElement<standEvents>;
 interface StandCardProps {
   type: Package;

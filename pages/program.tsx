@@ -38,7 +38,7 @@ const Index = ({
   ): JSX.Element | void => {
     const standSlug =
       stands &&
-      stands.find((stand) => stand && stand.company.id == company?.id)?.slug;
+      stands.find((stand) => stand && stand.company.id === company?.id)?.slug;
     if (standSlug) {
       return (
         <Link href={`stands/${standSlug}`}>

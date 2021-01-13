@@ -19,10 +19,10 @@ import dayjs, { Dayjs } from 'dayjs';
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
 
-const featuredEventStands = (
+const getFeaturedEventStands = (
   time: Dayjs,
   stands: stands_QueryResponse['stands']
-): stands_QueryResponse['stands'] | [] => {
+): stands_QueryResponse['stands'] => {
   const featuredStands = stands?.filter(
     (stand) => stand && currentFeaturedEvent(time, stand)
   );
@@ -55,6 +55,10 @@ const Index = ({
   props,
 }: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(dayjs());
+  const [featuredEventStands, setFeaturedEventStands] = useState<
+    stands_QueryResponse['stands'] | any[]
+  >([]);
+
   const {
     mainCollaborator,
     collaborators,
@@ -66,6 +70,13 @@ const Index = ({
     const interval = setInterval(() => setTime(dayjs()), intervalLength);
     return (): void => clearInterval(interval);
   }, [props.currentMetaData]);
+
+  useEffect(() => {
+    const updatedFeaturedStands = getFeaturedEventStands(time, props.stands);
+    if (updatedFeaturedStands) {
+      setFeaturedEventStands(updatedFeaturedStands);
+    }
+  }, [props.stands, time]);
 
   const currentDayCompaniesIds = (): string[] => {
     return props.currentMetaData[currentDayCompanies(endDate)]
@@ -88,12 +99,11 @@ const Index = ({
       {/* TODO: Complete technical implementation of the LivePlayer */}
       <LivePlayer stand={{}} />
 
-      {props.stands && (
-        <FeaturedEvents
-          time={time}
-          stands={featuredEventStands(time, props.stands) ?? []}
-        />
-      )}
+      {props.stands &&
+        featuredEventStands &&
+        featuredEventStands.length > 0 && (
+          <FeaturedEvents time={time} stands={featuredEventStands} />
+        )}
 
       {mainCollaborator && (
         <HSPGrid>
