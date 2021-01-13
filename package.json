@@ -9,7 +9,7 @@
     "start": "NODE_ENV=production next start",
     "schema:prod": "mkdir -p schema && get-graphql-schema https://itdagene.no/graphql > schema/schema.graphql",
     "schema:dev": "mkdir -p schema && get-graphql-schema http://localhost:8000/graphql > schema/schema.graphql",
-    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql --customScalars.Date=String --customScalars.Time=String --customScalars.DateTime=String --language typescript --artifactDirectory ./__generated__ --watchman false",
+    "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql --customScalars.Date=String --customScalars.Time=String --customScalars.DateTime=String --language typescript --artifactDirectory ./__generated__",
     "lint:prettier": "prettier '**/*.{js,ts,tsx,css,graphql}' --list-different",
     "lint:eslint": "eslint . --ext .js,.ts,.tsx --ignore-path .prettierignore",
     "lint": "yarn lint:prettier && yarn lint:eslint",
@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@next/bundle-analyzer": "^10.0.3",
-    "@sentry/browser": "^5.21.1",
+    "@sentry/browser": "^5.30.0",
     "@sentry/node": "^5.29.2",
     "@sentry/webpack-plugin": "^1.14.0",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
