@@ -41,9 +41,10 @@ type MenuItem = {
 
 const items: MenuItem[] = [
   { key: 'home', name: 'HJEM', to: '/' },
-  { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
+  { key: 'stands', name: 'STANDS', to: '/stands' },
   { key: 'program', name: 'PROGRAM', to: '/program' },
   { key: 'joblistings', name: 'JOBB', to: '/jobb' },
+  { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
   {
     key: 'info',
     name: 'INFO',

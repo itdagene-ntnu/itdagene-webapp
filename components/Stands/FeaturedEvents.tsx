@@ -45,11 +45,12 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   );
 };
 
-export const Header = styled.h1<{shadow?: boolean}>`
+export const Header = styled.h1<{ shadow?: boolean }>`
   margin: 0;
   margin-right: 10px;
   font-weight: 600;
-  text-shadow: ${(props): string => props.shadow ?"0px 0px 5px rgba(0, 0, 0, 0.4)" : "none"};
+  text-shadow: ${(props): string =>
+    props.shadow ? '0px 0px 5px rgba(0, 0, 0, 0.4)' : 'none'};
 
   @media only screen and (max-width: 992px) {
     font-size: 26px;

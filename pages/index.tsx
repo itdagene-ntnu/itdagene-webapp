@@ -27,7 +27,7 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
     props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
   return (
     <>
-      <Flex justifyAround wrapReverse>
+      <Flex justifyAround wrapReverse alignCenter>
         <FlexItem grow={1} basis="700px">
           {frontpage && <PageView hideDate page={frontpage} />}
         </FlexItem>

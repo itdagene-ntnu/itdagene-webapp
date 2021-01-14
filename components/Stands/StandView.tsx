@@ -26,7 +26,7 @@ export const Title = styled('h1')`
 `;
 
 const BackLink = styled.a`
-  font-size: 25px;
+  font-size: 20px;
   cursor: pointer;
 `;
 
@@ -88,7 +88,7 @@ const Stand = ({ stand }: Props): JSX.Element => {
   return (
     <>
       <BorderlessSection noPadding>
-        {/* <Back /> */}
+        <Back />
         <div>
           <img
             src={stand.company.logo || undefined}

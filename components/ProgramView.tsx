@@ -12,8 +12,11 @@ import {
   Paragraph,
 } from '../components/MarkdownRenderer';
 import { ProgramView_events } from '../__generated__/ProgramView_events.graphql';
+import { ArrayElement, eventTime } from './Stands/StandCard';
+import Link from 'next/link';
+import { program_QueryResponse } from '../__generated__/program_Query.graphql';
 
-const Title = styled.h1`
+const Title = styled.h2`
   position: relative;
   margin: 0px;
   &::after {
@@ -88,6 +91,15 @@ const InfoElement = styled.div`
   margin-right: 15px;
 `;
 
+const HostingCompanyLink = styled.a`
+  font-weight: 500;
+  cursor: pointer;
+`;
+
+const HostingCompanyNoLink = styled.span`
+  font-weight: 400;
+`;
+
 const EventInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -95,8 +107,48 @@ const EventInfo = styled.div`
   margin-top: 30px;
 `;
 
+interface LocationLinkProps {
+  event: ArrayElement<ProgramView_events>;
+  stands?: program_QueryResponse['stands'];
+}
+
+const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
+  let href;
+
+  const standSlug =
+    stands &&
+    stands.find((stand) => stand && stand.company.id === event.company?.id)
+      ?.slug;
+
+  // FIXME: This should be implemented as types
+  switch (event.location.toLowerCase()) {
+    case 'forsiden':
+      href = '/stands';
+      break;
+    case 'standen':
+      href = standSlug ? `stands/${standSlug}` : null;
+      break;
+    default:
+      href = null;
+      break;
+  }
+
+  return href ? (
+    <InfoElement>
+      <Link href={href}>
+        <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
+      </Link>
+    </InfoElement>
+  ) : (
+    <InfoElement>
+      <HostingCompanyNoLink>{`📍 ${event.location}`}</HostingCompanyNoLink>
+    </InfoElement>
+  );
+};
+
 type Props = {
   events: ProgramView_events;
+  stands?: program_QueryResponse['stands'];
 };
 
 const ProgramView = (props: Props): JSX.Element => {
@@ -114,12 +166,13 @@ const ProgramView = (props: Props): JSX.Element => {
               <EventInfo key={event.id}>
                 <Title>{event.title}</Title>
                 <EventTimePlaceInfo>
-                  {/* FIXME: Use utility func for formatting once implemented*/}
-                  <InfoElement>{`🕐 ${event.timeStart.slice(
-                    0,
-                    5
-                  )} - ${event.timeEnd.slice(0, 5)}`}</InfoElement>
-                  <InfoElement>{`\t\r📍 ${event.location}`}</InfoElement>
+                  <InfoElement>{`🕐 ${
+                    eventTime(event).timeRange
+                  }`}</InfoElement>
+                  <LocationLink event={event} stands={props.stands} />
+                  {event.company && (
+                    <HostingCompanyNoLink>{`🏢 ${event.company?.name}`}</HostingCompanyNoLink>
+                  )}
                 </EventTimePlaceInfo>
                 <br />
                 <ReactMarkdown
