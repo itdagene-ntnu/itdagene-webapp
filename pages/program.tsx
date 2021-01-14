@@ -20,9 +20,46 @@ import {
 import Link from 'next/link';
 import { ArrayElement, eventTime } from '../components/Stands/StandCard';
 
-type CompanyType = NonNullable<
-  ArrayElement<NonNullable<program_QueryResponse['events']>>['company']
->;
+type EventType = ArrayElement<NonNullable<program_QueryResponse['events']>>;
+
+interface LocationLinkProps {
+  event: EventType;
+  stands: program_QueryResponse['stands'];
+}
+
+const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
+  let href;
+
+  const standSlug =
+    stands &&
+    stands.find((stand) => stand && stand.company.id === event.company?.id)
+      ?.slug;
+
+  // FIXME: This should be implemented as types
+  switch (event.location.toLowerCase()) {
+    case 'forsiden':
+      href = '/stands';
+      break;
+    case 'standen':
+      href = standSlug ? `stands/${standSlug}` : null;
+      break;
+    default:
+      href = null;
+      break;
+  }
+
+  return href ? (
+    <InfoElement>
+      <Link href={href}>
+        <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
+      </Link>
+    </InfoElement>
+  ) : (
+    <InfoElement>
+      <HostingCompanyNoLink>{`📍 ${event.location}`}</HostingCompanyNoLink>
+    </InfoElement>
+  );
+};
 
 const Index = ({
   error,
@@ -31,22 +68,6 @@ const Index = ({
   const groupedEvents =
     props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
   const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
-
-  const renderHostingCompany = (
-    company: CompanyType | null,
-    stands: program_QueryResponse['stands']
-  ): JSX.Element | void => {
-    const standSlug =
-      stands &&
-      stands.find((stand) => stand && stand.company.id === company?.id)?.slug;
-    if (standSlug) {
-      return (
-        <Link href={`stands/${standSlug}`}>
-          <HostingCompanyLink>{`🏢 ${company?.name}`}</HostingCompanyLink>
-        </Link>
-      );
-    }
-  };
 
   return (
     <>
@@ -73,8 +94,10 @@ const Index = ({
                       <InfoElement>{`🕐 ${
                         eventTime(event).timeRange
                       }`}</InfoElement>
-                      <InfoElement>{`📍${event.location}`}</InfoElement>
-                      {renderHostingCompany(event.company, props.stands)}
+                      <LocationLink event={event} stands={props.stands} />
+                      {event.company && (
+                        <HostingCompanyNoLink>{`🏢 ${event.company?.name}`}</HostingCompanyNoLink>
+                      )}
                     </EventTimePlaceInfo>
                     <br />
                     <ReactMarkdown
@@ -109,12 +132,13 @@ export default withDataAndLayout(Index, {
   query: graphql`
     query program_Query {
       stands {
+        active
         slug
         company {
           id
         }
       }
-      events(type: A_0) {
+      events {
         ...ProgramView_events
         title
         id
@@ -222,6 +246,10 @@ const InfoElement = styled.div`
 const HostingCompanyLink = styled.a`
   font-weight: 500;
   cursor: pointer;
+`;
+
+const HostingCompanyNoLink = styled.span`
+  font-weight: 400;
 `;
 
 const EventInfo = styled.div`
