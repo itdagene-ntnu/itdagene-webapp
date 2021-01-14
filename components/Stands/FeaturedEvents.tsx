@@ -4,11 +4,9 @@ import Flex from 'styled-flex-component';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import { Divider } from './CompanyCardInfo';
 import FeaturedEventCard from './FeaturedEventCard';
-
-import { itdageneBlue } from '../../utils/colors';
-import Link from 'next/link';
 import { currentHalfhour } from '../../utils/time';
 import { Dayjs } from 'dayjs';
+import ProgramButton from './ProgramButton';
 
 interface FeaturedEventsProps {
   stands: NonNullable<stands_QueryResponse['stands']>;
@@ -29,11 +27,7 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
             halvtime
           </SubHeader>
         </Flex>
-        <Link href={'/program'}>
-          <ProgramButtonContainer>
-            <ProgramButtonText>Program itDAGENE</ProgramButtonText>
-          </ProgramButtonContainer>
-        </Link>
+        <ProgramButton />
       </Flex>
       <FeatStandGrid>
         {/* Show a maximum of 5 featured stands */}
@@ -51,31 +45,7 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   );
 };
 
-const ProgramButtonContainer = styled.div`
-  display: flex;
-  max-width: 300px;
-  flex: 1 1 150px;
-  background: #ffffff;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 7px;
-  padding: 15px;
-  border: 2px solid ${itdageneBlue};
-  color: ${itdageneBlue};
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-
-  @media only screen and (max-width: 992px) {
-    display: none;
-  }
-
-  @media only screen and (max-width: 1199px) {
-    max-width: 150px;
-    font-size: 10px;
-  } ;
-`;
-
-const Header = styled.h1`
+export const Header = styled.h1`
   margin: 0;
   margin-right: 10px;
   font-weight: 600;
@@ -85,29 +55,18 @@ const Header = styled.h1`
   }
 `;
 
-const ProgramButtonText = styled.h1`
-  margin: 0;
-  font-weight: 600;
-  margin-right: 10px;
-  font-size: 22px;
-
-  @media only screen and (max-width: 1199px) {
-    font-size: 15px;
-  }
-`;
-
 const Time = styled(Header)`
   font-weight: 300;
 `;
 
-const SubHeader = styled.h3`
+export const SubHeader = styled.h3`
   margin: 0;
   font-weight: 300;
 `;
 
-const PaddedDivider = styled(Divider)`
+export const PaddedDivider = styled(Divider)`
   background-color: #fff;
-  margin: 40px auto 40px auto;
+  margin: 30px auto 30px auto;
 `;
 
 const FeatStandGrid = styled('div')`
