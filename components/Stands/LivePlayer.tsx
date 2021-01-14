@@ -24,6 +24,7 @@ const Player = styled('div')`
   text-align: center;
   vertical-align: middle;
   position: relative;
+  margin-bottom: 50px;
   @media only screen and (max-width: 993px) {
     width: 100%;
     height: 400px;
