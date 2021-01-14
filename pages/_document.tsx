@@ -171,21 +171,7 @@ export default class Default extends Document<{
             </>
           )}
 
-          <script
-            async
-            src="https://chatwoot-itdagene.herokuapp.com/packs/js/sdk.js"
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-            window.chatwootSettings = {
-              type: "expanded_bubble",
-              launcherTitle: "Chat med Cisco",
-              showPopoutButton: true
-            };
-          `,
-            }}
-          />
+          <script async src="https://chat.itdagene.no/packs/js/sdk.js" />
         </Head>
         <body>
           <Main />
