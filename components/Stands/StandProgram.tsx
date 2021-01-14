@@ -4,7 +4,7 @@ import Loading from '../LoadingIndicator';
 import { graphql, useFragment } from 'relay-hooks';
 import { StandProgram_stand$key } from '../../__generated__/StandProgram_stand.graphql';
 import Flex, { FlexItem } from 'styled-flex-component';
-import Program from '../ProgramView';
+import Program from '../Program/ProgramView';
 
 const StyledH1 = styled.h1`
   font-style: italic;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { groupBy, sortBy } from 'lodash';
 import dayjs from 'dayjs';
 import ReactMarkdown from 'react-markdown';
@@ -10,11 +10,13 @@ import {
   ThematicBreak,
   MarkdownList,
   Paragraph,
-} from '../components/MarkdownRenderer';
-import { ProgramView_events } from '../__generated__/ProgramView_events.graphql';
-import { ArrayElement, eventTime } from './Stands/StandCard';
+} from '../MarkdownRenderer';
+import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
+import { ArrayElement, eventTime } from '../Stands/StandCard';
 import Link from 'next/link';
-import { program_QueryResponse } from '../__generated__/program_Query.graphql';
+import { program_QueryResponse } from '../../__generated__/program_Query.graphql';
+import Flex from 'styled-flex-component';
+import EventsToggle from './EventsToggle';
 
 const Title = styled.h2`
   position: relative;
@@ -47,13 +49,13 @@ const DateTitle = styled.h1`
 
 const GroupedDateEvent = styled.div`
   display: flex;
-  margin: 0px 20px 40px;
+  margin: 0px 40px 40px 0;
   flex-direction: column;
   flex: 1 1 500px;
   @media only screen and (max-width: 991px) {
     flex-direction: column;
     padding: 0px 0px;
-    margin: 0px 20px 10px;
+    margin: 0px 0px 10px 0;
   }
 `;
 
@@ -61,7 +63,7 @@ const CenterFlex = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  margin-top: 50px;
+  margin-top: 20px;
   @media only screen and (max-width: 991px) {
     padding: 0px;
     margin: 0px;
@@ -152,46 +154,58 @@ type Props = {
 };
 
 const ProgramView = (props: Props): JSX.Element => {
-  const groupedEvents =
-    props.events && groupBy(sortBy(props.events, 'timeStart'), 'date');
-  const sortedKeys = props.events && sortBy(Object.keys(groupedEvents || {}));
+  const [showPromoted, setShowPromoted] = useState(false);
+
+  const filteredEvents =
+    props.events &&
+    props.events.filter((event) =>
+      showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
+    );
+  const groupedEvents = groupBy(sortBy(filteredEvents, 'timeStart'), 'date');
+  const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
   return (
-    <CenterFlex>
-      {sortedKeys.map((k) => (
-        <GroupedDateEvent key={k}>
-          <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
-          <GroupedEvent>
-            {groupedEvents[k].map((event) => (
-              <EventInfo key={event.id}>
-                <Title>{event.title}</Title>
-                <EventTimePlaceInfo>
-                  <InfoElement>{`🕐 ${
-                    eventTime(event).timeRange
-                  }`}</InfoElement>
-                  <LocationLink event={event} stands={props.stands} />
-                  {event.company && (
-                    <HostingCompanyNoLink>{`🏢 ${event.company?.name}`}</HostingCompanyNoLink>
-                  )}
-                </EventTimePlaceInfo>
-                <br />
-                <ReactMarkdown
-                  source={event.description}
-                  escapeHtml={false}
-                  renderers={{
-                    heading: Heading,
-                    blockquote: Blockquote,
-                    thematicBreak: ThematicBreak,
-                    list: MarkdownList,
-                    paragraph: Paragraph,
-                  }}
-                />
-              </EventInfo>
-            ))}
-          </GroupedEvent>
-        </GroupedDateEvent>
-      ))}
-    </CenterFlex>
+    <Flex column>
+      <EventsToggle
+        showPromoted={showPromoted}
+        setShowPromoted={setShowPromoted}
+      />
+      <CenterFlex>
+        {sortedKeys.map((k) => (
+          <GroupedDateEvent key={k}>
+            <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
+            <GroupedEvent>
+              {groupedEvents[k].map((event) => (
+                <EventInfo key={event.id}>
+                  <Title>{event.title}</Title>
+                  <EventTimePlaceInfo>
+                    <InfoElement>{`🕐 ${
+                      eventTime(event).timeRange
+                    }`}</InfoElement>
+                    <LocationLink event={event} stands={props.stands} />
+                    {event.company && (
+                      <HostingCompanyNoLink>{`🏢 ${event.company?.name}`}</HostingCompanyNoLink>
+                    )}
+                  </EventTimePlaceInfo>
+                  <br />
+                  <ReactMarkdown
+                    source={event.description}
+                    escapeHtml={false}
+                    renderers={{
+                      heading: Heading,
+                      blockquote: Blockquote,
+                      thematicBreak: ThematicBreak,
+                      list: MarkdownList,
+                      paragraph: Paragraph,
+                    }}
+                  />
+                </EventInfo>
+              ))}
+            </GroupedEvent>
+          </GroupedDateEvent>
+        ))}
+      </CenterFlex>
+    </Flex>
   );
 };
 
