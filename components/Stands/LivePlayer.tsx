@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const LiveContainer = styled.div`
   display: flex;
+  /* padding: 0 75px 30px 75px; */
   margin-bottom: 30px;
   max-width: 2000px;
   margin: auto;
@@ -14,13 +15,14 @@ const LiveContainer = styled.div`
 `;
 
 const Player = styled('div')`
-  height: 800px;
+  height: 600px;
   width: 70%;
   background-color: #222;
   color: white;
   text-align: center;
   vertical-align: middle;
   position: relative;
+  margin-bottom: 50px;
   @media only screen and (max-width: 993px) {
     width: 100%;
     height: 400px;
@@ -31,7 +33,7 @@ const Player = styled('div')`
 `;
 
 const QAView = styled.div`
-  height: 800px;
+  height: 600px;
   width: 30%;
   background-color: #222;
   color: white;

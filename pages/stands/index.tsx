@@ -89,7 +89,7 @@ const Index = ({
     return collaborators ? collaborators.map((c) => c.id) : [];
   };
 
-  return timeIsAfterNow(time, '00:00:00', startDate) ? (
+  return timeIsAfterNow(time, '09:30:00', startDate) ? (
     <StandsDefault currentMetaData={props.currentMetaData} />
   ) : (
     <>
@@ -98,7 +98,7 @@ const Index = ({
       )}
 
       {/* TODO: Complete technical implementation of the LivePlayer */}
-      <LivePlayer stand={{}} />
+      <LivePlayer livestreamUrl={''} qaUrl={''} />
 
       {props.stands &&
         featuredEventStands &&

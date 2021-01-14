@@ -88,7 +88,7 @@ const Stand = ({ stand }: Props): JSX.Element => {
   return (
     <>
       <BorderlessSection noPadding>
-        <Back />
+        {/* <Back /> */}
         <div>
           <img
             src={stand.company.logo || undefined}
@@ -98,7 +98,6 @@ const Stand = ({ stand }: Props): JSX.Element => {
         </div>
       </BorderlessSection>
       <LivePlayer qaUrl={stand.qaUrl} livestreamUrl={stand.livestreamUrl} />
-
       <BorderlessSection noPadding>
         <NavBar items={navBarItems} />
         <Flex wrapReverse>
