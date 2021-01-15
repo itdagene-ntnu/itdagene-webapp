@@ -8,7 +8,6 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import { JoblistingItem } from '../Joblistings/JoblistingsContainer';
 
 const StyledH1 = styled.h1`
-  font-style: italic;
   font-weight: 100;
 `;
 
