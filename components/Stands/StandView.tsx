@@ -30,6 +30,10 @@ const BackLink = styled.a`
   cursor: pointer;
 `;
 
+const PaddedBorderlessSection = styled(BorderlessSection)`
+  margin-bottom: 50px;
+`;
+
 const Back = (): JSX.Element => (
   <Flex>
     <FlexItem>
@@ -98,7 +102,7 @@ const Stand = ({ stand }: Props): JSX.Element => {
         </div>
       </BorderlessSection>
       <LivePlayer qaUrl={stand.qaUrl} livestreamUrl={stand.livestreamUrl} />
-      <BorderlessSection noPadding>
+      <PaddedBorderlessSection noPadding>
         <NavBar items={navBarItems} />
         <Flex wrapReverse>
           <FlexItem basis="600px" grow={3}>
@@ -107,7 +111,7 @@ const Stand = ({ stand }: Props): JSX.Element => {
             </Flex>
           </FlexItem>
         </Flex>
-      </BorderlessSection>
+      </PaddedBorderlessSection>
     </>
   );
 };

@@ -29,7 +29,7 @@ const StandProgram = (props: Props): JSX.Element => {
 
   return program ? (
     program.events && program.events.length > 0 ? (
-      <Program events={program.events} />
+      <Program events={program.events} showToggleButton={false} />
     ) : (
       <Flex center>
         <FlexItem>

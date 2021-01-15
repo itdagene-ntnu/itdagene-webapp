@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const LiveContainer = styled.div`
+const LiveContainer = styled.div<{ frontPage?: boolean }>`
   display: flex;
-  /* padding: 0 75px 30px 75px; */
+  padding: ${(props): string =>
+    props.frontPage ? 'auto' : '0 75px 30px 75px'};
   margin-bottom: 30px;
   max-width: 2000px;
   margin: auto;
+
   @media only screen and (max-width: 993px) {
     flex-direction: column;
     justify-content: center;
@@ -46,9 +48,14 @@ const QAView = styled.div`
 interface Props {
   livestreamUrl: string;
   qaUrl: string;
+  frontPage?: boolean;
 }
-const LivePlayer = ({ livestreamUrl, qaUrl }: Props): JSX.Element => (
-  <LiveContainer>
+const LivePlayer = ({
+  livestreamUrl,
+  qaUrl,
+  frontPage,
+}: Props): JSX.Element => (
+  <LiveContainer frontPage={frontPage ?? false}>
     <Player>
       {livestreamUrl ? (
         <iframe

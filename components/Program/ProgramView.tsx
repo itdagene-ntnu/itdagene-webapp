@@ -151,6 +151,7 @@ const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
 type Props = {
   events: ProgramView_events;
   stands?: program_QueryResponse['stands'];
+  showToggleButton?: boolean;
 };
 
 const ProgramView = (props: Props): JSX.Element => {
@@ -161,15 +162,22 @@ const ProgramView = (props: Props): JSX.Element => {
     props.events.filter((event) =>
       showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
     );
-  const groupedEvents = groupBy(sortBy(filteredEvents, 'timeStart'), 'date');
+
+  // If on a company's page, don't show toggleButton and don't filter any events
+  const groupedEvents = groupBy(
+    sortBy(props.showToggleButton ? filteredEvents : props.events, 'timeStart'),
+    'date'
+  );
   const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
   return (
     <Flex column>
-      <EventsToggle
-        showPromoted={showPromoted}
-        setShowPromoted={setShowPromoted}
-      />
+      {props.showToggleButton && (
+        <EventsToggle
+          showPromoted={showPromoted}
+          setShowPromoted={setShowPromoted}
+        />
+      )}
       <CenterFlex>
         {sortedKeys.map((k) => (
           <GroupedDateEvent key={k}>

@@ -18,7 +18,11 @@ const Index = ({
     )}
 
     {props.events ? (
-      <ProgramView events={props.events} stands={props.stands} />
+      <ProgramView
+        events={props.events}
+        stands={props.stands}
+        showToggleButton
+      />
     ) : (
       <Flex>
         <FlexItem>
