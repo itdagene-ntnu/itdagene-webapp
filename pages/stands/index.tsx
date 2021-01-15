@@ -98,7 +98,7 @@ const Index = ({
       )}
 
       {/* TODO: Complete technical implementation of the LivePlayer */}
-      <LivePlayer livestreamUrl={''} qaUrl={''} />
+      <LivePlayer livestreamUrl={''} qaUrl={''} frontPage />
 
       {props.stands &&
         featuredEventStands &&
