@@ -57,43 +57,15 @@ export const currentHalfhour = (time: Dayjs): string => {
     : `${time.format('HH')}:30 - ${nextHour.format('HH')}:00`;
 };
 
-interface EventInfo {
-  timeRange: string;
-  eventTitle: string;
-  eventDescription: string;
-}
+export const eventTime = (event: ArrayElement<ProgramView_events>): string => {
+  const dayTimeStart = dayjs(
+    `${event.timeStart} ${event.date}`,
+    'HH:mm:ss YYYY-MM-DD'
+  ).format('HH:mm');
+  const dayTimeEnd = dayjs(
+    `${event.timeEnd} ${event.date}`,
+    'HH:mm:ss YYYY-MM-DD'
+  ).format('HH:mm');
 
-// FIXME: Create a eventType who's either ProgramView_events or NonNullable<StandCard_stand['events']>;
-export const eventTime = (
-  event: ArrayElement<ProgramView_events> | null,
-  truncLength = 50
-): EventInfo => {
-  let timeRange;
-  let eventTitle;
-  let eventDescription;
-
-  if (event) {
-    const dayTimeStart = dayjs(
-      `${event.timeStart} ${event.date}`,
-      'HH:mm:ss YYYY-MM-DD'
-    ).format('HH:mm');
-    const dayTimeEnd = dayjs(
-      `${event.timeEnd} ${event.date}`,
-      'HH:mm:ss YYYY-MM-DD'
-    ).format('HH:mm');
-
-    timeRange = `${dayTimeStart} - ${dayTimeEnd}`;
-    eventTitle = event.title;
-    eventDescription = event.description;
-  } else {
-    timeRange = '';
-    eventTitle = '💁🏼‍♀️';
-    eventDescription = '';
-  }
-
-  return {
-    timeRange,
-    eventTitle,
-    eventDescription,
-  };
+  return `${dayTimeStart} - ${dayTimeEnd}`;
 };

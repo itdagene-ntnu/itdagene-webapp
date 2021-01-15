@@ -12,7 +12,7 @@ import {
   Paragraph,
 } from '../MarkdownRenderer';
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
-import Link from 'next/link';
+// import Link from 'next/link';
 import { program_QueryResponse } from '../../__generated__/program_Query.graphql';
 import Flex from 'styled-flex-component';
 import EventsToggle from './EventsToggle';
@@ -190,12 +190,10 @@ const ProgramView = (props: Props): JSX.Element => {
                 <EventInfo key={event.id}>
                   <Title>{event.title}</Title>
                   <EventTimePlaceInfo>
-                    <InfoElement>{`🕐 ${
-                      eventTime(event).timeRange
-                    }`}</InfoElement>
+                    <InfoElement>{`🕐 ${eventTime(event)}`}</InfoElement>
                     <LocationLink event={event} stands={props.stands} />
                     {event.company && (
-                      <HostingCompanyNoLink>{`🏢 ${event.company?.name}`}</HostingCompanyNoLink>
+                      <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
                     )}
                   </EventTimePlaceInfo>
                   <br />
