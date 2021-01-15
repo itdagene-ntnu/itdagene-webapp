@@ -160,10 +160,11 @@ type Props = {
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState(false);
 
+  // Had an issue where event wasn't defined although by the schema it should be. Added a null-safety
   const filteredEvents =
     props.events &&
     props.events.filter((event) =>
-      showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
+      showPromoted ? event?.type === 'A_7' : event?.type !== 'A_7'
     );
 
   // If on a company's page, don't show toggleButton and don't filter any events
@@ -186,30 +187,33 @@ const ProgramView = (props: Props): JSX.Element => {
           <GroupedDateEvent key={k}>
             <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
             <GroupedEvent>
-              {groupedEvents[k].map((event) => (
-                <EventInfo key={event.id}>
-                  <Title>{event.title}</Title>
-                  <EventTimePlaceInfo>
-                    <InfoElement>{`🕐 ${eventTime(event)}`}</InfoElement>
-                    <LocationLink event={event} stands={props.stands} />
-                    {event.company && (
-                      <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
-                    )}
-                  </EventTimePlaceInfo>
-                  <br />
-                  <ReactMarkdown
-                    source={event.description}
-                    escapeHtml={false}
-                    renderers={{
-                      heading: Heading,
-                      blockquote: Blockquote,
-                      thematicBreak: ThematicBreak,
-                      list: MarkdownList,
-                      paragraph: Paragraph,
-                    }}
-                  />
-                </EventInfo>
-              ))}
+              {groupedEvents[k].map(
+                (event) =>
+                  event && (
+                    <EventInfo key={event.id}>
+                      <Title>{event.title}</Title>
+                      <EventTimePlaceInfo>
+                        <InfoElement>{`🕐 ${eventTime(event)}`}</InfoElement>
+                        <LocationLink event={event} stands={props.stands} />
+                        {event.company && (
+                          <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
+                        )}
+                      </EventTimePlaceInfo>
+                      <br />
+                      <ReactMarkdown
+                        source={event.description}
+                        escapeHtml={false}
+                        renderers={{
+                          heading: Heading,
+                          blockquote: Blockquote,
+                          thematicBreak: ThematicBreak,
+                          list: MarkdownList,
+                          paragraph: Paragraph,
+                        }}
+                      />
+                    </EventInfo>
+                  )
+              )}
             </GroupedEvent>
           </GroupedDateEvent>
         ))}
