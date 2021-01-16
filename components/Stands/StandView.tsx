@@ -11,6 +11,7 @@ import AboutPage from './AboutStand';
 import ProgramPage from './StandProgram';
 import JobListingsPage from './StandJoblistings';
 import LivePlayer from './LivePlayer';
+import KeyInfoBlob from './KeyInfoBlob';
 
 declare global {
   interface Window {
@@ -55,6 +56,11 @@ const LiveContentSection = styled.div`
   @media only screen and (max-width: 767px) {
     margin: 0 1em 30px 1em;
   }
+`;
+const KeyInfoSection = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 `;
 
 const Back = (): JSX.Element => (
@@ -153,6 +159,24 @@ const Stand = ({ stand }: Props): JSX.Element => {
             </Flex>
           </FlexItem>
         </Flex>
+        <KeyInfoSection>
+          {stand.company.keyInformation
+            .filter(
+              (keyInfo) =>
+                // Can remove this logic when implementing types backend
+                keyInfo &&
+                [
+                  'it-ansatte',
+                  'hovedkontor',
+                  'bedrift-type',
+                  'ett-ord',
+                ].includes(keyInfo.name)
+            )
+            .map(
+              (keyInfo) =>
+                keyInfo && <KeyInfoBlob key={keyInfo.id} keyInfo={keyInfo} />
+            )}
+        </KeyInfoSection>
       </BorderlessSection>
     </>
   );
@@ -168,8 +192,10 @@ export default createFragmentContainer(Stand, {
         description
         url
         keyInformation {
+          id
           name
           value
+          ...KeyInfoBlob_keyInformation
         }
         ...StandJoblistings_joblistings
       }
