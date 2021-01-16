@@ -12,25 +12,17 @@ const EventsToggle = ({
   showPromoted,
   setShowPromoted,
 }: EventsToggleProps): JSX.Element => {
-  const handleToggle = (promoted: boolean): void => {
-    if (promoted && !showPromoted) {
-      setShowPromoted(true);
-    } else if (!promoted && showPromoted) {
-      setShowPromoted(false);
-    }
-  };
-
   return (
     <ToggleContainer>
       <ToggleItem
         active={!showPromoted}
-        onClick={(): void => handleToggle(false)}
+        onClick={(): void => setShowPromoted(false)}
       >
         <SubHeader>Generelt program</SubHeader>
       </ToggleItem>
       <ToggleItem
         active={showPromoted}
-        onClick={(): void => handleToggle(true)}
+        onClick={(): void => setShowPromoted(true)}
       >
         <SubHeader>Promotert program</SubHeader>
       </ToggleItem>
@@ -42,6 +34,7 @@ const ToggleContainer = styled.div`
   display: flex;
   max-width: 525px;
   margin: 10px 0;
+  cursor: pointer;
 `;
 
 const ToggleItem = styled.div<{ active: boolean }>`
