@@ -147,11 +147,15 @@ const Index = ({
     time: time,
     start: toDayjs(props.currentMetaData.startDate, '09:30:00'),
   }) ? (
-    <StandsDefault currentMetaData={props.currentMetaData} />
+    <BorderlessSection>
+      <StandsDefault currentMetaData={props.currentMetaData} />
+    </BorderlessSection>
   ) : (
     <>
       {props.stands_page && (
-        <PageView hideContent hideDate hideTitle page={props.stands_page} />
+        <BorderlessSection>
+          <PageView hideContent hideDate hideTitle page={props.stands_page} />
+        </BorderlessSection>
       )}
 
       {props.itdagene_stand && (
