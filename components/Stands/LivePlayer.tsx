@@ -17,7 +17,7 @@ const Player = styled('div')`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 600px;
+  height: 700px;
   width: 70%;
   background-color: #222;
   color: white;
@@ -37,7 +37,7 @@ const QAView = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 600px;
+  height: 700px;
   width: 30%;
   background-color: #222;
   color: white;

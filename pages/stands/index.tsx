@@ -17,7 +17,8 @@ import LivePlayer from '../../components/Stands/LivePlayer';
 import FeaturedEvents from '../../components/Stands/FeaturedEvents';
 import dayjs, { Dayjs } from 'dayjs';
 import StandsDefault from '../../components/Stands/StandsDefault';
-import { PaddedDivider } from '../../components/Styled';
+import { BorderlessSection } from '../../components/Styled';
+import { seedShuffle } from '../../utils/random';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -34,6 +35,8 @@ type Companies =
   | stands_QueryResponse['currentMetaData']['companiesFirstDay']
   | stands_QueryResponse['currentMetaData']['companiesLastDay']
   | stands_QueryResponse['currentMetaData']['collaborators'];
+
+type Stands = NonNullable<stands_QueryResponse['stands']>;
 
 const getFeaturedEventStands = (
   time: Dayjs,
@@ -67,7 +70,7 @@ export const currentFeaturedEvent = (
   time: Dayjs,
   stand: ArrayElement<NonNullable<stands_QueryResponse['stands']>>
 ): FeaturedEvent | null => {
-  const featuredEvent = stand?.events?.find(
+  const featuredEvent = stand.events?.find(
     (event) =>
       event.type === 'A_7' &&
       timeIsBetween({
@@ -82,6 +85,8 @@ export const currentFeaturedEvent = (
 
 const companyIds = (companies: Companies): string[] =>
   companies ? companies.map((company) => company.id) : [];
+
+const seed = dayjs().format('YYYYMMDDHHmm');
 
 const Index = ({
   error,
@@ -135,6 +140,9 @@ const Index = ({
     companiesLastDay,
   ]);
 
+  const stands =
+    props.stands && seedShuffle<Stands[number]>(props.stands, seed);
+
   return timeIsAfter({
     time: time,
     start: toDayjs(props.currentMetaData.startDate, '09:30:00'),
@@ -146,67 +154,71 @@ const Index = ({
         <PageView hideContent hideDate hideTitle page={props.stands_page} />
       )}
 
-      {/* TODO: Complete technical implementation of the LivePlayer */}
-      <LivePlayer livestreamUrl={''} qaUrl={''} />
-      <PaddedDivider />
-
-      {props.stands &&
-        featuredEventStands &&
-        featuredEventStands.length > 0 && (
+      {props.itdagene_stand && (
+        <LiveContentSection>
+          <LivePlayer
+            livestreamUrl={props.itdagene_stand.livestreamUrl}
+            qaUrl={props.itdagene_stand.qaUrl}
+          />
+        </LiveContentSection>
+      )}
+      <BorderlessSection>
+        {stands && featuredEventStands && featuredEventStands.length > 0 && (
           <FeaturedEvents time={time} stands={featuredEventStands} />
         )}
 
-      {mainCollaborator && (
-        <HSPGrid>
-          {props.stands
+        {mainCollaborator && (
+          <HSPGrid>
+            {stands
+              ?.filter(
+                (stand) =>
+                  stand &&
+                  currentDayCompaniesIds.includes(stand.company.id) &&
+                  stand.company.id === mainCollaborator.id
+              )
+              .map((stand) => (
+                <StandCard
+                  key={stand.id}
+                  stand={stand}
+                  time={time}
+                  type={'standard'}
+                />
+              ))}
+          </HSPGrid>
+        )}
+
+        <SPGrid>
+          {stands
             ?.filter(
               (stand) =>
                 stand &&
                 currentDayCompaniesIds.includes(stand.company.id) &&
-                stand.company.id === mainCollaborator.id
+                companyIds(collaborators).includes(stand.company.id)
+            )
+            .map((stand) => (
+              <StandCard key={stand.id} stand={stand} time={time} type={'sp'} />
+            ))}
+        </SPGrid>
+
+        <StandGrid>
+          {stands
+            ?.filter(
+              (stand) =>
+                stand &&
+                currentDayCompaniesIds.includes(stand.company.id) &&
+                !companyIds(collaborators).includes(stand.company.id) &&
+                stand.company.id !== mainCollaborator?.id
             )
             .map((stand) => (
               <StandCard
+                key={stand.id}
                 stand={stand}
-                key={mainCollaborator.id}
                 time={time}
-                type={'hsp'}
+                type={'standard'}
               />
             ))}
-        </HSPGrid>
-      )}
-
-      <SPGrid>
-        {props.stands
-          ?.filter(
-            (stand) =>
-              stand &&
-              currentDayCompaniesIds.includes(stand.company.id) &&
-              companyIds(collaborators).includes(stand.company.id)
-          )
-          .map((stand) => (
-            <StandCard key={stand.id} stand={stand} time={time} type={'sp'} />
-          ))}
-      </SPGrid>
-
-      <StandGrid>
-        {props.stands
-          ?.filter(
-            (stand) =>
-              stand &&
-              currentDayCompaniesIds.includes(stand.company.id) &&
-              !companyIds(collaborators).includes(stand.company.id) &&
-              stand.company.id !== mainCollaborator?.id
-          )
-          .map((stand) => (
-            <StandCard
-              key={stand.id}
-              stand={stand}
-              time={time}
-              type={'standard'}
-            />
-          ))}
-      </StandGrid>
+        </StandGrid>
+      </BorderlessSection>
     </>
   );
 };
@@ -233,6 +245,14 @@ const SPGrid = styled(StandGrid)`
 
 const HSPGrid = styled(SPGrid)`
   grid-column: 1 / -1;
+`;
+
+const LiveContentSection = styled.div`
+  margin: 0 2em 30px 2em;
+
+  @media only screen and (max-width: 767px) {
+    margin: 0 1em 30px 1em;
+  }
 `;
 
 export default withDataAndLayout(Index, {
@@ -274,11 +294,16 @@ export default withDataAndLayout(Index, {
         ...PageView_page
         ...metadata_metadata
       }
+
+      itdagene_stand: stand(slug: "itdagene") {
+        livestreamUrl
+        qaUrl
+      }
     }
   `,
   variables: {},
   layout: ({ props, error }) => ({
-    responsive: true,
+    responsive: false,
     metadata: props && props.stands_page,
   }),
 });
