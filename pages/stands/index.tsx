@@ -18,6 +18,7 @@ import FeaturedEvents from '../../components/Stands/FeaturedEvents';
 import dayjs, { Dayjs } from 'dayjs';
 import StandsDefault from '../../components/Stands/StandsDefault';
 import { BorderlessSection } from '../../components/Styled';
+import { seedShuffle } from '../../utils/random';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
@@ -34,6 +35,8 @@ type Companies =
   | stands_QueryResponse['currentMetaData']['companiesFirstDay']
   | stands_QueryResponse['currentMetaData']['companiesLastDay']
   | stands_QueryResponse['currentMetaData']['collaborators'];
+
+type Stands = NonNullable<stands_QueryResponse['stands']>;
 
 const getFeaturedEventStands = (
   time: Dayjs,
@@ -55,7 +58,7 @@ const getCurrentDayCompaniesIds = (
   companiesFirstDay: Companies,
   companiesLastDay: Companies
 ): string[] => {
-  if (dayjs('2021-01-18').date() === dayjs(startDate).date()) {
+  if (isRespectiveDate(toDayjs(startDate))) {
     return companyIds(companiesFirstDay);
   } else if (isRespectiveDate(toDayjs(endDate))) {
     return companyIds(companiesLastDay);
@@ -82,6 +85,8 @@ export const currentFeaturedEvent = (
 
 const companyIds = (companies: Companies): string[] =>
   companies ? companies.map((company) => company.id) : [];
+
+const seed = dayjs().format('YYYYMMDDHHmm');
 
 const Index = ({
   error,
@@ -135,7 +140,10 @@ const Index = ({
     companiesLastDay,
   ]);
 
-  return !timeIsAfter({
+  const stands =
+    props.stands && seedShuffle<Stands[number]>(props.stands, seed);
+
+  return timeIsAfter({
     time: time,
     start: toDayjs(props.currentMetaData.startDate, '09:30:00'),
   }) ? (
@@ -155,15 +163,13 @@ const Index = ({
         </LiveContentSection>
       )}
       <BorderlessSection>
-        {props.stands &&
-          featuredEventStands &&
-          featuredEventStands.length > 0 && (
-            <FeaturedEvents time={time} stands={featuredEventStands} />
-          )}
+        {stands && featuredEventStands && featuredEventStands.length > 0 && (
+          <FeaturedEvents time={time} stands={featuredEventStands} />
+        )}
 
         {mainCollaborator && (
           <HSPGrid>
-            {props.stands
+            {stands
               ?.filter(
                 (stand) =>
                   stand &&
@@ -182,7 +188,7 @@ const Index = ({
         )}
 
         <SPGrid>
-          {props.stands
+          {stands
             ?.filter(
               (stand) =>
                 stand &&
@@ -195,7 +201,7 @@ const Index = ({
         </SPGrid>
 
         <StandGrid>
-          {props.stands
+          {stands
             ?.filter(
               (stand) =>
                 stand &&
@@ -252,7 +258,7 @@ const LiveContentSection = styled.div`
 export default withDataAndLayout(Index, {
   query: graphql`
     query stands_Query {
-      stands(shuffle: trye) {
+      stands {
         id
         events {
           date
