@@ -1,53 +1,20 @@
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc'; // dependent on utc plugin
 import timezone from 'dayjs/plugin/timezone';
-import { ProgramView_events } from '../__generated__/ProgramView_events.graphql';
-import { ArrayElement } from './types';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const timeIsBetween = (
-  time: Dayjs,
-  start: string,
-  end: string,
-  date: string
-): boolean => {
-  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
-  const e = dayjs(`${end} ${date}`, 'HH:mm:ss YYYY-MM-DD');
-  const now = dayjs(time);
-
-  return s.isBefore(now) && e.isAfter(now);
-};
-
-export const timeIsAfterNow = (
-  time: Dayjs,
-  start: string,
-  date: string
-): boolean => {
-  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
-  const now = dayjs(time);
-
-  return s.isAfter(now);
-};
-
-type currentDay = 'companiesFirstDay' | 'companiesLastDay';
-
-// TODO: This date-check should probably be implemented backend
-export const currentDayCompanies = (endDate: string): currentDay => {
-  const second_day = dayjs(`${endDate} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').tz(
-    'Europe/Oslo'
-  );
-
-  // Keeping this for test-cases
-  // const second_day = dayjs(
-  //   `${'2022-01-15'} 00:00:00`,
-  //   'YYYY-MM-DD HH:mm:ss'
-  // ).tz('Europe/Oslo');
-
-  return dayjs().tz('Europe/Oslo').isBefore(second_day)
-    ? 'companiesFirstDay'
-    : 'companiesLastDay';
+export const timeIsBetween = ({
+  time,
+  start,
+  end,
+}: {
+  time: Dayjs;
+  start: Dayjs;
+  end: Dayjs;
+}): boolean => {
+  return start.isBefore(time) && end.isAfter(time);
 };
 
 export const currentHalfhour = (time: Dayjs): string => {
@@ -57,15 +24,8 @@ export const currentHalfhour = (time: Dayjs): string => {
     : `${time.format('HH')}:30 - ${nextHour.format('HH')}:00`;
 };
 
-export const eventTime = (event: ArrayElement<ProgramView_events>): string => {
-  const dayTimeStart = dayjs(
-    `${event.timeStart} ${event.date}`,
-    'HH:mm:ss YYYY-MM-DD'
-  ).format('HH:mm');
-  const dayTimeEnd = dayjs(
-    `${event.timeEnd} ${event.date}`,
-    'HH:mm:ss YYYY-MM-DD'
-  ).format('HH:mm');
+export const eventTime = (start: Dayjs, end: Dayjs): string =>
+  `${start.format('HH:mm')} - ${end.format('HH:mm')}`;
 
-  return `${dayTimeStart} - ${dayTimeEnd}`;
-};
+export const toDayjs = (date: string, time: string): Dayjs =>
+  dayjs(date + time);

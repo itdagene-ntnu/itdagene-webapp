@@ -12,12 +12,12 @@ import {
   Paragraph,
 } from '../MarkdownRenderer';
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
-// import Link from 'next/link';
-import { program_QueryResponse } from '../../__generated__/program_Query.graphql';
+import { ProgramView_stands } from '../../__generated__/ProgramView_stands.graphql';
+import Link from 'next/link';
 import Flex from 'styled-flex-component';
 import EventsToggle from './EventsToggle';
 import { ArrayElement } from '../../utils/types';
-import { eventTime } from '../../utils/time';
+import { eventTime, toDayjs } from '../../utils/time';
 
 const Title = styled.h2`
   position: relative;
@@ -112,39 +112,29 @@ const EventInfo = styled.div`
 
 interface LocationLinkProps {
   event: ArrayElement<ProgramView_events>;
-  stands?: program_QueryResponse['stands'];
+  stands?: ProgramView_stands | null;
+  isLink?: boolean;
 }
 
-const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
-  let href;
+const Location = ({
+  event,
+  stands,
+  isLink = false,
+}: LocationLinkProps): JSX.Element => {
+  const standSlug = stands?.find(
+    (stand) => stand.company.id === event.company?.id
+  )?.slug;
 
-  const standSlug =
-    stands &&
-    stands.find((stand) => stand && stand.company.id === event.company?.id)
-      ?.slug;
+  const linkLocation =
+    event.type === 'A_7' ? standSlug && `/stands/${standSlug}` : '/stands';
 
-  // FIXME: This should be implemented as types
-  switch (event.location.toLowerCase()) {
-    case 'forsiden':
-      href = '/stands';
-      break;
-    case 'standen':
-      href = standSlug ? `stands/${standSlug}` : null;
-      break;
-    default:
-      href = null;
-      break;
-  }
-
-  // FIXME: Removed the linking until we've merged further /stands branches
-  return (
-    // href ? (
-    //   <InfoElement>
-    //     <Link href={href}>
-    //       <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
-    //     </Link>
-    //   </InfoElement>
-    // ) :
+  return isLink && linkLocation ? (
+    <InfoElement>
+      <Link href={linkLocation}>
+        <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
+      </Link>
+    </InfoElement>
+  ) : (
     <InfoElement>
       <HostingCompanyNoLink>{`📍 ${event.location}`}</HostingCompanyNoLink>
     </InfoElement>
@@ -153,19 +143,17 @@ const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
 
 type Props = {
   events: ProgramView_events;
-  stands?: program_QueryResponse['stands'];
+  stands?: ProgramView_stands | null;
   showToggleButton?: boolean;
+  useLinks?: boolean;
 };
 
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState(false);
 
-  // Had an issue where event wasn't defined although by the schema it should be. Added a null-safety
-  const filteredEvents =
-    props.events &&
-    props.events.filter((event) =>
-      showPromoted ? event?.type === 'A_7' : event?.type !== 'A_7'
-    );
+  const filteredEvents = props.events.filter((event) =>
+    showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
+  );
 
   // If on a company's page, don't show toggleButton and don't filter any events
   const groupedEvents = groupBy(
@@ -187,33 +175,37 @@ const ProgramView = (props: Props): JSX.Element => {
           <GroupedDateEvent key={k}>
             <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
             <GroupedEvent>
-              {groupedEvents[k].map(
-                (event) =>
-                  event && (
-                    <EventInfo key={event.id}>
-                      <Title>{event.title}</Title>
-                      <EventTimePlaceInfo>
-                        <InfoElement>{`🕐 ${eventTime(event)}`}</InfoElement>
-                        <LocationLink event={event} stands={props.stands} />
-                        {event.company && (
-                          <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
-                        )}
-                      </EventTimePlaceInfo>
-                      <br />
-                      <ReactMarkdown
-                        source={event.description}
-                        escapeHtml={false}
-                        renderers={{
-                          heading: Heading,
-                          blockquote: Blockquote,
-                          thematicBreak: ThematicBreak,
-                          list: MarkdownList,
-                          paragraph: Paragraph,
-                        }}
-                      />
-                    </EventInfo>
-                  )
-              )}
+              {groupedEvents[k].map((event) => (
+                <EventInfo key={event.id}>
+                  <Title>{event.title}</Title>
+                  <EventTimePlaceInfo>
+                    <InfoElement>{`🕐 ${eventTime(
+                      toDayjs(event.date, event.timeStart),
+                      toDayjs(event.date, event.timeEnd)
+                    )}`}</InfoElement>
+                    <Location
+                      event={event}
+                      stands={props.stands}
+                      isLink={props.useLinks}
+                    />
+                    {event.company && (
+                      <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
+                    )}
+                  </EventTimePlaceInfo>
+                  <br />
+                  <ReactMarkdown
+                    source={event.description}
+                    escapeHtml={false}
+                    renderers={{
+                      heading: Heading,
+                      blockquote: Blockquote,
+                      thematicBreak: ThematicBreak,
+                      list: MarkdownList,
+                      paragraph: Paragraph,
+                    }}
+                  />
+                </EventInfo>
+              ))}
             </GroupedEvent>
           </GroupedDateEvent>
         ))}
@@ -239,6 +231,14 @@ export default createFragmentContainer(ProgramView, {
       }
       usesTickets
       maxParticipants
+    }
+  `,
+  stands: graphql`
+    fragment ProgramView_stands on Stand @relay(plural: true) {
+      company {
+        id
+      }
+      slug
     }
   `,
 });

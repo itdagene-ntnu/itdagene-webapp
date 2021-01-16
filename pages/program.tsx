@@ -22,6 +22,7 @@ const Index = ({
         events={props.events}
         stands={props.stands}
         showToggleButton
+        //useLinks
       />
     ) : (
       <Flex>
@@ -37,28 +38,10 @@ export default withDataAndLayout(Index, {
   query: graphql`
     query program_Query {
       stands {
-        active
-        slug
-        company {
-          id
-        }
+        ...ProgramView_stands
       }
       events {
         ...ProgramView_events
-        title
-        id
-        timeStart
-        timeEnd
-        description
-        location
-        date
-        type
-        company {
-          id
-          name
-        }
-        usesTickets
-        maxParticipants
       }
       programPage: page(slug: "program") {
         ...PageView_page
