@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { StandsDefault_currentMetaData } from '../../__generated__/StandsDefault_currentMetaData.graphql';
 import Countdown from '../Countdown';
-import { CenterIt } from '../Styled';
-import { Header, PaddedDivider, SubHeader } from './FeaturedEvents';
+import { CenterIt, PaddedDivider, SubHeader } from '../Styled';
+import { Header } from './FeaturedEvents';
 import ProgramButton from './ProgramButton';
 
 interface StandsDefaultProps {

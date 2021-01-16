@@ -96,9 +96,17 @@ export const Divider = styled.hr`
   flex-shrink: 0;
 `;
 
+export const PaddedDivider = styled(Divider)<{ margin?: number }>`
+  background-color: #fff;
+  margin: ${(props): any =>
+    props.margin
+      ? `${props.margin}px auto ${props.margin}px auto`
+      : '30px auto 30px auto'};
+`;
+
 export const NudgeDiv = styled('div')<{ scale: number }>`
   transition: 0.1s;
   &:hover {
-    transform: scale(${(props) => props.scale});
+    transform: scale(${(props): any => props.scale});
   }
 `;

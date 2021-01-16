@@ -5,8 +5,9 @@ import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export const toDayjs = (date: string, time: string): Dayjs =>
-  dayjs(date + time);
+export const toDayjs = (date: string, time?: string): Dayjs => {
+  return time ? dayjs(date + time) : dayjs(date);
+};
 
 export const timeIsBetween = ({
   time,
@@ -31,25 +32,15 @@ export const eventTime = (start: Dayjs, end: Dayjs): string =>
   `${start.format('HH:mm')} - ${end.format('HH:mm')}`;
 
 // TODO: Change to Dayjs input
-export const timeIsAfter = ({ time, start }: { time: Dayjs; start: Dayjs }) => {
-  return start.isAfter(time);
-};
+export const timeIsAfter = ({
+  time,
+  start,
+}: {
+  time: Dayjs;
+  start: Dayjs;
+}): boolean => start.isAfter(time);
 
-type currentDay = 'companiesFirstDay' | 'companiesLastDay';
-
-// TODO: This date-check should probably be implemented backend
-export const currentDayCompanies = (endDate: string): currentDay => {
-  const second_day = dayjs(`${endDate} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').tz(
-    'Europe/Oslo'
-  );
-
-  // Keeping this for test-cases
-  // const second_day = dayjs(
-  //   `${'2022-01-15'} 00:00:00`,
-  //   'YYYY-MM-DD HH:mm:ss'
-  // ).tz('Europe/Oslo');
-
-  return dayjs().tz('Europe/Oslo').isBefore(second_day)
-    ? 'companiesFirstDay'
-    : 'companiesLastDay';
+export const isRespectiveDate = (date: Dayjs): boolean => {
+  const now = dayjs();
+  return now.date() === date.date();
 };

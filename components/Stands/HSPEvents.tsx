@@ -23,7 +23,7 @@ interface RelevantEventsProps {
 
 const RelevantEvents = ({ events }: RelevantEventsProps): JSX.Element => (
   <>
-    {events!.slice(Math.max(events.length - 3, 0)).map((event) => (
+    {events.slice(Math.max(events.length - 3, 0)).map((event) => (
       <EventGrid key={event?.id}>
         <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
         <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
@@ -37,11 +37,13 @@ const HSPEvents = ({
   time,
   currentEvent,
 }: HSPEventsProps): JSX.Element => {
-  const relevantEvents = stand?.events!.filter(
-    (event) =>
-      event &&
-      timeIsAfter({ time: time, start: toDayjs(event.date, event.timeStart) })
-  );
+  const relevantEvents =
+    stand?.events &&
+    stand.events.filter(
+      (event) =>
+        event &&
+        timeIsAfter({ time: time, start: toDayjs(event.date, event.timeStart) })
+    );
 
   return currentEvent ? (
     <>
@@ -49,10 +51,10 @@ const HSPEvents = ({
         <TimeSlot current={true}>{eventTime(currentEvent).timeRange}</TimeSlot>
         <EventTitle>{eventTime(currentEvent, 200).eventTitle}</EventTitle>
       </EventGrid>
-      <RelevantEvents events={relevantEvents} />
+      <RelevantEvents events={relevantEvents ?? []} />
     </>
   ) : (
-    <RelevantEvents events={relevantEvents} />
+    <RelevantEvents events={relevantEvents ?? []} />
   );
 };
 

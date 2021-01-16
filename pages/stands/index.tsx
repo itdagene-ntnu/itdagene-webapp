@@ -8,7 +8,7 @@ import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import { useEffect, useState } from 'react';
 import StandCard, { ArrayElement } from '../../components/Stands/StandCard';
 import {
-  currentDayCompanies,
+  isRespectiveDate,
   timeIsAfter,
   timeIsBetween,
   toDayjs,
@@ -17,19 +17,10 @@ import LivePlayer from '../../components/Stands/LivePlayer';
 import FeaturedEvents from '../../components/Stands/FeaturedEvents';
 import dayjs, { Dayjs } from 'dayjs';
 import StandsDefault from '../../components/Stands/StandsDefault';
+import { PaddedDivider } from '../../components/Styled';
 
 // Update the currentEvent-list every 30 sec
 const intervalLength = 1000 * 30;
-
-const getFeaturedEventStands = (
-  time: Dayjs,
-  stands: stands_QueryResponse['stands']
-): stands_QueryResponse['stands'] => {
-  const featuredStands = stands?.filter(
-    (stand) => stand && currentFeaturedEvent(time, stand)
-  );
-  return featuredStands ?? [];
-};
 
 type FeaturedEvent = ArrayElement<
   NonNullable<
@@ -38,6 +29,47 @@ type FeaturedEvent = ArrayElement<
     >['events']
   >
 >;
+
+type Companies =
+  | stands_QueryResponse['currentMetaData']['companiesFirstDay']
+  | stands_QueryResponse['currentMetaData']['companiesLastDay']
+  | stands_QueryResponse['currentMetaData']['collaborators'];
+
+const getFeaturedEventStands = (
+  time: Dayjs,
+  stands: stands_QueryResponse['stands'],
+  startDate: string,
+  endDate: string,
+  companiesFirstDay: Companies,
+  companiesLastDay: Companies
+): stands_QueryResponse['stands'] => {
+  const featuredStands = stands?.filter(
+    (stand) =>
+      stand &&
+      currentDayCompaniesIds(
+        startDate,
+        endDate,
+        companiesFirstDay,
+        companiesLastDay
+      ).includes(stand.company.id) &&
+      currentFeaturedEvent(time, stand)
+  );
+  return featuredStands ?? [];
+};
+
+const currentDayCompaniesIds = (
+  startDate: string,
+  endDate: string,
+  companiesFirstDay: Companies,
+  companiesLastDay: Companies
+): string[] => {
+  if (isRespectiveDate(toDayjs(startDate))) {
+    return companyIds(companiesFirstDay);
+  } else if (isRespectiveDate(toDayjs(endDate))) {
+    return companyIds(companiesLastDay);
+  }
+  return [];
+};
 
 export const currentFeaturedEvent = (
   time: Dayjs,
@@ -56,18 +88,23 @@ export const currentFeaturedEvent = (
   return featuredEvent ?? null;
 };
 
+const companyIds = (companies: Companies): string[] =>
+  companies ? companies.map((company) => company.id) : [];
+
 const Index = ({
   error,
   props,
 }: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(dayjs());
   const [featuredEventStands, setFeaturedEventStands] = useState<
-    stands_QueryResponse['stands'] | any[]
+    stands_QueryResponse['stands']
   >([]);
 
   const {
     mainCollaborator,
     collaborators,
+    companiesFirstDay,
+    companiesLastDay,
     startDate,
     endDate,
   } = props.currentMetaData;
@@ -78,21 +115,25 @@ const Index = ({
   }, [props.currentMetaData]);
 
   useEffect(() => {
-    const updatedFeaturedStands = getFeaturedEventStands(time, props.stands);
+    const updatedFeaturedStands = getFeaturedEventStands(
+      time,
+      props.stands,
+      startDate,
+      endDate,
+      companiesFirstDay,
+      companiesLastDay
+    );
     if (updatedFeaturedStands) {
       setFeaturedEventStands(updatedFeaturedStands);
     }
-  }, [props.stands, time]);
-
-  const currentDayCompaniesIds = (): string[] => {
-    return props.currentMetaData[currentDayCompanies(endDate)]
-      ? props.currentMetaData[currentDayCompanies(endDate)]!.map((c) => c.id)
-      : [];
-  };
-
-  const collaboratorsIds = (): string[] => {
-    return collaborators ? collaborators.map((c) => c.id) : [];
-  };
+  }, [
+    time,
+    props.stands,
+    startDate,
+    endDate,
+    companiesFirstDay,
+    companiesLastDay,
+  ]);
 
   return timeIsAfter({
     time: time,
@@ -107,6 +148,7 @@ const Index = ({
 
       {/* TODO: Complete technical implementation of the LivePlayer */}
       <LivePlayer livestreamUrl={''} qaUrl={''} />
+      <PaddedDivider />
 
       {props.stands &&
         featuredEventStands &&
@@ -118,11 +160,19 @@ const Index = ({
         <HSPGrid>
           {props.stands
             ?.filter(
-              (stand) => stand && stand.company.id === mainCollaborator.id
+              (stand) =>
+                stand &&
+                currentDayCompaniesIds(
+                  startDate,
+                  endDate,
+                  companiesFirstDay,
+                  companiesLastDay
+                ).includes(stand.company.id) &&
+                stand.company.id === mainCollaborator.id
             )
             .map((stand) => (
               <StandCard
-                stand={stand!}
+                stand={stand}
                 key={mainCollaborator.id}
                 time={time}
                 type={'hsp'}
@@ -134,10 +184,18 @@ const Index = ({
       <SPGrid>
         {props.stands
           ?.filter(
-            (stand) => stand && collaboratorsIds().includes(stand.company.id)
+            (stand) =>
+              stand &&
+              currentDayCompaniesIds(
+                startDate,
+                endDate,
+                companiesFirstDay,
+                companiesLastDay
+              ).includes(stand.company.id) &&
+              companyIds(collaborators).includes(stand.company.id)
           )
           .map((stand) => (
-            <StandCard key={stand?.id} stand={stand!} time={time} type={'sp'} />
+            <StandCard key={stand.id} stand={stand} time={time} type={'sp'} />
           ))}
       </SPGrid>
 
@@ -146,14 +204,19 @@ const Index = ({
           ?.filter(
             (stand) =>
               stand &&
-              currentDayCompaniesIds().includes(stand.company.id) &&
-              !collaboratorsIds().includes(stand.company.id) &&
+              currentDayCompaniesIds(
+                startDate,
+                endDate,
+                companiesFirstDay,
+                companiesLastDay
+              ).includes(stand.company.id) &&
+              !companyIds(collaborators).includes(stand.company.id) &&
               stand.company.id !== mainCollaborator?.id
           )
           .map((stand) => (
             <StandCard
-              key={stand?.id}
-              stand={stand!}
+              key={stand.id}
+              stand={stand}
               time={time}
               type={'standard'}
             />
@@ -193,7 +256,6 @@ export default withDataAndLayout(Index, {
       stands {
         id
         events {
-          title
           date
           timeStart
           timeEnd
@@ -217,11 +279,9 @@ export default withDataAndLayout(Index, {
         }
         companiesFirstDay {
           id
-          name
         }
         companiesLastDay {
           id
-          name
         }
       }
 

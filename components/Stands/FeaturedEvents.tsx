@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import Flex from 'styled-flex-component';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
-import { Divider } from './CompanyCardInfo';
 import FeaturedEventCard from './FeaturedEventCard';
 import { currentHalfhour } from '../../utils/time';
 import { Dayjs } from 'dayjs';
 import ProgramButton from './ProgramButton';
+import { PaddedDivider, SubHeader } from '../Styled';
 
 interface FeaturedEventsProps {
   stands: NonNullable<stands_QueryResponse['stands']>;
@@ -17,7 +17,7 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   return (
     <div>
       <Flex justifyBetween wrap>
-        <Flex column>
+        <FeaturedEventsInfo>
           <Flex wrap>
             <Header>Halvtimens bedrifter:</Header>
             <Time>{currentHalfhour(time)}</Time>
@@ -26,7 +26,7 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
             Trykk på bedriftene under for å se hva de har forberedt for sin
             halvtime
           </SubHeader>
-        </Flex>
+        </FeaturedEventsInfo>
         <ProgramButton />
       </Flex>
       <FeatStandGrid>
@@ -45,6 +45,12 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   );
 };
 
+const FeaturedEventsInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+`;
+
 export const Header = styled.h1<{ shadow?: boolean }>`
   margin: 0;
   margin-right: 10px;
@@ -59,16 +65,6 @@ export const Header = styled.h1<{ shadow?: boolean }>`
 
 const Time = styled(Header)`
   font-weight: 300;
-`;
-
-export const SubHeader = styled.h3`
-  margin: 0;
-  font-weight: 300;
-`;
-
-export const PaddedDivider = styled(Divider)`
-  background-color: #fff;
-  margin: 30px auto 30px auto;
 `;
 
 const FeatStandGrid = styled('div')`
