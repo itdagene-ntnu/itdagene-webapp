@@ -5,6 +5,9 @@ import timezone from 'dayjs/plugin/timezone';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+export const toDayjs = (date: string, time: string): Dayjs =>
+  dayjs(date + time);
+
 export const timeIsBetween = ({
   time,
   start,
@@ -27,15 +30,9 @@ export const currentHalfhour = (time: Dayjs): string => {
 export const eventTime = (start: Dayjs, end: Dayjs): string =>
   `${start.format('HH:mm')} - ${end.format('HH:mm')}`;
 
-export const toDayjs = (date: string, time: string): Dayjs =>
-  dayjs(date + time);
-
 // TODO: Change to Dayjs input
-export const timeIsAfter = (time: number, start: string, date: string) => {
-  const s = dayjs(`${start} ${date}`, 'HH:mm:ss YYYY-MM-DD');
-  const now = dayjs(time);
-
-  return s.isAfter(now);
+export const timeIsAfter = ({ time, start }: { time: Dayjs; start: Dayjs }) => {
+  return start.isAfter(time);
 };
 
 type currentDay = 'companiesFirstDay' | 'companiesLastDay';

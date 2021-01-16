@@ -153,7 +153,7 @@ const Stand = ({ stand }: Props): JSX.Element => {
             </Flex>
           </FlexItem>
         </Flex>
-      </PaddedBorderlessSection>
+      </BorderlessSection>
     </>
   );
 };

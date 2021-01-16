@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs';
 import React from 'react';
 import styled from 'styled-components';
-import { timeIsAfterNow } from '../../utils/time';
+import { timeIsAfter, toDayjs } from '../../utils/time';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 import {
   eventTime,
@@ -38,7 +38,9 @@ const HSPEvents = ({
   currentEvent,
 }: HSPEventsProps): JSX.Element => {
   const relevantEvents = stand?.events!.filter(
-    (event) => event && timeIsAfterNow(time, event.timeStart, event.date)
+    (event) =>
+      event &&
+      timeIsAfter({ time: time, start: toDayjs(event.date, event.timeStart) })
   );
 
   return currentEvent ? (

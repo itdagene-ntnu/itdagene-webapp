@@ -12,11 +12,12 @@ import {
   Paragraph,
 } from '../MarkdownRenderer';
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
-import { ArrayElement, eventTime } from '../Stands/StandCard';
+import { ProgramView_stands } from '../../__generated__/ProgramView_stands.graphql';
 import Link from 'next/link';
-import { program_QueryResponse } from '../../__generated__/program_Query.graphql';
 import Flex from 'styled-flex-component';
 import EventsToggle from './EventsToggle';
+import { ArrayElement } from '../../utils/types';
+import { eventTime, toDayjs } from '../../utils/time';
 
 const Title = styled.h2`
   position: relative;
@@ -111,33 +112,25 @@ const EventInfo = styled.div`
 
 interface LocationLinkProps {
   event: ArrayElement<ProgramView_events>;
-  stands?: program_QueryResponse['stands'];
+  stands?: ProgramView_stands | null;
+  isLink?: boolean;
 }
 
-const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
-  let href;
+const Location = ({
+  event,
+  stands,
+  isLink = false,
+}: LocationLinkProps): JSX.Element => {
+  const standSlug = stands?.find(
+    (stand) => stand.company.id === event.company?.id
+  )?.slug;
 
-  const standSlug =
-    stands &&
-    stands.find((stand) => stand && stand.company.id === event.company?.id)
-      ?.slug;
+  const linkLocation =
+    event.type === 'A_7' ? standSlug && `/stands/${standSlug}` : '/stands';
 
-  // FIXME: This should be implemented as types
-  switch (event.location.toLowerCase()) {
-    case 'forsiden':
-      href = '/stands';
-      break;
-    case 'standen':
-      href = standSlug ? `stands/${standSlug}` : null;
-      break;
-    default:
-      href = null;
-      break;
-  }
-
-  return href ? (
+  return isLink && linkLocation ? (
     <InfoElement>
-      <Link href={href}>
+      <Link href={linkLocation}>
         <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
       </Link>
     </InfoElement>
@@ -150,18 +143,17 @@ const LocationLink = ({ event, stands }: LocationLinkProps): JSX.Element => {
 
 type Props = {
   events: ProgramView_events;
-  stands?: program_QueryResponse['stands'];
+  stands?: ProgramView_stands | null;
   showToggleButton?: boolean;
+  useLinks?: boolean;
 };
 
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState(false);
 
-  const filteredEvents =
-    props.events &&
-    props.events.filter((event) =>
-      showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
-    );
+  const filteredEvents = props.events.filter((event) =>
+    showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
+  );
 
   // If on a company's page, don't show toggleButton and don't filter any events
   const groupedEvents = groupBy(
@@ -187,12 +179,17 @@ const ProgramView = (props: Props): JSX.Element => {
                 <EventInfo key={event.id}>
                   <Title>{event.title}</Title>
                   <EventTimePlaceInfo>
-                    <InfoElement>{`🕐 ${
-                      eventTime(event).timeRange
-                    }`}</InfoElement>
-                    <LocationLink event={event} stands={props.stands} />
+                    <InfoElement>{`🕐 ${eventTime(
+                      toDayjs(event.date, event.timeStart),
+                      toDayjs(event.date, event.timeEnd)
+                    )}`}</InfoElement>
+                    <Location
+                      event={event}
+                      stands={props.stands}
+                      isLink={props.useLinks}
+                    />
                     {event.company && (
-                      <HostingCompanyNoLink>{`🏢 ${event.company?.name}`}</HostingCompanyNoLink>
+                      <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
                     )}
                   </EventTimePlaceInfo>
                   <br />
@@ -234,6 +231,14 @@ export default createFragmentContainer(ProgramView, {
       }
       usesTickets
       maxParticipants
+    }
+  `,
+  stands: graphql`
+    fragment ProgramView_stands on Stand @relay(plural: true) {
+      company {
+        id
+      }
+      slug
     }
   `,
 });

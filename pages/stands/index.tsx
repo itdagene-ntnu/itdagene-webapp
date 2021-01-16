@@ -9,8 +9,9 @@ import { useEffect, useState } from 'react';
 import StandCard, { ArrayElement } from '../../components/Stands/StandCard';
 import {
   currentDayCompanies,
-  timeIsAfterNow,
+  timeIsAfter,
   timeIsBetween,
+  toDayjs,
 } from '../../utils/time';
 import LivePlayer from '../../components/Stands/LivePlayer';
 import FeaturedEvents from '../../components/Stands/FeaturedEvents';
@@ -45,7 +46,11 @@ export const currentFeaturedEvent = (
   const featuredEvent = stand?.events?.find(
     (event) =>
       event.type === 'A_7' &&
-      timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
+      timeIsBetween({
+        time: time,
+        start: toDayjs(event.date, event.timeStart),
+        end: toDayjs(event.date, event.timeEnd),
+      })
   );
 
   return featuredEvent ?? null;
@@ -89,7 +94,10 @@ const Index = ({
     return collaborators ? collaborators.map((c) => c.id) : [];
   };
 
-  return timeIsAfterNow(time, '09:30:00', startDate) ? (
+  return timeIsAfter({
+    time: time,
+    start: toDayjs(props.currentMetaData.startDate, '09:30:00'),
+  }) ? (
     <StandsDefault currentMetaData={props.currentMetaData} />
   ) : (
     <>
@@ -98,7 +106,7 @@ const Index = ({
       )}
 
       {/* TODO: Complete technical implementation of the LivePlayer */}
-      <LivePlayer livestreamUrl={''} qaUrl={''} frontPage />
+      <LivePlayer livestreamUrl={''} qaUrl={''} />
 
       {props.stands &&
         featuredEventStands &&

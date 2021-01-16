@@ -42,20 +42,6 @@ export default withDataAndLayout(Index, {
       }
       events {
         ...ProgramView_events
-        title
-        id
-        timeStart
-        timeEnd
-        description
-        location
-        date
-        type
-        company {
-          id
-          name
-        }
-        usesTickets
-        maxParticipants
       }
       programPage: page(slug: "program") {
         ...PageView_page

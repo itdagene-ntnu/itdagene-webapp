@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import dayjs, { Dayjs } from 'dayjs';
 
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { timeIsBetween } from '../../utils/time';
+import { timeIsBetween, toDayjs } from '../../utils/time';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 import HSPEvents from './HSPEvents';
@@ -32,7 +32,12 @@ export const getCurrentEvent = (
 ): standEvent | null => {
   const currentEvent = events?.find(
     (event) =>
-      event && timeIsBetween(time, event.timeStart, event.timeEnd, event.date)
+      event &&
+      timeIsBetween({
+        time: time,
+        start: toDayjs(event.date, event.timeStart),
+        end: toDayjs(event.date, event.timeEnd),
+      })
   );
   return currentEvent ?? null;
 };

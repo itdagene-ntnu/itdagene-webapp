@@ -9,7 +9,7 @@ import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
-import { timeIsAfterNow } from '../../utils/time';
+import { timeIsAfter, toDayjs } from '../../utils/time';
 import StandsButton from './StandsButton';
 
 type Props = {
@@ -100,12 +100,18 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
   const startDate = dayjs(currentMetaData.startDate);
   const endDate = dayjs(currentMetaData.endDate);
 
+  // TODO: Double-check this logic
   useEffect(() => {
-    if (timeIsAfterNow(time, '09:30:00', currentMetaData.startDate)) {
+    const beforeEventStart = timeIsAfter({
+      time: time,
+      start: toDayjs(currentMetaData.startDate, '09:30:00'),
+    });
+
+    if (beforeEventStart) {
       const interval = setInterval(() => setTime(dayjs()), intervalLength);
       return (): void => clearInterval(interval);
     }
-    if (!timeIsAfterNow(time, '09:30:00', currentMetaData.startDate)) {
+    if (!beforeEventStart) {
       setActive(true);
     }
   }, [currentMetaData, time]);
