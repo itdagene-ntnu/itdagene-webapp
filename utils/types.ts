@@ -7,3 +7,7 @@ export interface PageContext<T extends OperationType> extends NextPageContext {
   queryProps?: QueryProps<T>;
   environment?: Environment;
 }
+
+export type ArrayElement<
+  ArrayType extends readonly unknown[]
+> = ArrayType[number];

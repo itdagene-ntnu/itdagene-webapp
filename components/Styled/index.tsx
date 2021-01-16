@@ -82,3 +82,8 @@ export const NoBulletUl = styled('ul')`
   -moz-padding-start: 0px;
   -webkit-padding-start: 0px;
 `;
+
+export const SubHeader = styled.h3`
+  margin: 0;
+  font-weight: 300;
+`;
