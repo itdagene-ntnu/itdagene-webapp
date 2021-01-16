@@ -35,10 +35,10 @@ export const BorderlessSection = styled(ResponsiveContent)`
     !noPadding &&
     css`
       padding: 6em 0;
+      @media only screen and (max-width: 767px) {
+        padding: 2em 0;
+      }
     `};
-  @media only screen and (max-width: 767px) {
-    padding: 2em 0;
-  }
 `;
 
 export const BottomBorder = styled('div')`

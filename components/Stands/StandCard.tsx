@@ -42,28 +42,35 @@ export const getCurrentEvent = (
   return currentEvent ?? null;
 };
 
-interface EventInfo {
-  timeRange: string;
-  eventTitle: string;
-  eventDescription: string;
-}
-
-const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
+const StandCardWrapper = ({
+  stand,
+  time,
+  type,
+}: StandCardProps): JSX.Element => {
   const router = useRouter();
-  const currentEvent = getCurrentEvent(stand.events ?? [], time);
+  return (
+    <StandCard
+      stand={stand}
+      time={time}
+      type={type}
+      onClick={(): Promise<boolean> => router.push(`/stands/${stand.slug}`)}
+    />
+  );
+};
 
-  const handleRedirect = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ): void => {
-    e.preventDefault();
-    router.push(`/stands/[id]`, `/stands/${stand.slug}`);
-  };
+const StandCard = ({
+  stand,
+  time,
+  type,
+  onClick,
+}: StandCardProps & { onClick: () => Promise<boolean> }): JSX.Element => {
+  const currentEvent = getCurrentEvent(stand.events ?? [], time);
 
   switch (type) {
     case 'hsp':
       return (
         <>
-          <HSPContainerDesktop scale={1.03} onClick={handleRedirect}>
+          <HSPContainerDesktop scale={1.03} onClick={onClick}>
             <HSPCompanyImgContainer>
               <CompanyImg src={stand.company.logo ?? ''} />
             </HSPCompanyImgContainer>
@@ -72,46 +79,34 @@ const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
                 <HSPEvents
                   stand={stand}
                   time={time}
-                  currentEvent={currentEvent ?? null}
+                  currentEvent={currentEvent}
                 />
               </CompanyEvents>
-              <LiveIndicator active={stand.active ?? false} />
+              <LiveIndicator active={stand.active} />
             </FlexContainer>
           </HSPContainerDesktop>
-          <HSPContainerMobile scale={1.03} onClick={handleRedirect}>
-            <CompanyCardContent
-              stand={stand}
-              currentEvent={currentEvent ?? null}
-            />
+          <HSPContainerMobile scale={1.03}>
+            <CompanyCardContent stand={stand} currentEvent={currentEvent} />
           </HSPContainerMobile>
         </>
       );
     case 'sp':
       return (
-        <SPContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent
-            stand={stand}
-            currentEvent={currentEvent ?? null}
-          />
+        <SPContainer scale={1.03} onClick={onClick}>
+          <CompanyCardContent stand={stand} currentEvent={currentEvent} />
         </SPContainer>
       );
     case 'standard':
       return (
-        <StandardContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent
-            stand={stand}
-            currentEvent={currentEvent ?? null}
-          />
+        <StandardContainer scale={1.03} onClick={onClick}>
+          <CompanyCardContent stand={stand} currentEvent={currentEvent} />
         </StandardContainer>
       );
 
     default:
       return (
-        <StandardContainer scale={1.03} onClick={handleRedirect}>
-          <CompanyCardContent
-            stand={stand}
-            currentEvent={currentEvent ?? null}
-          />
+        <StandardContainer scale={1.03} onClick={onClick}>
+          <CompanyCardContent stand={stand} currentEvent={currentEvent} />
         </StandardContainer>
       );
   }
@@ -126,6 +121,7 @@ export const StandardContainer = styled(NudgeDiv)`
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
   padding: 15px;
+  cursor: pointer;
 `;
 
 const SPContainer = styled(StandardContainer)`
@@ -193,7 +189,7 @@ export const TimeSlot = styled.span<{ current?: boolean }>`
   font-weight: ${(props): number => (props.current ? 600 : 200)};
 `;
 
-export default createFragmentContainer(StandCard, {
+export default createFragmentContainer(StandCardWrapper, {
   stand: graphql`
     fragment StandCard_stand on Stand {
       id
