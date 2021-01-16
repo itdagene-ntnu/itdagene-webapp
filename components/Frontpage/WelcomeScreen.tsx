@@ -100,21 +100,21 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
   const startDate = dayjs(currentMetaData.startDate);
   const endDate = dayjs(currentMetaData.endDate);
 
+  useEffect(() => {
+    const interval = setInterval(() => setTime(dayjs()), intervalLength);
+    return (): void => clearInterval(interval);
+  }, []);
+
   // TODO: Double-check this logic
   useEffect(() => {
     const beforeEventStart = timeIsAfter({
       time: time,
       start: toDayjs(currentMetaData.startDate, '09:30:00'),
     });
-
-    if (beforeEventStart) {
-      const interval = setInterval(() => setTime(dayjs()), intervalLength);
-      return (): void => clearInterval(interval);
-    }
-    if (!beforeEventStart) {
+    if (!beforeEventStart && active) {
       setActive(true);
     }
-  }, [currentMetaData, time]);
+  }, [currentMetaData, active, time]);
 
   return (
     <RootContainer>
@@ -169,7 +169,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
       </MainContainer>
     </RootContainer>
   );
-};
+};;;
 
 export default createFragmentContainer(WelcomeScreen, {
   currentMetaData: graphql`
