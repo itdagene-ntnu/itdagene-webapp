@@ -170,6 +170,8 @@ export default class Default extends Document<{
               />
             </>
           )}
+
+          <script async src="https://chat.itdagene.no/packs/js/sdk.js" />
         </Head>
         <body>
           <Main />
