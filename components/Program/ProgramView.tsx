@@ -112,7 +112,7 @@ const EventInfo = styled.div`
 
 interface LocationLinkProps {
   event: ArrayElement<ProgramView_events>;
-  stands?: ProgramView_stands | null;
+  stands: ProgramView_stands | null;
   isLink?: boolean;
 }
 
@@ -143,7 +143,7 @@ const Location = ({
 
 type Props = {
   events: ProgramView_events;
-  stands?: ProgramView_stands | null;
+  stands: ProgramView_stands | null;
   showToggleButton?: boolean;
   useLinks?: boolean;
 };
@@ -179,10 +179,10 @@ const ProgramView = (props: Props): JSX.Element => {
                 <EventInfo key={event.id}>
                   <Title>{event.title}</Title>
                   <EventTimePlaceInfo>
-                    <InfoElement>{`🕐 ${eventTime(
-                      toDayjs(event.date, event.timeStart),
-                      toDayjs(event.date, event.timeEnd)
-                    )}`}</InfoElement>
+                    <InfoElement>{`🕐 ${eventTime({
+                      start: toDayjs(event.date, event.timeStart),
+                      end: toDayjs(event.date, event.timeEnd),
+                    })}`}</InfoElement>
                     <Location
                       event={event}
                       stands={props.stands}

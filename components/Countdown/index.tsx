@@ -13,7 +13,9 @@ import {
 } from '../../utils/colors';
 
 const NumberBox = styled('div')`
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   line-height: 1;
   letter-spacing: 2px;
   flex: 1;
@@ -25,13 +27,13 @@ const NumberBox = styled('div')`
   background: ${(props): any => props.color};
   margin: 5px;
   flex-basis: 135px;
+  color: white;
 `;
 
 const Number = styled('div')`
   margin-top: 25px;
   font-size: 52px;
   font-weight: bold;
-  3px 2px 3px rgba(255,255,255,.2)
 `;
 
 const Text = styled('span')`

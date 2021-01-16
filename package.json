@@ -43,6 +43,7 @@
     "react-select": "^3.1.1",
     "relay-hooks": "3.7.0",
     "relay-runtime": "^10.1.2",
+    "seedrandom": "^3.0.5",
     "styled-components": "^4.4.1",
     "styled-flex-component": "^3.0.2",
     "video-react": "^0.14.1"
