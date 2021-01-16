@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 const LiveContainer = styled.div`
   display: flex;
-  margin-bottom: 30px;
   max-width: 2000px;
   margin: auto;
+
   @media only screen and (max-width: 993px) {
     flex-direction: column;
     justify-content: center;
@@ -14,7 +14,10 @@ const LiveContainer = styled.div`
 `;
 
 const Player = styled('div')`
-  height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
   width: 70%;
   background-color: #222;
   color: white;
@@ -31,13 +34,16 @@ const Player = styled('div')`
 `;
 
 const QAView = styled.div`
-  height: 800px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
   width: 30%;
   background-color: #222;
   color: white;
   @media only screen and (max-width: 993px) {
     width: 100%;
-    height: 300px;
+    height: 400px;
   }
 `;
 

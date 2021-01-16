@@ -87,3 +87,11 @@ export const SubHeader = styled.h3`
   margin: 0;
   font-weight: 300;
 `;
+
+export const Divider = styled.hr`
+  width: 100%;
+  border: none;
+  height: 1.5px;
+  background-color: #f1f1f1;
+  flex-shrink: 0;
+`;

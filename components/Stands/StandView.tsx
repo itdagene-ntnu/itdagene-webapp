@@ -26,18 +26,32 @@ export const Title = styled('h1')`
 `;
 
 const BackLink = styled.a`
-  font-size: 25px;
+  font-size: 20px;
   cursor: pointer;
 `;
 
+const CompanyImg = styled.img`
+  max-width: 200px;
+  max-height: 70px;
+
+  @media only screen and (max-width: 767px) {
+    max-width: 120px;
+    max-height: 50px;
+  }
+`;
+
+const LiveContentSection = styled.div`
+  margin: 0 2em 30px 2em;
+
+  @media only screen and (max-width: 767px) {
+    margin: 0 1em 30px 1em;
+  }
+`;
+
 const Back = (): JSX.Element => (
-  <Flex>
-    <FlexItem>
-      <Link href="/stands">
-        <BackLink>{'< Tilbake til stands'}</BackLink>
-      </Link>
-    </FlexItem>
-  </Flex>
+  <Link href="/stands">
+    <BackLink>{'< Tilbake til stands'}</BackLink>
+  </Link>
 );
 
 const SubPage = ({
@@ -87,19 +101,17 @@ const Stand = ({ stand }: Props): JSX.Element => {
 
   return (
     <>
-      <BorderlessSection noPadding>
-        <Back />
-        <div>
-          <img
+      <LiveContentSection>
+        <Flex justifyBetween alignEnd style={{ marginBottom: '1em' }}>
+          <Back />
+          <CompanyImg
             src={stand.company.logo || undefined}
-            style={{ display: 'block', margin: '25px 0 25px' }}
             alt={`${stand.company.name} logo`}
           />
-        </div>
-      </BorderlessSection>
-      <LivePlayer qaUrl={stand.qaUrl} livestreamUrl={stand.livestreamUrl} />
-
-      <BorderlessSection noPadding>
+        </Flex>
+        <LivePlayer qaUrl={stand.qaUrl} livestreamUrl={stand.livestreamUrl} />
+      </LiveContentSection>
+      <BorderlessSection noPadding style={{ margin: '30px 0' }}>
         <NavBar items={navBarItems} />
         <Flex wrapReverse>
           <FlexItem basis="600px" grow={3}>

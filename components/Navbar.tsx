@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { lightGrey, itdageneBlue, itdageneLightBlue } from '../utils/colors';
+import { Divider } from './Styled';
 
 type ItemProps = {
   text: string;
@@ -26,8 +27,7 @@ type Props = {
 };
 
 const StyledNavbarItem = styled('div')`
-  padding-right: 20px;
-  font-weight: bold;
+  font-size: 20px;
   @media only screen and (max-width: 767px) {
     text-align: center;
     border: 1px solid ${lightGrey};
@@ -40,22 +40,17 @@ const StyledNavbarItem = styled('div')`
   }
 `;
 
-const Hr = styled('hr')`
-  background-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.7),
-    rgba(0, 0, 0, 0.1)
-  );
-  height: 2px;
-  border: 0;
-`;
-
 const StyledFlex = styled(Flex)`
   @media only screen and (max-width: 767px) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-gap: 5px;
+  }
+  & > * {
+    padding-right: 20px;
+  }
+  &:last-child {
+    padding-right: 0;
   }
 `;
 
@@ -111,7 +106,7 @@ const Navbar = ({ items }: Props): JSX.Element => {
           (item: Item) => item && <NavbarItem key={item.key} item={item} />
         )}
       </StyledFlex>
-      <Hr />
+      <Divider />
     </div>
   );
 };
