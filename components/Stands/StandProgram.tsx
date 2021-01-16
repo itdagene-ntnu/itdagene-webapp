@@ -29,7 +29,7 @@ const StandProgram = (props: Props): JSX.Element => {
 
   return program ? (
     program.events && program.events.length > 0 ? (
-      <ProgramView events={program.events} />
+      <ProgramView events={program.events} stands={null} />
     ) : (
       <Flex center>
         <FlexItem>

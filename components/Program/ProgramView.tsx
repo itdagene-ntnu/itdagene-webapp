@@ -112,7 +112,7 @@ const EventInfo = styled.div`
 
 interface LocationLinkProps {
   event: ArrayElement<ProgramView_events>;
-  stands?: ProgramView_stands | null;
+  stands: ProgramView_stands | null;
   isLink?: boolean;
 }
 
@@ -143,7 +143,7 @@ const Location = ({
 
 type Props = {
   events: ProgramView_events;
-  stands?: ProgramView_stands | null;
+  stands: ProgramView_stands | null;
   showToggleButton?: boolean;
   useLinks?: boolean;
 };
