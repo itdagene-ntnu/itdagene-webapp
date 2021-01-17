@@ -73,7 +73,14 @@ const SubPage = ({
 }): JSX.Element => {
   switch (page) {
     case 'om':
-      return <AboutPage stand={stand} />;
+      return (
+        <>
+          <AboutPage stand={stand} />
+          {stand.company.keyInformation && (
+            <KeyInfo keyInformation={stand.company.keyInformation} />
+          )}
+        </>
+      );
     case 'program':
       return <ProgramPage stand={stand} />;
     case 'joblistings':
@@ -154,9 +161,6 @@ const Stand = ({ stand }: Props): JSX.Element => {
             </Flex>
           </FlexItem>
         </Flex>
-        {stand.company.keyInformation && (
-          <KeyInfo keyInformation={stand.company.keyInformation} />
-        )}
       </BorderlessSection>
     </>
   );
