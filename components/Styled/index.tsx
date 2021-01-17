@@ -110,3 +110,10 @@ export const NudgeDiv = styled('div')<{ scale: number }>`
     transform: scale(${(props): any => props.scale});
   }
 `;
+
+export const EllipseOverflowDiv = styled.div<{ maxLines: number }>`
+  display: -webkit-box;
+  -webkit-line-clamp: ${(props): number => props.maxLines};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
