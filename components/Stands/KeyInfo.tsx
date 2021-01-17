@@ -1,7 +1,7 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import styled from 'styled-components';
-import { KeyInfoBlob_keyInformation } from '../../__generated__/KeyInfoBlob_keyInformation.graphql';
+import { KeyInfo_keyInformation } from '../../__generated__/KeyInfo_keyInformation.graphql';
 import {
   itdageneLightBlue,
   itdageneRed,
@@ -101,7 +101,7 @@ const keyInfoObject: KeyInfoType = {
 };
 
 interface KeyInfoProps {
-  keyInformation: KeyInfoBlob_keyInformation;
+  keyInformation: KeyInfo_keyInformation;
 }
 
 const KeyInfo = ({ keyInformation }: KeyInfoProps): JSX.Element => (
@@ -138,7 +138,7 @@ const KeyInfoSection = styled.div`
 
 export default createFragmentContainer(KeyInfo, {
   keyInformation: graphql`
-    fragment KeyInfoBlob_keyInformation on KeyInformation @relay(plural: true) {
+    fragment KeyInfo_keyInformation on KeyInformation @relay(plural: true) {
       id
       name
       value

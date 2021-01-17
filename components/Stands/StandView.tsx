@@ -11,7 +11,7 @@ import AboutPage from './AboutStand';
 import ProgramPage from './StandProgram';
 import JobListingsPage from './StandJoblistings';
 import LivePlayer from './LivePlayer';
-import KeyInfo from './KeyInfoBlob';
+import KeyInfo from './KeyInfo';
 
 declare global {
   interface Window {
@@ -172,7 +172,7 @@ export default createFragmentContainer(Stand, {
         description
         url
         keyInformation {
-          ...KeyInfoBlob_keyInformation
+          ...KeyInfo_keyInformation
         }
         ...StandJoblistings_joblistings
       }
