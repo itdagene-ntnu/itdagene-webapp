@@ -11,6 +11,7 @@ import AboutPage from './AboutStand';
 import ProgramPage from './StandProgram';
 import JobListingsPage from './StandJoblistings';
 import LivePlayer from './LivePlayer';
+import KeyInfo from './KeyInfo';
 
 declare global {
   interface Window {
@@ -72,7 +73,14 @@ const SubPage = ({
 }): JSX.Element => {
   switch (page) {
     case 'om':
-      return <AboutPage stand={stand} />;
+      return (
+        <>
+          <AboutPage stand={stand} />
+          {stand.company.keyInformation && (
+            <KeyInfo keyInformation={stand.company.keyInformation} />
+          )}
+        </>
+      );
     case 'program':
       return <ProgramPage stand={stand} />;
     case 'joblistings':
@@ -168,8 +176,7 @@ export default createFragmentContainer(Stand, {
         description
         url
         keyInformation {
-          name
-          value
+          ...KeyInfo_keyInformation
         }
         ...StandJoblistings_joblistings
       }
