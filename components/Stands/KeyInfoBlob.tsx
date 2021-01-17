@@ -64,7 +64,9 @@ const FlexCenter = styled.div`
   align-items: center;
 `;
 
-type KeyType = 'it-ansatte' | 'hovedkontor' | 'bedrift-type' | 'ett-ord';
+const keys = ['it-ansatte', 'hovedkontor', 'bedrift-type', 'ett-ord'] as const;
+
+type KeyType = typeof keys[number];
 
 interface ValueType {
   title: string;
@@ -99,34 +101,44 @@ const keyInfoObject: KeyInfoType = {
 };
 
 interface KeyInfoProps {
-  keyInfo: KeyInfoBlob_keyInformation;
+  keyInformation: KeyInfoBlob_keyInformation;
 }
 
-const KeyInfoBlob = ({ keyInfo }: KeyInfoProps): JSX.Element => {
-  // The casting can be removed when the backend has implemented types
+const KeyInfo = ({ keyInformation }: KeyInfoProps): JSX.Element => (
+  <KeyInfoSection>
+    {keyInformation
+      .filter((keyInfo) => keys.includes(keyInfo.name as KeyType))
+      .map((keyInfo) => (
+        <KeyInfoContainer key={keyInfo.id}>
+          <InfoKey>{keyInfoObject[keyInfo.name as KeyType].title}</InfoKey>
+          <InfoCircle>
+            <ValueInfoContainer>
+              <IconContainer
+                color={keyInfoObject[keyInfo.name as KeyType].color}
+              >
+                <i className={keyInfoObject[keyInfo.name as KeyType].icon} />
+              </IconContainer>
+              <FlexCenter>
+                <InfoValueContainer maxLines={3}>
+                  <InfoValue>{keyInfo.value}</InfoValue>
+                </InfoValueContainer>
+              </FlexCenter>
+            </ValueInfoContainer>
+          </InfoCircle>
+        </KeyInfoContainer>
+      ))}
+  </KeyInfoSection>
+);
 
-  return (
-    <KeyInfoContainer>
-      <InfoKey>{keyInfoObject[keyInfo.name as KeyType].title}</InfoKey>
-      <InfoCircle>
-        <ValueInfoContainer>
-          <IconContainer color={keyInfoObject[keyInfo.name as KeyType].color}>
-            <i className={keyInfoObject[keyInfo.name as KeyType].icon} />
-          </IconContainer>
-          <FlexCenter>
-            <InfoValueContainer maxLines={3}>
-              <InfoValue>{keyInfo.value}</InfoValue>
-            </InfoValueContainer>
-          </FlexCenter>
-        </ValueInfoContainer>
-      </InfoCircle>
-    </KeyInfoContainer>
-  );
-};
+const KeyInfoSection = styled.div`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+`;
 
-export default createFragmentContainer(KeyInfoBlob, {
+export default createFragmentContainer(KeyInfo, {
   keyInformation: graphql`
-    fragment KeyInfoBlob_keyInformation on KeyInformation {
+    fragment KeyInfoBlob_keyInformation on KeyInformation @relay(plural: true) {
       id
       name
       value
