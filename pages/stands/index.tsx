@@ -279,7 +279,7 @@ export default withDataAndLayout(Index, {
   `,
   variables: {},
   layout: ({ props, error }) => ({
-    responsive: true,
+    responsive: false,
     metadata: props && props.stands_page,
   }),
 });

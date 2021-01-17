@@ -3,7 +3,7 @@ import React, { Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
 import styled from 'styled-components';
 
-import Link from 'next/link';
+//import Link from 'next/link';
 import Flex from 'styled-flex-component';
 import { Companies_query } from '../../__generated__/Companies_query.graphql';
 import CompanyView from './CompanyView';
@@ -37,11 +37,14 @@ const Companies = ({ query }: Props): JSX.Element => {
               <CompanyView key={company.id} company={company} />
             ))}
           </Flex>
+          <div style={{ height: '100px' }} />
+          {/*
           <h4 style={{ textAlign: 'center' }}>
             <Link href="/info/[side]" as="/info/stands">
               Kart over stands
             </Link>
-          </h4>
+            </h4>
+          */}
         </Fragment>
       ))}
     </>
