@@ -36,34 +36,23 @@ type Companies =
   | stands_QueryResponse['currentMetaData']['companiesLastDay']
   | stands_QueryResponse['currentMetaData']['collaborators'];
 
+type Company = NonNullable<
+  stands_QueryResponse['currentMetaData']['companiesFirstDay']
+>[number];
+
 type Stands = NonNullable<stands_QueryResponse['stands']>;
 
 const getFeaturedEventStands = (
   time: Dayjs,
   stands: stands_QueryResponse['stands'],
   currentDayCompaniesIds: string[]
-): stands_QueryResponse['stands'] => {
+): NonNullable<stands_QueryResponse['stands']> => {
   const featuredStands = stands?.filter(
     (stand) =>
-      stand &&
       currentDayCompaniesIds.includes(stand.company.id) &&
       currentFeaturedEvent(time, stand)
   );
   return featuredStands ?? [];
-};
-
-const getCurrentDayCompaniesIds = (
-  startDate: string,
-  endDate: string,
-  companiesFirstDay: Companies,
-  companiesLastDay: Companies
-): string[] => {
-  if (isRespectiveDate(toDayjs(startDate))) {
-    return companyIds(companiesFirstDay);
-  } else if (isRespectiveDate(toDayjs(endDate))) {
-    return companyIds(companiesLastDay);
-  }
-  return [];
 };
 
 export const currentFeaturedEvent = (
@@ -83,9 +72,6 @@ export const currentFeaturedEvent = (
   return featuredEvent ?? null;
 };
 
-const companyIds = (companies: Companies): string[] =>
-  companies ? companies.map((company) => company.id) : [];
-
 const seed = dayjs().format('YYYYMMDDHHmm');
 
 const Index = ({
@@ -93,12 +79,6 @@ const Index = ({
   props,
 }: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(dayjs());
-  const [featuredEventStands, setFeaturedEventStands] = useState<
-    stands_QueryResponse['stands']
-  >([]);
-  const [currentDayCompaniesIds, setCurrentDayCompaniesIds] = useState<
-    string[]
-  >([]);
 
   const {
     mainCollaborator,
@@ -114,31 +94,23 @@ const Index = ({
     return (): void => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const updatedCurrentDayCompaniesIds = getCurrentDayCompaniesIds(
-      startDate,
-      endDate,
-      companiesFirstDay,
-      companiesLastDay
-    );
+  let companies: Companies = [];
+  if (isRespectiveDate(toDayjs(startDate)) && companiesFirstDay) {
+    companies = companiesFirstDay;
+  } else if (isRespectiveDate(toDayjs(endDate)) && companiesLastDay) {
+    companies = companiesLastDay;
+  }
 
-    const updatedFeaturedStands = getFeaturedEventStands(
-      time,
-      props.stands,
-      updatedCurrentDayCompaniesIds
-    );
+  const isCollaborator = (company: Company): boolean =>
+    !!collaborators?.some((c) => c.id === company.id);
 
-    if (updatedCurrentDayCompaniesIds)
-      setCurrentDayCompaniesIds(updatedCurrentDayCompaniesIds);
-    if (updatedFeaturedStands) setFeaturedEventStands(updatedFeaturedStands);
-  }, [
+  const companyIds = companies.map((c) => c.id);
+
+  const featuredEventStands = getFeaturedEventStands(
     time,
     props.stands,
-    startDate,
-    endDate,
-    companiesFirstDay,
-    companiesLastDay,
-  ]);
+    companyIds
+  );
 
   const stands =
     props.stands && seedShuffle<Stands[number]>(props.stands, seed);
@@ -153,7 +125,7 @@ const Index = ({
   ) : (
     <>
       {props.stands_page && (
-        <BorderlessSection>
+        <BorderlessSection noPadding>
           <PageView hideContent hideDate hideTitle page={props.stands_page} />
         </BorderlessSection>
       )}
@@ -167,7 +139,7 @@ const Index = ({
         </LiveContentSection>
       )}
       <BorderlessSection>
-        {stands && featuredEventStands && featuredEventStands.length > 0 && (
+        {stands && featuredEventStands.length > 0 && (
           <FeaturedEvents time={time} stands={featuredEventStands} />
         )}
 
@@ -177,7 +149,7 @@ const Index = ({
               ?.filter(
                 (stand) =>
                   stand &&
-                  currentDayCompaniesIds.includes(stand.company.id) &&
+                  companyIds.includes(stand.company.id) &&
                   stand.company.id === mainCollaborator.id
               )
               .map((stand) => (
@@ -185,7 +157,7 @@ const Index = ({
                   key={stand.id}
                   stand={stand}
                   time={time}
-                  type={'standard'}
+                  type="hsp"
                 />
               ))}
           </HSPGrid>
@@ -196,11 +168,11 @@ const Index = ({
             ?.filter(
               (stand) =>
                 stand &&
-                currentDayCompaniesIds.includes(stand.company.id) &&
-                companyIds(collaborators).includes(stand.company.id)
+                companyIds.includes(stand.company.id) &&
+                isCollaborator(stand.company)
             )
             .map((stand) => (
-              <StandCard key={stand.id} stand={stand} time={time} type={'sp'} />
+              <StandCard key={stand.id} stand={stand} time={time} type="sp" />
             ))}
         </SPGrid>
 
@@ -209,8 +181,8 @@ const Index = ({
             ?.filter(
               (stand) =>
                 stand &&
-                currentDayCompaniesIds.includes(stand.company.id) &&
-                !companyIds(collaborators).includes(stand.company.id) &&
+                companyIds.includes(stand.company.id) &&
+                !isCollaborator(stand.company) &&
                 stand.company.id !== mainCollaborator?.id
             )
             .map((stand) => (
@@ -218,7 +190,7 @@ const Index = ({
                 key={stand.id}
                 stand={stand}
                 time={time}
-                type={'standard'}
+                type="standard"
               />
             ))}
         </StandGrid>
