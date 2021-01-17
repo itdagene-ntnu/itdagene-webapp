@@ -234,7 +234,7 @@ const LiveContentSection = styled.div`
 export default withDataAndLayout(Index, {
   query: graphql`
     query stands_Query {
-      stands {
+      stands(currentDay: true) {
         id
         events {
           date
