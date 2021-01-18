@@ -114,6 +114,8 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
     setActive(!beforeEventStart);
   }, [currentMetaData, active, time]);
 
+  const isLive = time.isAfter(toDayjs(currentMetaData.endDate, '09:30:00'));
+
   return (
     <RootContainer>
       <Video
@@ -138,7 +140,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
                     .locale('nb')
                     .format('MMMM')} ${startDate.year()}`}
                 </SubHeader>
-                <LiveHeader>LIVE NÅ</LiveHeader>
+                {isLive && <LiveHeader>LIVE NÅ</LiveHeader>}
               </Flex>
             ) : (
               <SubHeader>
