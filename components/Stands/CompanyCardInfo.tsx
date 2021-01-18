@@ -1,14 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { eventTime, toDayjs } from '../../utils/time';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 import LiveIndicator from './LiveIndicator';
-import {
-  CompanyImg,
-  eventTime,
-  EventTitle,
-  standEvent,
-  TimeSlot,
-} from './StandCard';
+import { CompanyImg, EventTitle, standEvent, TimeSlot } from './StandCard';
 
 interface CompanyCardContentProps {
   stand: StandCard_stand;
@@ -30,8 +25,15 @@ const CompanyCardContent = ({
     <CompanyInfo>
       <SubHeader>{stand?.company.name}</SubHeader>
       <CurrentEvent>
-        <TimeSlot>{eventTime(currentEvent).timeRange}</TimeSlot>
-        <EventTitle>{eventTime(currentEvent).eventTitle}</EventTitle>
+        {currentEvent && (
+          <TimeSlot>
+            {eventTime({
+              start: toDayjs(currentEvent.date, currentEvent.timeStart),
+              end: toDayjs(currentEvent.date, currentEvent.timeEnd),
+            })}
+          </TimeSlot>
+        )}
+        <EventTitle>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</EventTitle>
       </CurrentEvent>
     </CompanyInfo>
   </>

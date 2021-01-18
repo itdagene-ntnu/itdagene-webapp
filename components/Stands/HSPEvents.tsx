@@ -20,7 +20,7 @@ const RelevantEvents = ({ events }: RelevantEventsProps): JSX.Element => {
   return (
     <>
       {events.slice(0, 3).map((event) => (
-        <EventGrid key={event?.id}>
+        <EventGrid key={event.id}>
           <TimeSlot>
             {eventTime({
               start: toDayjs(event.date, event.timeStart),
@@ -40,7 +40,7 @@ const HSPEvents = ({
   currentEvent,
 }: HSPEventsProps): JSX.Element => {
   const relevantEvents =
-    stand?.events &&
+    stand.events &&
     stand.events.filter(
       (event) =>
         event &&

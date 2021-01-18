@@ -37,15 +37,11 @@ const ProgramButtonContainer = styled.div<{ break?: boolean }>`
   } ;
 `;
 
-const ProgramButtonText = styled.h1<{ break?: boolean }>`
+const ProgramButtonText = styled.h1`
   margin: 0;
   font-weight: 600;
   margin-right: 10px;
   font-size: 22px;
-
-  @media only screen and (max-width: 1199px) {
-    font-size: ${(props): string => (props.break ? '15px' : '22px')};
-  }
 `;
 
 export default ProgramButton;

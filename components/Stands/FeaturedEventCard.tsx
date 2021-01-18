@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createFragmentContainer } from 'react-relay';
 import { graphql } from 'relay-hooks';
 import styled from 'styled-components';
@@ -8,10 +8,10 @@ import { FeaturedEventCard_stand } from '../../__generated__/FeaturedEventCard_s
 import { CompanyInfo, Divider, SubHeader } from './CompanyCardInfo';
 import {
   CompanyImg,
-  eventTime,
   EventTitle,
   getCurrentEvent,
   StandardContainer,
+  standEvent,
 } from './StandCard';
 
 interface FeaturedEventCard {
@@ -20,19 +20,24 @@ interface FeaturedEventCard {
 }
 
 const FeaturedEventCard = ({ stand, time }: FeaturedEventCard): JSX.Element => {
+  const [currentEvent, setCurrentEvent] = useState<standEvent | null>();
+
+  useEffect(() => {
+    const newCurrentEvent = getCurrentEvent(stand.events ?? [], time);
+    setCurrentEvent(newCurrentEvent);
+  }, [time, stand]);
+
   return (
     <Link href={`/stands/${stand.slug}`}>
       <StandardContainer scale={1.03}>
         <FeatCompanyImgContainer>
-          <CompanyImg src={stand?.company.logo ?? ''} />
+          <CompanyImg src={stand.company.logo ?? ''} />
         </FeatCompanyImgContainer>
         <Divider />
         <CompanyInfo>
-          <SubHeader>
-            {eventTime(getCurrentEvent(stand.events, time)).eventTitle}
-          </SubHeader>
+          <SubHeader>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</SubHeader>
           <EventTitle>
-            {eventTime(getCurrentEvent(stand.events, time)).eventDescription}
+            {currentEvent ? currentEvent.description : ''}
           </EventTitle>
         </CompanyInfo>
       </StandardContainer>

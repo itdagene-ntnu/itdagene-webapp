@@ -48,30 +48,12 @@ interface EventInfo {
   eventDescription: string;
 }
 
-export const eventTime = (
-  event: standEvent | null,
-  truncLength = 50
-): EventInfo => {
-  const dayTimeStart = dayjs(event?.timeStart, 'HH:mm:ss').format('HH:mm');
-  const dayTimeEnd = dayjs(event?.timeEnd, 'HH:mm:ss').format('HH:mm');
-
-  const timeRange = event ? `${dayTimeStart} - ${dayTimeEnd}` : '';
-
-  const eventTitle = event ? event.title : '💁🏼‍♀️';
-  const eventDescription = event ? event.description : '';
-  return {
-    timeRange,
-    eventTitle,
-    eventDescription,
-  };
-};
-
 const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
   const [currentEvent, setCurrentEvent] = useState<standEvent | null>();
   const router = useRouter();
 
   useEffect(() => {
-    const newCurrentEvent = getCurrentEvent(stand?.events ?? [], time);
+    const newCurrentEvent = getCurrentEvent(stand.events ?? [], time);
     setCurrentEvent(newCurrentEvent);
   }, [time, stand]);
 
@@ -79,7 +61,7 @@ const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ): void => {
     e.preventDefault();
-    router.push(`/stands/[id]`, `/stands/${stand?.slug}`);
+    router.push(`/stands/[id]`, `/stands/${stand.slug}`);
   };
 
   switch (type) {
@@ -88,7 +70,7 @@ const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
         <>
           <HSPContainerDesktop scale={1.03} onClick={handleRedirect}>
             <HSPCompanyImgContainer>
-              <CompanyImg src={stand?.company.logo ?? ''} />
+              <CompanyImg src={stand.company.logo ?? ''} />
             </HSPCompanyImgContainer>
             <FlexContainer>
               <CompanyEvents>
@@ -98,7 +80,7 @@ const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
                   currentEvent={currentEvent ?? null}
                 />
               </CompanyEvents>
-              <LiveIndicator active={stand?.active ?? false} />
+              <LiveIndicator active={stand.active ?? false} />
             </FlexContainer>
           </HSPContainerDesktop>
           <HSPContainerMobile scale={1.03} onClick={handleRedirect}>

@@ -36,7 +36,6 @@ export const eventTime = ({
   end: Dayjs;
 }): string => `${start.format('HH:mm')} - ${end.format('HH:mm')}`;
 
-// TODO: Change to Dayjs input
 export const timeIsAfter = ({
   time,
   start,
