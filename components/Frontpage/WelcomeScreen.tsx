@@ -111,9 +111,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
       time: time,
       start: toDayjs(currentMetaData.startDate, '09:30:00'),
     });
-    if (!beforeEventStart && active) {
-      setActive(true);
-    }
+    setActive(!beforeEventStart);
   }, [currentMetaData, active, time]);
 
   return (
