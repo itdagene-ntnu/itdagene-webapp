@@ -8,7 +8,7 @@ const StandsButton = (): JSX.Element => {
   return (
     <Link href={'/stands'}>
       <AnnouncementContainer scale={1.03}>
-        <Header shadow>TIL STANDSSIDEN</Header>
+        <Header shadow>TIL LIVESHOW</Header>
       </AnnouncementContainer>
     </Link>
   );
