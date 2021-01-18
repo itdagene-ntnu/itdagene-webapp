@@ -22,7 +22,7 @@ const Index = ({
         events={props.events}
         stands={props.stands}
         showToggleButton
-        //useLinks
+        useLinks
       />
     ) : (
       <Flex>

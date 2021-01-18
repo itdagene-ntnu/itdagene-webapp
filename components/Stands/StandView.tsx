@@ -50,6 +50,19 @@ const CompanyImg = styled.img`
   }
 `;
 
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  max-width: 2000px;
+  margin: auto;
+
+  @media only screen and (max-width: 993px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+`;
+
 const LiveContentSection = styled.div`
   margin: 0 2em 30px 2em;
 
@@ -60,7 +73,10 @@ const LiveContentSection = styled.div`
 
 const Back = (): JSX.Element => (
   <Link href="/stands">
-    <BackLink>{'< Tilbake til stands'}</BackLink>
+    <BackLink>
+      <i className="fas fa-arrow-left" />
+      {' Tilbake til stands'}
+    </BackLink>
   </Link>
 );
 
@@ -143,13 +159,13 @@ const Stand = ({ stand }: Props): JSX.Element => {
   return (
     <>
       <LiveContentSection>
-        <Flex justifyBetween alignEnd style={{ marginBottom: '1em' }}>
+        <Header style={{ marginBottom: '1em' }}>
           <Back />
           <CompanyImg
             src={stand.company.logo || undefined}
             alt={`${stand.company.name} logo`}
           />
-        </Flex>
+        </Header>
         <LivePlayer qaUrl={stand.qaUrl} livestreamUrl={stand.livestreamUrl} />
       </LiveContentSection>
       <BorderlessSection noPadding style={{ margin: '30px 0' }}>

@@ -111,9 +111,17 @@ export const NudgeDiv = styled('div')<{ scale: number }>`
   }
 `;
 
-export const EllipseOverflowDiv = styled.div<{ maxLines: number }>`
+export const EllipseOverflowDiv = styled.div<{
+  maxLines: number;
+  smallScreenMaxLines?: number;
+}>`
   display: -webkit-box;
   -webkit-line-clamp: ${(props): number => props.maxLines};
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  @media only screen and (max-width: 767px) {
+    -webkit-line-clamp: ${(props): number =>
+      props.smallScreenMaxLines ?? props.maxLines};
+  }
 `;

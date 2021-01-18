@@ -126,7 +126,7 @@ const Index = ({
     <>
       {props.stands_page && (
         <BorderlessSection noPadding>
-          <PageView hideContent hideDate hideTitle page={props.stands_page} />
+          <PageView hideDate hideTitle page={props.stands_page} />
         </BorderlessSection>
       )}
 
