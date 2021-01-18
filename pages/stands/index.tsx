@@ -38,26 +38,18 @@ type Companies =
 const getFeaturedEventStands = (
   time: Dayjs,
   stands: stands_QueryResponse['stands'],
-  startDate: string,
-  endDate: string,
-  companiesFirstDay: Companies,
-  companiesLastDay: Companies
+  currentDayCompaniesIds: string[]
 ): stands_QueryResponse['stands'] => {
   const featuredStands = stands?.filter(
     (stand) =>
       stand &&
-      currentDayCompaniesIds(
-        startDate,
-        endDate,
-        companiesFirstDay,
-        companiesLastDay
-      ).includes(stand.company.id) &&
+      currentDayCompaniesIds.includes(stand.company.id) &&
       currentFeaturedEvent(time, stand)
   );
   return featuredStands ?? [];
 };
 
-const currentDayCompaniesIds = (
+const getCurrentDayCompaniesIds = (
   startDate: string,
   endDate: string,
   companiesFirstDay: Companies,
@@ -99,6 +91,9 @@ const Index = ({
   const [featuredEventStands, setFeaturedEventStands] = useState<
     stands_QueryResponse['stands']
   >([]);
+  const [currentDayCompaniesIds, setCurrentDayCompaniesIds] = useState<
+    string[]
+  >([]);
 
   const {
     mainCollaborator,
@@ -112,20 +107,25 @@ const Index = ({
   useEffect(() => {
     const interval = setInterval(() => setTime(dayjs()), intervalLength);
     return (): void => clearInterval(interval);
-  }, [props.currentMetaData]);
+  }, []);
 
   useEffect(() => {
-    const updatedFeaturedStands = getFeaturedEventStands(
-      time,
-      props.stands,
+    const updatedCurrentDayCompaniesIds = getCurrentDayCompaniesIds(
       startDate,
       endDate,
       companiesFirstDay,
       companiesLastDay
     );
-    if (updatedFeaturedStands) {
-      setFeaturedEventStands(updatedFeaturedStands);
-    }
+
+    const updatedFeaturedStands = getFeaturedEventStands(
+      time,
+      props.stands,
+      updatedCurrentDayCompaniesIds
+    );
+
+    if (updatedCurrentDayCompaniesIds)
+      setCurrentDayCompaniesIds(updatedCurrentDayCompaniesIds);
+    if (updatedFeaturedStands) setFeaturedEventStands(updatedFeaturedStands);
   }, [
     time,
     props.stands,
@@ -162,12 +162,7 @@ const Index = ({
             ?.filter(
               (stand) =>
                 stand &&
-                currentDayCompaniesIds(
-                  startDate,
-                  endDate,
-                  companiesFirstDay,
-                  companiesLastDay
-                ).includes(stand.company.id) &&
+                currentDayCompaniesIds.includes(stand.company.id) &&
                 stand.company.id === mainCollaborator.id
             )
             .map((stand) => (
@@ -186,12 +181,7 @@ const Index = ({
           ?.filter(
             (stand) =>
               stand &&
-              currentDayCompaniesIds(
-                startDate,
-                endDate,
-                companiesFirstDay,
-                companiesLastDay
-              ).includes(stand.company.id) &&
+              currentDayCompaniesIds.includes(stand.company.id) &&
               companyIds(collaborators).includes(stand.company.id)
           )
           .map((stand) => (
@@ -204,12 +194,7 @@ const Index = ({
           ?.filter(
             (stand) =>
               stand &&
-              currentDayCompaniesIds(
-                startDate,
-                endDate,
-                companiesFirstDay,
-                companiesLastDay
-              ).includes(stand.company.id) &&
+              currentDayCompaniesIds.includes(stand.company.id) &&
               !companyIds(collaborators).includes(stand.company.id) &&
               stand.company.id !== mainCollaborator?.id
           )

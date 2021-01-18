@@ -17,13 +17,13 @@ const CompanyCardContent = ({
   <>
     <FirstRow>
       <CompanyImgContainer>
-        <CompanyImg src={stand?.company.logo ?? ''} />
+        <CompanyImg src={stand.company.logo ?? ''} />
       </CompanyImgContainer>
-      <LiveIndicator active={stand?.active ?? false} />
+      <LiveIndicator active={stand.active} />
     </FirstRow>
     <Divider />
     <CompanyInfo>
-      <SubHeader>{stand?.company.name}</SubHeader>
+      <SubHeader>{stand.company.name}</SubHeader>
       <CurrentEvent>
         {currentEvent && (
           <TimeSlot>

@@ -169,7 +169,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
       </MainContainer>
     </RootContainer>
   );
-};;;
+};
 
 export default createFragmentContainer(WelcomeScreen, {
   currentMetaData: graphql`

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { NudgeDiv } from '../Styled';
 import { useRouter } from 'next/router';
@@ -49,13 +49,8 @@ interface EventInfo {
 }
 
 const StandCard = ({ stand, time, type }: StandCardProps): JSX.Element => {
-  const [currentEvent, setCurrentEvent] = useState<standEvent | null>();
   const router = useRouter();
-
-  useEffect(() => {
-    const newCurrentEvent = getCurrentEvent(stand.events ?? [], time);
-    setCurrentEvent(newCurrentEvent);
-  }, [time, stand]);
+  const currentEvent = getCurrentEvent(stand.events ?? [], time);
 
   const handleRedirect = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
