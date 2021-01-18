@@ -5,6 +5,7 @@ import { createFragmentContainer } from 'react-relay';
 import { graphql } from 'relay-hooks';
 import styled from 'styled-components';
 import { FeaturedEventCard_stand } from '../../__generated__/FeaturedEventCard_stand.graphql';
+import { EllipseOverflowDiv } from '../Styled';
 import { CompanyInfo, Divider, SubHeader } from './CompanyCardInfo';
 import {
   CompanyImg,
@@ -35,10 +36,14 @@ const FeaturedEventCard = ({ stand, time }: FeaturedEventCard): JSX.Element => {
         </FeatCompanyImgContainer>
         <Divider />
         <CompanyInfo>
-          <SubHeader>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</SubHeader>
-          <EventTitle>
-            {currentEvent ? currentEvent.description : ''}
-          </EventTitle>
+          <EllipseOverflowDiv maxLines={2} smallScreenMaxLines={3}>
+            <SubHeader>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</SubHeader>
+          </EllipseOverflowDiv>
+          <EllipseOverflowDiv maxLines={2} smallScreenMaxLines={1}>
+            <EventTitle>
+              {currentEvent ? currentEvent.description : ''}
+            </EventTitle>
+          </EllipseOverflowDiv>
         </CompanyInfo>
       </StandardContainer>
     </Link>
