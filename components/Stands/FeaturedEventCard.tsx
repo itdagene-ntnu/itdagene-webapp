@@ -13,6 +13,7 @@ import {
   StandardContainer,
   standEvent,
 } from './StandCard';
+import { EllipseOverflowDiv } from '../../components/Styled';
 
 interface FeaturedEventCard {
   stand: FeaturedEventCard_stand;
@@ -35,9 +36,13 @@ const FeaturedEventCard = ({ stand, time }: FeaturedEventCard): JSX.Element => {
         </FeatCompanyImgContainer>
         <Divider />
         <CompanyInfo>
-          <SubHeader>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</SubHeader>
+          <EllipseOverflowDiv maxLines={2}>
+            <SubHeader>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</SubHeader>
+          </EllipseOverflowDiv>
           <EventTitle>
-            {currentEvent ? currentEvent.description : ''}
+            <EllipseOverflowDiv maxLines={2}>
+              {currentEvent ? currentEvent.description : ''}
+            </EllipseOverflowDiv>
           </EventTitle>
         </CompanyInfo>
       </StandardContainer>

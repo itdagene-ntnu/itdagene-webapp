@@ -4,6 +4,7 @@ import { eventTime, toDayjs } from '../../utils/time';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
 import LiveIndicator from './LiveIndicator';
 import { CompanyImg, EventTitle, standEvent, TimeSlot } from './StandCard';
+import { EllipseOverflowDiv } from '../Styled';
 
 interface CompanyCardContentProps {
   stand: StandCard_stand;
@@ -33,7 +34,9 @@ const CompanyCardContent = ({
             })}
           </TimeSlot>
         )}
-        <EventTitle>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</EventTitle>
+        <EllipseOverflowDiv maxLines={3}>
+          <EventTitle>{currentEvent ? currentEvent.title : '🤷🏼‍♀️'}</EventTitle>
+        </EllipseOverflowDiv>
       </CurrentEvent>
     </CompanyInfo>
   </>
