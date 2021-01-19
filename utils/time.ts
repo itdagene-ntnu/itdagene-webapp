@@ -28,8 +28,13 @@ export const currentHalfhour = (time: Dayjs): string => {
     : `${time.format('HH')}:30 - ${nextHour.format('HH')}:00`;
 };
 
-export const eventTime = (start: Dayjs, end: Dayjs): string =>
-  `${start.format('HH:mm')} - ${end.format('HH:mm')}`;
+export const eventTime = ({
+  start,
+  end,
+}: {
+  start: Dayjs;
+  end: Dayjs;
+}): string => `${start.format('HH:mm')} - ${end.format('HH:mm')}`;
 
 // TODO: Change to Dayjs input
 export const timeIsAfter = ({

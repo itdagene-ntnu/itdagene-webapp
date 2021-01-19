@@ -1,15 +1,10 @@
 import { Dayjs } from 'dayjs';
+import { sortBy } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
-import { timeIsAfter, toDayjs } from '../../utils/time';
+import { eventTime, timeIsAfter, toDayjs } from '../../utils/time';
 import { StandCard_stand } from '../../__generated__/StandCard_stand.graphql';
-import {
-  eventTime,
-  EventTitle,
-  standEvent,
-  standEvents,
-  TimeSlot,
-} from './StandCard';
+import { EventTitle, standEvent, standEvents, TimeSlot } from './StandCard';
 
 interface HSPEventsProps {
   stand: StandCard_stand;
@@ -21,16 +16,23 @@ interface RelevantEventsProps {
   events: standEvents;
 }
 
-const RelevantEvents = ({ events }: RelevantEventsProps): JSX.Element => (
-  <>
-    {events.slice(Math.max(events.length - 3, 0)).map((event) => (
-      <EventGrid key={event?.id}>
-        <TimeSlot>{eventTime(event).timeRange}</TimeSlot>
-        <EventTitle>{eventTime(event, 200).eventTitle}</EventTitle>
-      </EventGrid>
-    ))}
-  </>
-);
+const RelevantEvents = ({ events }: RelevantEventsProps): JSX.Element => {
+  return (
+    <>
+      {events.slice(0, 3).map((event) => (
+        <EventGrid key={event?.id}>
+          <TimeSlot>
+            {eventTime({
+              start: toDayjs(event.date, event.timeStart),
+              end: toDayjs(event.date, event.timeEnd),
+            })}
+          </TimeSlot>
+          <EventTitle>{event.title}</EventTitle>
+        </EventGrid>
+      ))}
+    </>
+  );
+};
 
 const HSPEvents = ({
   stand,
@@ -45,16 +47,23 @@ const HSPEvents = ({
         timeIsAfter({ time: time, start: toDayjs(event.date, event.timeStart) })
     );
 
+  const sortedEvents = sortBy(relevantEvents, ['date', 'timeStart']);
+
   return currentEvent ? (
     <>
       <EventGrid>
-        <TimeSlot current={true}>{eventTime(currentEvent).timeRange}</TimeSlot>
-        <EventTitle>{eventTime(currentEvent, 200).eventTitle}</EventTitle>
+        <TimeSlot current={true}>
+          {eventTime({
+            start: toDayjs(currentEvent.date, currentEvent.timeStart),
+            end: toDayjs(currentEvent.date, currentEvent.timeEnd),
+          })}
+        </TimeSlot>
+        <EventTitle>{currentEvent.title}</EventTitle>
       </EventGrid>
-      <RelevantEvents events={relevantEvents ?? []} />
+      <RelevantEvents events={sortedEvents ?? []} />
     </>
   ) : (
-    <RelevantEvents events={relevantEvents ?? []} />
+    <RelevantEvents events={sortedEvents ?? []} />
   );
 };
 

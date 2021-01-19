@@ -30,15 +30,12 @@ const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
         <ProgramButton />
       </Flex>
       <FeatStandGrid>
-        {/* Show a maximum of 5 featured stands */}
-        {stands
-          .slice(Math.max(stands.length - 5, 0))
-          .map(
-            (stand) =>
-              stand && (
-                <FeaturedEventCard key={stand.id} stand={stand} time={time} />
-              )
-          )}
+        {stands.map(
+          (stand) =>
+            stand && (
+              <FeaturedEventCard key={stand.id} stand={stand} time={time} />
+            )
+        )}
       </FeatStandGrid>
       <PaddedDivider />
     </div>

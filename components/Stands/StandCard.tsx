@@ -144,7 +144,7 @@ export const StandardContainer = styled(NudgeDiv)`
   display: flex;
   flex-direction: column;
   max-width: 100vw;
-  height: 180px;
+  height: 190px;
   background: #ffffff;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 7px;

@@ -179,10 +179,10 @@ const ProgramView = (props: Props): JSX.Element => {
                 <EventInfo key={event.id}>
                   <Title>{event.title}</Title>
                   <EventTimePlaceInfo>
-                    <InfoElement>{`🕐 ${eventTime(
-                      toDayjs(event.date, event.timeStart),
-                      toDayjs(event.date, event.timeEnd)
-                    )}`}</InfoElement>
+                    <InfoElement>{`🕐 ${eventTime({
+                      start: toDayjs(event.date, event.timeStart),
+                      end: toDayjs(event.date, event.timeEnd),
+                    })}`}</InfoElement>
                     <Location
                       event={event}
                       stands={props.stands}
