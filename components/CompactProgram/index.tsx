@@ -70,7 +70,7 @@ const CompactProgram = (): JSX.Element => (
         </Link>
       </Tile>
       <Tile color={itdageneLightBlue}>
-        <Link href="/stands">
+        <Link href="/info/stands">
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>

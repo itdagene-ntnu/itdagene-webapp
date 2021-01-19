@@ -21,8 +21,8 @@ const Index = ({
       <ProgramView
         events={props.events}
         stands={props.stands}
-        showToggleButton
-        useLinks
+        // showToggleButton
+        // useLinks
       />
     ) : (
       <Flex>
