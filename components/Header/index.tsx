@@ -8,8 +8,8 @@ import HamburgerMenu from 'react-hamburger-menu';
 import { lightGrey } from '../../utils/colors';
 
 const Header = styled('header')`
-  #border-bottom: 1px solid ${lightGrey};
-  #border-bottom: 3px solid #027cb5;
+  /* border-bottom: 1px solid ${lightGrey};
+  border-bottom: 3px solid #027cb5; */
   padding-top: 10px;
   padding-bottom: 10px;
   background: white;
@@ -41,7 +41,6 @@ type MenuItem = {
 
 const items: MenuItem[] = [
   { key: 'home', name: 'HJEM', to: '/' },
-  { key: 'stands', name: 'STANDS', to: '/stands' },
   { key: 'program', name: 'PROGRAM', to: '/program' },
   { key: 'joblistings', name: 'JOBB', to: '/jobb' },
   { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
