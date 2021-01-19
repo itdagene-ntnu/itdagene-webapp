@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
@@ -9,8 +9,6 @@ import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
-import { timeIsAfter, toDayjs } from '../../utils/time';
-import StandsButton from './StandsButton';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -76,45 +74,9 @@ const RootContainer = styled('div')`
   overflow: hidden;
 `;
 
-const LiveHeader = styled.span`
-  position: relative;
-  display: inline-block;
-  border-radius: 5px;
-  color: #f05454;
-  font-weight: 900;
-  stroke: white;
-  font-size: 35px;
-  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
-
-  -webkit-text-stroke-width: 0.75px;
-  -webkit-text-stroke-color: white;
-`;
-
-// Update the currentEvent-list every sec
-const intervalLength = 1000 * 1;
-
 const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
-  const [time, setTime] = useState(dayjs());
-  const [active, setActive] = useState(false);
-
   const startDate = dayjs(currentMetaData.startDate);
   const endDate = dayjs(currentMetaData.endDate);
-
-  useEffect(() => {
-    const interval = setInterval(() => setTime(dayjs()), intervalLength);
-    return (): void => clearInterval(interval);
-  }, []);
-
-  // TODO: Double-check this logic
-  useEffect(() => {
-    const beforeEventStart = timeIsAfter({
-      time: time,
-      start: toDayjs(currentMetaData.startDate, '09:30:00'),
-    });
-    setActive(!beforeEventStart);
-  }, [currentMetaData, active, time]);
-
-  const isLive = time.isAfter(toDayjs(currentMetaData.endDate, '09:30:00'));
 
   return (
     <RootContainer>
@@ -133,39 +95,23 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
               <b>it</b>DAGENE {currentMetaData.year}
             </Header>
 
-            {active ? (
-              <Flex justifyBetween alignCenter style={{ marginBottom: '10px' }}>
-                <SubHeader>
-                  {`${startDate.date()}. & ${endDate.date()}. ${endDate
-                    .locale('nb')
-                    .format('MMMM')} ${startDate.year()}`}
-                </SubHeader>
-                {isLive && <LiveHeader>LIVE NÅ</LiveHeader>}
-              </Flex>
-            ) : (
-              <SubHeader>
-                {`${startDate.date()}. & ${endDate.date()}. ${endDate
-                  .locale('nb')
-                  .format('MMMM')} ${startDate.year()}`}
-              </SubHeader>
-            )}
-            {!active && <Location>Digitalt // itdagene.no</Location>}
+            <SubHeader>
+              {`${startDate.date()}. & ${endDate.date()}. ${endDate
+                .locale('nb')
+                .format('MMMM')} ${startDate.year()}`}
+            </SubHeader>
+            <Location>NTNU Trondheim</Location>
           </FlexItem>
           <FlexItem>
-            {active ? (
-              <StandsButton />
-            ) : (
-              <Countdown currentMetaData={currentMetaData} />
-            )}
+            <Countdown currentMetaData={currentMetaData} />
           </FlexItem>
         </Flex>
-        {!active && (
-          <Link href="/om-itdagene">
-            <a>
-              <ReadMore>Les mer</ReadMore>
-            </a>
-          </Link>
-        )}
+
+        <Link href="/om-itdagene">
+          <a>
+            <ReadMore>Les mer</ReadMore>
+          </a>
+        </Link>
       </MainContainer>
     </RootContainer>
   );
