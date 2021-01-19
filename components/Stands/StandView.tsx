@@ -65,7 +65,10 @@ const KeyInfoSection = styled.div`
 
 const Back = (): JSX.Element => (
   <Link href="/stands">
-    <BackLink>{'< Tilbake til stands'}</BackLink>
+    <BackLink>
+      <i className={'fas fa-arrow-left'} />
+      {' Tilbake til stands'}
+    </BackLink>
   </Link>
 );
 
