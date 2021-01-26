@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
 import styled from 'styled-components';
 import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
@@ -10,29 +9,27 @@ const Title = styled('h1')`
   }
 `;
 
+const StyledLink = styled.a`
+  cursor: pointer;
+  transition: 0.2s;
+
+  :hover {
+    transform: scale(1.1);
+    transition: 0.2s;
+  }
+`;
+
 const Interest = (): JSX.Element => (
   <>
     <Flex justifyAround wrapReverse>
       <FlexItem grow={1} basis="700px">
         <Title>Interessert i å delta? </Title>
-        {/*}<p>
+        <p>
           Henvendelser angående interesse for itDAGENE 2020 er nå åpent. Vi
           ønsker å påpeke at dette <b>IKKE er et påmeldingskjema</b>, og det er
           <b> IKKE</b> førsteman til mølla. Under finner dere en lenke til vårt
           nye interesseskjema hvor din bedrift kan melde sin interesse for
           itDAGENE 2020.
-          </p>*/}
-        <p>
-          Henvendelser angående deltakelse på itDAGENE 2020 kan sendes på mail
-          til{' '}
-          <a href="mailto:bedrift@itdagene.no" target="_blank" rel="noreferrer">
-            bedrift@itdagene.no
-          </a>
-          . For mer informasjon angående itDAGENE 2020, se våre{' '}
-          <Link href="/info/[side]" as="/info/for-bedrifter">
-            infosider
-          </Link>
-          .
         </p>
       </FlexItem>
       <FlexItem>
@@ -45,6 +42,16 @@ const Interest = (): JSX.Element => (
         </CenterIt>
       </FlexItem>
     </Flex>
+    <CenterIt text>
+      <StyledLink href="https://interesse.itdagene.no" target="_blank">
+        <Image
+          style={{ width: 50 }}
+          src="https://cdn.onlinewebfonts.com/svg/img_193664.png"
+          alt="signup"
+        />
+        <h3>Interesseskjema</h3>
+      </StyledLink>
+    </CenterIt>
   </>
 );
 
