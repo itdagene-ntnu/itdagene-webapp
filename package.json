@@ -60,7 +60,7 @@
     "@types/react-infinite-scroller": "^1.2.1",
     "@types/react-modal": "^3.10.6",
     "@types/react-relay": "^7.0.17",
-    "@types/react-select": "^3.0.22",
+    "@types/react-select": "^4.0.4",
     "@types/relay-runtime": "^10.1.5",
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
