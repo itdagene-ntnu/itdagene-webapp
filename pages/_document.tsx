@@ -41,8 +41,9 @@ export default class Default extends Document<{
     return (
       <Html lang="nb">
         <Head>
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
-            href="https://cdn.rawgit.com/h-ibaldo/Raleway_Fixed_Numerals/master/css/rawline.css"
+            href="https://fonts.googleapis.com/css2?family=Raleway&display=swap"
             rel="stylesheet"
           />
           <style>{`
@@ -53,7 +54,8 @@ export default class Default extends Document<{
               color: rgba(0, 0, 0, 0.87);
               font-smoothing: antialiased;
               word-break: break-word;
-              font-family: rawline;
+              font-family: Raleway, sans-serif;
+              font-variant-numeric: lining-nums;
             }
             img {
               max-width: 100%;
