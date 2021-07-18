@@ -17,6 +17,7 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
 import SummerjobBanner from '../components/Frontpage/SummerjobBanner';
+import MainCollaborator from '../components/Collaborators/MainCollaborator';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
@@ -98,7 +99,7 @@ const Index = ({ props, error }: RenderProps): JSX.Element => (
     </Section>
     {props.currentMetaData.mainCollaborator && (
       <Section>
-        <HSP />
+        <MainCollaborator company={props.currentMetaData.mainCollaborator} />
       </Section>
     )}
     {props.currentMetaData.collaborators && (
@@ -128,9 +129,6 @@ export default withDataAndLayout(Index, {
         collaborators {
           id
         }
-        collaborators {
-          id
-        }
         companiesFirstDay {
           id
         }
@@ -139,6 +137,7 @@ export default withDataAndLayout(Index, {
         }
         mainCollaborator {
           id
+          ...MainCollaborator_company
         }
         ...Companies_query
         ...Collaborators_query
