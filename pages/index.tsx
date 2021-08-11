@@ -10,7 +10,6 @@ import Companies from '../components/Companies/Companies';
 import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled from 'styled-components';
-import HSP from '../components/Frontpage/HSP';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import Interest from '../components/Frontpage/Interest';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
