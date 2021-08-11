@@ -88,7 +88,11 @@ const MainCollaborator = ({
           <h3>↓ Ta en titt på denne filmen ↓</h3>
 
           {company.video ? (
-            <Player playsInline poster={company.poster || company.logo} src={company.video} />
+            <Player
+              playsInline
+              poster={company.poster || company.logo}
+              src={company.video}
+            />
           ) : (
             'Missing main collaborator video!'
           )}
