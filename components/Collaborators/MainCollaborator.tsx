@@ -33,16 +33,15 @@ const Title = styled('h1')`
 `;
 
 const fragmentSpec = graphql`
-  fragment MainCollaborator_company on Company {
+  fragment MainCollaborator_company on MainCollaborator {
     id
     name
     logo(width: 270, height: 100)
     url
     description
-    keyInformation {
-      name
-      value
-    }
+    video
+    poster
+    intro
   }
 `;
 
@@ -59,17 +58,6 @@ const MainCollaborator = ({
   const company: MainCollaborator_company = useFragment(
     fragmentSpec,
     props.company
-  );
-
-  // Somewhat hacky, but should do the trick without adding a bunch of fields etc.
-  const poster = company.keyInformation?.find(
-    (keyInfo) => keyInfo.name === 'hsp-poster'
-  );
-  const video = company.keyInformation?.find(
-    (keyInfo) => keyInfo.name === 'hsp-video'
-  );
-  const intro = company.keyInformation?.find(
-    (keyInfo) => keyInfo.name === 'hsp-intro'
   );
 
   return (
@@ -95,13 +83,14 @@ const MainCollaborator = ({
 
           {showDescription && <ReactMarkdown source={company.description} />}
 
-          <h3>{intro?.value || 'Missing hsp-intro'}</h3>
+          {company.intro && <ReactMarkdown source={company.intro} />}
+
           <h3>↓ Ta en titt på denne filmen ↓</h3>
 
-          {video ? (
-            <Player playsInline poster={poster?.value} src={video?.value} />
+          {company.video ? (
+            <Player playsInline poster={company.poster || company.logo} src={company.video} />
           ) : (
-            'Missing hsp-video'
+            'Missing main collaborator video!'
           )}
         </CenterIt>
       </FlexItem>
