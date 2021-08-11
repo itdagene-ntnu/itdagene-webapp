@@ -15,7 +15,6 @@ import Interest from '../components/Frontpage/Interest';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
-import SummerjobBanner from '../components/Frontpage/SummerjobBanner';
 import MainCollaborator from '../components/Collaborators/MainCollaborator';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
