@@ -90,9 +90,11 @@ const Index = ({ props, error }: RenderProps): JSX.Element => (
     <Section>
       <AboutSection {...props} />
     </Section>
-    <Section>
-      <Interest />
-    </Section>
+    {props.currentMetaData.interestForm && (
+      <Section>
+        <Interest form={props.currentMetaData.interestForm} />
+      </Section>
+    )}
     <Section>
       <CompactProgram />
     </Section>
@@ -125,6 +127,7 @@ export default withDataAndLayout(Index, {
         ...Year_currentMetaData
         ...WelcomeScreen_currentMetaData
         id
+        interestForm
         collaborators {
           id
         }

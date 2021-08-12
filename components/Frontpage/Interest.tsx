@@ -19,7 +19,11 @@ const StyledLink = styled.a`
   }
 `;
 
-const Interest = (): JSX.Element => (
+type Props = {
+  form: string;
+};
+
+const Interest = ({ form }: Props): JSX.Element => (
   <>
     <Flex justifyAround wrapReverse>
       <FlexItem grow={1} basis="700px">
@@ -43,7 +47,7 @@ const Interest = (): JSX.Element => (
       </FlexItem>
     </Flex>
     <CenterIt text>
-      <StyledLink href="https://interesse.itdagene.no" target="_blank">
+      <StyledLink href={form} target="_blank">
         <Image
           style={{ width: 50 }}
           src="https://cdn.onlinewebfonts.com/svg/img_193664.png"
