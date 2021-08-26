@@ -66,7 +66,12 @@ const EventsSection = ({
         query.pages.filter(Boolean).map(
           (element) =>
             element && (
-              <FlexItem key={element.slug} basis={'400px'} grow={1}>
+              <FlexItem
+                key={element.slug}
+                basis={'400px'}
+                grow={1}
+                style={{ paddingRight: '1em' }}
+              >
                 <h2> {element.title} </h2>
                 <p>{element.ingress}</p>
                 <Centered>
