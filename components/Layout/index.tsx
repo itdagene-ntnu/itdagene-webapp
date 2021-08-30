@@ -60,24 +60,6 @@ export const BlueSection = styled.div`
 
 export const Wrapper = (props: any): JSX.Element => <MainFlex {...props} />;
 
-// This is to make TS compile with google analytics.
-declare global {
-  interface Window {
-    __GA_TRACKING_ID__?: string;
-    gtag?: (...arg0: any) => any;
-  }
-}
-
-const pageview = (url: string): void => {
-  window.__GA_TRACKING_ID__ &&
-    window.gtag &&
-    window.gtag('config', window.__GA_TRACKING_ID__, {
-      page_location: url,
-    });
-};
-
-Router.events.on('routeChangeComplete', (url: string): void => pageview(url));
-
 export type Metadata = Partial<metadata_metadata> | null;
 
 export type LayoutSettings<T> = {
