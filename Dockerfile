@@ -26,8 +26,8 @@ RUN yarn schema:prod
 RUN yarn relay
 RUN yarn build
 
-FROM node:12-alpine
-MAINTAINER Odin Ugedal <odin@ugedal.com>
+FROM node:16-alpine
+LABEL org.opencontianers.image.authors="web@itdagene.no"
 RUN mkdir /app
 WORKDIR /app/
 
