@@ -3,7 +3,7 @@ export default function debounce(
   ms = 0
 ): (arg0: any) => Promise<any> {
   //TODO
-  let timer: number | null = null;
+  let timer: ReturnType<typeof setTimeout> | null = null;
   let resolves: any[] = [];
 
   return function (...args): Promise<any> {
