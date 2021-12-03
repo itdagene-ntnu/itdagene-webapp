@@ -8286,10 +8286,10 @@ regexpp@^3.0.0:
   resolved "https://registry.yarnpkg.com/regexpp/-/regexpp-3.0.0.tgz#dd63982ee3300e67b41c1956f850aa680d9d330e"
   integrity sha512-Z+hNr7RAVWxznLPuA7DIh8UNX1j9CDrUQxskw9IrBE1Dxue2lyXT+shqEIeLUjrokxIP8CMy1WkjgG3rTsd5/g==
 
-relay-compiler-language-typescript@^13.0.2:
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/relay-compiler-language-typescript/-/relay-compiler-language-typescript-13.0.2.tgz#ef3bfe955a94cb140bdd77c92380aa211c0a5015"
-  integrity sha512-YbwTs7dW7FQcszTzPdxFLkb1jND+tlenYmGca4P0ybgiOCus8HpA7U1PRfIiFHxjwHntqjucmUDdJcSHjgGiGg==
+relay-compiler-language-typescript@^13.0.10:
+  version "13.0.10"
+  resolved "https://registry.yarnpkg.com/relay-compiler-language-typescript/-/relay-compiler-language-typescript-13.0.10.tgz#1b80fc6fe1f398a3706a12e3493165b3e0a59800"
+  integrity sha512-JFEjaYX3Jb3OQcMnrcCNNMQG5hjs8UpvtrrDGcv6Lnj0SMI9LhAg8NHJOWR3JOVdEVINA02mU5Cfw4VicH5USA==
   dependencies:
     immutable "^4.0.0-rc.12"
     invariant "^2.2.4"
