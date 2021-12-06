@@ -37,7 +37,7 @@ class Index extends React.Component<RenderProps, State> {
               loadingStart={this.loadingStart}
               loadingEnd={this.loadingEnd}
               /* TODO FIXME Fragment types are not properly handled by WithData */
-              root={(props as unknown) as FragmentRef<typeof props>}
+              root={props as unknown as FragmentRef<typeof props>}
             />
           )}
         </JoblistingsContainer>

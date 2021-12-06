@@ -158,9 +158,11 @@ const ListRenderer = (props: Props): JSX.Element => {
       )
       .concat(
         props.other
-          ? (props.other.nodes as (JoblistingNode & {
-              noListing: boolean;
-            })[]).map((e) => ({
+          ? (
+              props.other.nodes as (JoblistingNode & {
+                noListing: boolean;
+              })[]
+            ).map((e) => ({
               node: e,
               noListing: true,
             }))

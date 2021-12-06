@@ -285,14 +285,8 @@ export const JoblistingsList = createPaginationContainer(
       };
     },
     getVariables(props, { cursor, count }, fragmentVariables) {
-      const {
-        type,
-        orderBy,
-        company,
-        fromYear,
-        toYear,
-        towns,
-      } = fragmentVariables;
+      const { type, orderBy, company, fromYear, toYear, towns } =
+        fragmentVariables;
       return {
         count,
         orderBy,

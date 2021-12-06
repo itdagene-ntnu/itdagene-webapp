@@ -14,9 +14,8 @@ import LiveIndicator from './LiveIndicator';
 
 dayjs.extend(customParseFormat);
 
-export type ArrayElement<
-  ArrayType extends readonly unknown[]
-> = ArrayType[number];
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType[number];
 type Package = 'standard' | 'sp' | 'hsp';
 export type standEvents = NonNullable<StandCard_stand['events']>;
 export type standEvent = ArrayElement<standEvents>;

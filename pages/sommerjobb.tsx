@@ -169,7 +169,7 @@ class Index extends React.Component<RenderProps, State> {
               setCurrentNode={this.setCurrentNode}
               setAllListings={this.setAllListings}
               /* TODO FIXME Fragment types are not properly handled by WithData */
-              root={(props as unknown) as FragmentRef<typeof props>}
+              root={props as unknown as FragmentRef<typeof props>}
               other={props as FragmentRef<typeof props>}
               collaborators={props as FragmentRef<typeof props>}
             />

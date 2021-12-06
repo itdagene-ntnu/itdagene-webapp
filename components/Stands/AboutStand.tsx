@@ -7,7 +7,8 @@ import styled from 'styled-components';
 import { graphql, useFragment } from 'relay-hooks';
 import { AboutStand_stand$key } from '../../__generated__/AboutStand_stand.graphql';
 
-const VIDEO_REGEX = /https:\/\/cdn\.itdagene\.no\/([a-zA-Z0-9]+\/?)*.(mp4|mkv|webm)/;
+const VIDEO_REGEX =
+  /https:\/\/cdn\.itdagene\.no\/([a-zA-Z0-9]+\/?)*.(mp4|mkv|webm)/;
 
 type Props = {
   stand: AboutStand_stand$key;

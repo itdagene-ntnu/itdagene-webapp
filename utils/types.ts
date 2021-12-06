@@ -8,6 +8,5 @@ export interface PageContext<T extends OperationType> extends NextPageContext {
   environment?: Environment;
 }
 
-export type ArrayElement<
-  ArrayType extends readonly unknown[]
-> = ArrayType[number];
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType[number];
