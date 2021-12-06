@@ -14,9 +14,7 @@ import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
 export default class Default extends Document<{
   styleTags: Array<React.ReactElement<{}>>;
 }> {
-  static async getInitialProps(
-    ctx: DocumentContext
-  ): Promise<
+  static async getInitialProps(ctx: DocumentContext): Promise<
     DocumentInitialProps & {
       styleTags: Array<React.ReactElement<{}>>;
     }
@@ -25,8 +23,10 @@ export default class Default extends Document<{
     const originalRenderPage = ctx.renderPage;
     ctx.renderPage = (): ReturnType<DocumentContext['renderPage']> =>
       originalRenderPage({
-        enhanceApp: (App) => (props): JSX.Element =>
-          sheet.collectStyles(<App {...props} />),
+        enhanceApp:
+          (App) =>
+          (props): JSX.Element =>
+            sheet.collectStyles(<App {...props} />),
       });
     const initialProps = await Document.getInitialProps(ctx);
     if (ctx.err) {

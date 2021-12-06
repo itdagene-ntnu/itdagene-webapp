@@ -246,7 +246,7 @@ const TownSelector = withRouter(
         }
         styles={customStyles}
         defaultValue={
-          (router.query.towns as unknown) as ValueType<OptionTypeBase>
+          router.query.towns as unknown as ValueType<OptionTypeBase>
         }
         filterOptions={(
           options: Option[],
