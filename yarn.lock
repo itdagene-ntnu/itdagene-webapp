@@ -1385,10 +1385,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-relay@^7.0.17":
-  version "7.0.17"
-  resolved "https://registry.yarnpkg.com/@types/react-relay/-/react-relay-7.0.17.tgz#83f6b85c41b5fd3bb27d04d759fa4c0e4dd6a8d4"
-  integrity sha512-cJqOFIbp3M3/QkRpxlL4pwWRWB0lPGHevJFW8unuebkkITre8ptgknkGhAKe5IlA6ENTRJqVQXMuNdyLxl+0cQ==
+"@types/react-relay@^11.0.3":
+  version "11.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-relay/-/react-relay-11.0.3.tgz#95097049203f2f814e1330453d037841a2a310e5"
+  integrity sha512-hgKmTCswmZclKOqju/3pcVgJG3FtNrwfLLq4wtpZuQ/UJAyVeQ90SS6GiGZBr6hDZmcxNMIQCNyJ0YK5eE9Ceg==
   dependencies:
     "@types/react" "*"
     "@types/relay-runtime" "*"
@@ -1417,12 +1417,7 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/relay-runtime@*":
-  version "10.1.4"
-  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.4.tgz#bc667ca4898ab3512bcf0b047ba009c08bac34dc"
-  integrity sha512-0Y8Xri8ycFzVpujBLAabYaOxZujzkpcYZsi/sSjHn3E6INeS4l3DEN21uzrW7xQKhbma/g5yYRqnlnZsM8K1Uw==
-
-"@types/relay-runtime@^10.1.5":
+"@types/relay-runtime@*", "@types/relay-runtime@^10.1.5":
   version "10.1.5"
   resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.5.tgz#723a730f165639282b427c95013e8308dec53904"
   integrity sha512-Sjm1Z3WZsDY3CeS2ypq7bz8X4U7h7tup3Gh1zPFaF2n4nKW+zzH9YKu+GgYC/IxwOJcdv1g3GPKsRovRf+OdPw==
