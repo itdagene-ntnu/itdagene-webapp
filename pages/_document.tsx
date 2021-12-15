@@ -42,7 +42,7 @@ export default class Default extends Document<{
         <Head>
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Raleway&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
             rel="stylesheet"
           />
           <style>{`
@@ -53,7 +53,7 @@ export default class Default extends Document<{
               color: rgba(0, 0, 0, 0.87);
               font-smoothing: antialiased;
               word-break: break-word;
-              font-family: Raleway, sans-serif;
+              font-family: Roboto, sans-serif;
               font-variant-numeric: lining-nums;
             }
             img {

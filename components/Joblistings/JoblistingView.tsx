@@ -16,7 +16,7 @@ export const Title = styled('h1')`
   text-align: center;
   font-size: 4rem;
   font-weight: 400;
-  font-family: Raleway;
+  font-family: Roboto;
   margin: 0 0 40px;
   @media only screen and (max-width: 767px) {
     font-size: 2.4rem;

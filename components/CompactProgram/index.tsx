@@ -94,4 +94,5 @@ const CompactProgram = (): JSX.Element => (
     </CenterIt>
   </Flex>
 );
+
 export default CompactProgram;

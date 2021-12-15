@@ -14,9 +14,23 @@ type Props = {
   hideTitle?: boolean;
 };
 
-const GrayText = styled('div')`
-  color: gray;
+const Title = styled('h1')`
+  font-weight: bold;
+  font-smoothing: antialiased;
+  font-size: 3rem;
+  margin-bottom: 1rem;
 `;
+
+const LastUpdate = styled('div')`
+  font-weight: bold;
+  font-family: Roboto;
+  font-size: 0.8rem;
+  color: #222;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  margin-bottom: 1.5rem;
+`;
+
 const LinkRenderer = ({
   href,
   children,
@@ -44,11 +58,11 @@ const PageView = ({
   hideTitle,
 }: Props): JSX.Element => (
   <>
-    {!hideTitle && <h1>{page.title}</h1>}
+    {!hideTitle && <Title>{page.title}</Title>}
     {!hideDate && (
-      <GrayText>
-        Sist oppdatert: {dayjs(page.dateSaved as string).format(`D. MMMM YYYY`)}
-      </GrayText>
+      <LastUpdate>
+        {dayjs(page.dateSaved as string).format(`DD. MMMM, YYYY`)}
+      </LastUpdate>
     )}
     {!hideContent && (
       <Flex column>

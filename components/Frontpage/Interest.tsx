@@ -4,6 +4,10 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
 
 const Title = styled('h1')`
+  font-weight: bold;
+  font-smoothing: antialiased;
+  font-size: 3rem;
+  margin-bottom: 1rem;
   @media only screen and (max-width: 767px) {
     font-size: 1.5em;
   }

@@ -87,7 +87,7 @@ const Footer = (): JSX.Element => (
         <BottomAbout>
           <NoBulletUl>
             <li>
-              <strong>Om itDAGENE</strong>
+              <strong>Om oss</strong>
             </li>
             <li>
               itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med

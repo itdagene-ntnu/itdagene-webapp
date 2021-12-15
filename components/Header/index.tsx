@@ -5,29 +5,27 @@ import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import HamburgerMenu from 'react-hamburger-menu';
-import { lightGrey } from '../../utils/colors';
 
 const Header = styled('header')`
-  /* border-bottom: 1px solid ${lightGrey};
-  border-bottom: 3px solid #027cb5; */
   padding-top: 10px;
   padding-bottom: 10px;
   background: white;
 `;
 
 const StyledMenuItem = styled('span')`
-  color: #394b59;
+  color: #3f4b54;
   font-size: 20px;
-  padding: 0 10px;
+  padding: 0 20px;
   opacity: 0.8;
+  transition: all 100ms ease-in-out;
   ${({ active = false }: { active?: boolean }): any =>
     active &&
     css`
-      text-shadow: 0px 0px 0.5px black;
+      text-shadow: 0px 0px 0.25px black;
       opacity: 1;
     `};
   :hover {
-    text-shadow: 0px 0px 0.5px black;
+    text-shadow: 0px 0px 0.25px black;
     opacity: 1;
   }
 `;
@@ -40,13 +38,13 @@ type MenuItem = {
 };
 
 const items: MenuItem[] = [
-  { key: 'home', name: 'HJEM', to: '/' },
-  { key: 'program', name: 'PROGRAM', to: '/program' },
-  { key: 'joblistings', name: 'JOBB', to: '/jobb' },
-  { key: 'about-us', name: 'OM ITDAGENE', to: '/om-itdagene' },
+  { key: 'home', name: 'Hjem', to: '/' },
+  { key: 'program', name: 'Program', to: '/program' },
+  { key: 'joblistings', name: 'Jobb', to: '/jobb' },
+  { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
   {
     key: 'info',
-    name: 'INFO',
+    name: 'Info',
     to: '/info/[side]',
     as: '/info/for-bedrifter',
   },

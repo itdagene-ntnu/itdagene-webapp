@@ -15,12 +15,6 @@ type Page = NonNullable<
   NonNullable<NonNullable<Side_info_QueryResponse>['pages']>[0]
 >;
 
-const StyledHeading = styled('h1')`
-  font-weight: 200;
-  font-size: 4em;
-  margin: 0;
-`;
-
 const StyledPageView = styled('div')`
   margin-left: 0;
 `;
@@ -41,7 +35,6 @@ const Index = ({ props }: RenderProps): JSX.Element => {
     : [];
   return (
     <>
-      <StyledHeading>INFO</StyledHeading>
       <Navbar items={navitems} />
       {page ? (
         <StyledPageView>
