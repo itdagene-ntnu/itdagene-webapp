@@ -13,10 +13,10 @@ const Header = styled('header')`
 `;
 
 const StyledMenuItem = styled('span')`
-  color: #3f4b54;
+  color: #3f4e59;
   font-size: 20px;
   padding: 0 20px;
-  opacity: 0.8;
+  opacity: 0.75;
   transition: all 100ms ease-in-out;
   ${({ active = false }: { active?: boolean }): any =>
     active &&
@@ -56,7 +56,11 @@ const MenuItem = withRouter(
     return (
       <Link href={to} as={as}>
         <a>
-          <StyledMenuItem active={item.to === router.asPath}>
+          <StyledMenuItem
+            active={
+              item.to.split(/[/s?]+/)[1] === router.asPath.split(/[/s?]+/)[1]
+            }
+          >
             {name}
           </StyledMenuItem>
         </a>
