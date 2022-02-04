@@ -4180,12 +4180,12 @@ eslint-plugin-react@^7.21.5:
     resolve "^1.18.1"
     string.prototype.matchall "^4.0.2"
 
-eslint-plugin-relay@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-relay/-/eslint-plugin-relay-1.8.1.tgz#7363b1c134cfa3468377d46eadaa3a2b9b73dfcf"
-  integrity sha512-7xhyLDq3Bv5q+lKZUMYcRHq1OdFsgjuY5hAu3NNY+TkPPsdcp80de7eEJ8Ux5M3YJpnyr2UAHGksx5Exx6+I7g==
+eslint-plugin-relay@^1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-relay/-/eslint-plugin-relay-1.8.3.tgz#3f320b79259c14c8112909568b208a08e7a9ebae"
+  integrity sha512-awyrwntUTZ7Z+lJUnniTCnJdZYr1dY2djQDARMx1P1y2BFMsBjtTljBK0lBEM7yiTHPBwVnE2OSnXxcD4yMb0A==
   dependencies:
-    graphql "^14.0.0 || ^15.0.0-rc.1"
+    graphql "^14.0.0 || ^15.0.0"
 
 eslint-scope@^4.0.3:
   version "4.0.3"
@@ -5048,10 +5048,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.4
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.4.tgz#2256bde14d3632958c465ebc96dc467ca07a29fb"
   integrity sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
 
-"graphql@^14.0.0 || ^15.0.0-rc.1":
-  version "15.0.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.0.0.tgz#042a5eb5e2506a2e2111ce41eb446a8e570b8be9"
-  integrity sha512-ZyVO1xIF9F+4cxfkdhOJINM+51B06Friuv4M66W7HzUOeFd+vNzUn4vtswYINPi6sysjf1M2Ri/rwZALqgwbaQ==
+"graphql@^14.0.0 || ^15.0.0", graphql@^15.4.0:
+  version "15.8.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.8.0.tgz#33410e96b012fa3bdb1091cc99a94769db212b38"
+  integrity sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==
 
 graphql@^14.0.2:
   version "14.7.0"
@@ -5059,11 +5059,6 @@ graphql@^14.0.2:
   integrity sha512-l0xWZpoPKpppFzMfvVyFmp9vLN7w/ZZJPefUicMCepfJeQ8sMcztloGYY9DfjVPo6tIUDzU5Hw3MUbIjj9AVVA==
   dependencies:
     iterall "^1.2.2"
-
-graphql@^15.4.0:
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.4.0.tgz#e459dea1150da5a106486ba7276518b5295a4347"
-  integrity sha512-EB3zgGchcabbsU9cFe1j+yxdzKQKAbGUWRb13DsrsMN1yyfmmIq+2+L5MqVWcDCE4V89R5AyUOi7sMOGxdsYtA==
 
 growly@^1.3.0:
   version "1.3.0"
