@@ -87,14 +87,13 @@ const Footer = (): JSX.Element => (
         <BottomAbout>
           <NoBulletUl>
             <li>
-              <strong>Om</strong>
+              <strong>Om oss</strong>
             </li>
             <li>
               itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
-              fremtidige arbeidsgivere. Messen arrangeres av studenter for
-              studenter, overskuddet går til studentenes ekskursjon i
-              tredjeklasse. itDAGENE arrangeres en gang i året av data- og
-              kommunikasjonsteknologi ved NTNU i Trondheim.
+              fremtidige arbeidsgivere. Messen arrengeres én gang i året av
+              data- og kommunikasjonsteknologi studenter ved NTNU i Trondheim.
+              Overskuddet går til studentenes ekskursjon i tredjeklasse.
             </li>
           </NoBulletUl>
         </BottomAbout>
