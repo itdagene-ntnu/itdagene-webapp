@@ -6,10 +6,10 @@ import dayjs from 'dayjs';
 import styled from 'styled-components';
 import Flex from 'styled-flex-component';
 import {
-  itdageneLightBlue,
-  itdageneGreen,
-  itdageneRed,
-  itdageneYellow,
+  blueNCS,
+  princetonOrange,
+  skyBlue,
+  indigoDye,
 } from '../../utils/colors';
 
 const NumberBox = styled('div')`
@@ -58,16 +58,16 @@ const renderer = ({
 }: RendererProps): JSX.Element | boolean =>
   !completed && (
     <Flex center wrap>
-      <NumberBox color={itdageneGreen}>
+      <NumberBox color={blueNCS}>
         <Number>{days}</Number> <Text> dager </Text>
       </NumberBox>
-      <NumberBox color={itdageneRed}>
+      <NumberBox color={princetonOrange}>
         <Number>{hours}</Number> <Text> timer </Text>
       </NumberBox>
-      <NumberBox color={itdageneLightBlue}>
+      <NumberBox color={skyBlue}>
         <Number>{minutes}</Number> <Text> minutter </Text>
       </NumberBox>
-      <NumberBox color={itdageneYellow}>
+      <NumberBox color={indigoDye}>
         <Number>{seconds}</Number> <Text> sekunder </Text>
       </NumberBox>
     </Flex>

@@ -4,10 +4,10 @@ import { CenterIt } from '../Styled';
 import styled from 'styled-components';
 import Link from 'next/link';
 import {
-  itdageneLightBlue,
-  itdageneGreen,
-  itdageneRed,
-  itdageneYellow,
+  blueNCS,
+  princetonOrange,
+  skyBlue,
+  indigoDye,
 } from '../../utils/colors';
 
 const Title = styled('h1')`
@@ -55,28 +55,28 @@ const CompactProgram = (): JSX.Element => (
       <Title>Hva skjer under itDAGENE?</Title>
     </FlexItem>
     <Flex row wrap>
-      <Tile color={itdageneGreen}>
+      <Tile color={blueNCS}>
         <Link href="/jobb">
           <CenterIt text>
             <StyledLink>Sommerjobb</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-      <Tile color={itdageneRed}>
+      <Tile color={princetonOrange}>
         <Link href="/program">
           <CenterIt text>
             <StyledLink>Kurs</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-      <Tile color={itdageneLightBlue}>
+      <Tile color={skyBlue}>
         <Link href="/info/stands">
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-      <Tile color={itdageneYellow}>
+      <Tile color={indigoDye}>
         <Link href="/info/bankett">
           <CenterIt text>
             <StyledLink>Bankett</StyledLink>
