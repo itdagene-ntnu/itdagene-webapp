@@ -56,9 +56,9 @@ const CompactProgram = (): JSX.Element => (
     </FlexItem>
     <Flex row wrap>
       <Tile color={blueNCS}>
-        <Link href="/jobb">
+        <Link href="/jobb?type=&orderBy=DEADLINE">
           <CenterIt text>
-            <StyledLink>Sommerjobb</StyledLink>
+            <StyledLink>Jobb</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
