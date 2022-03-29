@@ -1505,10 +1505,10 @@
     "@types/scheduler" "*"
     csstype "^3.0.2"
 
-"@types/relay-runtime@*", "@types/relay-runtime@^10.1.5":
-  version "10.1.5"
-  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-10.1.5.tgz#723a730f165639282b427c95013e8308dec53904"
-  integrity sha512-Sjm1Z3WZsDY3CeS2ypq7bz8X4U7h7tup3Gh1zPFaF2n4nKW+zzH9YKu+GgYC/IxwOJcdv1g3GPKsRovRf+OdPw==
+"@types/relay-runtime@*", "@types/relay-runtime@^13.0.3":
+  version "13.0.3"
+  resolved "https://registry.yarnpkg.com/@types/relay-runtime/-/relay-runtime-13.0.3.tgz#0139a02d24fd527c844af3063e943692fd181854"
+  integrity sha512-LZr9fiWspAtiFIMDcj/6LarYFqxd3jh3ASXULtWL5Tl5CHoDe48Il2nIAF66XKLLCG3QvDgHR8yLX6ZVWKjkkw==
 
 "@types/scheduler@*":
   version "0.16.2"
