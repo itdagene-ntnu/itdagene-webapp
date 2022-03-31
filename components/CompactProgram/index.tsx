@@ -63,7 +63,7 @@ const CompactProgram = (): JSX.Element => (
         </Link>
       </Tile>
       <Tile color={princetonOrange}>
-        <Link href="/program">
+        <Link href="/info/lightning-talks">
           <CenterIt text>
             <StyledLink>Kurs</StyledLink>
           </CenterIt>
