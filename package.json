@@ -31,7 +31,7 @@
     "lodash": "^4.17.21",
     "next": "^10.0.3",
     "rc-slider": "^9.7.5",
-    "react": "^16.13.1",
+    "react": "^16.14.0",
     "react-countdown-now": "^2.1.2",
     "react-dom": "16.13.1",
     "react-hamburger-menu": "^1.2.1",
