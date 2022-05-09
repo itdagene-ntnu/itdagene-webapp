@@ -40,7 +40,7 @@
     "react-modal": "^3.14.4",
     "react-relay": "^10.1.2",
     "react-responsive-carousel": "^3.2.11",
-    "react-select": "^3.1.1",
+    "react-select": "^5.3.2",
     "relay-hooks": "3.7.0",
     "relay-runtime": "^10.1.2",
     "seedrandom": "^3.0.5",
