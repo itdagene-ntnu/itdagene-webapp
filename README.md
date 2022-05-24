@@ -1,7 +1,5 @@
 # itDAGENE-webapp
 
-[![CircleCI](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp.svg?style=svg)](https://circleci.com/gh/itdagene-ntnu/itdagene-webapp) ![Dependencies](https://david-dm.org/itdagene-ntnu/itdagene-webapp.svg)
-
 > nextgen itDAGENE frontend
 
 ![Picture of the page](https://cdn.itdagene.no/webapp-screen.png)
