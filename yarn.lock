@@ -2518,12 +2518,14 @@ babel-plugin-macros@^2.0.0:
     cosmiconfig "^5.0.5"
     resolve "^1.8.1"
 
-babel-plugin-relay@^10.1.2:
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/babel-plugin-relay/-/babel-plugin-relay-10.1.2.tgz#8f85ea9a92f9b173fe534960f08c6a7d58c6925d"
-  integrity sha512-vaGaRcO/5axeTSCRgEvFUMIsOJdSItORqCftDWfoA0nHpXbLgonmiPNGMkNx0rjDYVz2wm7ktA/Fc13twZ2lDQ==
+babel-plugin-relay@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-relay/-/babel-plugin-relay-14.0.0.tgz#fb34a2f35e4b6ab5464ec82d7109b9973c5fea31"
+  integrity sha512-lOZplk+U6kBM7BsqpexpEIyQbob/XjUDdRin93WMfZEfXc2P+a6UiegZaXv5XdpG61tLUnvqjs4Td+UQxtqb8g==
   dependencies:
     babel-plugin-macros "^2.0.0"
+    cosmiconfig "^5.0.5"
+    graphql "15.3.0"
 
 "babel-plugin-styled-components@>= 1", babel-plugin-styled-components@^1.12.0:
   version "1.12.0"
@@ -5406,6 +5408,11 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.2.4
   version "4.2.10"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.10.tgz#147d3a006da4ca3ce14728c7aefc287c367d7a6c"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
+
+graphql@15.3.0:
+  version "15.3.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.3.0.tgz#3ad2b0caab0d110e3be4a5a9b2aa281e362b5278"
+  integrity sha512-GTCJtzJmkFLWRfFJuoo9RWWa/FfamUHgiFosxi/X1Ani4AVWbeyBenZTNX6dM+7WSbbFfTo/25eh0LLkwHMw2w==
 
 "graphql@^14.0.0 || ^15.0.0", graphql@^15.4.0:
   version "15.8.0"
