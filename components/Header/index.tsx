@@ -48,6 +48,7 @@ const items: MenuItem[] = [
     to: '/info/[side]',
     as: '/info/for-bedrifter',
   },
+  { key: 'startup', name: '📌 Startup-land', to: '/info/startup' },
 ];
 
 const MenuItem = withRouter(
