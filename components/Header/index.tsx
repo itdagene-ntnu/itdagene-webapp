@@ -40,7 +40,7 @@ type MenuItem = {
 const items: MenuItem[] = [
   { key: 'home', name: 'Hjem', to: '/' },
   // { key: 'program', name: 'Program', to: '/program' },
-  { key: 'joblistings', name: 'Jobb', to: '/jobb?type=&orderBy=DEADLINE' },
+  { key: 'joblistings', name: 'Jobb', to: '/jobb' },
   { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
   {
     key: 'info',
