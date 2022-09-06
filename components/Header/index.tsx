@@ -46,7 +46,7 @@ const items: MenuItem[] = [
     key: 'info',
     name: 'Info',
     to: '/info/[side]',
-    as: '/info/for-bedrifter',
+    as: '/info/stands',
   },
   { key: 'startup', name: '📌 Startup-land', to: '/info/startup' },
 ];
