@@ -157,8 +157,6 @@ export default class Default extends Document<{
           />
 
           {this.props.styleTags}
-
-          <script async src="https://chat.itdagene.no/packs/js/sdk.js" />
         </Head>
         <body>
           <Main />

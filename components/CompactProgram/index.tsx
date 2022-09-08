@@ -56,16 +56,16 @@ const CompactProgram = (): JSX.Element => (
     </FlexItem>
     <Flex row wrap>
       <Tile color={blueNCS}>
-        <Link href="/jobb?type=&orderBy=DEADLINE">
+        <Link href="/jobb">
           <CenterIt text>
             <StyledLink>Jobb</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={princetonOrange}>
-        <Link href="/info/lightning-talks">
+        <Link href="/program">
           <CenterIt text>
-            <StyledLink>Kurs</StyledLink>
+            <StyledLink>Program</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
