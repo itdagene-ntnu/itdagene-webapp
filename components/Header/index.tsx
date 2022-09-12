@@ -49,6 +49,7 @@ const items: MenuItem[] = [
     as: '/info/stands',
   },
   { key: 'startup', name: '📌 Startup-land', to: '/info/startup' },
+  { key: 'case', name: '📌 itCASE', to: '/info/case'}
 ];
 
 const MenuItem = withRouter(
