@@ -49,7 +49,7 @@ const items: MenuItem[] = [
   },
   { key: 'startup', name: 'Startup-land', to: '/info/startup' },
   { key: 'case', name: 'itCASE', to: '/info/case' },
-  { key: 'about-us', name: 'Om oss', to: '/om-itdagene' }
+  { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
 ];
 
 const MenuItem = withRouter(
