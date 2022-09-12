@@ -38,17 +38,18 @@ type MenuItem = {
 };
 
 const items: MenuItem[] = [
-  { key: 'home', name: 'Hjem', to: '/' },
+  //{ key: 'home', name: 'Hjem', to: '/' },
   { key: 'program', name: 'Program', to: '/program' },
   { key: 'joblistings', name: 'Jobb', to: '/jobb' },
-  { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
   {
     key: 'info',
     name: 'Info',
     to: '/info/[side]',
     as: '/info/stands',
   },
-  { key: 'startup', name: '📌 Startup-land', to: '/info/startup' },
+  { key: 'startup', name: 'Startup-land', to: '/info/startup' },
+  { key: 'case', name: 'itCASE', to: '/info/case' },
+  { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
 ];
 
 const MenuItem = withRouter(
