@@ -12,6 +12,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import Interest from '../components/Frontpage/Interest';
+import RunForMe from '../components/Frontpage/RunForMe';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
@@ -118,6 +119,9 @@ const Index = ({ props, error }: RenderProps): JSX.Element => (
         <Companies query={props.currentMetaData} />
       </Section>
     )}
+    <Section>
+      <RunForMe />
+    </Section>
     <Section style={{ borderBottom: 0 }}>
       <EventsSection query={props} />
     </Section>
