@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Sentry from '@sentry/node';
 import { NextPageContext } from 'next';
 import NextError, { ErrorProps } from 'next/error';
@@ -67,6 +67,7 @@ MyError.getInitialProps = async ({
   );
 
   errorInitialProps.hasGetInitialPropsRun = true;
+  //asdfasfedasfdfasdf
 
   const statusCode = res ? res.statusCode : err ? err.statusCode : 404;
 
