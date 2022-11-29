@@ -92,7 +92,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         <Flex column contentSpaceBetween>
           <FlexItem>
             <Header>
-              <b>it</b>DAGENE {currentMetaData.year}
+              <b>it</b>DAGENE 2023
             </Header>
 
             <SubHeader>
