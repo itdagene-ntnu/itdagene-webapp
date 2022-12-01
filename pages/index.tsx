@@ -103,7 +103,7 @@ const Index = ({ props, error }: RenderProps): JSX.Element => (
     <Section>
       <CompactProgram />
     </Section>
-    {props.currentMetaData.mainCollaborator && (
+    {props.currentMetaData.mainCollaborator?.id && (
       <Section>
         <MainCollaborator company={props.currentMetaData.mainCollaborator} />
       </Section>

@@ -43,6 +43,7 @@ const Collaborator = ({
     fragmentSpec,
     props.company
   );
+
   return (
     <div
       style={{ flex: 1, maxWidth: '100%', flexBasis: 350, padding: '0 10px' }}
