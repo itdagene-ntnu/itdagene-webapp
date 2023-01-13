@@ -33,11 +33,11 @@ const Interest = ({ form }: Props): JSX.Element => (
       <FlexItem grow={1} basis="700px">
         <Title>Interessert i å delta? </Title>
         <p>
-          Henvendelser angående interesse for itDAGENE 2023 er nå åpent. Vi
-          ønsker å påpeke at dette <b>IKKE er et påmeldingskjema</b>, og det er
-          <b> IKKE</b> førsteman til mølla. Under finner dere en lenke til vårt
-          nye interesseskjema hvor din bedrift kan melde sin interesse for
-          itDAGENE 2023.
+          Interesseskjemaet for itDAGENE2023 er nå åpent. Frist for å melde
+          interesse er <b>1.mars 2023</b>. Vi ønsker å påpeke at dette kun er
+          for å kartlegge interesse og at det ikke er et påmeldingsskjema. Under
+          finner dere en lenke til vårt nye interesseskjema hvor din bedrift kan
+          melde sin interesse for itDAGENE 2023.
         </p>
       </FlexItem>
       <FlexItem>
