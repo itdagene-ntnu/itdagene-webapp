@@ -7,7 +7,7 @@ import {
 } from 'react-relay';
 import { Image, NudgeDiv } from './Styled';
 import Link from 'next/link';
-import * as React from 'react';
+import React, * as React from 'react';
 import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';

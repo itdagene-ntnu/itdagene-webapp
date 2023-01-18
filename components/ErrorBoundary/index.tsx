@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, * as React from 'react';
 import * as Sentry from '@sentry/browser';
 
 type Props = {
