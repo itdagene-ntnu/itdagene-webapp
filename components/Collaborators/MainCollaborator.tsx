@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import { Player } from 'video-react';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import {
+  MainCollaborator_company,
+  MainCollaborator_company$key,
+} from '../../__generated__/MainCollaborator_company.graphql';
 
 const Div = styled('div')`
   display: flex;
@@ -20,11 +24,6 @@ const DivItem = styled('div')`
   flex-shrink: 1;
   display: block;
 `;
-
-import {
-  MainCollaborator_company,
-  MainCollaborator_company$key,
-} from '../../__generated__/MainCollaborator_company.graphql';
 
 type Props = {
   company: MainCollaborator_company$key;

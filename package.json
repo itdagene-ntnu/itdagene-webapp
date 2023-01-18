@@ -46,7 +46,6 @@
     "relay-runtime": "^10.1.2",
     "seedrandom": "^3.0.5",
     "styled-components": "^5.3.6",
-    "styled-flex-component": "^3.0.2",
     "video-react": "^0.15.0"
   },
   "browser": {

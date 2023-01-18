@@ -2,10 +2,17 @@ import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import Link from 'next/link';
 import { PageView_page } from '../../__generated__/PageView_page.graphql';
-import Flex from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
 
 type Props = {
   page: PageView_page;
@@ -61,9 +68,9 @@ const PageView = ({
       </LastUpdate>
     )}
     {!hideContent && (
-      <Flex column>
+      <Div>
         <ReactMarkdown renderers={renderers} source={page.content} />
-      </Flex>
+      </Div>
     )}
   </>
 );

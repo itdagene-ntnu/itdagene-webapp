@@ -64,7 +64,7 @@ const CountDownComponent = ({
   seconds,
   completed,
 }: RendererProps) => {
-  const [statiDate, setStaticDate] = useState(true);
+  const [staticDate, setStaticDate] = useState(true);
   useEffect(() => {
     setStaticDate(false);
   }, []);
@@ -80,7 +80,7 @@ const CountDownComponent = ({
         <Number>{minutes}</Number> <Text> minutter </Text>
       </NumberBox>
       <NumberBox color={indigoDye}>
-        <Number>{statiDate ? 0 : seconds}</Number> <Text> sekunder </Text>
+        <Number>{staticDate ? 0 : seconds}</Number> <Text> sekunder </Text>
       </NumberBox>
     </Div>
   );

@@ -4,8 +4,27 @@ import { NextPageContext } from 'next';
 import NextError, { ErrorProps } from 'next/error';
 import Layout from '../components/Layout';
 import { CenterIt } from '../components/Styled';
-import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  flex-basis: 100%;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 type Props = {
   statusCode: number;
@@ -40,14 +59,14 @@ const MyError = ({
   }
   return (
     <Layout noLoading>
-      <Flex center full>
-        <FlexItem>
+      <Div>
+        <DivItem>
           <CenterIt text>
             <H1>{statusCode}</H1>
             <h2>{title || ERROR_TITLES[statusCode] || 'En feil oppsto'}</h2>
           </CenterIt>
-        </FlexItem>
-      </Flex>
+        </DivItem>
+      </Div>
     </Layout>
   );
 };

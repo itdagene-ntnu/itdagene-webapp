@@ -7,7 +7,6 @@ import { graphql } from 'react-relay';
 import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
 import Collaborators from '../components/Collaborators/Collaborators';
 import Companies from '../components/Companies/Companies';
-import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled from 'styled-components';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
@@ -20,6 +19,47 @@ import MainCollaborator from '../components/Collaborators/MainCollaborator';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  justify-content: space-around;
+  align-content: stretch;
+  align-items: center;
+`;
+
+const Div2 = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: 700px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: block;
+`;
+
+const DivItem1 = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
+
+const DivItem2 = styled('div')`
+  order: 0;
+  flex-basis: 400px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: block;
+`;
+
 const ReadMore = styled('h4')``;
 
 const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
@@ -27,11 +67,9 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
     props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
   return (
     <>
-      <Flex justifyAround wrapReverse alignCenter>
-        <FlexItem grow={1} basis="700px">
-          {frontpage && <PageView hideDate page={frontpage} />}
-        </FlexItem>
-        <FlexItem>
+      <Div>
+        <DivItem>{frontpage && <PageView hideDate page={frontpage} />}</DivItem>
+        <DivItem1>
           <CenterIt>
             <Image
               style={{ width: 350, maxWidth: '100%' }}
@@ -39,8 +77,8 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
               alt="itDAGENE logo"
             />
           </CenterIt>
-        </FlexItem>
-      </Flex>
+        </DivItem1>
+      </Div>
       <CenterIt text>
         <Link href="/om-itdagene">
           <ReadMore>Les mer</ReadMore>
@@ -60,17 +98,12 @@ const EventsSection = ({
   query: pages_index_QueryResponse;
 }): JSX.Element => (
   <>
-    <Flex wrap>
+    <Div2>
       {query.pages &&
         query.pages.filter(Boolean).map(
           (element) =>
             element && (
-              <FlexItem
-                key={element.slug}
-                basis={'400px'}
-                grow={1}
-                style={{ paddingRight: '1em' }}
-              >
+              <DivItem2 key={element.slug} style={{ paddingRight: '1em' }}>
                 <h2>{element.title}</h2>
                 <p>{element.ingress}</p>
                 <Centered>
@@ -78,10 +111,10 @@ const EventsSection = ({
                     <ReadMore>Les mer</ReadMore>
                   </Link>
                 </Centered>
-              </FlexItem>
+              </DivItem2>
             )
         )}
-    </Flex>
+    </Div2>
   </>
 );
 

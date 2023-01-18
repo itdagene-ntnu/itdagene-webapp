@@ -1,7 +1,6 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { JoblistingView_joblisting } from '../../__generated__/JoblistingView_joblisting.graphql';
-import Flex, { FlexItem } from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import { NoBulletUl } from '../Styled';
