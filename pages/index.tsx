@@ -43,9 +43,7 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
       </Flex>
       <CenterIt text>
         <Link href="/om-itdagene">
-          <a>
-            <ReadMore>Les mer</ReadMore>
-          </a>
+          <ReadMore>Les mer</ReadMore>
         </Link>
       </CenterIt>
     </>
@@ -73,13 +71,11 @@ const EventsSection = ({
                 grow={1}
                 style={{ paddingRight: '1em' }}
               >
-                <h2> {element.title} </h2>
+                <h2>{element.title}</h2>
                 <p>{element.ingress}</p>
                 <Centered>
                   <Link href="/info/[side]" as={`/info/${element.slug}`}>
-                    <a>
-                      <ReadMore>Les mer</ReadMore>
-                    </a>
+                    <ReadMore>Les mer</ReadMore>
                   </Link>
                 </Centered>
               </FlexItem>

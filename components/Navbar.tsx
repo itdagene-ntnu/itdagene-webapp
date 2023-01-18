@@ -2,9 +2,24 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { lightGrey, itdageneBlue, itdageneLightBlue } from '../utils/colors';
 import { Divider } from './Styled';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 type ItemProps = {
   text: string;
@@ -40,7 +55,7 @@ const StyledNavbarItem = styled('div')`
   }
 `;
 
-const StyledFlex = styled(Flex)`
+const StyledFlex = styled(Div)`
   @media only screen and (max-width: 767px) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -69,7 +84,7 @@ const ItemWrapper = ({
   const isLink = (item as LinkItem).href !== undefined;
   return isLink ? (
     <Link href={(item as LinkItem).href} as={(item as LinkItem).as}>
-      <a>{children}</a>
+      {children}
     </Link>
   ) : (
     <Item onClick={(): void => (item as HandledItem).onClick(item.key)}>
@@ -85,7 +100,7 @@ const NavbarItem = withRouter(
       ? router.asPath === (item as LinkItem).as
       : (item as HandledItem).active(item.key);
     return (
-      <FlexItem>
+      <DivItem>
         {!isActive ? (
           <ItemWrapper item={item}>
             <StyledNavbarItem>{item.text}</StyledNavbarItem>
@@ -93,7 +108,7 @@ const NavbarItem = withRouter(
         ) : (
           <StyledNavbarItem>{item.text}</StyledNavbarItem>
         )}
-      </FlexItem>
+      </DivItem>
     );
   }
 );

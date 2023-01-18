@@ -130,7 +130,7 @@ const Location = ({
 
   return isLink && linkLocation ? (
     <InfoElement>
-      <Link href={linkLocation}>
+      <Link href={linkLocation} legacyBehavior>
         <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
       </Link>
     </InfoElement>

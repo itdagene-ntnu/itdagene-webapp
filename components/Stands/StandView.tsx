@@ -72,7 +72,7 @@ const LiveContentSection = styled.div`
 `;
 
 const Back = (): JSX.Element => (
-  <Link href="/stands">
+  <Link href="/stands" legacyBehavior>
     <BackLink>
       <i className="fas fa-arrow-left" />
       {' Tilbake til stands'}

@@ -40,11 +40,7 @@ const LinkRenderer = ({
 }): JSX.Element => {
   // Use next.js router for internal urls
   if (href.startsWith('/')) {
-    return (
-      <Link href={href}>
-        <a> {children}</a>
-      </Link>
-    );
+    return <Link href={href}>{children}</Link>;
   }
   return <a href={href}> {children}</a>;
 };

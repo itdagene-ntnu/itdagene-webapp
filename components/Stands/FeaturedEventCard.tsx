@@ -29,7 +29,7 @@ const FeaturedEventCard = ({ stand, time }: FeaturedEventCard): JSX.Element => {
   }, [time, stand]);
 
   return (
-    <Link href={`/stands/${stand.slug}`}>
+    <Link href={`/stands/${stand.slug}`} legacyBehavior>
       <StandardContainer scale={1.03}>
         <FeatCompanyImgContainer>
           <CompanyImg src={stand.company.logo ?? ''} />

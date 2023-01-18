@@ -1,5 +1,4 @@
 import React from 'react';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { CenterIt } from '../Styled';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -9,6 +8,30 @@ import {
   skyBlue,
   indigoDye,
 } from '../../utils/colors';
+
+const DivWrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-content: stretch;
+`;
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 const Title = styled('h1')`
   @media only screen and (max-width: 767px) {
@@ -50,49 +73,47 @@ const ReadMore = styled('h4')`
 `;
 
 const CompactProgram = (): JSX.Element => (
-  <Flex justifyAround column>
-    <FlexItem>
+  <DivWrapper>
+    <DivItem>
       <Title>Hva skjer under itDAGENE?</Title>
-    </FlexItem>
-    <Flex row wrap>
+    </DivItem>
+    <Div>
       <Tile color={blueNCS}>
-        <Link href="/jobb">
+        <Link href="/jobb" legacyBehavior>
           <CenterIt text>
             <StyledLink>Jobb</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={princetonOrange}>
-        <Link href="/program">
+        <Link href="/program" legacyBehavior>
           <CenterIt text>
             <StyledLink>Program</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={skyBlue}>
-        <Link href="/info/stands">
+        <Link href="/info/stands" legacyBehavior>
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={indigoDye}>
-        <Link href="/info/bankett">
+        <Link href="/info/bankett" legacyBehavior>
           <CenterIt text>
             <StyledLink>Bankett</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
-    </Flex>
+    </Div>
 
     <CenterIt text>
       <Link href="/program">
-        <a>
-          <ReadMore>Les mer</ReadMore>
-        </a>
+        <ReadMore>Les mer</ReadMore>
       </Link>
     </CenterIt>
-  </Flex>
+  </DivWrapper>
 );
 
 export default CompactProgram;

@@ -9,7 +9,6 @@ import { useFragment } from 'relay-hooks';
 import { Image } from '../Styled';
 import Link from 'next/link';
 import * as React from 'react';
-import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { JoblistingsContainer_root } from '../../__generated__/JoblistingsContainer_root.graphql';
 import { JoblistingsContainer_joblisting$key } from '../../__generated__/JoblistingsContainer_joblisting.graphql';
@@ -17,6 +16,38 @@ import LoadingIndicator from '../LoadingIndicator';
 import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const Div2 = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: 700px;
+  flex-grow: 26;
+  flex-shrink: 1;
+  display: block;
+`;
+
+const DivItem2 = styled('div')`
+  order: 0;
+  flex-basis: 300px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: block;
+`;
 
 function joinValues(values: string[]): string | JSX.Element {
   if (values.length < 2) {
@@ -71,7 +102,7 @@ export const query = graphql`
   }
 `;
 
-const JoblistingGrid = styled(Flex)`
+const JoblistingGrid = styled(Div2)`
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
   display: grid;
@@ -129,56 +160,53 @@ export const JoblistingItem = (props: {
         href={'/jobb/[slug]'}
         as={`/jobb/${joblisting.slug}`}
       >
-        <a>
-          <CompanyImage
-            src={joblisting.company.logo || '/static/itdagene-gray.png'}
-          />
-          <h3
-            style={{
-              fontWeight: 'normal',
-              fontSize: 20,
-              lineHeight: '24px',
-              color: 'black',
-              margin: '5px 0',
-              textAlign: 'center',
-            }}
-          >
-            {joblisting.title}
-          </h3>
-          <div style={{ color: 'gray', textAlign: 'center' }}>
-            {
-              jobTypeOptions.find(
-                (el) => el.value === joblisting.type.toLowerCase()
-              )?.label
-            }{' '}
-            @ {joblisting.company.name}
-          </div>
-          <div
-            style={{
-              color: 'gray',
-              textAlign: 'center',
-              fontWeight: 'bold',
-              margin: '3px',
-            }}
-          >
-            {joblisting.deadline
-              ? 'Frist: ' +
-                dayjs(joblisting.deadline).format(
-                  `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
-                )
-              : 'Løpende søknadsfrist'}
-          </div>
-
-          <div style={{ color: 'gray', textAlign: 'center' }}>
-            {joblisting.towns.length > 3
-              ? `${joblisting.towns[0].name}, ${
-                  joblisting.towns[1].name
-                }, ${joblisting.towns[2].name.slice(0, 3)}...`
-              : joinValues(
-                  joblisting.towns.map(({ name }: { name: string }) => name)
-                )}
-          </div>
-        </a>
+        <CompanyImage
+          src={joblisting.company.logo || '/static/itdagene-gray.png'}
+        />
+        <h3
+          style={{
+            fontWeight: 'normal',
+            fontSize: 20,
+            lineHeight: '24px',
+            color: 'black',
+            margin: '5px 0',
+            textAlign: 'center',
+          }}
+        >
+          {joblisting.title}
+        </h3>
+        <div style={{ color: 'gray', textAlign: 'center' }}>
+          {
+            jobTypeOptions.find(
+              (el) => el.value === joblisting.type.toLowerCase()
+            )?.label
+          }{' '}
+          @ {joblisting.company.name}
+        </div>
+        <div
+          style={{
+            color: 'gray',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            margin: '3px',
+          }}
+        >
+          {joblisting.deadline
+            ? 'Frist: ' +
+              dayjs(joblisting.deadline).format(
+                `D. MMMM ${isCurrentYear(joblisting.deadline) ? '' : 'YYYY'}`
+              )
+            : 'Løpende søknadsfrist'}
+        </div>
+        <div style={{ color: 'gray', textAlign: 'center' }}>
+          {joblisting.towns.length > 3
+            ? `${joblisting.towns[0].name}, ${
+                joblisting.towns[1].name
+              }, ${joblisting.towns[2].name.slice(0, 3)}...`
+            : joinValues(
+                joblisting.towns.map(({ name }: { name: string }) => name)
+              )}
+        </div>
       </Link>
     </CompanyElement>
   );
@@ -314,14 +342,12 @@ const JoblistingsContainer = ({
   children,
 }: ContainerProps): JSX.Element => (
   <div>
-    <Flex wrapReverse>
-      <FlexItem basis="700px" grow={26}>
-        {children}
-      </FlexItem>
-      <FlexItem basis="300px" grow={1}>
+    <Div>
+      <DivItem>{children}</DivItem>
+      <DivItem2>
         <Sidebar environment={environment} variables={variables} />
-      </FlexItem>
-    </Flex>
+      </DivItem2>
+    </Div>
   </div>
 );
 
