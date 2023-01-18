@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const AnnouncementBanner = (): JSX.Element => {
   return (
-    <Link href="/sommerjobb" as="/sommerjobb">
+    <Link href="/sommerjobb" as="/sommerjobb" legacyBehavior>
       <AnnouncementContainer>
         <a>
           <InfoContainer>

@@ -1,12 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
-import Flex from 'styled-flex-component';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import FeaturedEventCard from './FeaturedEventCard';
 import { currentHalfhour } from '../../utils/time';
 import { Dayjs } from 'dayjs';
 import ProgramButton from './ProgramButton';
 import { PaddedDivider, SubHeader } from '../Styled';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const Div2 = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: stretch;
+`;
 
 interface FeaturedEventsProps {
   stands: NonNullable<stands_QueryResponse['stands']>;
@@ -16,19 +31,19 @@ interface FeaturedEventsProps {
 const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   return (
     <div>
-      <Flex justifyBetween wrap>
+      <Div2>
         <FeaturedEventsInfo>
-          <Flex wrap>
+          <Div>
             <Header>Halvtimens bedrifter:</Header>
             <Time>{currentHalfhour(time)}</Time>
-          </Flex>
+          </Div>
           <SubHeader>
             Trykk på bedriftene under for å se hva de har forberedt for sin
             halvtime
           </SubHeader>
         </FeaturedEventsInfo>
         <ProgramButton />
-      </Flex>
+      </Div2>
       <FeatStandGrid>
         {stands.map(
           (stand) =>

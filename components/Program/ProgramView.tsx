@@ -14,10 +14,17 @@ import {
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
 import { ProgramView_stands } from '../../__generated__/ProgramView_stands.graphql';
 import Link from 'next/link';
-import Flex from 'styled-flex-component';
 import EventsToggle from './EventsToggle';
 import { ArrayElement } from '../../utils/types';
 import { eventTime, toDayjs } from '../../utils/time';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
 
 const Title = styled.h2`
   position: relative;
@@ -130,7 +137,7 @@ const Location = ({
 
   return isLink && linkLocation ? (
     <InfoElement>
-      <Link href={linkLocation}>
+      <Link href={linkLocation} legacyBehavior>
         <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
       </Link>
     </InfoElement>
@@ -163,7 +170,7 @@ const ProgramView = (props: Props): JSX.Element => {
   const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
   return (
-    <Flex column>
+    <Div>
       {props.showToggleButton && (
         <EventsToggle
           showPromoted={showPromoted}
@@ -210,7 +217,7 @@ const ProgramView = (props: Props): JSX.Element => {
           </GroupedDateEvent>
         ))}
       </CenterFlex>
-    </Flex>
+    </Div>
   );
 };
 

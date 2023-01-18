@@ -1,13 +1,52 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { JoblistingView_joblisting } from '../../__generated__/JoblistingView_joblisting.graphql';
-import Flex, { FlexItem } from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import { NoBulletUl } from '../Styled';
 import dayjs from 'dayjs';
 import { lightGrey } from '../../utils/colors';
 import { Player } from 'video-react';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: stretch;
+`;
+
+const Div2 = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const Div3 = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: 600px;
+  flex-grow: 3;
+  flex-shrink: 1;
+  display: block;
+`;
+
+const DivItem2 = styled('div')`
+  order: 0;
+  flex-basis: 300px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: block;
+`;
 
 type Props = {
   joblisting: JoblistingView_joblisting;
@@ -48,14 +87,14 @@ const List = ({
       .filter((e) => !!e.value)
       .map(({ key, value }) => (
         <li key={key}>
-          <Flex justifyBetween>
+          <Div>
             <span
               style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
             >
               <i>{key}</i>:
             </span>
             <strong style={{ textAlign: 'right' }}>{value}</strong>
-          </Flex>
+          </Div>
         </li>
       ))}
   </NoBulletUl>
@@ -160,9 +199,9 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
       <ReactMarkdown source={joblisting.company.description} />
     </CompanyDesc>
-    <Flex wrapReverse>
-      <FlexItem basis="600px" grow={3}>
-        <Flex column>
+    <Div2>
+      <DivItem>
+        <Div3>
           <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
 
           {joblisting.videoUrl && (
@@ -173,9 +212,9 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
               <Player playsInline src={joblisting.videoUrl} />
             </PlayerView>
           )}
-        </Flex>
-      </FlexItem>
-      <FlexItem basis="300px" grow={1}>
+        </Div3>
+      </DivItem>
+      <DivItem2>
         <Sidebar>
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />
@@ -186,8 +225,8 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
             )}
           </div>
         </Sidebar>
-      </FlexItem>
-    </Flex>
+      </DivItem2>
+    </Div2>
   </>
 );
 

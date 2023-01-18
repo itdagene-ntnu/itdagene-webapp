@@ -1,10 +1,41 @@
 import * as React from 'react';
 import { withRouter, NextRouter } from 'next/router';
 import { ResponsiveContent } from '../Styled';
-import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import HamburgerMenu from 'react-hamburger-menu';
+
+const DivWrapper = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-content: stretch;
+`;
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItems = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 const Header = styled('header')`
   padding-top: 10px;
@@ -57,15 +88,13 @@ const MenuItem = withRouter(
     const { to, name, as } = item;
     return (
       <Link href={to} as={as}>
-        <a>
-          <StyledMenuItem
-            active={
-              item.to.split(/[/s?]+/)[1] === router.asPath.split(/[/s?]+/)[1]
-            }
-          >
-            {name}
-          </StyledMenuItem>
-        </a>
+        <StyledMenuItem
+          active={
+            item.to.split(/[/s?]+/)[1] === router.asPath.split(/[/s?]+/)[1]
+          }
+        >
+          {name}
+        </StyledMenuItem>
       </Link>
     );
   }
@@ -106,18 +135,16 @@ class StatefulDropdown extends React.Component<{}, State> {
     return (
       <Header>
         <ResponsiveContent>
-          <Flex justifyBetween style={{ padding: '20px 0' }}>
-            <FlexItem>
+          <DivWrapper style={{ padding: '20px 0' }}>
+            <DivItem>
               <Link href="/">
-                <a>
-                  <ItdageneLogo
-                    src="/static/itdagene-gray2.png"
-                    alt="Hvit itDAGENE logo"
-                  />
-                </a>
+                <ItdageneLogo
+                  src="/static/itdagene-gray2.png"
+                  alt="Hvit itDAGENE logo"
+                />
               </Link>
-            </FlexItem>
-            <Flex style={{ alignItems: 'center' }}>
+            </DivItem>
+            <Div style={{ alignItems: 'center' }}>
               <OnOther>
                 {items.map((item) => (
                   <MenuItem key={item.key} item={item} />
@@ -137,13 +164,13 @@ class StatefulDropdown extends React.Component<{}, State> {
                   animationDuration={0.5}
                 />
               </OnMobile>
-            </Flex>
-          </Flex>
+            </Div>
+          </DivWrapper>
           <OnMobile>
-            <Flex column style={{ lineHeight: '42px' }}>
+            <DivItems style={{ lineHeight: '42px' }}>
               {this.state.open &&
                 items.map((item) => <MenuItem key={item.key} item={item} />)}
-            </Flex>
+            </DivItems>
           </OnMobile>
         </ResponsiveContent>
       </Header>

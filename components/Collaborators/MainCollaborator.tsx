@@ -1,16 +1,29 @@
 import { useFragment, graphql } from 'relay-hooks';
 import { ZoomImage, CenterIt } from '../Styled';
-import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { Player } from 'video-react';
-
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-
 import {
   MainCollaborator_company,
   MainCollaborator_company$key,
 } from '../../__generated__/MainCollaborator_company.graphql';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 type Props = {
   company: MainCollaborator_company$key;
@@ -61,18 +74,18 @@ const MainCollaborator = ({
   );
 
   return (
-    <Flex justifyAround column>
-      <FlexItem>
+    <Div>
+      <DivItem>
         <CenterIt text>
           <Title>Hovedsamarbeidspartner</Title>
         </CenterIt>
-      </FlexItem>
-      <FlexItem>
-        <FlexItem>
+      </DivItem>
+      <DivItem>
+        <DivItem>
           <a href={company.url || ''}>
             <HSPLogo src={company.logo || ''} alt="Logo" />
           </a>
-        </FlexItem>
+        </DivItem>
         <CenterIt text>
           <p>
             <b>
@@ -97,8 +110,8 @@ const MainCollaborator = ({
             'Missing main collaborator video!'
           )}
         </CenterIt>
-      </FlexItem>
-    </Flex>
+      </DivItem>
+    </Div>
   );
 };
 

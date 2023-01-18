@@ -1,10 +1,25 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { BoardMember_user } from '../__generated__/BoardMember_user.graphql';
-import Flex, { FlexItem } from 'styled-flex-component';
-
 import { Image, CenterIt } from './Styled';
 import styled from 'styled-components';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  flex-direction: column;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 const RoundHead = styled(Image)`
   border-radius: 2000px;
@@ -12,7 +27,7 @@ const RoundHead = styled(Image)`
   height: 195px;
 `;
 
-const Card = styled(FlexItem)`
+const Card = styled(DivItem)`
   margin: 15px;
 `;
 
@@ -26,13 +41,13 @@ const BoardMember = ({
   <Card>
     <CenterIt text>
       <RoundHead src={photo || ''} />
-      <Flex column>
+      <Div>
         <h4 style={{ fontSize: 15, marginBottom: 0 }}>{fullName}</h4>
         <i>{role}</i>
         <a style={{ fontSize: '12px' }} href={`mailto:${email}`}>
           {email}
         </a>
-      </Flex>
+      </Div>
     </CenterIt>
   </Card>
 );

@@ -6,7 +6,7 @@ import { NudgeDiv } from '../Styled';
 
 const StandsButton = (): JSX.Element => {
   return (
-    <Link href={'/stands'}>
+    <Link href={'/stands'} legacyBehavior>
       <AnnouncementContainer scale={1.03}>
         <Header shadow>TIL STANDSSIDEN</Header>
       </AnnouncementContainer>

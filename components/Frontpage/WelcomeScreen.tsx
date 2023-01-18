@@ -3,12 +3,27 @@ import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
 import Link from 'next/link';
-import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: space-between;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -89,8 +104,8 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         src="https://cdn.itdagene.no/itdagene.mp4"
       />
       <MainContainer text>
-        <Flex column contentSpaceBetween>
-          <FlexItem>
+        <Div>
+          <DivItem>
             <Header>
               <b>it</b>DAGENE {currentMetaData.year}
             </Header>
@@ -101,16 +116,14 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
                 .format('MMMM')} ${startDate.year()}`}
             </SubHeader>
             <Location>NTNU Trondheim</Location>
-          </FlexItem>
-          <FlexItem>
+          </DivItem>
+          <DivItem>
             <Countdown currentMetaData={currentMetaData} />
-          </FlexItem>
-        </Flex>
+          </DivItem>
+        </Div>
 
         <Link href="/om-itdagene">
-          <a>
-            <ReadMore>Les mer</ReadMore>
-          </a>
+          <ReadMore>Les mer</ReadMore>
         </Link>
       </MainContainer>
     </RootContainer>

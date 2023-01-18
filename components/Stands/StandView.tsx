@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { StandView_stand } from '../../__generated__/StandView_stand.graphql';
 import { ChatwootSDK, Chatwoot, ChatwootSettings } from '../../types/chatwoot';
-import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { BorderlessSection } from '../Styled';
 import NavBar from '../Navbar';
@@ -12,6 +11,30 @@ import ProgramPage from './StandProgram';
 import JobListingsPage from './StandJoblistings';
 import LivePlayer from './LivePlayer';
 import KeyInfo from './KeyInfo';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const Div2 = styled('div')`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: 600px;
+  flex-grow: 3;
+  flex-shrink: 1;
+  display: block;
+`;
 
 declare global {
   interface Window {
@@ -72,7 +95,7 @@ const LiveContentSection = styled.div`
 `;
 
 const Back = (): JSX.Element => (
-  <Link href="/stands">
+  <Link href="/stands" legacyBehavior>
     <BackLink>
       <i className="fas fa-arrow-left" />
       {' Tilbake til stands'}
@@ -170,13 +193,13 @@ const Stand = ({ stand }: Props): JSX.Element => {
       </LiveContentSection>
       <BorderlessSection noPadding style={{ margin: '30px 0' }}>
         <NavBar items={navBarItems} />
-        <Flex wrapReverse>
-          <FlexItem basis="600px" grow={3}>
-            <Flex column>
+        <Div>
+          <DivItem>
+            <Div2>
               <SubPage stand={stand} page={currentPage} />
-            </Flex>
-          </FlexItem>
-        </Flex>
+            </Div2>
+          </DivItem>
+        </Div>
       </BorderlessSection>
     </>
   );

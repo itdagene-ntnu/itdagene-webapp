@@ -1,7 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
+
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap-reverse;
+  justify-content: space-around;
+  align-content: stretch;
+`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: 700px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: block;
+`;
+
+const DivItemLogo = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block;
+`;
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -29,8 +52,8 @@ type Props = {
 
 const Interest = ({ form }: Props): JSX.Element => (
   <>
-    <Flex justifyAround wrapReverse>
-      <FlexItem grow={1} basis="700px">
+    <Div>
+      <DivItem>
         <Title>Interessert i å delta? </Title>
         <p>
           Interesseskjemaet for itDAGENE2023 er nå åpent. Frist for å melde
@@ -39,8 +62,8 @@ const Interest = ({ form }: Props): JSX.Element => (
           finner dere en lenke til vårt nye interesseskjema hvor din bedrift kan
           melde sin interesse for itDAGENE 2023.
         </p>
-      </FlexItem>
-      <FlexItem>
+      </DivItem>
+      <DivItemLogo>
         <CenterIt>
           <Image
             style={{ width: 350, maxWidth: '100%' }}
@@ -48,8 +71,8 @@ const Interest = ({ form }: Props): JSX.Element => (
             alt="itDAGENE logo"
           />
         </CenterIt>
-      </FlexItem>
-    </Flex>
+      </DivItemLogo>
+    </Div>
     <CenterIt text>
       <StyledLink href={form} target="_blank">
         <Image
