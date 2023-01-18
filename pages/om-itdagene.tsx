@@ -8,13 +8,14 @@ import {
 import BoardMember from '../components/BoardMember';
 import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
 import PageView from '../components/PageView';
-import Flex from 'styled-flex-component';
 import { sortBy } from 'lodash';
+import styled from 'styled-components';
 
 const ROLES = [
   'Leder',
   'Nestleder',
   'Økonomi',
+  'Bedriftsansvarlig',
   'Bedrift',
   'Bankett',
   'Logistikk',
@@ -23,6 +24,14 @@ const ROLES = [
   'Medlem',
 ];
 
+const Div = styled('div')`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: stretch
+  align-items: center;
+  justify-content: center;`;
+
 const Index = ({
   error,
   props,
@@ -30,13 +39,13 @@ const Index = ({
   <>
     {props.omItdagene && <PageView page={props.omItdagene} />}
     <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
-    <Flex wrap center>
+    <Div>
       {sortBy(props.currentMetaData.boardMembers, (m) =>
         ROLES.indexOf(m.role || 'Medlem')
       ).map((user) => (
         <BoardMember key={user.id} user={user} />
       ))}
-    </Flex>
+    </Div>
   </>
 );
 

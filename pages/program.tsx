@@ -4,7 +4,21 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { program_QueryResponse } from '../__generated__/program_Query.graphql';
 import PageView from '../components/PageView';
 import ProgramView from '../components/Program/ProgramView';
-import Flex, { FlexItem } from 'styled-flex-component';
+import styled from 'styled-components';
+
+const Div = styled('div')`
+display: flex;
+flex-direction: row;
+flex-wrap: nowrap;
+justify-content: flex-start;
+align-content: stretch`;
+
+const DivItem = styled('div')`
+  order: 0;
+  flex-basis: auto;
+  flex-grow: 0;
+  flex-shrink: 1;
+  display: block`;
 
 const Index = ({
   error,
@@ -25,11 +39,11 @@ const Index = ({
         // useLinks
       />
     ) : (
-      <Flex>
-        <FlexItem>
+      <Div>
+        <DivItem>
           <h1>Programmet er tomt</h1>
-        </FlexItem>
-      </Flex>
+        </DivItem>
+      </Div>
     )}
   </>
 );
