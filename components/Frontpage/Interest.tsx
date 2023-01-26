@@ -56,7 +56,7 @@ const Interest = ({ form }: Props): JSX.Element => (
       <DivItem>
         <Title>Interessert i å delta? </Title>
         <p>
-          Interesseskjemaet for itDAGENE2023 er nå åpent. Frist for å melde
+          Interesseskjemaet for itDAGENE 2023 er nå åpent. Frist for å melde
           interesse er <b>1.mars 2023</b>. Vi ønsker å påpeke at dette kun er
           for å kartlegge interesse og at det ikke er et påmeldingsskjema. Under
           finner dere en lenke til vårt nye interesseskjema hvor din bedrift kan

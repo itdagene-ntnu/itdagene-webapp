@@ -39,7 +39,7 @@ type ExtendedErrorProps = ErrorProps & {
 
 const ERROR_TITLES: Record<string, string> = {
   '404': 'Fant ikke siden :(',
-  '500': 'Noe har gått fryktelig galt.',
+  '500': 'Vi jobber med siden frem mot neste itDAGENE, kom tilbake senere.',
 };
 
 const H1 = styled('h1')`
