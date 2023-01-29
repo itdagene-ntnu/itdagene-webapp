@@ -4,38 +4,8 @@ import { ResponsiveContent } from '../Styled';
 import Link from 'next/link';
 import styled, { css } from 'styled-components';
 import HamburgerMenu from 'react-hamburger-menu';
-
-const DivWrapper = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-content: stretch;
-`;
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItems = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 const Header = styled('header')`
   padding-top: 10px;
@@ -135,16 +105,16 @@ class StatefulDropdown extends React.Component<{}, State> {
     return (
       <Header>
         <ResponsiveContent>
-          <DivWrapper style={{ padding: '20px 0' }}>
-            <DivItem>
+          <Flex justifyContent="space-between" style={{ padding: '20px 0' }}>
+            <FlexItem>
               <Link href="/">
                 <ItdageneLogo
                   src="/static/itdagene-gray2.png"
                   alt="Hvit itDAGENE logo"
                 />
               </Link>
-            </DivItem>
-            <Div style={{ alignItems: 'center' }}>
+            </FlexItem>
+            <Flex style={{ alignItems: 'center' }}>
               <OnOther>
                 {items.map((item) => (
                   <MenuItem key={item.key} item={item} />
@@ -164,13 +134,13 @@ class StatefulDropdown extends React.Component<{}, State> {
                   animationDuration={0.5}
                 />
               </OnMobile>
-            </Div>
-          </DivWrapper>
+            </Flex>
+          </Flex>
           <OnMobile>
-            <DivItems style={{ lineHeight: '42px' }}>
+            <Flex flexDirection="column" style={{ lineHeight: '42px' }}>
               {this.state.open &&
                 items.map((item) => <MenuItem key={item.key} item={item} />)}
-            </DivItems>
+            </Flex>
           </OnMobile>
         </ResponsiveContent>
       </Header>

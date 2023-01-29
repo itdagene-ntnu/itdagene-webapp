@@ -7,46 +7,8 @@ import { NoBulletUl } from '../Styled';
 import dayjs from 'dayjs';
 import { lightGrey } from '../../utils/colors';
 import { Player } from 'video-react';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-content: stretch;
-`;
-
-const Div2 = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap-reverse;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const Div3 = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: 600px;
-  flex-grow: 3;
-  flex-shrink: 1;
-  display: block;
-`;
-
-const DivItem2 = styled('div')`
-  order: 0;
-  flex-basis: 300px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 type Props = {
   joblisting: JoblistingView_joblisting;
@@ -87,14 +49,14 @@ const List = ({
       .filter((e) => !!e.value)
       .map(({ key, value }) => (
         <li key={key}>
-          <Div>
+          <Flex justifyContent="space-between">
             <span
               style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
             >
               <i>{key}</i>:
             </span>
             <strong style={{ textAlign: 'right' }}>{value}</strong>
-          </Div>
+          </Flex>
         </li>
       ))}
   </NoBulletUl>
@@ -199,9 +161,9 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
       <ReactMarkdown source={joblisting.company.description} />
     </CompanyDesc>
-    <Div2>
-      <DivItem>
-        <Div3>
+    <Flex flexWrap="wrap-reverse">
+      <FlexItem flexBasis="600px" flexGrow="3">
+        <Flex flexDirection="column">
           <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
 
           {joblisting.videoUrl && (
@@ -212,9 +174,9 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
               <Player playsInline src={joblisting.videoUrl} />
             </PlayerView>
           )}
-        </Div3>
-      </DivItem>
-      <DivItem2>
+        </Flex>
+      </FlexItem>
+      <FlexItem flexBasis="300px" flexGrow="1">
         <Sidebar>
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />
@@ -225,8 +187,8 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
             )}
           </div>
         </Sidebar>
-      </DivItem2>
-    </Div2>
+      </FlexItem>
+    </Flex>
   </>
 );
 

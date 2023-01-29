@@ -5,26 +5,8 @@ import NextError, { ErrorProps } from 'next/error';
 import Layout from '../components/Layout';
 import { CenterIt } from '../components/Styled';
 import styled from 'styled-components';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-content: stretch;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  flex-basis: 100%;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import FlexItem from '../components/Styled/FlexItem';
+import Flex from '../components/Styled/Flex';
 
 type Props = {
   statusCode: number;
@@ -59,14 +41,22 @@ const MyError = ({
   }
   return (
     <Layout noLoading>
-      <Div>
-        <DivItem>
+      <Flex
+        justifyContent="center"
+        style={{
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          flexBasis: '100%',
+        }}
+      >
+        <FlexItem>
           <CenterIt text>
             <H1>{statusCode}</H1>
             <h2>{title || ERROR_TITLES[statusCode] || 'En feil oppsto'}</h2>
           </CenterIt>
-        </DivItem>
-      </Div>
+        </FlexItem>
+      </Flex>
     </Layout>
   );
 };

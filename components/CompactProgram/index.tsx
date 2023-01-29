@@ -8,30 +8,8 @@ import {
   skyBlue,
   indigoDye,
 } from '../../utils/colors';
-
-const DivWrapper = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-content: stretch;
-`;
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 const Title = styled('h1')`
   @media only screen and (max-width: 767px) {
@@ -73,11 +51,11 @@ const ReadMore = styled('h4')`
 `;
 
 const CompactProgram = (): JSX.Element => (
-  <DivWrapper>
-    <DivItem>
+  <Flex flexDirection="column" justifyContent="space-around">
+    <FlexItem>
       <Title>Hva skjer under itDAGENE?</Title>
-    </DivItem>
-    <Div>
+    </FlexItem>
+    <Flex flexWrap="wrap">
       <Tile color={blueNCS}>
         <Link href="/jobb" legacyBehavior>
           <CenterIt text>
@@ -106,14 +84,14 @@ const CompactProgram = (): JSX.Element => (
           </CenterIt>
         </Link>
       </Tile>
-    </Div>
+    </Flex>
 
     <CenterIt text>
       <Link href="/program">
         <ReadMore>Les mer</ReadMore>
       </Link>
     </CenterIt>
-  </DivWrapper>
+  </Flex>
 );
 
 export default CompactProgram;

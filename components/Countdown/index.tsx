@@ -10,15 +10,7 @@ import {
   skyBlue,
   indigoDye,
 } from '../../utils/colors';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-content: stretch;
-  align-items: center;
-  justify-content: center;
-`;
+import Flex from '../Styled/Flex';
 
 const NumberBox = styled('div')`
   display: flex;
@@ -69,7 +61,11 @@ const CountDownComponent = ({
     setStaticDate(false);
   }, []);
   return (
-    <Div>
+    <Flex
+      flexWrap="wrap"
+      justifyContent="center"
+      style={{ alignItems: 'center' }}
+    >
       <NumberBox color={blueNCS}>
         <Number>{days}</Number> <Text> dager </Text>
       </NumberBox>
@@ -82,7 +78,7 @@ const CountDownComponent = ({
       <NumberBox color={indigoDye}>
         <Number>{staticDate ? 0 : seconds}</Number> <Text> sekunder </Text>
       </NumberBox>
-    </Div>
+    </Flex>
   );
 };
 

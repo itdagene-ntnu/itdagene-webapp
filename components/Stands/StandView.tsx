@@ -11,30 +11,8 @@ import ProgramPage from './StandProgram';
 import JobListingsPage from './StandJoblistings';
 import LivePlayer from './LivePlayer';
 import KeyInfo from './KeyInfo';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap-reverse;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const Div2 = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: 600px;
-  flex-grow: 3;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 declare global {
   interface Window {
@@ -193,13 +171,13 @@ const Stand = ({ stand }: Props): JSX.Element => {
       </LiveContentSection>
       <BorderlessSection noPadding style={{ margin: '30px 0' }}>
         <NavBar items={navBarItems} />
-        <Div>
-          <DivItem>
-            <Div2>
+        <Flex flexWrap="wrap-reverse">
+          <FlexItem flexBasis="600px" flexGrow="3">
+            <Flex flexDirection="column">
               <SubPage stand={stand} page={currentPage} />
-            </Div2>
-          </DivItem>
-        </Div>
+            </Flex>
+          </FlexItem>
+        </Flex>
       </BorderlessSection>
     </>
   );
