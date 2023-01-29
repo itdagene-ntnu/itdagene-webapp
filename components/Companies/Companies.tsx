@@ -2,11 +2,11 @@ import { createFragmentContainer, graphql } from 'react-relay';
 import React, { Fragment } from 'react';
 import sortBy from 'lodash/sortBy';
 import styled from 'styled-components';
-import { Div } from './CompaniesStyle';
 
 //import Link from 'next/link';
 import { Companies_query } from '../../__generated__/Companies_query.graphql';
 import CompanyView from './CompanyView';
+import Flex from '../Styled/Flex';
 
 type Props = {
   query: Companies_query;
@@ -32,11 +32,11 @@ const Companies = ({ query }: Props): JSX.Element => {
       {sections.map(({ title, data }) => (
         <Fragment key={title}>
           <Title>{title}</Title>
-          <Div>
+          <Flex flexWrap="wrap" justifyContent="space-around">
             {data.map((company) => (
               <CompanyView key={company.id} company={company} />
             ))}
-          </Div>
+          </Flex>
           <div style={{ height: '100px' }} />
           {/*
           <h4 style={{ textAlign: 'center' }}>

@@ -16,49 +16,10 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
 import MainCollaborator from '../components/Collaborators/MainCollaborator';
+import FlexItem from '../components/Styled/FlexItem';
+import Flex from '../components/Styled/Flex';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap-reverse;
-  justify-content: space-around;
-  align-content: stretch;
-  align-items: center;
-`;
-
-const Div2 = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: 700px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: block;
-`;
-
-const DivItem1 = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
-
-const DivItem2 = styled('div')`
-  order: 0;
-  flex-basis: 400px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: block;
-`;
 
 const ReadMore = styled('h4')``;
 
@@ -67,9 +28,15 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
     props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
   return (
     <>
-      <Div>
-        <DivItem>{frontpage && <PageView hideDate page={frontpage} />}</DivItem>
-        <DivItem1>
+      <Flex
+        flexWrap="wrap-reverse"
+        justifyContent="space-around"
+        style={{ alignItems: 'center' }}
+      >
+        <FlexItem flexBasis="700px" flexGrow="1">
+          {frontpage && <PageView hideDate page={frontpage} />}
+        </FlexItem>
+        <FlexItem>
           <CenterIt>
             <Image
               style={{ width: 350, maxWidth: '100%' }}
@@ -77,8 +44,8 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
               alt="itDAGENE logo"
             />
           </CenterIt>
-        </DivItem1>
-      </Div>
+        </FlexItem>
+      </Flex>
       <CenterIt text>
         <Link href="/om-itdagene">
           <ReadMore>Les mer</ReadMore>
@@ -98,12 +65,17 @@ const EventsSection = ({
   query: pages_index_QueryResponse;
 }): JSX.Element => (
   <>
-    <Div2>
+    <Flex flexWrap="wrap">
       {query.pages &&
         query.pages.filter(Boolean).map(
           (element) =>
             element && (
-              <DivItem2 key={element.slug} style={{ paddingRight: '1em' }}>
+              <FlexItem
+                flexBasis="400px"
+                flexGrow="1"
+                key={element.slug}
+                style={{ paddingRight: '1em' }}
+              >
                 <h2>{element.title}</h2>
                 <p>{element.ingress}</p>
                 <Centered>
@@ -111,10 +83,10 @@ const EventsSection = ({
                     <ReadMore>Les mer</ReadMore>
                   </Link>
                 </Centered>
-              </DivItem2>
+              </FlexItem>
             )
         )}
-    </Div2>
+    </Flex>
   </>
 );
 

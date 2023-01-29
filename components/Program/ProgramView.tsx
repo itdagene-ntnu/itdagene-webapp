@@ -17,14 +17,7 @@ import Link from 'next/link';
 import EventsToggle from './EventsToggle';
 import { ArrayElement } from '../../utils/types';
 import { eventTime, toDayjs } from '../../utils/time';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
+import Flex from '../Styled/Flex';
 
 const Title = styled.h2`
   position: relative;
@@ -170,7 +163,7 @@ const ProgramView = (props: Props): JSX.Element => {
   const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
   return (
-    <Div>
+    <Flex flexDirection="column">
       {props.showToggleButton && (
         <EventsToggle
           showPromoted={showPromoted}
@@ -217,7 +210,7 @@ const ProgramView = (props: Props): JSX.Element => {
           </GroupedDateEvent>
         ))}
       </CenterFlex>
-    </Div>
+    </Flex>
   );
 };
 

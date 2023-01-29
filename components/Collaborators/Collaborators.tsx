@@ -3,7 +3,7 @@ import { createFragmentContainer, graphql } from 'react-relay';
 import { Collaborators_query } from '../../__generated__/Collaborators_query.graphql';
 import CollaboratorView from './Collaborator';
 import styled from 'styled-components';
-import { Div } from './CollaboratorStyle';
+import Flex from '../Styled/Flex';
 
 type Props = {
   query: Collaborators_query;
@@ -23,7 +23,7 @@ const Collaborators = ({
   query.collaborators ? (
     <>
       <Title>Våre samarbeidspartnere</Title>
-      <Div>
+      <Flex flexWrap="wrap" justifyContent="center">
         {query.collaborators.map((company) => (
           <CollaboratorView
             showJoblistings={showJoblistings}
@@ -32,7 +32,7 @@ const Collaborators = ({
             company={company}
           />
         ))}
-      </Div>
+      </Flex>
     </>
   ) : null;
 

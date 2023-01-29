@@ -8,22 +8,8 @@ import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: space-between;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -104,8 +90,8 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         src="https://cdn.itdagene.no/itdagene.mp4"
       />
       <MainContainer text>
-        <Div>
-          <DivItem>
+        <Flex flexDirection="column" alignContent="space-between">
+          <FlexItem>
             <Header>
               <b>it</b>DAGENE {currentMetaData.year}
             </Header>
@@ -116,11 +102,11 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
                 .format('MMMM')} ${startDate.year()}`}
             </SubHeader>
             <Location>NTNU Trondheim</Location>
-          </DivItem>
-          <DivItem>
+          </FlexItem>
+          <FlexItem>
             <Countdown currentMetaData={currentMetaData} />
-          </DivItem>
-        </Div>
+          </FlexItem>
+        </Flex>
 
         <Link href="/om-itdagene">
           <ReadMore>Les mer</ReadMore>

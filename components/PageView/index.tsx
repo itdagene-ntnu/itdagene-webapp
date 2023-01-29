@@ -5,14 +5,7 @@ import { PageView_page } from '../../__generated__/PageView_page.graphql';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
+import Flex from '../Styled/Flex';
 
 type Props = {
   page: PageView_page;
@@ -68,9 +61,9 @@ const PageView = ({
       </LastUpdate>
     )}
     {!hideContent && (
-      <Div>
+      <Flex flexDirection="column">
         <ReactMarkdown renderers={renderers} source={page.content} />
-      </Div>
+      </Flex>
     )}
   </>
 );

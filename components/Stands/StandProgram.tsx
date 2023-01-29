@@ -4,23 +4,8 @@ import Loading from '../LoadingIndicator';
 import { graphql, useFragment } from 'relay-hooks';
 import { StandProgram_stand$key } from '../../__generated__/StandProgram_stand.graphql';
 import ProgramView from '../Program/ProgramView';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-content: stretch;
-  align-items: center;
-  justify-content: center;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 const StyledH1 = styled.h1`
   font-style: italic;
@@ -47,11 +32,11 @@ const StandProgram = (props: Props): JSX.Element => {
     program.events && program.events.length > 0 ? (
       <ProgramView events={program.events} stands={null} />
     ) : (
-      <Div>
-        <DivItem>
+      <Flex justifyContent="center" style={{ alignItems: 'center' }}>
+        <FlexItem>
           <StyledH1>Programmet er tomt</StyledH1>
-        </DivItem>
-      </Div>
+        </FlexItem>
+      </Flex>
     )
   ) : (
     <Loading />

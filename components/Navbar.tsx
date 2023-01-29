@@ -4,22 +4,8 @@ import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
 import { lightGrey, itdageneBlue, itdageneLightBlue } from '../utils/colors';
 import { Divider } from './Styled';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from './Styled/Flex';
+import FlexItem from './Styled/FlexItem';
 
 type ItemProps = {
   text: string;
@@ -55,7 +41,7 @@ const StyledNavbarItem = styled('div')`
   }
 `;
 
-const StyledFlex = styled(Div)`
+const StyledFlex = styled(Flex)`
   @media only screen and (max-width: 767px) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -100,7 +86,7 @@ const NavbarItem = withRouter(
       ? router.asPath === (item as LinkItem).as
       : (item as HandledItem).active(item.key);
     return (
-      <DivItem>
+      <FlexItem>
         {!isActive ? (
           <ItemWrapper item={item}>
             <StyledNavbarItem>{item.text}</StyledNavbarItem>
@@ -108,7 +94,7 @@ const NavbarItem = withRouter(
         ) : (
           <StyledNavbarItem>{item.text}</StyledNavbarItem>
         )}
-      </DivItem>
+      </FlexItem>
     );
   }
 );

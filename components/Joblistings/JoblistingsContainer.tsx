@@ -16,38 +16,8 @@ import LoadingIndicator from '../LoadingIndicator';
 import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap-reverse;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const Div2 = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: 700px;
-  flex-grow: 26;
-  flex-shrink: 1;
-  display: block;
-`;
-
-const DivItem2 = styled('div')`
-  order: 0;
-  flex-basis: 300px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 function joinValues(values: string[]): string | JSX.Element {
   if (values.length < 2) {
@@ -102,7 +72,7 @@ export const query = graphql`
   }
 `;
 
-const JoblistingGrid = styled(Div2)`
+const JoblistingGrid = styled(Flex)`
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
   display: grid;
@@ -342,12 +312,14 @@ const JoblistingsContainer = ({
   children,
 }: ContainerProps): JSX.Element => (
   <div>
-    <Div>
-      <DivItem>{children}</DivItem>
-      <DivItem2>
+    <Flex flexWrap="wrap-reverse">
+      <FlexItem flexBasis="700px" flexGrow="26">
+        {children}
+      </FlexItem>
+      <FlexItem flexBasis="300px" flexGrow="1">
         <Sidebar environment={environment} variables={variables} />
-      </DivItem2>
-    </Div>
+      </FlexItem>
+    </Flex>
   </div>
 );
 

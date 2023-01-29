@@ -8,22 +8,8 @@ import {
   MainCollaborator_company,
   MainCollaborator_company$key,
 } from '../../__generated__/MainCollaborator_company.graphql';
-
-const Div = styled('div')`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-content: stretch;
-`;
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 type Props = {
   company: MainCollaborator_company$key;
@@ -74,18 +60,18 @@ const MainCollaborator = ({
   );
 
   return (
-    <Div>
-      <DivItem>
+    <Flex flexDirection="column" justifyContent="space-around">
+      <FlexItem>
         <CenterIt text>
           <Title>Hovedsamarbeidspartner</Title>
         </CenterIt>
-      </DivItem>
-      <DivItem>
-        <DivItem>
+      </FlexItem>
+      <FlexItem>
+        <FlexItem>
           <a href={company.url || ''}>
             <HSPLogo src={company.logo || ''} alt="Logo" />
           </a>
-        </DivItem>
+        </FlexItem>
         <CenterIt text>
           <p>
             <b>
@@ -110,8 +96,8 @@ const MainCollaborator = ({
             'Missing main collaborator video!'
           )}
         </CenterIt>
-      </DivItem>
-    </Div>
+      </FlexItem>
+    </Flex>
   );
 };
 
