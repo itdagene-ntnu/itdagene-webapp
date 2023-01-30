@@ -42,14 +42,13 @@ const items: MenuItem[] = [
   //{ key: 'home', name: 'Hjem', to: '/' },
   { key: 'program', name: 'Program', to: '/program' },
   { key: 'joblistings', name: 'Jobb', to: '/jobb' },
+  { key: 'for-bedrifter', name: 'For bedrifter', to: '/info/for-bedrifter' },
   {
     key: 'info',
     name: 'Info',
     to: '/info/[side]',
     as: '/info/for-bedrifter',
   },
-  { key: 'startup', name: 'Startup-land', to: '/info/startup' },
-  { key: 'case', name: 'itCASE', to: '/info/case' },
   { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
 ];
 
