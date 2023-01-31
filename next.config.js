@@ -38,5 +38,4 @@ module.exports = withSourceMaps({
 
     return config;
   },
-  swcMinify: true,
 });

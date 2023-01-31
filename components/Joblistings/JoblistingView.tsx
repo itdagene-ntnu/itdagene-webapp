@@ -1,14 +1,13 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { JoblistingView_joblisting } from '../../__generated__/JoblistingView_joblisting.graphql';
+import Flex, { FlexItem } from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import { NoBulletUl } from '../Styled';
 import dayjs from 'dayjs';
 import { lightGrey } from '../../utils/colors';
 import { Player } from 'video-react';
-import Flex from '../Styled/Flex';
-import FlexItem from '../Styled/FlexItem';
 
 type Props = {
   joblisting: JoblistingView_joblisting;
@@ -49,7 +48,7 @@ const List = ({
       .filter((e) => !!e.value)
       .map(({ key, value }) => (
         <li key={key}>
-          <Flex justifyContent="space-between">
+          <Flex justifyBetween>
             <span
               style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
             >
@@ -161,9 +160,9 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
       <ReactMarkdown source={joblisting.company.description} />
     </CompanyDesc>
-    <Flex flexWrap="wrap-reverse">
-      <FlexItem flexBasis="600px" flexGrow="3">
-        <Flex flexDirection="column">
+    <Flex wrapReverse>
+      <FlexItem basis="600px" grow={3}>
+        <Flex column>
           <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
 
           {joblisting.videoUrl && (
@@ -176,7 +175,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
           )}
         </Flex>
       </FlexItem>
-      <FlexItem flexBasis="300px" flexGrow="1">
+      <FlexItem basis="300px" grow={1}>
         <Sidebar>
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />

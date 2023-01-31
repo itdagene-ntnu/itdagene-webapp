@@ -7,6 +7,7 @@ import { graphql } from 'react-relay';
 import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
 import Collaborators from '../components/Collaborators/Collaborators';
 import Companies from '../components/Companies/Companies';
+import Flex, { FlexItem } from 'styled-flex-component';
 import Link from 'next/link';
 import styled from 'styled-components';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
@@ -16,8 +17,6 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import PageView from '../components/PageView';
 import CompactProgram from '../components/CompactProgram';
 import MainCollaborator from '../components/Collaborators/MainCollaborator';
-import FlexItem from '../components/Styled/FlexItem';
-import Flex from '../components/Styled/Flex';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
@@ -28,12 +27,8 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
     props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
   return (
     <>
-      <Flex
-        flexWrap="wrap-reverse"
-        justifyContent="space-around"
-        style={{ alignItems: 'center' }}
-      >
-        <FlexItem flexBasis="700px" flexGrow="1">
+      <Flex justifyAround wrapReverse alignCenter>
+        <FlexItem grow={1} basis="700px">
           {frontpage && <PageView hideDate page={frontpage} />}
         </FlexItem>
         <FlexItem>
@@ -48,7 +43,9 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
       </Flex>
       <CenterIt text>
         <Link href="/om-itdagene">
-          <ReadMore>Les mer</ReadMore>
+          <a>
+            <ReadMore>Les mer</ReadMore>
+          </a>
         </Link>
       </CenterIt>
     </>
@@ -65,22 +62,24 @@ const EventsSection = ({
   query: pages_index_QueryResponse;
 }): JSX.Element => (
   <>
-    <Flex flexWrap="wrap">
+    <Flex wrap>
       {query.pages &&
         query.pages.filter(Boolean).map(
           (element) =>
             element && (
               <FlexItem
-                flexBasis="400px"
-                flexGrow="1"
                 key={element.slug}
+                basis={'400px'}
+                grow={1}
                 style={{ paddingRight: '1em' }}
               >
-                <h2>{element.title}</h2>
+                <h2> {element.title} </h2>
                 <p>{element.ingress}</p>
                 <Centered>
                   <Link href="/info/[side]" as={`/info/${element.slug}`}>
-                    <ReadMore>Les mer</ReadMore>
+                    <a>
+                      <ReadMore>Les mer</ReadMore>
+                    </a>
                   </Link>
                 </Centered>
               </FlexItem>
@@ -120,6 +119,9 @@ const Index = ({ props, error }: RenderProps): JSX.Element => (
         <Companies query={props.currentMetaData} />
       </Section>
     )}
+    <Section>
+      <RunForMe />
+    </Section>
     <Section style={{ borderBottom: 0 }}>
       <EventsSection query={props} />
     </Section>
@@ -161,12 +163,11 @@ export default withDataAndLayout(Index, {
   `,
   variables: {
     slugs: [
-      //TODO: Remove this when we have this year's pages
       'frontpage',
-      'bankett-copy',
-      'sommerjobbmaraton-copy',
-      'stands-copy',
-      'kurs-copy',
+      'bankett',
+      'sommerjobbmaraton',
+      'stands',
+      'kurs',
       'om-itdagene',
     ],
   },

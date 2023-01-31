@@ -1,15 +1,9 @@
 import * as React from 'react';
+
 import styled from 'styled-components';
+import { FlexItem } from 'styled-flex-component';
 import { ResponsiveContent, NoBulletUl } from '../Styled';
 import { lightGrey } from '../../utils/colors';
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
 
 const Container = styled('div')`
   padding: 2.5em 0em;
@@ -26,7 +20,7 @@ const InnerContainer = styled('div')`
   }
 `;
 
-const RightBorderFlex = styled(DivItem)`
+const RightBorderFlex = styled(FlexItem)`
   border-right: 1px solid ${lightGrey};
   margin-right: 20px;
   padding-right: 20px;

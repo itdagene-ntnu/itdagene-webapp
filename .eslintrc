@@ -26,7 +26,6 @@
   "rules": {
     "react/prop-types": 0,
     "react/display-name": 2,
-    "react/react-in-jsx-scope": "off",
     "relay/graphql-syntax": 2,
     "relay/compat-uses-vars": 1,
     "relay/graphql-naming": 2,

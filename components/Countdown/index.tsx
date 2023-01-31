@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 import Countdown from 'react-countdown-now';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { Countdown_currentMetaData } from '../../__generated__/Countdown_currentMetaData.graphql';
 import dayjs from 'dayjs';
 import styled from 'styled-components';
+import Flex from 'styled-flex-component';
 import {
   blueNCS,
   princetonOrange,
   skyBlue,
   indigoDye,
 } from '../../utils/colors';
-import Flex from '../Styled/Flex';
 
 const NumberBox = styled('div')`
   display: flex;
@@ -49,23 +49,15 @@ type RendererProps = {
   completed: boolean;
 };
 
-const CountDownComponent = ({
+const renderer = ({
   days,
   hours,
   minutes,
   seconds,
   completed,
-}: RendererProps) => {
-  const [staticDate, setStaticDate] = useState(true);
-  useEffect(() => {
-    setStaticDate(false);
-  }, []);
-  return (
-    <Flex
-      flexWrap="wrap"
-      justifyContent="center"
-      style={{ alignItems: 'center' }}
-    >
+}: RendererProps): JSX.Element | boolean =>
+  !completed && (
+    <Flex center wrap>
       <NumberBox color={blueNCS}>
         <Number>{days}</Number> <Text> dager </Text>
       </NumberBox>
@@ -76,27 +68,9 @@ const CountDownComponent = ({
         <Number>{minutes}</Number> <Text> minutter </Text>
       </NumberBox>
       <NumberBox color={indigoDye}>
-        <Number>{staticDate ? 0 : seconds}</Number> <Text> sekunder </Text>
+        <Number>{seconds}</Number> <Text> sekunder </Text>
       </NumberBox>
     </Flex>
-  );
-};
-
-const renderer = ({
-  days,
-  hours,
-  minutes,
-  seconds,
-  completed,
-}: RendererProps): JSX.Element | boolean =>
-  !completed && (
-    <CountDownComponent
-      days={days}
-      hours={hours}
-      minutes={minutes}
-      seconds={seconds}
-      completed={completed}
-    />
   );
 
 const CountdownComponent = (props: {
