@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import Loading from '../LoadingIndicator';
 import { graphql, useFragment } from 'relay-hooks';
 import { StandProgram_stand$key } from '../../__generated__/StandProgram_stand.graphql';
-import Flex, { FlexItem } from 'styled-flex-component';
 import ProgramView from '../Program/ProgramView';
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 const StyledH1 = styled.h1`
   font-style: italic;
@@ -31,7 +32,7 @@ const StandProgram = (props: Props): JSX.Element => {
     program.events && program.events.length > 0 ? (
       <ProgramView events={program.events} stands={null} />
     ) : (
-      <Flex center>
+      <Flex justifyContent="center" style={{ alignItems: 'center' }}>
         <FlexItem>
           <StyledH1>Programmet er tomt</StyledH1>
         </FlexItem>

@@ -2,10 +2,10 @@ import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import Link from 'next/link';
 import { PageView_page } from '../../__generated__/PageView_page.graphql';
-import Flex from 'styled-flex-component';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
+import Flex from '../Styled/Flex';
 
 type Props = {
   page: PageView_page;
@@ -40,11 +40,7 @@ const LinkRenderer = ({
 }): JSX.Element => {
   // Use next.js router for internal urls
   if (href.startsWith('/')) {
-    return (
-      <Link href={href}>
-        <a> {children}</a>
-      </Link>
-    );
+    return <Link href={href}>{children}</Link>;
   }
   return <a href={href}> {children}</a>;
 };
@@ -65,7 +61,7 @@ const PageView = ({
       </LastUpdate>
     )}
     {!hideContent && (
-      <Flex column>
+      <Flex flexDirection="column">
         <ReactMarkdown renderers={renderers} source={page.content} />
       </Flex>
     )}

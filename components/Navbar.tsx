@@ -2,9 +2,10 @@ import * as React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { withRouter, NextRouter } from 'next/router';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { lightGrey, itdageneBlue, itdageneLightBlue } from '../utils/colors';
 import { Divider } from './Styled';
+import Flex from './Styled/Flex';
+import FlexItem from './Styled/FlexItem';
 
 type ItemProps = {
   text: string;
@@ -69,7 +70,7 @@ const ItemWrapper = ({
   const isLink = (item as LinkItem).href !== undefined;
   return isLink ? (
     <Link href={(item as LinkItem).href} as={(item as LinkItem).as}>
-      <a>{children}</a>
+      {children}
     </Link>
   ) : (
     <Item onClick={(): void => (item as HandledItem).onClick(item.key)}>

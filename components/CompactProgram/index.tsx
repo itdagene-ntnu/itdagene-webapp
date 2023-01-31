@@ -1,5 +1,4 @@
 import React from 'react';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { CenterIt } from '../Styled';
 import styled from 'styled-components';
 import Link from 'next/link';
@@ -9,6 +8,8 @@ import {
   skyBlue,
   indigoDye,
 } from '../../utils/colors';
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 const Title = styled('h1')`
   @media only screen and (max-width: 767px) {
@@ -50,34 +51,34 @@ const ReadMore = styled('h4')`
 `;
 
 const CompactProgram = (): JSX.Element => (
-  <Flex justifyAround column>
+  <Flex flexDirection="column" justifyContent="space-around">
     <FlexItem>
       <Title>Hva skjer under itDAGENE?</Title>
     </FlexItem>
-    <Flex row wrap>
+    <Flex flexWrap="wrap">
       <Tile color={blueNCS}>
-        <Link href="/jobb">
+        <Link href="/jobb" legacyBehavior>
           <CenterIt text>
             <StyledLink>Jobb</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={princetonOrange}>
-        <Link href="/program">
+        <Link href="/program" legacyBehavior>
           <CenterIt text>
             <StyledLink>Program</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={skyBlue}>
-        <Link href="/info/stands">
+        <Link href="/info/stands" legacyBehavior>
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
       <Tile color={indigoDye}>
-        <Link href="/info/bankett">
+        <Link href="/info/bankett" legacyBehavior>
           <CenterIt text>
             <StyledLink>Bankett</StyledLink>
           </CenterIt>
@@ -87,9 +88,7 @@ const CompactProgram = (): JSX.Element => (
 
     <CenterIt text>
       <Link href="/program">
-        <a>
-          <ReadMore>Les mer</ReadMore>
-        </a>
+        <ReadMore>Les mer</ReadMore>
       </Link>
     </CenterIt>
   </Flex>

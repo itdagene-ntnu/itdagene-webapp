@@ -1,10 +1,10 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { BoardMember_user } from '../__generated__/BoardMember_user.graphql';
-import Flex, { FlexItem } from 'styled-flex-component';
-
 import { Image, CenterIt } from './Styled';
 import styled from 'styled-components';
+import Flex from './Styled/Flex';
+import FlexItem from './Styled/FlexItem';
 
 const RoundHead = styled(Image)`
   border-radius: 2000px;
@@ -26,7 +26,7 @@ const BoardMember = ({
   <Card>
     <CenterIt text>
       <RoundHead src={photo || ''} />
-      <Flex column>
+      <Flex flexDirection="column">
         <h4 style={{ fontSize: 15, marginBottom: 0 }}>{fullName}</h4>
         <i>{role}</i>
         <a style={{ fontSize: '12px' }} href={`mailto:${email}`}>

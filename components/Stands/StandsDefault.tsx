@@ -1,10 +1,11 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import styled from 'styled-components';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { StandsDefault_currentMetaData } from '../../__generated__/StandsDefault_currentMetaData.graphql';
 import Countdown from '../Countdown';
 import { CenterIt, PaddedDivider, SubHeader } from '../Styled';
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 import { Header } from './FeaturedEvents';
 import ProgramButton from './ProgramButton';
 
@@ -17,9 +18,9 @@ const StandsDefault = ({
 }: StandsDefaultProps): JSX.Element => {
   return (
     <CountDownContainer>
-      <Flex justifyBetween wrap>
+      <Flex flexWrap="wrap" justifyContent="space-between">
         <InfoContainer>
-          <Flex wrap>
+          <Flex flexWrap="wrap">
             <Header>itDAGENE-stands åpner snart</Header>
           </Flex>
           <SubHeader>
@@ -29,7 +30,7 @@ const StandsDefault = ({
         <ProgramButton />
       </Flex>
       <PaddedDivider />
-      <Flex column contentSpaceBetween>
+      <Flex flexDirection="column" alignContent="space-between">
         <FlexItem>
           <Countdown currentMetaData={currentMetaData} />
         </FlexItem>

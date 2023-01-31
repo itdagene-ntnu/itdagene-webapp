@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import Flex from 'styled-flex-component';
 import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
 import FeaturedEventCard from './FeaturedEventCard';
 import { currentHalfhour } from '../../utils/time';
 import { Dayjs } from 'dayjs';
 import ProgramButton from './ProgramButton';
 import { PaddedDivider, SubHeader } from '../Styled';
+import Flex from '../Styled/Flex';
 
 interface FeaturedEventsProps {
   stands: NonNullable<stands_QueryResponse['stands']>;
@@ -16,9 +16,9 @@ interface FeaturedEventsProps {
 const FeaturedEvents = ({ stands, time }: FeaturedEventsProps): JSX.Element => {
   return (
     <div>
-      <Flex justifyBetween wrap>
+      <Flex justifyContent="space-between" flexWrap="wrap">
         <FeaturedEventsInfo>
-          <Flex wrap>
+          <Flex flexWrap="wrap">
             <Header>Halvtimens bedrifter:</Header>
             <Time>{currentHalfhour(time)}</Time>
           </Flex>

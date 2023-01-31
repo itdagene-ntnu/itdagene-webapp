@@ -22,7 +22,7 @@ export const CustomOpengraphRenderer = ({
   const { title, description, sharingImage } = object || {};
   return (
     <Head>
-      <title> {title || defaultTitle}</title>
+      <title>{title || defaultTitle}</title>
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title || defaultTitle} />
       <meta

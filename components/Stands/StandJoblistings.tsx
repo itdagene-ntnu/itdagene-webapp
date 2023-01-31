@@ -4,8 +4,9 @@ import Loading from '../LoadingIndicator';
 import { graphql, useFragment } from 'relay-hooks';
 import styled from 'styled-components';
 import { StandJoblistings_joblistings$key } from '../../__generated__/StandJoblistings_joblistings.graphql';
-import Flex, { FlexItem } from 'styled-flex-component';
 import { JoblistingItem } from '../Joblistings/JoblistingsContainer';
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 const StyledH1 = styled.h1`
   font-weight: 100;
@@ -36,12 +37,16 @@ const StandJoblistings = (props: Props): JSX.Element => {
   return company ? (
     company.joblistings?.edges && company.joblistings.edges.length > 0 ? (
       <div>
-        <Flex row center wrap>
+        <Flex
+          flexWrap="wrap"
+          justifyContent="center"
+          style={{ alignItems: 'center' }}
+        >
           {company.joblistings.edges.map(
             (e, i) => e?.node && <JoblistingItem node={e.node} key={i} />
           )}
         </Flex>
-        <Flex center>
+        <Flex justifyContent="center" style={{ alignItems: 'center' }}>
           <h3>
             <Link
               href={`/jobb?company=${company.id}&companyName=${company.name}`}
@@ -52,7 +57,7 @@ const StandJoblistings = (props: Props): JSX.Element => {
         </Flex>
       </div>
     ) : (
-      <Flex center>
+      <Flex justifyContent="center" style={{ alignItems: 'center' }}>
         <FlexItem>
           <StyledH1>Ingen jobbannonser</StyledH1>
         </FlexItem>

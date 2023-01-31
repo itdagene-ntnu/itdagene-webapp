@@ -1,16 +1,15 @@
 import { useFragment, graphql } from 'relay-hooks';
 import { ZoomImage, CenterIt } from '../Styled';
-import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { Player } from 'video-react';
-
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-
 import {
   MainCollaborator_company,
   MainCollaborator_company$key,
 } from '../../__generated__/MainCollaborator_company.graphql';
+import Flex from '../Styled/Flex';
+import FlexItem from '../Styled/FlexItem';
 
 type Props = {
   company: MainCollaborator_company$key;
@@ -61,7 +60,7 @@ const MainCollaborator = ({
   );
 
   return (
-    <Flex justifyAround column>
+    <Flex flexDirection="column" justifyContent="space-around">
       <FlexItem>
         <CenterIt text>
           <Title>Hovedsamarbeidspartner</Title>
