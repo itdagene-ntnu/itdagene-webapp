@@ -8,14 +8,13 @@ import {
 import { Image, NudgeDiv } from './Styled';
 import Link from 'next/link';
 import * as React from 'react';
+import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { SummerjobMarathon_root } from '../__generated__/SummerjobMarathon_root.graphql';
 import { SummerjobMarathon_other } from '../__generated__/SummerjobMarathon_other.graphql';
 import { SummerjobMarathon_collaborators } from '../__generated__/SummerjobMarathon_collaborators.graphql';
 import LoadingIndicator from './LoadingIndicator';
 import InfiniteScroll from 'react-infinite-scroller';
-import Flex from './Styled/Flex';
-import FlexItem from './Styled/FlexItem';
 
 const CompanyImage = styled(Image)`
   width: 95%;
@@ -49,12 +48,7 @@ export const query = graphql`
   }
 `;
 
-const JoblistingGrid = styled('div')`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap-reverse;
-  justify-content: flex-start;
-  align-content: stretch;
+const JoblistingGrid = styled(Flex)`
   width: 100%;
   grid-template-columns: repeat(auto-fill, minmax(239px, 1fr));
   display: ${(props: { center?: boolean }): string =>
@@ -365,13 +359,13 @@ const SummerjobMarathonContainer = ({
   variables,
   children,
 }: ContainerProps): JSX.Element => (
-  <Flex flexWrap="wrap-reverse">
-    <Flex flexWrap="wrap-reverse">
-      <FlexItem flexBasis="700px" flexGrow="26">
+  <div>
+    <Flex wrapReverse>
+      <FlexItem basis="700px" grow={26}>
         {children}
       </FlexItem>
     </Flex>
-  </Flex>
+  </div>
 );
 
 export default SummerjobMarathonContainer;

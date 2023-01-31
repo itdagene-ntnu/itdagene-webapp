@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import Flex, { FlexItem } from 'styled-flex-component';
 import { Image, CenterIt } from '../Styled';
-import Flex from '../Styled/Flex';
-import FlexItem from '../Styled/FlexItem';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -27,8 +25,8 @@ const StyledLink = styled.a`
 
 const Interest = (): JSX.Element => (
   <>
-    <Flex flexWrap="wrap-reverse" justifyContent="space-around">
-      <FlexItem flexBasis="700px" flexGrow="1">
+    <Flex justifyAround wrapReverse>
+      <FlexItem grow={1} basis="700px">
         <Title>Løp for meg!</Title>
         <p>
           I år er vi kjempestolte av å fortelle at itDAGENE, i samarbeid med vår

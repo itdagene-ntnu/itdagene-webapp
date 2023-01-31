@@ -3,13 +3,12 @@ import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
 import Link from 'next/link';
+import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
-import Flex from '../Styled/Flex';
-import FlexItem from '../Styled/FlexItem';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -90,7 +89,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         src="https://cdn.itdagene.no/itdagene.mp4"
       />
       <MainContainer text>
-        <Flex flexDirection="column" alignContent="space-between">
+        <Flex column contentSpaceBetween>
           <FlexItem>
             <Header>
               <b>it</b>DAGENE {currentMetaData.year}
@@ -109,7 +108,9 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         </Flex>
 
         <Link href="/om-itdagene">
-          <ReadMore>Les mer</ReadMore>
+          <a>
+            <ReadMore>Les mer</ReadMore>
+          </a>
         </Link>
       </MainContainer>
     </RootContainer>

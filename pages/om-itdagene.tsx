@@ -8,14 +8,13 @@ import {
 import BoardMember from '../components/BoardMember';
 import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
 import PageView from '../components/PageView';
+import Flex from 'styled-flex-component';
 import { sortBy } from 'lodash';
-import Flex from '../components/Styled/Flex';
 
 const ROLES = [
   'Leder',
   'Nestleder',
   'Økonomi',
-  'Bedriftsansvarlig',
   'Bedrift',
   'Bankett',
   'Logistikk',
@@ -31,11 +30,7 @@ const Index = ({
   <>
     {props.omItdagene && <PageView page={props.omItdagene} />}
     <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
-    <Flex
-      flexWrap="wrap"
-      justifyContent="center"
-      style={{ alignItems: 'center' }}
-    >
+    <Flex wrap center>
       {sortBy(props.currentMetaData.boardMembers, (m) =>
         ROLES.indexOf(m.role || 'Medlem')
       ).map((user) => (

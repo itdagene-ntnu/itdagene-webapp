@@ -4,9 +4,7 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { program_QueryResponse } from '../__generated__/program_Query.graphql';
 import PageView from '../components/PageView';
 import ProgramView from '../components/Program/ProgramView';
-import styled from 'styled-components';
-import Flex from '../components/Styled/Flex';
-import FlexItem from '../components/Styled/FlexItem';
+import Flex, { FlexItem } from 'styled-flex-component';
 
 const Index = ({
   error,

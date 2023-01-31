@@ -1,9 +1,10 @@
 import { createFragmentContainer, graphql } from 'react-relay';
+import React from 'react';
 
 import { Collaborators_query } from '../../__generated__/Collaborators_query.graphql';
 import CollaboratorView from './Collaborator';
+import Flex from 'styled-flex-component';
 import styled from 'styled-components';
-import Flex from '../Styled/Flex';
 
 type Props = {
   query: Collaborators_query;
@@ -23,7 +24,7 @@ const Collaborators = ({
   query.collaborators ? (
     <>
       <Title>Våre samarbeidspartnere</Title>
-      <Flex flexWrap="wrap" justifyContent="center">
+      <Flex wrap justifyCenter>
         {query.collaborators.map((company) => (
           <CollaboratorView
             showJoblistings={showJoblistings}

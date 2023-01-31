@@ -4,9 +4,9 @@ import sortBy from 'lodash/sortBy';
 import styled from 'styled-components';
 
 //import Link from 'next/link';
+import Flex from 'styled-flex-component';
 import { Companies_query } from '../../__generated__/Companies_query.graphql';
 import CompanyView from './CompanyView';
-import Flex from '../Styled/Flex';
 
 type Props = {
   query: Companies_query;
@@ -32,7 +32,7 @@ const Companies = ({ query }: Props): JSX.Element => {
       {sections.map(({ title, data }) => (
         <Fragment key={title}>
           <Title>{title}</Title>
-          <Flex flexWrap="wrap" justifyContent="space-around">
+          <Flex wrap justifyAround>
             {data.map((company) => (
               <CompanyView key={company.id} company={company} />
             ))}

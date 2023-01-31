@@ -5,7 +5,7 @@ import { itdageneBlue } from '../../utils/colors';
 
 const ProgramButton = (): JSX.Element => {
   return (
-    <Link href={'/program'} legacyBehavior>
+    <Link href={'/program'}>
       <ProgramButtonContainer>
         <ProgramButtonText>Program itDAGENE</ProgramButtonText>
       </ProgramButtonContainer>

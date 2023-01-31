@@ -29,7 +29,11 @@ const LinkRenderer = ({
   children: React.ReactNode;
 }): JSX.Element => {
   if (href.startsWith('/')) {
-    return <Link href={href}>{children}</Link>;
+    return (
+      <Link href={href}>
+        <a> {children}</a>
+      </Link>
+    );
   }
   // If the url matches a video on our cdn, render it.
   if (VIDEO_REGEX.test(href)) {

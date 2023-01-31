@@ -4,9 +4,8 @@ import { NextPageContext } from 'next';
 import NextError, { ErrorProps } from 'next/error';
 import Layout from '../components/Layout';
 import { CenterIt } from '../components/Styled';
+import Flex, { FlexItem } from 'styled-flex-component';
 import styled from 'styled-components';
-import FlexItem from '../components/Styled/FlexItem';
-import Flex from '../components/Styled/Flex';
 
 type Props = {
   statusCode: number;
@@ -21,7 +20,7 @@ type ExtendedErrorProps = ErrorProps & {
 
 const ERROR_TITLES: Record<string, string> = {
   '404': 'Fant ikke siden :(',
-  '500': 'Vi jobber med siden frem mot neste itDAGENE, kom tilbake senere.',
+  '500': 'Noe har gått fryktelig galt.',
 };
 
 const H1 = styled('h1')`
@@ -41,15 +40,7 @@ const MyError = ({
   }
   return (
     <Layout noLoading>
-      <Flex
-        justifyContent="center"
-        style={{
-          alignItems: 'center',
-          width: '100%',
-          height: '100%',
-          flexBasis: '100%',
-        }}
-      >
+      <Flex center full>
         <FlexItem>
           <CenterIt text>
             <H1>{statusCode}</H1>
