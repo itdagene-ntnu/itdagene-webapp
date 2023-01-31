@@ -120,9 +120,6 @@ const Index = ({ props, error }: RenderProps): JSX.Element => (
         <Companies query={props.currentMetaData} />
       </Section>
     )}
-    <Section>
-      <RunForMe />
-    </Section>
     <Section style={{ borderBottom: 0 }}>
       <EventsSection query={props} />
     </Section>
@@ -164,11 +161,12 @@ export default withDataAndLayout(Index, {
   `,
   variables: {
     slugs: [
+      //TODO: Remove this when we have this year's pages
       'frontpage',
-      'bankett',
-      'sommerjobbmaraton',
-      'stands',
-      'kurs',
+      'bankett-copy',
+      'sommerjobbmaraton-copy',
+      'stands-copy',
+      'kurs-copy',
       'om-itdagene',
     ],
   },
