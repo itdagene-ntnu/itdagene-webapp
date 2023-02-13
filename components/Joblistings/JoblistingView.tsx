@@ -9,6 +9,7 @@ import { lightGrey } from '../../utils/colors';
 import { Player } from 'video-react';
 import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
+import Head from 'next/head';
 
 type Props = {
   joblisting: JoblistingView_joblisting;
@@ -148,6 +149,11 @@ const CompanyDesc = styled(GrayText)`
 
 const Joblisting = ({ joblisting }: Props): JSX.Element => (
   <>
+    {!joblisting.isActive ?? (
+      <Head>
+        <meta name="robots" content="noindex" />
+      </Head>
+    )}
     <div style={{ maxWidth: 800, margin: 'auto' }}>
       <img
         src={joblisting.company.logo || undefined}
@@ -215,6 +221,7 @@ export default createFragmentContainer(Joblisting, {
       url
       dateCreated
       videoUrl
+      isActive
     }
   `,
 });
