@@ -49,6 +49,7 @@ const items: MenuItem[] = [
     to: '/info/[side]',
     as: '/info/for-bedrifter',
   },
+  { key: 'galleri', name: 'galleri', to: '/galleri' },
   { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
 ];
 

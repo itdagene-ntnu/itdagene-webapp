@@ -1,0 +1,14 @@
+.gallery {
+  width: 230px;
+  margin: 8px 20px 0;
+  display: -ms-grid;
+  display: grid;
+  grid-gap: 4px 4px;
+  -ms-grid-columns: 1fr 1fr 1fr;
+  -ms-grid-rows: 2;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid transparent;
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+}
