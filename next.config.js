@@ -38,5 +38,15 @@ module.exports = withSourceMaps({
 
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.itdagene.no',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
   swcMinify: true,
 });

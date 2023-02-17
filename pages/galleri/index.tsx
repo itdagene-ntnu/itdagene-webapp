@@ -1,19 +1,18 @@
 import Layout, { Metadata } from '../../components/Layout';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
+import { itdageneBlue } from '../../utils/colors';
 
-// alle scr url's må være i form av /static/...
-// for some fucking reason
 const images = [
-  '/galleri/DSC_1043.jpg',
-  '/galleri/DSC_1003.jpg',
-  '/galleri/DSC_1053.jpg',
-  '/galleri/DSC_1105.jpg',
-  '/galleri/DSC_1128.jpg',
-  '/galleri/DSC_1137.jpg',
-  '/galleri/DSC_1141.jpg',
-  '/galleri/DSC_1145.jpg',
+  'DSC_1043.jpg',
+  'DSC_1003.jpg',
+  'DSC_1053.jpg',
+  'DSC_1105.jpg',
+  'DSC_1128.jpg',
+  'DSC_1137.jpg',
+  'DSC_1141.jpg',
+  'DSC_1145.jpg',
 ];
 
 const GalleryWrap = styled('div')`
@@ -23,7 +22,25 @@ const GalleryWrap = styled('div')`
   align-items: center;
   justify-content: center;
   max-width: 1120px;
-  margin: 0 auto;
+  margin: 0 auto 60px;
+`;
+
+const SliderWrap = styled('div')`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  @media only screen and (max-width: 767px) {
+    display: none;
+  }
 `;
 
 const Single = styled('div')`
@@ -41,28 +58,17 @@ const SingleImg = styled(Image)`
   object-fit: cover;
 
   &:hover {
-    transform: scale(1.06);
-
+    position: relative;
+    transform: scale(1.11);
+    z-index: 99;
     transition: transform 0.2s ease-in-out;
   }
 `;
 
-const SliderWrap = styled('div')`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-`;
-
 const FullScreenImageDiv = styled('div')`
+  width: 850px;
+  cursor: pointer;
+
   width: cals(100%-40px);
   height: cals(100%-40px);
   display: flex;
@@ -70,13 +76,24 @@ const FullScreenImageDiv = styled('div')`
   justify-content: center;
 `;
 
-const FullScreenImage = styled('img')`
-  max-width: 960px;
+const FullScreenImage = styled(Image)`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  max-width: 100%;
   max-height: 100%;
   pointer-events: none;
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+`;
+
+const Title = styled('h1')`
+  font-weight: bold;
+  font-smoothing: antialiased;
+  font-size: 3rem;
+  margin-bottom: 1rem;
 `;
 
 export default function Test() {
@@ -107,79 +124,101 @@ export default function Test() {
       : setSlideNumber(slideNumber + 1);
   };
 
-  const style = {
-    position: 'fixed',
-    top: '50%',
-    right: '40px',
-    color: '#52bfe3',
-    fontSize: '65px',
+  const StyledButton = ({
+    name,
+    top = '50%',
+    right = '40px',
+    left,
+    onClick,
+  }: {
+    name: string;
+    top?: string;
+    right?: string;
+    left?: string;
+    onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  }) => {
+    return (
+      <>
+        {/* eslint-disable-next-line*/}
+        {/* @ts-ignore*/}
+        <ion-icon
+          onClick={onClick}
+          style={{
+            position: 'fixed',
+            fontSize: '65px',
+            color: itdageneBlue,
+            top: top,
+            right: right,
+            left: left,
+          }}
+          name={name}
+        />
+      </>
+    );
   };
 
-  const style1 = {
-    position: 'fixed',
+  const changeImageOnKey = useCallback(
+    (event) => {
+      if (event.key === 'Escape') {
+        handleCloseModal();
+      }
+      if (event.key === 'ArrowRight') {
+        nextSlide();
+      }
+      if (event.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    },
+    [slideNumber]
+  );
 
-    top: '50%',
-    color: '#52bfe3',
-    left: '40px',
-    fontSize: '65px',
-  };
-
-  const style2 = {
-    position: 'fixed',
-
-    top: '40px',
-    right: '40px',
-
-    color: '#52bfe3',
-
-    fontSize: '65px',
-  };
+  useEffect(() => {
+    document.addEventListener('keydown', changeImageOnKey);
+    return function cleanup() {
+      document.removeEventListener('keydown', changeImageOnKey);
+    };
+  });
 
   return (
     <>
-      <Layout noLoading>
+      <Layout noLoading responsive>
         {openModal && (
           <SliderWrap>
-            {/* eslint-disable-next-line*/}
-            {/* @ts-ignore*/}
-            <ion-icon
+            <StyledButton
+              name="close-circl d-outline"
+              top="40px"
               onClick={handleCloseModal}
-              style={style2}
-              name="close-circle-outline"
             />
-            {/* eslint-disable-next-line*/}
-            {/* @ts-ignore*/}
-            <ion-icon
-              onClick={prevSlide}
-              style={style1}
+            <StyledButton
               name="arrow-back-outline"
+              left="40px"
+              onClick={prevSlide}
             />
-            {/* eslint-disable-next-line*/}
-            {/* @ts-ignore*/}
-            <ion-icon
-              onClick={nextSlide}
-              style={style}
-              name="arrow-forward-outline"
-            />
+            <StyledButton name="arrow-forward-outline" onClick={nextSlide} />
             <FullScreenImageDiv onClick={handleCloseModal}>
-              <FullScreenImage src={images[slideNumber]} alt="" />
+              <FullScreenImage
+                src={`https://cdn.itdagene.no/${images[slideNumber]}`}
+                alt={images[slideNumber]}
+                width={850}
+                height={330}
+              />
             </FullScreenImageDiv>
           </SliderWrap>
         )}
+
+        <Title>Galleri</Title>
         <GalleryWrap>
-          {images.map((slide, index) => {
-            return (
-              <Single key={index} onClick={() => handleOpenModal(index)}>
-                <SingleImg
-                  src={slide}
-                  alt=""
-                  width={450}
-                  height={230}
-                  quality={100}
-                />
-              </Single>
-            );
-          })}
+          {images.map((slide, index) => (
+            <Single key={slide} onClick={() => handleOpenModal(index)}>
+              <SingleImg
+                src={`https://cdn.itdagene.no/${slide}`}
+                alt={slide}
+                width={450}
+                height={230}
+                quality={100}
+              />
+            </Single>
+          ))}
         </GalleryWrap>
       </Layout>
     </>
