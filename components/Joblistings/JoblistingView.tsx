@@ -149,7 +149,7 @@ const CompanyDesc = styled(GrayText)`
 
 const Joblisting = ({ joblisting }: Props): JSX.Element => (
   <>
-    {!joblisting.isActive ?? (
+    {!joblisting.isActive && (
       <Head>
         <meta name="robots" content="noindex" />
       </Head>
