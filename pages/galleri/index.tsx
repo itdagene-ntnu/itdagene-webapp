@@ -3,6 +3,13 @@ import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { itdageneBlue } from '../../utils/colors';
+import {
+  withDataAndLayout,
+  WithDataAndLayoutProps,
+  WithDataDataProps,
+} from '../../lib/withData';
+import { omItdagene_QueryResponse } from '../../__generated__/omItdagene_Query.graphql';
+import { graphql } from 'react-relay';
 
 const images = [
   'DSC_1043.jpg',
@@ -55,6 +62,8 @@ const SingleImg = styled(Image)`
 
   width: 100%;
   height: 100%;
+  width: auto;
+
   object-fit: cover;
 
   &:hover {
@@ -68,6 +77,7 @@ const SingleImg = styled(Image)`
 const FullScreenImageDiv = styled('div')`
   width: 850px;
   cursor: pointer;
+  width: auto;
 
   width: cals(100%-40px);
   height: cals(100%-40px);
@@ -96,7 +106,10 @@ const Title = styled('h1')`
   margin-bottom: 1rem;
 `;
 
-export default function Test() {
+const Galleri = ({
+  error,
+  props,
+}: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => {
   const [slideNumber, setSlideNumber] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
@@ -178,49 +191,73 @@ export default function Test() {
       document.removeEventListener('keydown', changeImageOnKey);
     };
   });
-
   return (
     <>
-      <Layout noLoading responsive>
-        {openModal && (
-          <SliderWrap>
-            <StyledButton
-              name="close-circl d-outline"
-              top="40px"
-              onClick={handleCloseModal}
+      {openModal && (
+        <SliderWrap>
+          <StyledButton
+            name="close-circl d-outline"
+            top="40px"
+            onClick={handleCloseModal}
+          />
+          <StyledButton
+            name="arrow-back-outline"
+            left="40px"
+            onClick={prevSlide}
+          />
+          <StyledButton name="arrow-forward-outline" onClick={nextSlide} />
+          <FullScreenImageDiv onClick={handleCloseModal}>
+            <FullScreenImage
+              src={`https://cdn.itdagene.no/${images[slideNumber]}`}
+              alt={images[slideNumber]}
+              width={850}
+              height={330}
             />
-            <StyledButton
-              name="arrow-back-outline"
-              left="40px"
-              onClick={prevSlide}
-            />
-            <StyledButton name="arrow-forward-outline" onClick={nextSlide} />
-            <FullScreenImageDiv onClick={handleCloseModal}>
-              <FullScreenImage
-                src={`https://cdn.itdagene.no/${images[slideNumber]}`}
-                alt={images[slideNumber]}
-                width={850}
-                height={330}
-              />
-            </FullScreenImageDiv>
-          </SliderWrap>
-        )}
+          </FullScreenImageDiv>
+        </SliderWrap>
+      )}
 
-        <Title>Galleri</Title>
-        <GalleryWrap>
-          {images.map((slide, index) => (
-            <Single key={slide} onClick={() => handleOpenModal(index)}>
-              <SingleImg
-                src={`https://cdn.itdagene.no/${slide}`}
-                alt={slide}
-                width={450}
-                height={230}
-                quality={100}
-              />
-            </Single>
-          ))}
-        </GalleryWrap>
-      </Layout>
+      <Title>Galleri</Title>
+      <GalleryWrap>
+        {images.map((slide, index) => (
+          <Single key={slide} onClick={() => handleOpenModal(index)}>
+            <SingleImg
+              src={`https://cdn.itdagene.no/${slide}`}
+              alt={slide}
+              width={450}
+              height={230}
+              quality={100}
+            />
+          </Single>
+        ))}
+      </GalleryWrap>
     </>
   );
-}
+};
+
+export default withDataAndLayout(Galleri, {
+  query: graphql`
+    query galleri_Query {
+      currentMetaData {
+        year
+        id
+        boardMembers {
+          ...BoardMember_user
+          id
+          role
+          fullName
+        }
+      }
+
+      omItdagene: page(slug: "om-itdagene") {
+        ...PageView_page
+        ...metadata_metadata
+      }
+    }
+  `,
+  variables: {},
+  layout: ({ props, error }: WithDataDataProps<omItdagene_QueryResponse>) => ({
+    responsive: true,
+    metadata: props ? props.omItdagene : undefined,
+  }),
+});

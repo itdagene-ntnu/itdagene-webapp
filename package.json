@@ -45,6 +45,7 @@
     "relay-hooks": "3.7.0",
     "relay-runtime": "^10.1.2",
     "seedrandom": "^3.0.5",
+    "sharp": "^0.31.3",
     "styled-components": "^5.3.6",
     "video-react": "^0.15.0"
   },
