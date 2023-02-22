@@ -62,8 +62,6 @@ const SingleImg = styled(Image)`
 
   width: 100%;
   height: 100%;
-  width: auto;
-
   object-fit: cover;
 
   &:hover {
@@ -75,10 +73,8 @@ const SingleImg = styled(Image)`
 `;
 
 const FullScreenImageDiv = styled('div')`
-  width: 850px;
+  width: 1100px;
   cursor: pointer;
-  width: auto;
-
   width: cals(100%-40px);
   height: cals(100%-40px);
   display: flex;
