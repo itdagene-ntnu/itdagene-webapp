@@ -18,7 +18,7 @@ type Props = {
 
 const Image = styled(ZoomImage)`
   width: 270px;
-  height: 100px;
+  height: 103px;
   max-width: calc(100% - 30px);
   object-fit: cover;
   margin: 40px auto 0 auto;
@@ -69,7 +69,10 @@ const MainCollaborator = ({
       <FlexItem>
         <FlexItem>
           <a href={company.url || ''}>
-            <HSPLogo src={company.logo || ''} alt="Logo" />
+            <HSPLogo
+              src={'https://cdn.itdagene.no/Computas_logo_liggende.jpg'}
+              alt="Logo"
+            />
           </a>
         </FlexItem>
         <CenterIt text>
@@ -84,7 +87,9 @@ const MainCollaborator = ({
 
           {company.intro && <ReactMarkdown source={company.intro} />}
 
-          <h3>↓ Ta en titt på denne filmen ↓</h3>
+          <h3>
+            ↓ Ta en titt på hvordan sommerjobb i {company.name} kan se ut ↓
+          </h3>
 
           {company.video ? (
             <Player
