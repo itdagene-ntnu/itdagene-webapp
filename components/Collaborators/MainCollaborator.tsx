@@ -35,7 +35,7 @@ const fragmentSpec = graphql`
   fragment MainCollaborator_company on MainCollaborator {
     id
     name
-    logo(width: 270, height: 100)
+    logo(width: 1000, height: 1000)
     url
     description
     video
@@ -69,10 +69,7 @@ const MainCollaborator = ({
       <FlexItem>
         <FlexItem>
           <a href={company.url || ''}>
-            <HSPLogo
-              src={'https://cdn.itdagene.no/Computas_logo_liggende.jpg'}
-              alt="Logo"
-            />
+            <HSPLogo src={company.logo || ''} alt="Logo" />
           </a>
         </FlexItem>
         <CenterIt text>
@@ -92,11 +89,7 @@ const MainCollaborator = ({
           </h3>
 
           {company.video ? (
-            <Player
-              playsInline
-              poster={company.poster || company.logo}
-              src={company.video}
-            />
+            <Player playsInline poster={company.logo} src={company.video} />
           ) : (
             'Missing main collaborator video!'
           )}
