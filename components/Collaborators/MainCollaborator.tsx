@@ -63,7 +63,7 @@ const MainCollaborator = ({
     <Flex flexDirection="column" justifyContent="space-around">
       <FlexItem>
         <CenterIt text>
-          <Title>Hovedsamarbeidspartner</Title>
+          <Title>Vår hovedsamarbeidspartner</Title>
         </CenterIt>
       </FlexItem>
       <FlexItem>
