@@ -42,7 +42,7 @@ const items: MenuItem[] = [
   //{ key: 'home', name: 'Hjem', to: '/' },
   { key: 'program', name: 'Program', to: '/program' },
   { key: 'joblistings', name: 'Jobb', to: '/jobb' },
-  { key: 'for-bedrifter', name: 'For bedrifter', to: '/info/for-bedrifter' },
+  { key: 'for-bedrifter', name: 'For bedrifter', to: '/company-information' },
   {
     key: 'info',
     name: 'Info',
