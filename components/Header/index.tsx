@@ -47,7 +47,7 @@ const items: MenuItem[] = [
     key: 'info',
     name: 'Info',
     to: '/info/[side]',
-    as: '/info/for-bedrifter',
+    as: '/info/bankett-copy',
   },
   { key: 'galleri', name: 'Galleri', to: '/galleri' },
   { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
