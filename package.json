@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@next/bundle-analyzer": "^10.0.3",
+    "@nextui-org/react": "^1.0.0-beta.12",
     "@sentry/browser": "^6.17.9",
     "@sentry/node": "^5.29.2",
     "@sentry/webpack-plugin": "^1.18.6",
