@@ -2,6 +2,7 @@ import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
 import * as Sentry from '@sentry/node';
+// import { NextUIProvider } from '@nextui-org/react';
 
 // All css imports go here
 import './test.css';
@@ -31,6 +32,7 @@ export default class MyApp extends App {
             content="width=device-width, initial-scale=1, maximum-scale=1"
           />
         </Head>
+
         <Component {...modifiedPageProps} />
       </>
     );

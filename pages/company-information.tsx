@@ -6,6 +6,7 @@ import {
 import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
 import { graphql } from 'react-relay';
 import styled from 'styled-components';
+import { Collapse, Text, Link } from '@nextui-org/react';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -21,12 +22,35 @@ const companyInformation = ({
   return (
     <>
       <Title>For bedrifter</Title>
-      <div>
-        itDAGENE ønsker å vise studentene på Gløshaugen hva teknologiverden har
-        å by på, og vi håper derfor at deres bedrift vil være med å bidra til å
-        gjøre itDAGENE til en av Norges beste arbeidslivsmesser! Har du noen
-        spørsmål er det bare å ta kontakt via mail: bedrift@itdagene.no
-      </div>
+      <Collapse.Group>
+        <Collapse title="Når er fristen for å melde seg på?">
+          <Text>
+            itDAGENE 2023 er fullbooket, men dere kan sende en mail til
+            bedrift@itdagene.no så kontakter vi dere for å melde interesse for
+            2024.
+          </Text>
+        </Collapse>
+        <Collapse title="Hva koster det å delta på itDAGENE?">
+          <Text>
+            For informasjon om priser på pakketilbudene og arrangementene vi
+            tilbyr, ta kontakt med{' '}
+            <a href="mailto:styret@itdagene.no">styret@itdagene.no </a>.
+          </Text>
+        </Collapse>
+        <Collapse title="Hvor arrangeres itDAGENE?">
+          <Text>itDAGENE arrangeres i underetasjen U1 på Realfagsbygget.</Text>
+        </Collapse>
+        <Collapse title="Hvem deltar på itDAGENE?">
+          <Text>
+            itDAGENE arrangeres av studenter ved Datateknologi og
+            Kommunikasjonsteknologi & digital sikkerhet, men alle IT-studenter
+            på Gløshaugen er velkommen!
+          </Text>
+        </Collapse>
+        <Collapse title="Når står bedriftene på stand">
+          <Text>Standområdet er åpent fra 10.00 til 16.00 begge dager.</Text>
+        </Collapse>
+      </Collapse.Group>
     </>
   );
 };
