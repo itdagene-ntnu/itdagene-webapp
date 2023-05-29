@@ -52,7 +52,7 @@ const Interest = ({ form }: Props): JSX.Element => (
       </FlexItem>
     </Flex>
     <CenterIt text>
-      <StyledLink href={form} target="_blank">
+      <StyledLink href={form} target="_blank" rel="noreferrer">
         <Image
           style={{ width: 50 }}
           src="https://cdn.onlinewebfonts.com/svg/img_193664.png"

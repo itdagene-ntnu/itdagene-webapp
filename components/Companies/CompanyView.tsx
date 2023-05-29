@@ -22,7 +22,7 @@ const Image = styled(ZoomImage)`
 
 const CompanyView = ({ company }: Props): JSX.Element | null =>
   company.logo ? (
-    <a href={company.url || undefined}>
+    <a href={company.url || undefined} target="_blank" rel="noreferrer">
       <Image src={company.logo || ''} />
     </a>
   ) : null;

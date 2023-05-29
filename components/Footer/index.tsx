@@ -83,10 +83,23 @@ const Footer = (): JSX.Element => (
             </li>
             <li>
               Github •{' '}
-              <a href="https://github.com/itdagene-ntnu">itdagene-ntnu</a>
+              <a
+                href="https://github.com/itdagene-ntnu"
+                target="_blank"
+                rel="noreferrer"
+              >
+                itdagene-ntnu
+              </a>
             </li>
             <li>
-              Docs • <a href="https://docs.itdagene.no">docs.itdagene.no</a>
+              Docs •{' '}
+              <a
+                href="https://docs.itdagene.no"
+                target="_blank"
+                rel="noreferrer"
+              >
+                docs.itdagene.no
+              </a>
             </li>
           </NoBulletUl>
         </RightBorderFlex>

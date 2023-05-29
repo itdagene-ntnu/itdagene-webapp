@@ -48,7 +48,7 @@ const Collaborator = ({
     <div
       style={{ flex: 1, maxWidth: '100%', flexBasis: 350, padding: '0 10px' }}
     >
-      <a href={company.url || ''}>
+      <a href={company.url || ''} target="_blank" rel="noreferrer">
         <Image src={company.logo || ''} />
       </a>
       {showDescription && <ReactMarkdown source={company.description} />}
