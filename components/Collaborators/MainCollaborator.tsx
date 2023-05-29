@@ -68,7 +68,7 @@ const MainCollaborator = ({
       </FlexItem>
       <FlexItem>
         <FlexItem>
-          <a href={company.url || ''}>
+          <a href={company.url || ''} target="_blank" rel="noreferrer">
             <HSPLogo src={company.logo || ''} alt="Logo" />
           </a>
         </FlexItem>

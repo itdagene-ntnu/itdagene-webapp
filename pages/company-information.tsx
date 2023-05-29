@@ -21,13 +21,13 @@ const companyInformation = ({
 }: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => {
   return (
     <>
-      <Title>For bedrifter</Title>
+      <Title>Ofte stile spørsmål</Title>
       <Collapse.Group>
         <Collapse title="Når er fristen for å melde seg på?">
           <Text>
-            itDAGENE 2023 er fullbooket, men dere kan sende en mail til
-            bedrift@itdagene.no så kontakter vi dere for å melde interesse for
-            2024.
+            itDAGENE 2023 er fullbooket, men dere kan sende en mail til {}
+            <a href="mailto:bedrift@itdagene.no">bedrift@itdagene.no</a> så
+            kontakter vi dere for å melde interesse for 2024.
           </Text>
         </Collapse>
         <Collapse title="Hva koster det å delta på itDAGENE?">
