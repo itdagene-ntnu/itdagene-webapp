@@ -184,7 +184,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />
             {joblisting.url && (
-              <a href={joblisting.url} target='_blank' rel='noreferrer'>
+              <a href={joblisting.url} target="_blank" rel="noreferrer">
                 <h3>Søk her</h3>
               </a>
             )}
