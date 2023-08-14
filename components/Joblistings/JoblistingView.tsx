@@ -164,9 +164,6 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <div style={{ maxWidth: 1000, margin: 'auto' }}>
       <Title>{joblisting.title}</Title>
     </div>
-    <CompanyDesc style={{ maxWidth: 960, fontSize: '1.3rem' }}>
-      <ReactMarkdown source={joblisting.company.description} />
-    </CompanyDesc>
     <Flex flexWrap="wrap-reverse">
       <FlexItem flexBasis="600px" flexGrow="3">
         <Flex flexDirection="column">
@@ -187,7 +184,7 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
           <div style={{ width: '100%' }}>
             <List joblisting={joblisting} />
             {joblisting.url && (
-              <a href={joblisting.url}>
+              <a href={joblisting.url} target="_blank" rel="noreferrer">
                 <h3>Søk her</h3>
               </a>
             )}
