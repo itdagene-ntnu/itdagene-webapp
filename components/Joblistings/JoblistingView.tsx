@@ -167,6 +167,17 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <Flex flexWrap="wrap-reverse">
       <FlexItem flexBasis="600px" flexGrow="3">
         <Flex flexDirection="column">
+          {joblisting.image && (
+            <div style={{ maxWidth: 600, margin: 'auto' }}>
+              <img
+                src={
+                  'https://itdagene.no/uploads/' + joblisting.image || undefined
+                }
+                style={{ display: 'block', margin: '25px auto 45px' }}
+                alt={`Logo til ${joblisting.company.name}`}
+              />
+            </div>
+          )}
           <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
 
           {joblisting.videoUrl && (
@@ -209,6 +220,7 @@ export default createFragmentContainer(Joblisting, {
       towns {
         name
       }
+      image
       deadline
       title
       type
