@@ -156,9 +156,15 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     )}
     <div style={{ maxWidth: 800, margin: 'auto' }}>
       <img
-        src={joblisting.company.logo || undefined}
+        src={
+          joblisting.image
+            ? 'https://itdagene.no/uploads/' + joblisting.image || undefined
+            : joblisting.company.logo || undefined
+        }
         style={{ display: 'block', margin: '25px auto 45px' }}
-        alt={`Logo til ${joblisting.company.name}`}
+        alt={`Logo til ${
+          joblisting.image ? joblisting.image : joblisting.company.name
+        }`}
       />
     </div>
     <div style={{ maxWidth: 1000, margin: 'auto' }}>
@@ -167,17 +173,6 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <Flex flexWrap="wrap-reverse">
       <FlexItem flexBasis="600px" flexGrow="3">
         <Flex flexDirection="column">
-          {joblisting.image && (
-            <div style={{ maxWidth: 600, margin: 'auto' }}>
-              <img
-                src={
-                  'https://itdagene.no/uploads/' + joblisting.image || undefined
-                }
-                style={{ display: 'block', margin: '25px auto 45px' }}
-                alt={`Logo til ${joblisting.company.name}`}
-              />
-            </div>
-          )}
           <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
 
           {joblisting.videoUrl && (
