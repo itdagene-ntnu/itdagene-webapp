@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import Flex from '../Styled/Flex';
+import { Player } from 'video-react';
 
 type Props = {
   page: PageView_page;
@@ -52,21 +53,39 @@ const PageView = ({
   hideDate,
   hideContent,
   hideTitle,
-}: Props): JSX.Element => (
-  <>
-    {!hideTitle && <Title>{page.title}</Title>}
-    {!hideDate && (
-      <LastUpdate>
-        {dayjs(page.dateSaved as string).format(`DD. MMMM, YYYY`)}
-      </LastUpdate>
-    )}
-    {!hideContent && (
-      <Flex flexDirection="column">
-        <ReactMarkdown renderers={renderers} source={page.content} />
-      </Flex>
-    )}
-  </>
-);
+}: Props): JSX.Element => {
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    boxShadow: 24,
+    p: 1,
+  };
+  return (
+    <>
+      {!hideTitle && <Title>{page.title}</Title>}
+      {!hideDate && (
+        <LastUpdate>
+          {dayjs(page.dateSaved as string).format(`DD. MMMM, YYYY`)}
+        </LastUpdate>
+      )}
+      {!hideContent && (
+        <Flex flexDirection="column">
+          <ReactMarkdown renderers={renderers} source={page.content} />
+        </Flex>
+      )}
+      {page.videoFile && (
+        <Player
+          fluid={false}
+          height={600}
+          playsInline
+          src={'https://itdagene.no/uploads/' + page.videoFile}
+        />
+      )}
+    </>
+  );
+};
 
 export default createFragmentContainer(PageView, {
   page: graphql`
@@ -77,6 +96,7 @@ export default createFragmentContainer(PageView, {
       title
       dateSaved
       dateCreated
+      videoFile
     }
   `,
 });
