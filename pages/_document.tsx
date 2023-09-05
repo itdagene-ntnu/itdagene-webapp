@@ -10,7 +10,7 @@ import * as Sentry from '@sentry/node';
 import { ServerStyleSheet } from 'styled-components';
 import * as React from 'react';
 import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
-
+import Script from 'next/script';
 export default class Default extends Document<{
   styleTags: Array<React.ReactElement<{}>>;
 }> {
@@ -151,6 +151,10 @@ export default class Default extends Document<{
           <link rel="manifest" href="/static/manifest.json" />
           <link
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+          <link
+            rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
             integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
             crossOrigin="anonymous"
@@ -161,14 +165,16 @@ export default class Default extends Document<{
         <body>
           <Main />
           <NextScript />
-          <script
+          <Script
             type="module"
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-          ></script>
-          <script
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+            strategy="beforeInteractive"
+          />
+          <Script
             noModule
-            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-          ></script>
+            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+            strategy="beforeInteractive"
+          />
         </body>
       </Html>
     );
