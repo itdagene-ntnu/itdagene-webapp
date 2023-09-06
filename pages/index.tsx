@@ -18,10 +18,17 @@ import CompactProgram from '../components/CompactProgram';
 import MainCollaborator from '../components/Collaborators/MainCollaborator';
 import FlexItem from '../components/Styled/FlexItem';
 import Flex from '../components/Styled/Flex';
+import { Player } from 'video-react';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
 const ReadMore = styled('h4')``;
+
+const CustomPlayer = styled.div`
+  @media only screen and (max-width: 767px) {
+    display: none;
+  }
+`;
 
 const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
   const frontpage =
@@ -29,28 +36,24 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
   return (
     <>
       <Flex
-        flexWrap="wrap-reverse"
-        justifyContent="space-around"
-        style={{ alignItems: 'center' }}
+        justifyContent="space-between"
+        flexDirection="row"
+        style={{ alignItems: 'center', gap: '2em' }}
       >
         <FlexItem flexBasis="700px" flexGrow="1">
           {frontpage && <PageView hideDate page={frontpage} />}
         </FlexItem>
-        <FlexItem>
-          <CenterIt>
-            <Image
-              style={{ width: 350, maxWidth: '100%' }}
-              src="https://cdn.itdagene.no/itdagene-svart.png"
-              alt="itDAGENE logo"
-            />
-          </CenterIt>
-        </FlexItem>
+
+        <CustomPlayer>
+          <Player
+            playsInline
+            src={'https://cdn.itdagene.no/it.mp4'}
+            fluid={false}
+            width={280}
+            height={500}
+          />
+        </CustomPlayer>
       </Flex>
-      <CenterIt text>
-        <Link href="/om-itdagene">
-          <ReadMore>Les mer</ReadMore>
-        </Link>
-      </CenterIt>
     </>
   );
 };
