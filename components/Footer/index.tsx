@@ -110,7 +110,7 @@ const Footer = (): JSX.Element => (
             </li>
             <li>
               itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
-              fremtidige arbeidsgivere. Messen arrengeres én gang i året av
+              fremtidige arbeidsgivere. Messen arrangeres én gang i året av
               data- og kommunikasjonsteknologi studenter ved NTNU i Trondheim.
               Overskuddet går til studentenes ekskursjon i tredjeklasse.
             </li>
