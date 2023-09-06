@@ -104,8 +104,8 @@ const CountdownComponent = (props: {
 }): JSX.Element => (
   <Countdown
     date={dayjs(props.currentMetaData.startDate)
-      .add(9, 'hour')
-      .add(30, 'minute')
+      .add(10, 'hour')
+      .add(0, 'minute')
       .toDate()}
     renderer={renderer}
   />
