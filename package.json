@@ -19,6 +19,8 @@
   "author": "Odin Ugedal <odin@ugedal.com>",
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "@next/bundle-analyzer": "^10.0.3",
     "@nextui-org/react": "^1.0.0-beta.12",
     "@sentry/browser": "^6.17.9",

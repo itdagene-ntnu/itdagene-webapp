@@ -1,145 +1,54 @@
 import React, { useState } from 'react';
 import { groupBy, sortBy } from 'lodash';
 import dayjs from 'dayjs';
-import ReactMarkdown from 'react-markdown';
+
 import styled from 'styled-components';
 import { graphql, createFragmentContainer } from 'react-relay';
-import {
-  Heading,
-  Blockquote,
-  ThematicBreak,
-  MarkdownList,
-  Paragraph,
-} from '../MarkdownRenderer';
+
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
 import { ProgramView_stands } from '../../__generated__/ProgramView_stands.graphql';
-import Link from 'next/link';
 import EventsToggle from './EventsToggle';
-import { ArrayElement } from '../../utils/types';
+
 import { eventTime, toDayjs } from '../../utils/time';
 import Flex from '../Styled/Flex';
+import Timeline from '@material-ui/lab/Timeline';
+import TimelineItem from '@material-ui/lab/TimelineItem';
+import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
+import TimelineConnector from '@material-ui/lab/TimelineConnector';
+import TimelineContent from '@material-ui/lab/TimelineContent';
+import TimelineDot from '@material-ui/lab/TimelineDot';
+import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
+import Typography from '@material-ui/core/Typography';
 
-const Title = styled.h2`
-  position: relative;
-  margin: 0px;
-  &::after {
-    content: ' ';
-    position: absolute;
-    background-color: #f5f5f5;
-    border: 3.5px solid #0d7bb4;
-    width: 15px;
-    height: 15px;
-    bottom: 9px;
-    left: -63.2px;
-    box-shadow: -2px 0px 5px 2px rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-  }
-  @media only screen and (max-width: 991px) {
-    font-size: 1.7em;
-
-    &::after {
-      bottom: 2px;
-    }
+const TimelineDate = styled(TimelineOppositeContent)`
+  @media only screen and (max-width: 767px) {
+    display: none;
   }
 `;
 
+const MobileViewDate = styled(Typography)`
+  display: none;
+  @media only screen and (max-width: 767px) {
+    display: block;
+  }
+`;
+
+const Title = styled('h1')`
+  font-weight: bold;
+  font-smoothing: antialiased;
+  font-size: 3rem;
+  margin-bottom: 3rem;
+`;
 const DateTitle = styled.h1`
   margin: 0px 0px 5px 0px;
-  font-weight: 300;
-`;
+  font-size: 1.5em;
+  font-weight: 900;
 
-const GroupedDateEvent = styled.div`
-  display: flex;
-  margin: 0px 40px 40px 0;
-  flex-direction: column;
-  flex: 1 1 500px;
-  @media only screen and (max-width: 991px) {
-    flex-direction: column;
-    padding: 0px 0px;
-    margin: 0px 0px 10px 0;
+  text-align: center;
+  @media only screen and (max-width: 767px) {
+    text-align: left;
   }
 `;
-
-const CenterFlex = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  margin-top: 20px;
-  @media only screen and (max-width: 991px) {
-    padding: 0px;
-    margin: 0px;
-  }
-`;
-
-const GroupedEvent = styled.div`
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
-  border-radius: 0px 10px 10px 0px;
-  padding: 0px 50px 30px 50px;
-  border-left: 4px solid #0d7bb4;
-  @media only screen and (max-width: 991px) {
-    margin-bottom: 50px;
-  }
-`;
-
-const EventTimePlaceInfo = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-`;
-
-const InfoElement = styled.div`
-  margin-right: 15px;
-`;
-
-const HostingCompanyLink = styled.a`
-  font-weight: 500;
-  cursor: pointer;
-`;
-
-const HostingCompanyNoLink = styled.span`
-  font-weight: 400;
-`;
-
-const EventInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 30px;
-`;
-
-interface LocationLinkProps {
-  event: ArrayElement<ProgramView_events>;
-  stands: ProgramView_stands | null;
-  isLink?: boolean;
-}
-
-const Location = ({
-  event,
-  stands,
-  isLink = false,
-}: LocationLinkProps): JSX.Element => {
-  const standSlug = stands?.find(
-    (stand) => stand.company.id === event.company?.id
-  )?.slug;
-
-  const linkLocation =
-    event.type === 'A_7' ? standSlug && `/stands/${standSlug}` : '/stands';
-
-  return isLink && linkLocation ? (
-    <InfoElement>
-      <Link href={linkLocation} legacyBehavior>
-        <HostingCompanyLink>{`📍 ${event.location}`}</HostingCompanyLink>
-      </Link>
-    </InfoElement>
-  ) : (
-    <InfoElement>
-      <HostingCompanyNoLink>{`📍 ${event.location}`}</HostingCompanyNoLink>
-    </InfoElement>
-  );
-};
 
 type Props = {
   events: ProgramView_events;
@@ -170,46 +79,62 @@ const ProgramView = (props: Props): JSX.Element => {
           setShowPromoted={setShowPromoted}
         />
       )}
-      <CenterFlex>
+      <Title>Program</Title>
+      <div>
         {sortedKeys.map((k) => (
-          <GroupedDateEvent key={k}>
+          <div key={k}>
             <DateTitle>{dayjs(k).format('dddd DD.MM').toUpperCase()}</DateTitle>
-            <GroupedEvent>
+            <Timeline>
               {groupedEvents[k].map((event) => (
-                <EventInfo key={event.id}>
-                  <Title>{event.title}</Title>
-                  <EventTimePlaceInfo>
-                    <InfoElement>{`🕐 ${eventTime({
+                <TimelineItem key={k + event.id}>
+                  <TimelineDate
+                    style={{
+                      margin: 'auto 0',
+                      paddingLeft: '4rem',
+                      paddingRight: '4rem',
+                      color: 'grey',
+                    }}
+                  >
+                    {`${eventTime({
                       start: toDayjs(event.date, event.timeStart),
                       end: toDayjs(event.date, event.timeEnd),
-                    })}`}</InfoElement>
-                    <Location
-                      event={event}
-                      stands={props.stands}
-                      isLink={props.useLinks}
-                    />
-                    {event.company && (
-                      <HostingCompanyNoLink>{`🏢 ${event.company.name}`}</HostingCompanyNoLink>
-                    )}
-                  </EventTimePlaceInfo>
-                  <br />
-                  <ReactMarkdown
-                    source={event.description}
-                    escapeHtml={false}
-                    renderers={{
-                      heading: Heading,
-                      blockquote: Blockquote,
-                      thematicBreak: ThematicBreak,
-                      list: MarkdownList,
-                      paragraph: Paragraph,
+                    })}`}
+                  </TimelineDate>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="inherit"></TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent
+                    style={{
+                      paddingTop: '5px',
+                      paddingBottom: '5px',
+                      paddingLeft: '4rem',
+                      paddingRight: '4rem',
                     }}
-                  />
-                </EventInfo>
+                  >
+                    <Typography variant="h5" component="span">
+                      {event.title}
+                    </Typography>
+                    <Typography />
+                    {/* eslint-disable-next-line*/}
+                    {/* @ts-ignore*/}
+                    <ion-icon
+                      style={{ color: '#156493' }}
+                      name="location-sharp"
+                    />
+                    {event.location}
+                    <MobileViewDate>{`${eventTime({
+                      start: toDayjs(event.date, event.timeStart),
+                      end: toDayjs(event.date, event.timeEnd),
+                    })}`}</MobileViewDate>
+                  </TimelineContent>
+                </TimelineItem>
               ))}
-            </GroupedEvent>
-          </GroupedDateEvent>
+            </Timeline>
+          </div>
         ))}
-      </CenterFlex>
+      </div>
     </Flex>
   );
 };
