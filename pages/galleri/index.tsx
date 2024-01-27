@@ -1,5 +1,11 @@
 import styled from 'styled-components';
-import { ChangeEvent, ReactElement, useCallback, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import Image from 'next/image';
 import { itdageneBlue } from '../../utils/colors';
 import {
@@ -59,7 +65,6 @@ const SingleImg = styled(Image)`
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
-
   &:hover {
     position: relative;
     transform: scale(1.025);
@@ -106,7 +111,7 @@ const Galleri = ({
   };
 
   // Previous Image
-  const prevSlide = ():void => {
+  const prevSlide = (): void => {
     slideNumber === 0
       ? setSlideNumber(images.length - 1)
       : setSlideNumber(slideNumber - 1);
@@ -196,10 +201,7 @@ const Galleri = ({
             left="40px"
             onClick={prevSlide}
           />
-          <StyledButton 
-            name="arrow-forward-outline" 
-            onClick={nextSlide} 
-          />
+          <StyledButton name="arrow-forward-outline" onClick={nextSlide} />
           <div>
             <FullScreenImage
               src={`https://cdn.itdagene.no/${images[slideNumber]}`}
