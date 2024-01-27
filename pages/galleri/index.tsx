@@ -1,6 +1,5 @@
-import Layout, { Metadata } from '../../components/Layout';
 import styled from 'styled-components';
-import { useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, ReactElement, useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { itdageneBlue } from '../../utils/colors';
 import {
@@ -56,34 +55,17 @@ const Single = styled('div')`
 `;
 
 const SingleImg = styled(Image)`
-  max-width: 100%;
+  object-fit: cover;
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
-  width: 100%;
-  height: 100%;
-  width: auto;
-
-  object-fit: cover;
 
   &:hover {
     position: relative;
-    transform: scale(1.11);
+    transform: scale(1.025);
     z-index: 99;
     transition: transform 0.2s ease-in-out;
   }
-`;
-
-const FullScreenImageDiv = styled('div')`
-  width: 850px;
-  cursor: pointer;
-  width: auto;
-
-  width: cals(100%-40px);
-  height: cals(100%-40px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const FullScreenImage = styled(Image)`
@@ -113,25 +95,25 @@ const Galleri = ({
   const [slideNumber, setSlideNumber] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
-  const handleOpenModal = (index: number) => {
+  const handleOpenModal = (index: number): void => {
     setSlideNumber(index);
     setOpenModal(true);
   };
 
   // Close Modal
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setOpenModal(false);
   };
 
   // Previous Image
-  const prevSlide = () => {
+  const prevSlide = ():void => {
     slideNumber === 0
       ? setSlideNumber(images.length - 1)
       : setSlideNumber(slideNumber - 1);
   };
 
   // Next Image
-  const nextSlide = () => {
+  const nextSlide = (): void => {
     slideNumber + 1 === images.length
       ? setSlideNumber(0)
       : setSlideNumber(slideNumber + 1);
@@ -142,20 +124,25 @@ const Galleri = ({
     top = '50%',
     right = '40px',
     left,
+    rotate,
     onClick,
   }: {
     name: string;
     top?: string;
     right?: string;
     left?: string;
+    rotate?: string;
     onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  }) => {
+  }): ReactElement => {
     return (
       <>
         {/* eslint-disable-next-line*/}
         {/* @ts-ignore*/}
         <ion-icon
-          onClick={onClick}
+          onClick={(event: ChangeEvent<HTMLInputElement>): void => {
+            event.stopPropagation();
+            onClick(event);
+          }}
           style={{
             position: 'fixed',
             fontSize: '65px',
@@ -163,6 +150,8 @@ const Galleri = ({
             top: top,
             right: right,
             left: left,
+            cursor: 'pointer',
+            transform: rotate ? `rotate(${rotate})` : 'none',
           }}
           name={name}
         />
@@ -173,6 +162,7 @@ const Galleri = ({
   const changeImageOnKey = useCallback(
     (event) => {
       if (event.key === 'Escape') {
+        event.preventDefault();
         handleCloseModal();
       }
       if (event.key === 'ArrowRight') {
@@ -187,17 +177,18 @@ const Galleri = ({
 
   useEffect(() => {
     document.addEventListener('keydown', changeImageOnKey);
-    return function cleanup() {
+    return function cleanup(): void {
       document.removeEventListener('keydown', changeImageOnKey);
     };
   });
   return (
     <>
       {openModal && (
-        <SliderWrap>
+        <SliderWrap onClick={(): void => handleCloseModal()}>
           <StyledButton
-            name="close-circl d-outline"
+            name="add-outline"
             top="40px"
+            rotate="45deg"
             onClick={handleCloseModal}
           />
           <StyledButton
@@ -205,22 +196,25 @@ const Galleri = ({
             left="40px"
             onClick={prevSlide}
           />
-          <StyledButton name="arrow-forward-outline" onClick={nextSlide} />
-          <FullScreenImageDiv onClick={handleCloseModal}>
+          <StyledButton 
+            name="arrow-forward-outline" 
+            onClick={nextSlide} 
+          />
+          <div>
             <FullScreenImage
               src={`https://cdn.itdagene.no/${images[slideNumber]}`}
               alt={images[slideNumber]}
               width={850}
               height={330}
             />
-          </FullScreenImageDiv>
+          </div>
         </SliderWrap>
       )}
 
       <Title>Galleri</Title>
       <GalleryWrap>
         {images.map((slide, index) => (
-          <Single key={slide} onClick={() => handleOpenModal(index)}>
+          <Single key={slide} onClick={(): void => handleOpenModal(index)}>
             <SingleImg
               src={`https://cdn.itdagene.no/${slide}`}
               alt={slide}
