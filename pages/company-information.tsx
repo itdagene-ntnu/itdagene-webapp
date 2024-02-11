@@ -25,9 +25,8 @@ const companyInformation = ({
       <Collapse.Group>
         <Collapse title="Når er fristen for å melde seg på?">
           <Text>
-            itDAGENE 2023 er fullbooket, men dere kan sende en mail til {}
-            <a href="mailto:bedrift@itdagene.no">bedrift@itdagene.no</a> så
-            kontakter vi dere for å melde interesse for 2024.
+            Fristen er 15. mars 2024. Interesse kan bli meldt ved å gå inn på{' '}
+            <a href="https://interesse.itdagene.no/">interesse.itdagene.no</a>.
           </Text>
         </Collapse>
         <Collapse title="Hva koster det å delta på itDAGENE?">
