@@ -20,6 +20,8 @@ import TimelineDot from '@material-ui/lab/TimelineDot';
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import Typography from '@material-ui/core/Typography';
 
+import { Image, Divider } from '../Styled';
+
 const TimelineDate = styled(TimelineOppositeContent)`
   @media only screen and (max-width: 767px) {
     display: none;
@@ -50,6 +52,10 @@ const DateTitle = styled.h1`
   }
 `;
 
+const UnderDevelopmentPlaceholder = styled('img')`
+  margin-bottom: 1rem;
+`;
+
 type Props = {
   events: ProgramView_events;
   stands: ProgramView_stands | null;
@@ -59,6 +65,15 @@ type Props = {
 
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState(false);
+
+  if (props.events.length === 0) {
+    return (
+      <UnderDevelopmentPlaceholder
+        alt="Programmet og nettsiden for itDAGENE 2024 er for tiden under planlegging!"
+        src="/static/under-development-placeholder.png"
+      />
+    );
+  }
 
   const filteredEvents = props.events.filter((event) =>
     showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
