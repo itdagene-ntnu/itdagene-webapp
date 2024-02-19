@@ -21,7 +21,7 @@ const companyInformation = ({
 }: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => {
   return (
     <>
-      <Title>Ofte stile spørsmål</Title>
+      <Title>Ofte stilte spørsmål</Title>
       <Collapse.Group>
         <Collapse title="Når er fristen for å melde seg på?">
           <Text>
