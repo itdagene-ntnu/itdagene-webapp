@@ -35,7 +35,7 @@ const Interest = ({ form }: Props): JSX.Element => (
         <Title>Interessert i å delta? </Title>
         <p>
           Interesseskjemaet for itDAGENE 2024 er nå åpent. Frist for å melde
-          interesse er <b>15. mars 2024</b>. Vi ønsker å påpeke at dette kun er
+          interesse er <b>5. april 2024</b>. Vi ønsker å påpeke at dette kun er
           for å kartlegge interesse og at det ikke er et påmeldingsskjema. Under
           finner dere en lenke til vårt nye interesseskjema hvor din bedrift kan
           melde sin interesse for itDAGENE 2024.

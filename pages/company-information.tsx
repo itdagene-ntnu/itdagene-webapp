@@ -1,12 +1,12 @@
+import { Collapse, Text } from '@nextui-org/react';
+import { graphql } from 'react-relay';
+import styled from 'styled-components';
+import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
 import {
   withDataAndLayout,
   WithDataAndLayoutProps,
   WithDataDataProps,
 } from '../lib/withData';
-import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
-import { graphql } from 'react-relay';
-import styled from 'styled-components';
-import { Collapse, Text, Link } from '@nextui-org/react';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -25,7 +25,7 @@ const companyInformation = ({
       <Collapse.Group>
         <Collapse title="Når er fristen for å melde seg på?">
           <Text>
-            Fristen er 15. mars 2024. Interesse kan bli meldt ved å gå inn på{' '}
+            Fristen er 5. april 2024. Interesse kan bli meldt ved å gå inn på{' '}
             <a href="https://interesse.itdagene.no/">interesse.itdagene.no</a>.
           </Text>
         </Collapse>
