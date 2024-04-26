@@ -21,7 +21,7 @@ type Props = {
 };
 
 const BoardMember = ({
-  user: { role, fullName, photo, email },
+  user: { role, fullName, photo, email, linkedin },
 }: Props): JSX.Element => (
   <Card>
     <CenterIt text>
@@ -29,9 +29,18 @@ const BoardMember = ({
       <Flex flexDirection="column">
         <h4 style={{ fontSize: 15, marginBottom: 0 }}>{fullName}</h4>
         <i>{role}</i>
-        <a style={{ fontSize: '12px' }} href={`mailto:${email}`}>
-          {email}
-        </a>
+        <Flex justifyContent="center" alignItems="center" gap="10px">
+          <a style={{ height: '40px', fontSize: '40px' }} href={`mailto:${email}`}>
+            {/* @ts-ignore*/}
+            <ion-icon name="mail" />
+          </a>
+          { linkedin &&
+            <a style={{ height: '32px', fontSize: '32px' }} href={`https://${linkedin.includes("www.linkedin.com/in/") ? linkedin : `www.linkedin.com/in/${linkedin}`}`}>
+              {/* @ts-ignore*/}
+              <ion-icon name="logo-linkedin" />
+            </a>
+          }
+        </Flex>
       </Flex>
     </CenterIt>
   </Card>
@@ -45,6 +54,7 @@ export default createFragmentContainer(BoardMember, {
       fullName
       role
       email
+      linkedin
     }
   `,
 });

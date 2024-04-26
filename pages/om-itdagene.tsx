@@ -56,6 +56,7 @@ export default withDataAndLayout(Index, {
           id
           role
           fullName
+          linkedin
         }
       }
 
