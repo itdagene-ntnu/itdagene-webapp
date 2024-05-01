@@ -30,16 +30,26 @@ const BoardMember = ({
         <h4 style={{ fontSize: 15, marginBottom: 0 }}>{fullName}</h4>
         <i>{role}</i>
         <Flex justifyContent="center" alignItems="center" gap="10px">
-          <a style={{ height: '40px', fontSize: '40px' }} href={`mailto:${email}`}>
+          <a
+            style={{ height: '40px', fontSize: '40px' }}
+            href={`mailto:${email}`}
+          >
             {/* @ts-ignore*/}
             <ion-icon name="mail" />
           </a>
-          { linkedin &&
-            <a style={{ height: '32px', fontSize: '32px' }} href={`https://${linkedin.includes("www.linkedin.com/in/") ? linkedin : `www.linkedin.com/in/${linkedin}`}`}>
+          {linkedin && (
+            <a
+              style={{ height: '32px', fontSize: '32px' }}
+              href={`https://${
+                linkedin.includes('www.linkedin.com/in/')
+                  ? linkedin
+                  : `www.linkedin.com/in/${linkedin}`
+              }`}
+            >
               {/* @ts-ignore*/}
               <ion-icon name="logo-linkedin" />
             </a>
-          }
+          )}
         </Flex>
       </Flex>
     </CenterIt>
