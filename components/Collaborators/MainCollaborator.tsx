@@ -21,11 +21,11 @@ const Image = styled(ZoomImage)`
   height: 103px;
   max-width: calc(100% - 30px);
   object-fit: cover;
-  margin: 40px auto 0 auto;
   padding: 15px;
 `;
 
 const Title = styled('h1')`
+  margin: 0;
   @media only screen and (max-width: 767px) {
     font-size: 1.5em;
   }
@@ -47,7 +47,7 @@ const fragmentSpec = graphql`
 const HSPLogo = styled(Image)`
   width: 450px;
   max-width: 100%;
-  margin-top: 10px;
+  margin: 20px auto;
 `;
 
 const MainCollaborator = ({
@@ -73,7 +73,7 @@ const MainCollaborator = ({
           </a>
         </FlexItem>
         <CenterIt text>
-          <p>
+          <p style={{ fontSize: 20 }}>
             <b>
               Vi er stolte av å kunne presentere {company.name} som
               hovedsamarbeidspartner!
@@ -84,14 +84,13 @@ const MainCollaborator = ({
 
           {company.intro && <ReactMarkdown source={company.intro} />}
 
-          <h3>
-            ↓ Ta en titt på hvordan sommerjobb i {company.name} kan se ut ↓
-          </h3>
-
-          {company.video ? (
-            <Player playsInline poster={company.logo} src={company.video} />
-          ) : (
-            'Missing main collaborator video!'
+          {company.video && (
+            <>
+              <h3>
+                ↓ Ta en titt på hvordan sommerjobb i {company.name} kan se ut ↓
+              </h3>
+              <Player playsInline poster={company.logo} src={company.video} />
+            </>
           )}
         </CenterIt>
       </FlexItem>
