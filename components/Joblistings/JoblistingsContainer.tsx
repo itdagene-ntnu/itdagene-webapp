@@ -213,11 +213,12 @@ const ListRenderer = (props: Props): JSX.Element => (
           props.root.joblistings.edges.map(
             (e, i) => e?.node && <JoblistingItem node={e.node} key={i} />
           )}
-
-        {props.root?.joblistings?.edges.length === 0 && (
-          <h2>For øyeblikket er det ingen annonser</h2>
-        )}
       </JoblistingGrid>
+      {props.root?.joblistings?.edges.length === 0 && (
+        <h2 style={{ textAlign: 'center', marginTop: '4.5rem', color: 'gray' }}>
+          For øyeblikket er det ingen annonser
+        </h2>
+      )}
     </InfiniteScroll>
   </>
 );
