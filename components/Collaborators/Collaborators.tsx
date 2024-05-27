@@ -23,7 +23,7 @@ const Collaborators = ({
   query.collaborators ? (
     <>
       <Title>Våre samarbeidspartnere</Title>
-      <Flex flexWrap="wrap" justifyContent="center">
+      <Flex flexWrap="wrap" justifyContent="center" gap="2em">
         {query.collaborators.map((company) => (
           <CollaboratorView
             showJoblistings={showJoblistings}
