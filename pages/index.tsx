@@ -41,7 +41,7 @@ const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
         style={{ alignItems: 'center', gap: '2em' }}
       >
         <FlexItem flexBasis="700px" flexGrow="1">
-          {frontpage && <PageView hideDate page={frontpage} />}
+          {frontpage && <PageView page={frontpage} />}
         </FlexItem>
 
         <CustomPlayer>
