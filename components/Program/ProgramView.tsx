@@ -70,7 +70,7 @@ const ProgramView = (props: Props): JSX.Element => {
           activeOption={showPromoted}
           setActiveOption={setShowPromoted}
         />
-        )}
+      )}
       <Flex alignItems="center" justifyContent="space-between">
         <Title>Program</Title>
         <EventsToggle
