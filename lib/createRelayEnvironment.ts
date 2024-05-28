@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Environment,
   Network,
@@ -12,6 +14,12 @@ import {
 import { Environment as EnvironmentType } from 'relay-runtime';
 import * as Sentry from '@sentry/node';
 import fetch from 'isomorphic-unfetch';
+
+export type EnvSettings = {
+  sentryDsn: string;
+  release: string;
+  relayEndpoint: string;
+};
 
 let relayEnvironment: EnvironmentType | null = null;
 
@@ -56,12 +64,6 @@ function fetchQueryWithSentry(envSettings: EnvSettings) {
       throw err;
     });
 }
-
-export type EnvSettings = {
-  sentryDsn: string;
-  release: string;
-  relayEndpoint: string;
-};
 
 export default function initEnvironment({
   records,
