@@ -42,7 +42,6 @@ const items: MenuItem[] = [
   //{ key: 'home', name: 'Hjem', to: '/' },
   { key: 'program', name: 'Program', to: '/program' },
   { key: 'joblistings', name: 'Jobb', to: '/jobb' },
-  { key: 'for-bedrifter', name: 'For bedrifter', to: '/company-information' },
   {
     key: 'info',
     name: 'Info',
@@ -50,6 +49,7 @@ const items: MenuItem[] = [
     as: '/info/bankett',
   },
   { key: 'galleri', name: 'Galleri', to: '/galleri' },
+  { key: 'faq', name: 'FAQ', to: '/faq' },
   { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
 ];
 
