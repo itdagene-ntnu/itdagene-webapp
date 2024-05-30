@@ -18,7 +18,11 @@ const Title = styled('h1')`
   margin-bottom: 1rem;
 `;
 
-const Question = ({ question }: { question: { question: string, answer: string}}) => {
+const Question = ({
+  question,
+}: {
+  question: { question: string; answer: string };
+}) => {
   return (
     <Collapse title={question.question}>
       <ReactMarkdown source={question.answer} />
@@ -58,7 +62,6 @@ export default withDataAndLayout(Faq, {
   query: graphql`
     query faq_Query {
       questions {
-        ...Question_query
         question
         answer
       }
