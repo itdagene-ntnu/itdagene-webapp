@@ -7,7 +7,7 @@ import {
   WithDataDataProps,
 } from '../lib/withData';
 import { faq_QueryResponse } from '../__generated__/faq_Query.graphql';
-import Question from '../components/Question';
+import ReactMarkdown from 'react-markdown';
 import Flex from '../components/Styled/Flex';
 import FlexItem from '../components/Styled/FlexItem';
 
@@ -18,7 +18,15 @@ const Title = styled('h1')`
   margin-bottom: 1rem;
 `;
 
-const faq = ({
+const Question = ({ question }: { question: { question: string, answer: string}}) => {
+  return (
+    <Collapse title={question.question}>
+      <ReactMarkdown source={question.answer} />
+    </Collapse>
+  );
+};
+
+const Faq = ({
   error,
   props,
 }: WithDataAndLayoutProps<faq_QueryResponse>): JSX.Element => {
@@ -46,29 +54,13 @@ const faq = ({
   );
 };
 
-export default withDataAndLayout(faq, {
+export default withDataAndLayout(Faq, {
   query: graphql`
     query faq_Query {
-      currentMetaData {
-        year
-        id
-        boardMembers {
-          ...BoardMember_user
-          id
-          role
-          fullName
-        }
-      }
-
       questions {
         ...Question_query
         question
         answer
-      }
-
-      omItdagene: page(slug: "om-itdagene") {
-        ...PageView_page
-        ...metadata_metadata
       }
     }
   `,
