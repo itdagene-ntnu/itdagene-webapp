@@ -65,6 +65,11 @@ export default withDataAndLayout(Faq, {
         question
         answer
       }
+
+      omItdagene: page(slug: "om-itdagene") {
+        ...PageView_page
+        ...metadata_metadata
+      }
     }
   `,
   variables: {},
