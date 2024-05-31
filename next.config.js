@@ -3,6 +3,15 @@ const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const { SENTRY_ORG, SENTRY_PROJECT, RELEASE, COMMIT_SHA } = process.env
 
 module.exports = withSourceMaps({
+  async redirects() {
+    return [
+      {
+        source: '/company-information',
+        destination: '/faq',
+        permanent: true,
+      },
+    ]
+  },
   webpack: (config, { dev, isServer }) => {
     const originalEntry = config.entry;
     config.entry = async () => {
