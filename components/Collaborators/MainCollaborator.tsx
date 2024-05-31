@@ -89,7 +89,11 @@ const MainCollaborator = ({
               <h3>
                 ↓ Ta en titt på hvordan sommerjobb i {company.name} kan se ut ↓
               </h3>
-              <Player playsInline poster={company.poster || company.logo} src={company.video} />
+              <Player
+                playsInline
+                poster={company.poster || company.logo}
+                src={company.video}
+              />
             </>
           )}
         </CenterIt>
