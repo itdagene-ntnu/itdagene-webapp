@@ -15,9 +15,7 @@ const Index = ({
   <>
     {props.programPage && <PageView hideContent page={props.programPage} />}
 
-    {props.programPage && (
-      <PageView hideTitle hideDate page={props.programPage} />
-    )}
+    {props.programPage && <PageView hideTitle page={props.programPage} />}
 
     {props.events ? (
       <ProgramView

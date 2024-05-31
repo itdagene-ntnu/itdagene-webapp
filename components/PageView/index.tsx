@@ -10,7 +10,6 @@ import { Player } from 'video-react';
 
 type Props = {
   page: PageView_page;
-  hideDate?: boolean;
   hideContent?: boolean;
   hideTitle?: boolean;
 };
@@ -20,16 +19,6 @@ const Title = styled('h1')`
   font-smoothing: antialiased;
   font-size: 3rem;
   margin-bottom: 1rem;
-`;
-
-const LastUpdate = styled('div')`
-  font-weight: bold;
-  font-family: Roboto;
-  font-size: 0.8rem;
-  color: #222;
-  text-transform: uppercase;
-  letter-spacing: 1.25px;
-  margin-bottom: 1.5rem;
 `;
 
 const LinkRenderer = ({
@@ -48,28 +37,10 @@ const LinkRenderer = ({
 
 const renderers = { link: LinkRenderer };
 
-const PageView = ({
-  page,
-  hideDate,
-  hideContent,
-  hideTitle,
-}: Props): JSX.Element => {
-  const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    boxShadow: 24,
-    p: 1,
-  };
+const PageView = ({ page, hideContent, hideTitle }: Props): JSX.Element => {
   return (
     <>
       {!hideTitle && <Title>{page.title}</Title>}
-      {!hideDate && (
-        <LastUpdate>
-          {dayjs(page.dateSaved as string).format(`DD. MMMM, YYYY`)}
-        </LastUpdate>
-      )}
       {!hideContent && (
         <Flex flexDirection="column">
           <ReactMarkdown renderers={renderers} source={page.content} />
