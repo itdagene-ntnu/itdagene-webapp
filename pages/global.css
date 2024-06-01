@@ -22,14 +22,17 @@ p {
 }
 
 a {
-  color: #0778BC;
+  color: #0778bc;
   text-decoration: none;
-  
+
   &:hover {
-    color: #41C0EB;
+    color: #41c0eb;
   }
 }
 
-h1,h2,h3,h4 {
+h1,
+h2,
+h3,
+h4 {
   font-weight: 500;
 }

@@ -10,7 +10,6 @@ module.exports = {
   },
   plugins: [],
   corePlugins: {
-    preflight: false // This enables default html styling
-  }
-}
-
+    preflight: false, // This enables default html styling
+  },
+};
