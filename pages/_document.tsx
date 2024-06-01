@@ -45,38 +45,6 @@ export default class Default extends Document<{
             href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
             rel="stylesheet"
           />
-          <style>{`
-            body {
-              margin: 0;
-              padding: 0;
-              font-size: 16px;
-              color: rgba(0, 0, 0, 0.87);
-              font-smoothing: antialiased;
-              word-break: break-word;
-              font-family: Roboto, sans-serif;
-              font-variant-numeric: lining-nums;
-            }
-            img {
-              max-width: 100%;
-            }
-            p {
-              line-height: 1.4285em;
-            }
-            a {
-              color: ${itdageneBlue};
-              text-decoration: none;
-            }
-
-            a:hover {
-              color: ${itdageneLightBlue};
-              text-decoration: none;
-            }
-            h1,h2,h3,h4 {
-              font-weight: 500;
-            }
-
-          `}</style>
-
           <meta name="theme-color" content="#ffffff" />
           <link
             rel="icon"
