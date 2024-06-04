@@ -42,12 +42,12 @@ jobs:
           name: lint
           command: |
             yarn lint
-            
+
       - run:
           name: build
           command: |
             yarn build
-            
+
       - run:
           name: test
           command: |
