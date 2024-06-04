@@ -1,14 +1,21 @@
-version: 2
+version: 2.1
+
+orbs: 
+  browser-tools: circleci/browser-tools@1.4.8
+
 jobs:
   tests:
     docker:
-      - image: circleci/node:16-browsers
+      - image: cimg/node:20.4.0-browsers
     working_directory: ~/repo
     steps:
+      - browser-tools/install-browser-tools
       - checkout
+          
       - restore_cache:
           keys:
             - deps-{{ checksum "yarn.lock" }}
+            
       - run:
           name: install dependencies
           command: |
