@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/node';
 // import { NextUIProvider } from '@nextui-org/react';
 
 // All css imports go here
+import './global.css';
 import './test.css';
 import 'video-react/dist/video-react.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
