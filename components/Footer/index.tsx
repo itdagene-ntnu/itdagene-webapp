@@ -73,7 +73,7 @@ const Footer = (): JSX.Element => (
               <a href="mailto:styret@itdagene.no">styret@itdagene.no </a>
             </li>
             <li>
-              Webansvarlig •{' '}
+              Webansvarlige •{' '}
               <a href="mailto:web@itdagene.no">web@itdagene.no </a>
             </li>
           </NoBulletUl>
