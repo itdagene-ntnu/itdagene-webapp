@@ -73,7 +73,7 @@ const Footer = (): JSX.Element => (
               <a href="mailto:styret@itdagene.no">styret@itdagene.no </a>
             </li>
             <li>
-              Webansvarlig •{' '}
+              Webansvarlige •{' '}
               <a href="mailto:web@itdagene.no">web@itdagene.no </a>
             </li>
           </NoBulletUl>
@@ -111,7 +111,7 @@ const Footer = (): JSX.Element => (
             <li>
               itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
               fremtidige arbeidsgivere. Messen arrangeres én gang i året av
-              data- og kommunikasjonsteknologi studenter ved NTNU i Trondheim.
+              data- og cybersikkerhetsstudenter ved NTNU i Trondheim.
               Overskuddet går til studentenes ekskursjon i tredjeklasse.
             </li>
           </NoBulletUl>

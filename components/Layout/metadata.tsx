@@ -3,7 +3,7 @@ import { createFragmentContainer, graphql } from 'react-relay';
 import Head from 'next/head';
 import { metadata_metadata } from '../../__generated__/metadata_metadata.graphql';
 const defaultDescription =
-  'itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med fremtidige arbeidsgivere. Messen arrangeres én gang i året av data- og kommunikasjonsteknolpgi studenter ved NTNU i Trondheim. Overskuddet går til studentenes ekskursjon i tredjeklasse.';
+  'itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med fremtidige arbeidsgivere. Messen arrangeres én gang i året av data- og cybersikkerhetsstudenter ved NTNU i Trondheim. Overskuddet går til studentenes ekskursjon i tredjeklasse.';
 const defaultSharingImage = '/static/itdagene_facebookshare.png';
 const defaultTitle = 'itDAGENE';
 
