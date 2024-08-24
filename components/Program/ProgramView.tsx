@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy, sortBy } from 'lodash';
+import dayjs from 'dayjs';
 
 import styled from 'styled-components';
 import { graphql, createFragmentContainer } from 'react-relay';
@@ -46,11 +47,35 @@ const ProgramView = (props: Props): JSX.Element => {
     'date'
   );
   const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
+  
+  // const eventsWithTime = sortBy(Object.entries(groupedEvents)).map(event => {
+  //   return {
+  //     time: event[0] + "T" + event[1][0].timeStart, 
+  //     event: event
+  //   }
+  // })
 
   // Todo: find active date/event smarter
   useEffect(() => {
     setActiveDate(sortedKeys[0]);
     setActiveEvent(groupedEvents[sortedKeys[0]][0].id);
+    // const now = dayjs().format();
+    // let closestDate = eventsWithTime[0].time;
+    // let smallestDifference = Math.abs(dayjs(closestDate).diff(now));
+    
+    // for (let i = 1; i < sortedKeys.length; i++) {
+    //   const currentDifference = Math.abs(dayjs(eventsWithTime[i].time).diff(now));
+    //   if (currentDifference < smallestDifference) {
+    //     smallestDifference = currentDifference;
+    //     closestDate = eventsWithTime[i].time;
+    //   }
+    // }
+    // console.log(closestDate)
+
+    // const activeEvent = eventsWithTime.find((event) => event.time === closestDate)
+    // if (activeEvent) setActiveEvent(activeEvent.event[1][0].id);
+    // setActiveDate(closestDate.split("T")[0]);
+    // console.log(activeEvent.event[1][0])
   }, []);
 
   if (props.events.length === 0) {
@@ -97,6 +122,7 @@ export default createFragmentContainer(ProgramView, {
       id
       timeStart
       timeEnd
+      coverImage
       description
       location
       date

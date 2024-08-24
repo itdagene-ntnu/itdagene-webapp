@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
 import { eventTime, toDayjs } from '../../../utils/time';
 import styled from 'styled-components';
 import { itdageneBlue } from '../../../utils/colors';
@@ -39,6 +40,11 @@ const Card = styled.div<{ active?: boolean }>`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 40% 60%;
+`;
+
+const EventCover = styled.img`
+  max-height: 256px;
+  object-fit: cover;
 `;
 
 const DesktopProgramTimeline = ({
@@ -121,13 +127,14 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
   return (
     <Flex
       flexDirection="column"
-      style={{
-        boxShadow: '0 0 0.75rem #ddd',
-        padding: '1rem 1.5rem',
-        borderRadius: '0.75rem',
-      }}
+      style={{ position: "sticky", height: "fit-content", top: "2rem" }}
     >
-      <h3 style={{ fontSize: 30 }}>{event.title}</h3>
+      <EventCover src="/static/under-development-placeholder.png" alt="cover" />
+      <h3 style={{ fontSize: 40, margin: "2rem 0 0" }}>{event.title}</h3>
+      <Flex gap="0 2rem" flexDirection="column">
+        <p style={{ margin: 0 }}>{event.location}</p> 
+        <p style={{ margin: 0 }}>{dayjs(event.date).format('dddd DD.MM')} {event.timeStart} - {event.timeEnd}</p> 
+      </Flex>
       <p>{event.description}</p>
     </Flex>
   );
