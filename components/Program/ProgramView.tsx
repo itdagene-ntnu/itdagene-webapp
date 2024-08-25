@@ -36,7 +36,7 @@ type Props = {
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState('Generelt program');
   const [activeDate, setActiveDate] = useState('');
-  
+
   const filteredEvents: ProgramView_events = props.events.filter((event) =>
     showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
   );
@@ -46,7 +46,7 @@ const ProgramView = (props: Props): JSX.Element => {
     sortBy(props.showToggleButton ? filteredEvents : props.events, 'timeStart'),
     'date'
   );
-  
+
   const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
   useEffect(() => {
@@ -80,10 +80,7 @@ const ProgramView = (props: Props): JSX.Element => {
           dateOptions
         />
       </Flex>
-      <ProgramTimeline
-        activeDate={activeDate}
-        events={groupedEvents}
-      />
+      <ProgramTimeline activeDate={activeDate} events={groupedEvents} />
     </Flex>
   );
 };

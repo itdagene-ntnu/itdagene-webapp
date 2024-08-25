@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
 
@@ -16,4 +16,4 @@ export const findClosestDate = (dates: string[], parseFormat = ''): string => {
     }
   }
   return closestDate;
-}
+};

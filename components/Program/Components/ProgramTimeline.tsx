@@ -4,7 +4,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineOppositeContent, {
-  timelineOppositeContentClasses
+  timelineOppositeContentClasses,
 } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import { Collapse, Text } from '@nextui-org/react';
@@ -49,18 +49,26 @@ const DesktopProgramTimeline = ({
   activeDate,
   events,
 }: ProgramTimelineProps): JSX.Element => {
-  const [activeEvent, setActiveEvent] = useState<ArrayElement<ProgramView_events>>();
-  
-  // If activeDate is today, select the next event to happen, 
+  const [activeEvent, setActiveEvent] =
+    useState<ArrayElement<ProgramView_events>>();
+
+  // If activeDate is today, select the next event to happen,
   // if not select the first event of that day
   useEffect(() => {
     if (!events || !events[activeDate]) return;
-    const closestTime = findClosestDate(events[activeDate].map(event => event.timeStart), 'HH:mm:ss')
-    const closestEvent = events[activeDate].find((event) => event.timeStart === closestTime)
-    const isToday = dayjs(activeDate).isSame(dayjs(), 'day')
-    setActiveEvent((isToday && closestEvent) ? closestEvent : events[activeDate][0]);
-  }, [events, activeDate])
-  
+    const closestTime = findClosestDate(
+      events[activeDate].map((event) => event.timeStart),
+      'HH:mm:ss'
+    );
+    const closestEvent = events[activeDate].find(
+      (event) => event.timeStart === closestTime
+    );
+    const isToday = dayjs(activeDate).isSame(dayjs(), 'day');
+    setActiveEvent(
+      isToday && closestEvent ? closestEvent : events[activeDate][0]
+    );
+  }, [events, activeDate]);
+
   return (
     <Grid>
       <Timeline
@@ -130,13 +138,19 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
   return (
     <Flex
       flexDirection="column"
-      style={{ position: "sticky", height: "fit-content", top: "2rem" }}
+      style={{ position: 'sticky', height: 'fit-content', top: '2rem' }}
     >
-      <EventCover src={"https://itdagene.no/uploads/event_covers/" + event.coverImage} alt="cover image" />
-      <h3 style={{ fontSize: 40, margin: "2rem 0 0" }}>{event.title}</h3>
+      <EventCover
+        src={'https://itdagene.no/uploads/event_covers/' + event.coverImage}
+        alt="cover image"
+      />
+      <h3 style={{ fontSize: 40, margin: '2rem 0 0' }}>{event.title}</h3>
       <Flex gap="0 2rem" flexDirection="column">
-        <p style={{ margin: 0 }}>{event.location}</p> 
-        <p style={{ margin: 0 }}>{dayjs(event.date).format('dddd DD.MM')} {event.timeStart} - {event.timeEnd}</p> 
+        <p style={{ margin: 0 }}>{event.location}</p>
+        <p style={{ margin: 0 }}>
+          {dayjs(event.date).format('dddd DD.MM')} {event.timeStart} -{' '}
+          {event.timeEnd}
+        </p>
       </Flex>
       <p>{event.description}</p>
     </Flex>
