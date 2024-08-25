@@ -140,10 +140,13 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
       flexDirection="column"
       style={{ position: 'sticky', height: 'fit-content', top: '2rem' }}
     >
-      <EventCover
-        src={'https://itdagene.no/uploads/event_covers/' + event.coverImage}
-        alt="cover image"
-      />
+      {event.coverImage && (
+        <EventCover
+          src={'https://itdagene.no/uploads/event_covers/' + event.coverImage}
+          alt="cover image"
+        />
+      )}
+
       <h3 style={{ fontSize: 40, margin: '2rem 0 0' }}>{event.title}</h3>
       <Flex gap="0 2rem" flexDirection="column">
         <p style={{ margin: 0 }}>{event.location}</p>
