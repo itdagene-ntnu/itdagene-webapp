@@ -12,6 +12,7 @@ import EventsToggle from './Components/EventsToggle';
 import Flex from '../Styled/Flex';
 
 import ProgramTimeline from './Components/ProgramTimeline';
+import { findClosestDate } from '../../utils/findClosestDate';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -35,9 +36,8 @@ type Props = {
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState('Generelt program');
   const [activeDate, setActiveDate] = useState('');
-  const [activeEvent, setActiveEvent] = useState('');
-
-  const filteredEvents = props.events.filter((event) =>
+  
+  const filteredEvents: ProgramView_events = props.events.filter((event) =>
     showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
   );
 
@@ -46,36 +46,11 @@ const ProgramView = (props: Props): JSX.Element => {
     sortBy(props.showToggleButton ? filteredEvents : props.events, 'timeStart'),
     'date'
   );
-  const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
   
-  // const eventsWithTime = sortBy(Object.entries(groupedEvents)).map(event => {
-  //   return {
-  //     time: event[0] + "T" + event[1][0].timeStart, 
-  //     event: event
-  //   }
-  // })
+  const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
-  // Todo: find active date/event smarter
   useEffect(() => {
-    setActiveDate(sortedKeys[0]);
-    setActiveEvent(groupedEvents[sortedKeys[0]][0].id);
-    // const now = dayjs().format();
-    // let closestDate = eventsWithTime[0].time;
-    // let smallestDifference = Math.abs(dayjs(closestDate).diff(now));
-    
-    // for (let i = 1; i < sortedKeys.length; i++) {
-    //   const currentDifference = Math.abs(dayjs(eventsWithTime[i].time).diff(now));
-    //   if (currentDifference < smallestDifference) {
-    //     smallestDifference = currentDifference;
-    //     closestDate = eventsWithTime[i].time;
-    //   }
-    // }
-    // console.log(closestDate)
-
-    // const activeEvent = eventsWithTime.find((event) => event.time === closestDate)
-    // if (activeEvent) setActiveEvent(activeEvent.event[1][0].id);
-    // setActiveDate(closestDate.split("T")[0]);
-    // console.log(activeEvent.event[1][0])
+    setActiveDate(findClosestDate(sortedKeys));
   }, []);
 
   if (props.events.length === 0) {
@@ -108,8 +83,6 @@ const ProgramView = (props: Props): JSX.Element => {
       <ProgramTimeline
         activeDate={activeDate}
         events={groupedEvents}
-        activeEventId={activeEvent}
-        setActiveEvent={setActiveEvent}
       />
     </Flex>
   );

@@ -1,30 +1,28 @@
-import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
-import { eventTime, toDayjs } from '../../../utils/time';
-import styled from 'styled-components';
-import { itdageneBlue } from '../../../utils/colors';
-
 import Timeline from '@mui/lab/Timeline';
-import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineOppositeContent, {
-  timelineOppositeContentClasses,
+  timelineOppositeContentClasses
 } from '@mui/lab/TimelineOppositeContent';
-
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import { Collapse, Text } from '@nextui-org/react';
-
-import Flex from '../../Styled/Flex';
-
+import dayjs from 'dayjs';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { isMobile } from 'react-device-detect';
+import styled from 'styled-components';
+import { itdageneBlue } from '../../../utils/colors';
+import { findClosestDate } from '../../../utils/findClosestDate';
+import { eventTime, toDayjs } from '../../../utils/time';
+import { ArrayElement } from '../../../utils/types';
+import { ProgramView_events } from '../../../__generated__/ProgramView_events.graphql';
+import Flex from '../../Styled/Flex';
 
 type ProgramTimelineProps = {
   activeDate: string;
-  events: any;
-  activeEventId: string;
-  setActiveEvent: (eventId: string) => void;
+  events: Record<string, ProgramView_events>;
 };
 
 const Card = styled.div<{ active?: boolean }>`
@@ -50,14 +48,19 @@ const EventCover = styled.img`
 const DesktopProgramTimeline = ({
   activeDate,
   events,
-  activeEventId,
-  setActiveEvent,
 }: ProgramTimelineProps): JSX.Element => {
-  const currentEvent = activeDate
-    ? Object.values(events)
-        .flat()
-        .find((event: any) => event.id === activeEventId)
-    : null;
+  const [activeEvent, setActiveEvent] = useState<ArrayElement<ProgramView_events>>();
+  
+  // If activeDate is today, select the next event to happen, 
+  // if not select the first event of that day
+  useEffect(() => {
+    if (!events || !events[activeDate]) return;
+    const closestTime = findClosestDate(events[activeDate].map(event => event.timeStart), 'HH:mm:ss')
+    const closestEvent = events[activeDate].find((event) => event.timeStart === closestTime)
+    const isToday = dayjs(activeDate).isSame(dayjs(), 'day')
+    setActiveEvent((isToday && closestEvent) ? closestEvent : events[activeDate][0]);
+  }, [events, activeDate])
+  
   return (
     <Grid>
       <Timeline
@@ -87,8 +90,8 @@ const DesktopProgramTimeline = ({
 
               <TimelineContent style={{ padding: '5px 1rem 5px 2rem' }}>
                 <Card
-                  active={activeEventId === event.id}
-                  onClick={(): void => setActiveEvent(event.id)}
+                  active={activeEvent?.id === event.id}
+                  onClick={(): void => setActiveEvent(event)}
                 >
                   <Flex flexDirection="column">
                     <h3 style={{ margin: 0, fontSize: 20, fontWeight: 400 }}>
@@ -96,7 +99,7 @@ const DesktopProgramTimeline = ({
                     </h3>
                     <Flex
                       style={{
-                        color: activeEventId === event.id ? '#eee' : 'grey',
+                        color: activeEvent?.id === event.id ? '#eee' : 'grey',
                       }}
                       alignItems="center"
                     >
@@ -105,7 +108,7 @@ const DesktopProgramTimeline = ({
                       <ion-icon
                         style={{
                           color:
-                            activeEventId === event.id ? '#eee' : '#156493',
+                            activeEvent?.id === event.id ? '#eee' : '#156493',
                         }}
                         name="location-sharp"
                       />
@@ -118,7 +121,7 @@ const DesktopProgramTimeline = ({
             </TimelineItem>
           ))}
       </Timeline>
-      {currentEvent && <EventPage event={currentEvent} />}
+      {activeEvent && <EventPage event={activeEvent} />}
     </Grid>
   );
 };
@@ -129,7 +132,7 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
       flexDirection="column"
       style={{ position: "sticky", height: "fit-content", top: "2rem" }}
     >
-      <EventCover src="/static/under-development-placeholder.png" alt="cover" />
+      <EventCover src={"https://itdagene.no/uploads/event_covers/" + event.coverImage} alt="cover image" />
       <h3 style={{ fontSize: 40, margin: "2rem 0 0" }}>{event.title}</h3>
       <Flex gap="0 2rem" flexDirection="column">
         <p style={{ margin: 0 }}>{event.location}</p> 
