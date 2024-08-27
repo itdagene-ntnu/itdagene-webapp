@@ -4,14 +4,14 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
 import TimelineOppositeContent, {
-  timelineOppositeContentClasses,
+    timelineOppositeContentClasses
 } from '@mui/lab/TimelineOppositeContent';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import { Collapse, Text } from '@nextui-org/react';
 import dayjs from 'dayjs';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
+import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
 import { itdageneBlue } from '../../../utils/colors';
 import { findClosestDate } from '../../../utils/findClosestDate';
@@ -19,6 +19,7 @@ import { eventTime, toDayjs } from '../../../utils/time';
 import { ArrayElement } from '../../../utils/types';
 import { ProgramView_events } from '../../../__generated__/ProgramView_events.graphql';
 import Flex from '../../Styled/Flex';
+import Link from 'next/link';
 
 type ProgramTimelineProps = {
   activeDate: string;
@@ -134,6 +135,22 @@ const DesktopProgramTimeline = ({
   );
 };
 
+const LinkRenderer = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}): JSX.Element => {
+  // Use next.js router for internal urls
+  if (href.startsWith('/')) {
+    return <Link href={href}>{children}</Link>;
+  }
+  return <a href={href}> {children}</a>;
+};
+
+const renderers = { link: LinkRenderer };
+
 const EventPage = ({ event }: { event: any }): JSX.Element => {
   return (
     <Flex
@@ -142,7 +159,7 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
     >
       {event.coverImage && (
         <EventCover
-          src={'https://itdagene.no/uploads/event_covers/' + event.coverImage}
+          src={'https://itdagene.no/uploads/' + event.coverImage}
           alt="cover image"
         />
       )}
@@ -151,11 +168,11 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
       <Flex gap="0 2rem" flexDirection="column">
         <p style={{ margin: 0 }}>{event.location}</p>
         <p style={{ margin: 0 }}>
-          {dayjs(event.date).format('dddd DD.MM')} {event.timeStart} -{' '}
+          {dayjs(event.date).format('dddd DD.MM')} | {event.timeStart} -{' '}
           {event.timeEnd}
         </p>
       </Flex>
-      <p>{event.description}</p>
+      <ReactMarkdown renderers={renderers} source={event.description} />
     </Flex>
   );
 };
