@@ -171,6 +171,7 @@ export default withDataAndLayout(Index, {
       'stands-copy',
       'kurs-copy',
       'om-itdagene',
+      'stands',
     ],
   },
 });
