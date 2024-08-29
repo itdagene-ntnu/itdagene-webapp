@@ -239,7 +239,10 @@ const MobileProgramTimeline = ({
                     </>
                   }
                 >
-                  <Text>{event.description}</Text>
+                  <ReactMarkdown
+                    renderers={renderers}
+                    source={event.description}
+                  />
                 </Collapse>
               </TimelineContent>
             </TimelineItem>

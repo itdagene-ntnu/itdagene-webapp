@@ -13,11 +13,13 @@ import Flex from '../Styled/Flex';
 
 import ProgramTimeline from './Components/ProgramTimeline';
 import { findClosestDate } from '../../utils/findClosestDate';
+import { isMobile } from 'react-device-detect';
 
 const Title = styled('h1')`
   font-weight: bold;
   font-smoothing: antialiased;
   font-size: 3rem;
+  ${isMobile && 'margin-top: 0;'}
   margin-bottom: 3rem;
   white-space: nowrap;
 `;
@@ -71,7 +73,11 @@ const ProgramView = (props: Props): JSX.Element => {
           setActiveOption={setShowPromoted}
         />
       )}
-      <Flex alignItems="center" justifyContent="space-between">
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        flexDirection={isMobile ? 'column' : 'row'}
+      >
         <Title>Program</Title>
         <EventsToggle
           options={sortedKeys}
