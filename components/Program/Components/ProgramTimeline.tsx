@@ -20,6 +20,10 @@ import { ArrayElement } from '../../../utils/types';
 import { ProgramView_events } from '../../../__generated__/ProgramView_events.graphql';
 import Flex from '../../Styled/Flex';
 import Link from 'next/link';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { capitalize } from 'lodash';
+
+dayjs.extend(customParseFormat);
 
 type ProgramTimelineProps = {
   activeDate: string;
@@ -103,7 +107,14 @@ const DesktopProgramTimeline = ({
                   onClick={(): void => setActiveEvent(event)}
                 >
                   <Flex flexDirection="column">
-                    <h3 style={{ margin: 0, fontSize: 20, fontWeight: 400 }}>
+                    <h3
+                      style={{
+                        margin: 0,
+                        fontSize: 20,
+                        fontWeight: 400,
+                        hyphens: 'manual',
+                      }}
+                    >
                       {event.title}
                     </h3>
                     <Flex
@@ -166,10 +177,15 @@ const EventPage = ({ event }: { event: any }): JSX.Element => {
 
       <h3 style={{ fontSize: 40, margin: '2rem 0 0' }}>{event.title}</h3>
       <Flex gap="0 2rem" flexDirection="column">
-        <p style={{ margin: 0 }}>{event.location}</p>
         <p style={{ margin: 0 }}>
-          {dayjs(event.date).format('dddd DD.MM')} | {event.timeStart} -{' '}
-          {event.timeEnd}
+          <b>Når: </b>
+          {capitalize(dayjs(event.date).format('dddd DD. MMM'))} |{' '}
+          {dayjs(event.timeStart, 'HH:mm').format('HH:mm')} -{' '}
+          {dayjs(event.timeEnd, 'HH:mm').format('HH:mm')}
+        </p>
+        <p style={{ margin: 0 }}>
+          <b>Hvor: </b>
+          {event.location}
         </p>
       </Flex>
       <ReactMarkdown renderers={renderers} source={event.description} />
