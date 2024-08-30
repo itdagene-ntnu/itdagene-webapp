@@ -1,62 +1,22 @@
-import React from 'react';
-
-import { Section } from '../components/Styled';
-import { Image, CenterIt } from '../components/Styled';
-import { graphql } from 'react-relay';
-
-import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
-import Collaborators from '../components/Collaborators/Collaborators';
-import Companies from '../components/Companies/Companies';
 import Link from 'next/link';
+import React from 'react';
+import { graphql } from 'react-relay';
 import styled from 'styled-components';
-import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
-import Interest from '../components/Frontpage/Interest';
-import RunForMe from '../components/Frontpage/RunForMe';
-import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
-import PageView from '../components/PageView';
-import CompactProgram from '../components/CompactProgram';
+import Collaborators from '../components/Collaborators/Collaborators';
 import MainCollaborator from '../components/Collaborators/MainCollaborator';
-import FlexItem from '../components/Styled/FlexItem';
+import CompactProgram from '../components/CompactProgram';
+import Companies from '../components/Companies/Companies';
+import Interest from '../components/Frontpage/Interest';
+import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
+import { Section } from '../components/Styled';
 import Flex from '../components/Styled/Flex';
-import { Player } from 'video-react';
+import FlexItem from '../components/Styled/FlexItem';
+import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
+import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
 const ReadMore = styled('h4')``;
-
-const CustomPlayer = styled.div`
-  @media only screen and (max-width: 767px) {
-    display: none;
-  }
-`;
-
-const AboutSection = (props: pages_index_QueryResponse): JSX.Element => {
-  const frontpage =
-    props.pages && props.pages.find((el) => el && el.slug === 'frontpage');
-  return (
-    <>
-      <Flex
-        justifyContent="space-between"
-        flexDirection="row"
-        style={{ alignItems: 'center', gap: '2em' }}
-      >
-        <FlexItem flexBasis="700px" flexGrow="1">
-          {frontpage && <PageView page={frontpage} />}
-        </FlexItem>
-
-        <CustomPlayer>
-          <Player
-            playsInline
-            src={'https://cdn.itdagene.no/it.mp4'}
-            fluid={false}
-            width={280}
-            height={500}
-          />
-        </CustomPlayer>
-      </Flex>
-    </>
-  );
-};
 
 const Centered = styled('div')`
   text-align: center;
@@ -96,9 +56,6 @@ const EventsSection = ({
 const Index = ({ props, error }: RenderProps): JSX.Element => (
   <>
     <WelcomeScreen currentMetaData={props.currentMetaData} />
-    <Section>
-      <AboutSection {...props} />
-    </Section>
     {props.currentMetaData.interestForm && (
       <Section>
         <Interest form={props.currentMetaData.interestForm} />
