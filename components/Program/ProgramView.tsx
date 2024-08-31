@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy, sortBy } from 'lodash';
-import dayjs from 'dayjs';
 
 import styled from 'styled-components';
 import { graphql, createFragmentContainer } from 'react-relay';
@@ -14,6 +13,9 @@ import Flex from '../Styled/Flex';
 import ProgramTimeline from './Components/ProgramTimeline';
 import { findClosestDate } from '../../utils/findClosestDate';
 import { isMobile } from 'react-device-detect';
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
+import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_currentMetaData.graphql';
+import dayjs from 'dayjs';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -31,8 +33,10 @@ const UnderDevelopmentPlaceholder = styled('img')`
 type Props = {
   events: ProgramView_events;
   stands: ProgramView_stands | null;
+  currentMetaData: ProgramView_currentMetaData;
   showToggleButton?: boolean;
   useLinks?: boolean;
+  query: NextParsedUrlQuery;
 };
 
 const ProgramView = (props: Props): JSX.Element => {
@@ -48,11 +52,20 @@ const ProgramView = (props: Props): JSX.Element => {
     sortBy(props.showToggleButton ? filteredEvents : props.events, 'timeStart'),
     'date'
   );
-
+  
+  const mainEvents = [groupedEvents[props.currentMetaData.startDate], groupedEvents[props.currentMetaData.endDate]] 
+  const otherEvents = Object.entries(groupedEvents).filter(([key]) => key in [props.currentMetaData.startDate, props.currentMetaData.endDate])
+  
+  console.log(mainEvents, otherEvents)
   const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
 
+  const parsedQueryEvent = typeof props.query.event === 'string'
+    ? props.events.find((event) => event.id === props.query.event)
+    : null;
+  
+  
   useEffect(() => {
-    setActiveDate(findClosestDate(sortedKeys));
+    setActiveDate(parsedQueryEvent?.date || findClosestDate(sortedKeys));
   }, []);
 
   if (props.events.length === 0) {
@@ -86,7 +99,7 @@ const ProgramView = (props: Props): JSX.Element => {
           dateOptions
         />
       </Flex>
-      <ProgramTimeline activeDate={activeDate} events={groupedEvents} />
+      <ProgramTimeline activeDate={activeDate} events={groupedEvents} query={props.query} />
     </Flex>
   );
 };
@@ -119,4 +132,10 @@ export default createFragmentContainer(ProgramView, {
       slug
     }
   `,
+  currentMetaData: graphql`
+    fragment ProgramView_currentMetaData on MetaData {
+      startDate
+      endDate
+    }
+    `
 });

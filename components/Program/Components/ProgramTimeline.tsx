@@ -22,12 +22,14 @@ import Flex from '../../Styled/Flex';
 import Link from 'next/link';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { capitalize } from 'lodash';
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 
 dayjs.extend(customParseFormat);
 
 type ProgramTimelineProps = {
   activeDate: string;
   events: Record<string, ProgramView_events>;
+  query: NextParsedUrlQuery;
 };
 
 const Card = styled.div<{ active?: boolean }>`
@@ -53,10 +55,11 @@ const EventCover = styled.img`
 const DesktopProgramTimeline = ({
   activeDate,
   events,
+  query,
 }: ProgramTimelineProps): JSX.Element => {
   const [activeEvent, setActiveEvent] =
     useState<ArrayElement<ProgramView_events>>();
-
+  
   // If activeDate is today, select the next event to happen,
   // if not select the first event of that day
   useEffect(() => {
@@ -73,7 +76,7 @@ const DesktopProgramTimeline = ({
       isToday && closestEvent ? closestEvent : events[activeDate][0]
     );
   }, [events, activeDate]);
-
+  
   return (
     <Grid>
       <Timeline

@@ -8,7 +8,7 @@
     "build": "sed \"s/throw new Error(\\`Build optimization failed/new Error(\\`FUUUU: /g\" node_modules/next/dist/build/index.js  > node_modules/next.bak && mv node_modules/next.bak node_modules/next/dist/build/index.js && next build",
     "start": "NODE_ENV=production next start",
     "schema:prod": "mkdir -p schema && get-graphql-schema https://itdagene.no/graphql > schema/schema.graphql",
-    "schema:dev": "mkdir -p schema && get-graphql-schema http://localhost:8000/graphql > schema/schema.graphql",
+    "schema:dev": "mkdir -p schema && get-graphql-schema http://127.0.0.1:8000/graphql > schema/schema.graphql",
     "relay": "relay-compiler --src ./ --exclude '**/schema/**' --exclude '**/.next/**' '**/node_modules/**' '**/test/**'  '**/__generated__/**' --schema ./schema/schema.graphql --customScalars.Date=String --customScalars.Time=String --customScalars.DateTime=String --language typescript --artifactDirectory ./__generated__",
     "lint:prettier": "prettier '**/*.{js,ts,tsx,css,graphql}' --list-different",
     "lint:eslint": "eslint . --ext .js,.ts,.tsx --ignore-path .prettierignore",
