@@ -39,9 +39,6 @@ const Index = ({
 export default withDataAndLayout(Index, {
   query: graphql`
     query program_Query {
-      stands {
-        ...ProgramView_stands
-      }
       events {
         ...ProgramView_events
       }

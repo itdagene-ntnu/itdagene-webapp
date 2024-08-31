@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { graphql, createFragmentContainer } from 'react-relay';
 
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
-import { ProgramView_stands } from '../../__generated__/ProgramView_stands.graphql';
 import EventsToggle from './Components/EventsToggle';
 
 import Flex from '../Styled/Flex';
@@ -32,7 +31,6 @@ const UnderDevelopmentPlaceholder = styled('img')`
 
 type Props = {
   events: ProgramView_events;
-  stands: ProgramView_stands | null;
   currentMetaData: ProgramView_currentMetaData;
   showToggleButton?: boolean;
   useLinks?: boolean;
@@ -122,14 +120,6 @@ export default createFragmentContainer(ProgramView, {
       }
       usesTickets
       maxParticipants
-    }
-  `,
-  stands: graphql`
-    fragment ProgramView_stands on Stand @relay(plural: true) {
-      company {
-        id
-      }
-      slug
     }
   `,
   currentMetaData: graphql`
