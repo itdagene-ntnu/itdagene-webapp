@@ -1,4 +1,4 @@
-import { Skeleton } from '@mui/material';
+import { Skeleton, SkeletonTypeMap } from '@mui/material';
 import Image, { ImageProps } from 'next/image';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -7,6 +7,9 @@ const StyledImage = styled(Image)<{
   $hover: boolean;
   $cursor: string;
 }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   object-fit: cover;
   cursor: ${(props) => props.$cursor || 'default'};
   transform: scale(1);
@@ -19,9 +22,12 @@ const StyledImage = styled(Image)<{
 `;
 
 type LazyImageProps = ImageProps & {
-  skeletonVariant?: string;
+  skeletonVariant?: 'text' | 'rectangular' | 'rounded' | 'circular' | undefined;
   hover?: boolean;
   cursor?: string;
+  src: string;
+  alt: string;
+  onClick?: () => void;
 };
 
 /**
@@ -29,20 +35,24 @@ type LazyImageProps = ImageProps & {
  * you might need to update styling if used elsewhere
  */
 const LazyImage = ({
-  skeletonVariant = 'reactangular',
+  skeletonVariant = 'rectangular',
   hover = false,
   cursor = 'default',
+  src,
+  alt,
+  onClick,
   width,
   height,
-  ...props
 }: LazyImageProps): JSX.Element => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   return (
     <>
       <div
         style={{
           width: width,
           height: height,
+          display: error ? 'none' : 'block',
         }}
       >
         {loading && (
@@ -57,12 +67,15 @@ const LazyImage = ({
         <StyledImage
           $hover={hover}
           $cursor={cursor}
+          src={src}
+          alt={alt}
           loading="lazy"
           onLoad={(): void => setLoading(false)}
+          onError={(): void => setError(true)}
+          onClick={onClick}
           width={width}
           height={height}
           quality={100}
-          {...props}
         />
       </div>
     </>
