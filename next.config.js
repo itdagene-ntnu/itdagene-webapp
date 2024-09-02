@@ -55,6 +55,12 @@ module.exports = withSourceMaps({
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'itdagene.no',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   swcMinify: true,
