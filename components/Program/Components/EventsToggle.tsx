@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { capitalize } from 'lodash';
 import React from 'react';
 import styled from 'styled-components';
 import { itdageneBlue } from '../../../utils/colors';
@@ -8,14 +9,12 @@ type EventsToggleProps = {
   options: string[];
   activeOption: string;
   setActiveOption: (value: string) => void;
-  dateOptions?: boolean;
 };
 
 const EventsToggle = ({
   options,
   activeOption,
   setActiveOption,
-  dateOptions,
 }: EventsToggleProps): JSX.Element => {
   return (
     <ToggleContainer>
@@ -26,7 +25,7 @@ const EventsToggle = ({
           active={opt === activeOption}
         >
           <SubHeader>
-            {dateOptions ? dayjs(opt).format('dddd DD.MM').toUpperCase() : opt}
+            {dayjs(opt).isValid() ? capitalize(dayjs(opt).format('dddd DD.MM')) : opt}
           </SubHeader>
         </ToggleItem>
       ))}

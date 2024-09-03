@@ -23,6 +23,9 @@ const StandProgram = (props: Props): JSX.Element => {
         events {
           ...ProgramView_events
         }
+        currentMetaData {
+         ...ProgramView_currentMetaData
+        }
       }
     `,
     props.stand
@@ -30,7 +33,7 @@ const StandProgram = (props: Props): JSX.Element => {
 
   return program ? (
     program.events && program.events.length > 0 ? (
-      <ProgramView events={program.events} stands={null} />
+      <ProgramView events={program.events} currentMetaData={program.currentMetaData} />
     ) : (
       <Flex justifyContent="center" style={{ alignItems: 'center' }}>
         <FlexItem>

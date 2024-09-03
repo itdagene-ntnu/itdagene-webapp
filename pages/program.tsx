@@ -20,8 +20,7 @@ const Index = ({
     {props.events ? (
       <ProgramView
         events={props.events}
-        stands={props.stands}
-        query={router.query}
+        router={router}
         currentMetaData={props.currentMetaData}
         // showToggleButton
         // useLinks

@@ -15,6 +15,7 @@ import { isMobile } from 'react-device-detect';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_currentMetaData.graphql';
 import dayjs from 'dayjs';
+import { NextRouter } from 'next/router';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -34,7 +35,7 @@ type Props = {
   currentMetaData: ProgramView_currentMetaData;
   showToggleButton?: boolean;
   useLinks?: boolean;
-  query: NextParsedUrlQuery;
+  router: NextRouter;
 };
 
 const ProgramView = (props: Props): JSX.Element => {
@@ -51,19 +52,29 @@ const ProgramView = (props: Props): JSX.Element => {
     'date'
   );
   
-  const mainEvents = [groupedEvents[props.currentMetaData.startDate], groupedEvents[props.currentMetaData.endDate]] 
-  const otherEvents = Object.entries(groupedEvents).filter(([key]) => key in [props.currentMetaData.startDate, props.currentMetaData.endDate])
+  const sortedEvents = sortBy(props.events, 'timeStart')
   
-  console.log(mainEvents, otherEvents)
-  const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
+  const startDate = props.currentMetaData.startDate;
+  const endDate = props.currentMetaData.endDate;
 
-  const parsedQueryEvent = typeof props.query.event === 'string'
-    ? props.events.find((event) => event.id === props.query.event)
-    : null;
+  const otherGrouped = groupBy(sortedEvents, ({ date }) =>
+    date === startDate || date === endDate ? date : 'Før itDAGENE'
+  );
+
+  const sortedKeys = sortBy(Object.keys(otherGrouped), (key) => [dayjs(key).isValid(), key]);
   
-  
+  const parsedQueryEvent =
+    typeof props.router.query.event === 'string'
+      ? props.events.find((event) => event.id === props.router.query.event)
+      : null;
+
+
   useEffect(() => {
-    setActiveDate(parsedQueryEvent?.date || findClosestDate(sortedKeys));
+    const parsedDate = parsedQueryEvent?.date
+    setActiveDate((parsedDate === startDate || parsedDate === endDate) 
+      ? parsedDate 
+      : findClosestDate(sortedKeys)
+    )
   }, []);
 
   if (props.events.length === 0) {
@@ -94,10 +105,13 @@ const ProgramView = (props: Props): JSX.Element => {
           options={sortedKeys}
           activeOption={activeDate}
           setActiveOption={setActiveDate}
-          dateOptions
         />
       </Flex>
-      <ProgramTimeline activeDate={activeDate} events={groupedEvents} query={props.query} />
+      <ProgramTimeline
+        activeDate={activeDate}
+        events={otherGrouped}
+        router={props.router}
+      />
     </Flex>
   );
 };
@@ -127,5 +141,5 @@ export default createFragmentContainer(ProgramView, {
       startDate
       endDate
     }
-    `
+  `,
 });
