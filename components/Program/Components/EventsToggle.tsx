@@ -25,7 +25,9 @@ const EventsToggle = ({
           active={opt === activeOption}
         >
           <SubHeader>
-            {dayjs(opt).isValid() ? capitalize(dayjs(opt).format('dddd DD.MM')) : opt}
+            {dayjs(opt).isValid()
+              ? capitalize(dayjs(opt).format('dddd DD.MM'))
+              : opt}
           </SubHeader>
         </ToggleItem>
       ))}

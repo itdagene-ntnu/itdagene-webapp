@@ -51,9 +51,9 @@ const ProgramView = (props: Props): JSX.Element => {
     sortBy(props.showToggleButton ? filteredEvents : props.events, 'timeStart'),
     'date'
   );
-  
-  const sortedEvents = sortBy(props.events, 'timeStart')
-  
+
+  const sortedEvents = sortBy(props.events, 'timeStart');
+
   const startDate = props.currentMetaData.startDate;
   const endDate = props.currentMetaData.endDate;
 
@@ -61,20 +61,23 @@ const ProgramView = (props: Props): JSX.Element => {
     date === startDate || date === endDate ? date : 'Før itDAGENE'
   );
 
-  const sortedKeys = sortBy(Object.keys(otherGrouped), (key) => [dayjs(key).isValid(), key]);
-  
+  const sortedKeys = sortBy(Object.keys(otherGrouped), (key) => [
+    dayjs(key).isValid(),
+    key,
+  ]);
+
   const parsedQueryEvent =
     typeof props.router.query.event === 'string'
       ? props.events.find((event) => event.id === props.router.query.event)
       : null;
 
-
   useEffect(() => {
-    const parsedDate = parsedQueryEvent?.date
-    setActiveDate((parsedDate === startDate || parsedDate === endDate) 
-      ? parsedDate 
-      : findClosestDate(sortedKeys)
-    )
+    const parsedDate = parsedQueryEvent?.date;
+    setActiveDate(
+      parsedDate === startDate || parsedDate === endDate
+        ? parsedDate
+        : findClosestDate(sortedKeys)
+    );
   }, []);
 
   if (props.events.length === 0) {

@@ -42,7 +42,7 @@ export default withDataAndLayout(Index, {
         ...ProgramView_events
       }
       currentMetaData {
-       ...ProgramView_currentMetaData
+        ...ProgramView_currentMetaData
       }
       programPage: page(slug: "program") {
         ...PageView_page

@@ -10,7 +10,7 @@ export const findClosestDate = (dates: string[], parseFormat = ''): string => {
 
   for (let i = 1; i < dates.length; i++) {
     if (!dayjs(dates[i]).isValid()) continue;
-    console.log(dates[i])
+    console.log(dates[i]);
     const currentDifference = Math.abs(dayjs(dates[i], parseFormat).diff(now));
     if (currentDifference < smallestDifference) {
       smallestDifference = currentDifference;
