@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy, sortBy } from 'lodash';
-import dayjs from 'dayjs';
 
 import styled from 'styled-components';
 import { graphql, createFragmentContainer } from 'react-relay';
 
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
-import { ProgramView_stands } from '../../__generated__/ProgramView_stands.graphql';
 import EventsToggle from './Components/EventsToggle';
 
 import Flex from '../Styled/Flex';
@@ -14,6 +12,10 @@ import Flex from '../Styled/Flex';
 import ProgramTimeline from './Components/ProgramTimeline';
 import { findClosestDate } from '../../utils/findClosestDate';
 import { isMobile } from 'react-device-detect';
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
+import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_currentMetaData.graphql';
+import dayjs from 'dayjs';
+import { NextRouter } from 'next/router';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -30,14 +32,32 @@ const UnderDevelopmentPlaceholder = styled('img')`
 
 type Props = {
   events: ProgramView_events;
-  stands: ProgramView_stands | null;
+  currentMetaData: ProgramView_currentMetaData;
   showToggleButton?: boolean;
   useLinks?: boolean;
+  router: NextRouter;
 };
 
 const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState('Generelt program');
   const [activeDate, setActiveDate] = useState('');
+
+  const updateQueryEvent = (eventId: any): void => {
+    const newQuery = { ...props.router.query, event: eventId };
+    props.router.push(
+      {
+        pathname: props.router.pathname,
+        query: newQuery,
+      },
+      undefined,
+      { shallow: true, scroll: false }
+    );
+  };
+
+  const updateActiveDate = (opt: string): void => {
+    setActiveDate(opt);
+    updateQueryEvent(groupedEvents[opt][0].id);
+  };
 
   const filteredEvents: ProgramView_events = props.events.filter((event) =>
     showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
@@ -49,10 +69,33 @@ const ProgramView = (props: Props): JSX.Element => {
     'date'
   );
 
-  const sortedKeys = sortBy(Object.keys(groupedEvents || {}));
+  // const sortedEvents = sortBy(props.events, 'timeStart');
+
+  const startDate = props.currentMetaData.startDate;
+  const endDate = props.currentMetaData.endDate;
+
+  // Use for "Før itDAGENE tab, need to update find closes event logic"
+  // const otherGrouped = groupBy(sortedEvents, ({ date }) =>
+  //   date === startDate || date === endDate ? date : 'Før itDAGENE'
+  // );
+
+  const sortedKeys = sortBy(Object.keys(groupedEvents), (key) => [
+    dayjs(key).isValid(),
+    key,
+  ]);
+
+  const parsedQueryEvent =
+    typeof props.router.query.event === 'string'
+      ? props.events.find((event) => event.id === props.router.query.event)
+      : null;
 
   useEffect(() => {
-    setActiveDate(findClosestDate(sortedKeys));
+    const parsedDate = parsedQueryEvent?.date;
+    setActiveDate(
+      parsedDate === startDate || parsedDate === endDate
+        ? parsedDate
+        : findClosestDate(sortedKeys)
+    );
   }, []);
 
   if (props.events.length === 0) {
@@ -82,11 +125,15 @@ const ProgramView = (props: Props): JSX.Element => {
         <EventsToggle
           options={sortedKeys}
           activeOption={activeDate}
-          setActiveOption={setActiveDate}
-          dateOptions
+          setActiveOption={updateActiveDate}
         />
       </Flex>
-      <ProgramTimeline activeDate={activeDate} events={groupedEvents} />
+      <ProgramTimeline
+        activeDate={activeDate}
+        updateQueryEvent={updateQueryEvent}
+        events={groupedEvents}
+        router={props.router}
+      />
     </Flex>
   );
 };
@@ -111,12 +158,10 @@ export default createFragmentContainer(ProgramView, {
       maxParticipants
     }
   `,
-  stands: graphql`
-    fragment ProgramView_stands on Stand @relay(plural: true) {
-      company {
-        id
-      }
-      slug
+  currentMetaData: graphql`
+    fragment ProgramView_currentMetaData on MetaData {
+      startDate
+      endDate
     }
   `,
 });

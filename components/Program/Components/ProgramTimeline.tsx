@@ -22,12 +22,15 @@ import Flex from '../../Styled/Flex';
 import Link from 'next/link';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { capitalize } from 'lodash';
+import { NextRouter } from 'next/router';
 
 dayjs.extend(customParseFormat);
 
 type ProgramTimelineProps = {
   activeDate: string;
+  updateQueryEvent: (opt: string) => void;
   events: Record<string, ProgramView_events>;
+  router: NextRouter;
 };
 
 const Card = styled.div<{ active?: boolean }>`
@@ -52,15 +55,30 @@ const EventCover = styled.img`
 
 const DesktopProgramTimeline = ({
   activeDate,
+  updateQueryEvent,
   events,
+  router,
 }: ProgramTimelineProps): JSX.Element => {
   const [activeEvent, setActiveEvent] =
     useState<ArrayElement<ProgramView_events>>();
+
+  const updateActiveEvent = (event: any): void => {
+    setActiveEvent(event);
+    updateQueryEvent(event.id);
+  };
 
   // If activeDate is today, select the next event to happen,
   // if not select the first event of that day
   useEffect(() => {
     if (!events || !events[activeDate]) return;
+    const parsedQueryEvent =
+      typeof router.query.event === 'string'
+        ? events[activeDate].find((event) => event.id === router.query.event)
+        : null;
+    if (parsedQueryEvent) {
+      setActiveEvent(parsedQueryEvent);
+      return;
+    }
     const closestTime = findClosestDate(
       events[activeDate].map((event) => event.timeStart),
       'HH:mm:ss'
@@ -104,7 +122,7 @@ const DesktopProgramTimeline = ({
               <TimelineContent style={{ padding: '5px 1rem 5px 2rem' }}>
                 <Card
                   active={activeEvent?.id === event.id}
-                  onClick={(): void => setActiveEvent(event)}
+                  onClick={(): void => updateActiveEvent(event)}
                 >
                   <Flex flexDirection="column">
                     <h3

@@ -4,13 +4,13 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { program_QueryResponse } from '../__generated__/program_Query.graphql';
 import PageView from '../components/PageView';
 import ProgramView from '../components/Program/ProgramView';
-import styled from 'styled-components';
 import Flex from '../components/Styled/Flex';
 import FlexItem from '../components/Styled/FlexItem';
 
 const Index = ({
   error,
   props,
+  router,
 }: WithDataAndLayoutProps<program_QueryResponse>): JSX.Element => (
   <>
     {props.programPage && <PageView hideContent page={props.programPage} />}
@@ -20,7 +20,8 @@ const Index = ({
     {props.events ? (
       <ProgramView
         events={props.events}
-        stands={props.stands}
+        router={router}
+        currentMetaData={props.currentMetaData}
         // showToggleButton
         // useLinks
       />
@@ -37,11 +38,11 @@ const Index = ({
 export default withDataAndLayout(Index, {
   query: graphql`
     query program_Query {
-      stands {
-        ...ProgramView_stands
-      }
       events {
         ...ProgramView_events
+      }
+      currentMetaData {
+        ...ProgramView_currentMetaData
       }
       programPage: page(slug: "program") {
         ...PageView_page
