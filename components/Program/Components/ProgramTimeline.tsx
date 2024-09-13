@@ -28,6 +28,7 @@ dayjs.extend(customParseFormat);
 
 type ProgramTimelineProps = {
   activeDate: string;
+  updateQueryEvent: (opt: string) => void;
   events: Record<string, ProgramView_events>;
   router: NextRouter;
 };
@@ -54,11 +55,17 @@ const EventCover = styled.img`
 
 const DesktopProgramTimeline = ({
   activeDate,
+  updateQueryEvent,
   events,
   router,
 }: ProgramTimelineProps): JSX.Element => {
   const [activeEvent, setActiveEvent] =
     useState<ArrayElement<ProgramView_events>>();
+
+  const updateActiveEvent = (event: any): void => {
+    setActiveEvent(event);
+    updateQueryEvent(event.id);
+  };
 
   // If activeDate is today, select the next event to happen,
   // if not select the first event of that day
@@ -115,18 +122,7 @@ const DesktopProgramTimeline = ({
               <TimelineContent style={{ padding: '5px 1rem 5px 2rem' }}>
                 <Card
                   active={activeEvent?.id === event.id}
-                  onClick={(): void => {
-                    const newQuery = { ...router.query, event: event.id };
-                    router.push(
-                      {
-                        pathname: router.pathname,
-                        query: newQuery,
-                      },
-                      undefined,
-                      { shallow: true, scroll: false }
-                    );
-                    setActiveEvent(event);
-                  }}
+                  onClick={(): void => updateActiveEvent(event)}
                 >
                   <Flex flexDirection="column">
                     <h3

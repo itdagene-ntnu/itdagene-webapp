@@ -201,7 +201,6 @@ export default createFragmentContainer(Stand, {
       qaUrl
       chatUrl
       ...AboutStand_stand
-      ...StandProgram_stand
     }
   `,
 });

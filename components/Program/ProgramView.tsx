@@ -42,6 +42,23 @@ const ProgramView = (props: Props): JSX.Element => {
   const [showPromoted, setShowPromoted] = useState('Generelt program');
   const [activeDate, setActiveDate] = useState('');
 
+  const updateQueryEvent = (eventId: any): void => {
+    const newQuery = { ...props.router.query, event: eventId };
+    props.router.push(
+      {
+        pathname: props.router.pathname,
+        query: newQuery,
+      },
+      undefined,
+      { shallow: true, scroll: false }
+    );
+  };
+
+  const updateActiveDate = (opt: string): void => {
+    setActiveDate(opt);
+    updateQueryEvent(groupedEvents[opt][0].id);
+  };
+
   const filteredEvents: ProgramView_events = props.events.filter((event) =>
     showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
   );
@@ -52,16 +69,17 @@ const ProgramView = (props: Props): JSX.Element => {
     'date'
   );
 
-  const sortedEvents = sortBy(props.events, 'timeStart');
+  // const sortedEvents = sortBy(props.events, 'timeStart');
 
   const startDate = props.currentMetaData.startDate;
   const endDate = props.currentMetaData.endDate;
 
-  const otherGrouped = groupBy(sortedEvents, ({ date }) =>
-    date === startDate || date === endDate ? date : 'Før itDAGENE'
-  );
+  // Use for "Før itDAGENE tab, need to update find closes event logic"
+  // const otherGrouped = groupBy(sortedEvents, ({ date }) =>
+  //   date === startDate || date === endDate ? date : 'Før itDAGENE'
+  // );
 
-  const sortedKeys = sortBy(Object.keys(otherGrouped), (key) => [
+  const sortedKeys = sortBy(Object.keys(groupedEvents), (key) => [
     dayjs(key).isValid(),
     key,
   ]);
@@ -107,12 +125,13 @@ const ProgramView = (props: Props): JSX.Element => {
         <EventsToggle
           options={sortedKeys}
           activeOption={activeDate}
-          setActiveOption={setActiveDate}
+          setActiveOption={updateActiveDate}
         />
       </Flex>
       <ProgramTimeline
         activeDate={activeDate}
-        events={otherGrouped}
+        updateQueryEvent={updateQueryEvent}
+        events={groupedEvents}
         router={props.router}
       />
     </Flex>
