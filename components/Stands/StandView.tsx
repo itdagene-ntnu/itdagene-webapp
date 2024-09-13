@@ -99,7 +99,7 @@ const SubPage = ({
         </>
       );
     case 'program':
-      return <ProgramPage stand={stand} />;
+      return <ProgramPage />;
     case 'joblistings':
       return <JobListingsPage company={stand.company} />;
     default:
