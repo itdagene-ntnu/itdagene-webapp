@@ -10,6 +10,7 @@ import { faq_QueryResponse } from '../__generated__/faq_Query.graphql';
 import ReactMarkdown from 'react-markdown';
 import Flex from '../components/Styled/Flex';
 import FlexItem from '../components/Styled/FlexItem';
+import { groupBy } from 'lodash';
 
 const Title = styled('h1')`
   font-weight: bold;
@@ -18,11 +19,15 @@ const Title = styled('h1')`
   margin-bottom: 1rem;
 `;
 
+const SubTitle = styled('h2')`
+  font-weight: normal;
+`;
+
 const Question = ({
   question,
 }: {
   question: { question: string; answer: string };
-}) => {
+}): JSX.Element => {
   return (
     <Collapse title={question.question}>
       <ReactMarkdown source={question.answer} />
@@ -34,16 +39,27 @@ const Faq = ({
   error,
   props,
 }: WithDataAndLayoutProps<faq_QueryResponse>): JSX.Element => {
+  const groupedQuestions = groupBy(props.questions, 'isForCompanies');
   return (
     <>
       <Title>Ofte stilte spørsmål</Title>
       {props.questions ? (
-        <Collapse.Group>
-          {props.questions.map(
-            (question, index) =>
-              question && <Question key={index} question={question} />
-          )}
-        </Collapse.Group>
+        <>
+          <SubTitle>Generelle spørsmål</SubTitle>
+          <Collapse.Group>
+            {groupedQuestions['false'].map(
+              (question, index) =>
+                question && <Question key={index} question={question} />
+            )}
+          </Collapse.Group>
+          <SubTitle>For Bedrifter</SubTitle>
+          <Collapse.Group>
+            {groupedQuestions['true'].map(
+              (question, index) =>
+                question && <Question key={index} question={question} />
+            )}
+          </Collapse.Group>
+        </>
       ) : (
         <Flex>
           <FlexItem>
@@ -64,6 +80,7 @@ export default withDataAndLayout(Faq, {
       questions {
         question
         answer
+        isForCompanies
       }
 
       omItdagene: page(slug: "om-itdagene") {
