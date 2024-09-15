@@ -77,7 +77,7 @@ const seed = dayjs().format('YYYYMMDDHHmm');
 const Index = ({
   error,
   props,
-}: WithDataAndLayoutProps<stands_QueryResponse>): JSX.Element => {
+}: WithDataAndLayoutProps<oldStands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(dayjs());
 
   const {
@@ -233,7 +233,7 @@ const LiveContentSection = styled.div`
 
 export default withDataAndLayout(Index, {
   query: graphql`
-    query stands_Query {
+    query oldStands_Query {
       stands {
         id
         events {
