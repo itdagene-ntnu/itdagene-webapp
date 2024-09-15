@@ -54,7 +54,7 @@ export const TimelineItem = ({
             style={{ backgroundColor: color ?? '#BDBDBD', flexGrow: 1 }}
           />
         </Flex>
-        <div style={{ flexGrow: 1 }}>{children[1]}</div>
+        <div style={{ flexGrow: 1, padding: '0.5rem 0' }}>{children[1]}</div>
       </Flex>
     </>
   );

@@ -126,6 +126,8 @@ const DesktopProgramTimeline = ({
                 width: '100px',
                 flexShrink: 0,
                 color: 'grey',
+                marginTop: 'auto',
+                marginBottom: 'auto',
               }}
             >
               {`${eventTime({
