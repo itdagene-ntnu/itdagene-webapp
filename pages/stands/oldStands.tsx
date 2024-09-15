@@ -4,7 +4,7 @@ import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import PageView from '../../components/PageView';
 import styled from 'styled-components';
 
-import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
+import { oldStands_QueryResponse } from '../../__generated__/oldStands_Query.graphql';
 import { useEffect, useState } from 'react';
 import StandCard, { ArrayElement } from '../../components/Stands/StandCard';
 import {
@@ -26,27 +26,27 @@ const intervalLength = 1000 * 30;
 type FeaturedEvent = ArrayElement<
   NonNullable<
     NonNullable<
-      ArrayElement<NonNullable<stands_QueryResponse['stands']>>
+      ArrayElement<NonNullable<oldStands_QueryResponse['stands']>>
     >['events']
   >
 >;
 
 type Companies =
-  | stands_QueryResponse['currentMetaData']['companiesFirstDay']
-  | stands_QueryResponse['currentMetaData']['companiesLastDay']
-  | stands_QueryResponse['currentMetaData']['collaborators'];
+  | oldStands_QueryResponse['currentMetaData']['companiesFirstDay']
+  | oldStands_QueryResponse['currentMetaData']['companiesLastDay']
+  | oldStands_QueryResponse['currentMetaData']['collaborators'];
 
 type Company = NonNullable<
-  stands_QueryResponse['currentMetaData']['companiesFirstDay']
+  oldStands_QueryResponse['currentMetaData']['companiesFirstDay']
 >[number];
 
-type Stands = NonNullable<stands_QueryResponse['stands']>;
+type Stands = NonNullable<oldStands_QueryResponse['stands']>;
 
 const getFeaturedEventStands = (
   time: Dayjs,
-  stands: stands_QueryResponse['stands'],
+  stands: oldStands_QueryResponse['stands'],
   currentDayCompaniesIds: string[]
-): NonNullable<stands_QueryResponse['stands']> => {
+): NonNullable<oldStands_QueryResponse['stands']> => {
   const featuredStands = stands?.filter(
     (stand) =>
       currentDayCompaniesIds.includes(stand.company.id) &&
@@ -57,7 +57,7 @@ const getFeaturedEventStands = (
 
 export const currentFeaturedEvent = (
   time: Dayjs,
-  stand: ArrayElement<NonNullable<stands_QueryResponse['stands']>>
+  stand: ArrayElement<NonNullable<oldStands_QueryResponse['stands']>>
 ): FeaturedEvent | null => {
   const featuredEvent = stand.events?.find(
     (event) =>
