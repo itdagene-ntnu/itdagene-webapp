@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { stands_QueryResponse } from '../../__generated__/stands_Query.graphql';
+import { oldStands_QueryResponse } from '../../__generated__/oldStands_Query.graphql';
 import FeaturedEventCard from './FeaturedEventCard';
 import { currentHalfhour } from '../../utils/time';
 import { Dayjs } from 'dayjs';
@@ -9,7 +9,7 @@ import { PaddedDivider, SubHeader } from '../Styled';
 import Flex from '../Styled/Flex';
 
 interface FeaturedEventsProps {
-  stands: NonNullable<stands_QueryResponse['stands']>;
+  stands: NonNullable<oldStands_QueryResponse['stands']>;
   time: Dayjs;
 }
 
