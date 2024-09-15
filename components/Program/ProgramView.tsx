@@ -91,11 +91,16 @@ const ProgramView = (props: Props): JSX.Element => {
 
   useEffect(() => {
     const parsedDate = parsedQueryEvent?.date;
-    setActiveDate(
-      parsedDate === startDate || parsedDate === endDate
-        ? parsedDate
-        : findClosestDate(sortedKeys)
-    );
+
+    const today = dayjs().format('YYYY-MM-DD');
+
+    if (parsedDate === startDate || parsedDate === endDate) {
+      setActiveDate(parsedDate);
+    } else if (sortedKeys.includes(today)) {
+      setActiveDate(today);
+    } else {
+      setActiveDate(sortedKeys[0]);
+    }
   }, []);
 
   if (props.events.length === 0) {

@@ -1,19 +1,16 @@
-import Timeline from '@mui/lab/Timeline';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import TimelineItem, { timelineItemClasses } from '@mui/lab/TimelineItem';
-import TimelineOppositeContent, {
-  timelineOppositeContentClasses,
-} from '@mui/lab/TimelineOppositeContent';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import { Collapse, Text } from '@nextui-org/react';
+import { Timeline, TimelineItem } from './Timeline';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
-import { itdageneBlue } from '../../../utils/colors';
+import {
+  blueNCS,
+  indigoDye,
+  itdageneBlue,
+  princetonOrange,
+  skyBlue,
+} from '../../../utils/colors';
 import { findClosestDate } from '../../../utils/findClosestDate';
 import { eventTime, toDayjs } from '../../../utils/time';
 import { ArrayElement } from '../../../utils/types';
@@ -22,6 +19,7 @@ import Flex from '../../Styled/Flex';
 import Link from 'next/link';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { capitalize } from 'lodash';
+import { Collapse } from '@nextui-org/react';
 import { NextRouter } from 'next/router';
 
 dayjs.extend(customParseFormat);
@@ -45,6 +43,7 @@ const Card = styled.div<{ active?: boolean }>`
 
 const Grid = styled.div`
   display: grid;
+  gap: 1.5rem;
   grid-template-columns: 40% 60%;
 `;
 
@@ -52,6 +51,12 @@ const EventCover = styled.img`
   max-height: 256px;
   object-fit: cover;
 `;
+
+const timelineColors = [indigoDye, blueNCS, princetonOrange, skyBlue];
+
+const hasHappened = (date: string, time: string) => {
+  return dayjs().isAfter(dayjs(`${date} ${time}`, 'YYYY-MM-DD HH:mm::ss'));
+};
 
 const DesktopProgramTimeline = ({
   activeDate,
@@ -69,6 +74,7 @@ const DesktopProgramTimeline = ({
 
   // If activeDate is today, select the next event to happen,
   // if not select the first event of that day
+
   useEffect(() => {
     if (!events || !events[activeDate]) return;
     const parsedQueryEvent =
@@ -79,11 +85,14 @@ const DesktopProgramTimeline = ({
       setActiveEvent(parsedQueryEvent);
       return;
     }
+    const upcomingEvents = events[activeDate].filter(
+      (event) => !hasHappened(activeDate, event.timeEnd)
+    );
     const closestTime = findClosestDate(
-      events[activeDate].map((event) => event.timeStart),
+      upcomingEvents.map((event) => event.timeStart),
       'HH:mm:ss'
     );
-    const closestEvent = events[activeDate].find(
+    const closestEvent = upcomingEvents.find(
       (event) => event.timeStart === closestTime
     );
     const isToday = dayjs(activeDate).isSame(dayjs(), 'day');
@@ -92,72 +101,76 @@ const DesktopProgramTimeline = ({
     );
   }, [events, activeDate]);
 
+  if (!activeDate) return <span></span>;
+
   return (
     <Grid>
-      <Timeline
-        sx={{
-          [`& .${timelineOppositeContentClasses.root}`]: {
-            flex: 0.5,
-          },
-        }}
-      >
-        {activeDate &&
-          events[activeDate].map((event: any) => (
-            <TimelineItem key={activeDate + event.id}>
-              <TimelineOppositeContent
-                style={{ margin: 'auto 0', padding: '0 1rem', color: 'grey' }}
-              >
-                {`${eventTime({
-                  start: toDayjs(event.date, event.timeStart),
-                  end: toDayjs(event.date, event.timeEnd),
-                })}`}
-              </TimelineOppositeContent>
+      <Timeline>
+        {events[activeDate].map((event: any, index: number) => (
+          <TimelineItem
+            key={event.id}
+            prevColor={
+              hasHappened(activeDate, event.timeStart)
+                ? timelineColors[index % timelineColors.length]
+                : undefined
+            }
+            color={
+              hasHappened(activeDate, event.timeStart)
+                ? timelineColors[(index + 1) % timelineColors.length]
+                : undefined
+            }
+          >
+            <div
+              style={{
+                textAlign: 'right',
+                width: '100px',
+                flexShrink: 0,
+                color: 'grey',
+              }}
+            >
+              {`${eventTime({
+                start: toDayjs(event.date, event.timeStart),
+                end: toDayjs(event.date, event.timeEnd),
+              })}`}
+            </div>
 
-              <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot color="inherit"></TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-
-              <TimelineContent style={{ padding: '5px 1rem 5px 2rem' }}>
-                <Card
-                  active={activeEvent?.id === event.id}
-                  onClick={(): void => updateActiveEvent(event)}
+            <Card
+              active={activeEvent?.id === event.id}
+              onClick={(): void => updateActiveEvent(event)}
+            >
+              <Flex flexDirection="column" gap="0.5rem">
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: 20,
+                    fontWeight: 400,
+                    hyphens: 'manual',
+                  }}
                 >
-                  <Flex flexDirection="column">
-                    <h3
-                      style={{
-                        margin: 0,
-                        fontSize: 20,
-                        fontWeight: 400,
-                        hyphens: 'manual',
-                      }}
-                    >
-                      {event.title}
-                    </h3>
-                    <Flex
-                      style={{
-                        color: activeEvent?.id === event.id ? '#eee' : 'grey',
-                      }}
-                      alignItems="center"
-                    >
-                      {/* eslint-disable-next-line*/}
-                      {/* @ts-ignore*/}
-                      <ion-icon
-                        style={{
-                          color:
-                            activeEvent?.id === event.id ? '#eee' : '#156493',
-                        }}
-                        name="location-sharp"
-                      />
+                  {event.title}
+                </h3>
+                <Flex
+                  style={{
+                    color: activeEvent?.id === event.id ? '#eee' : 'grey',
+                  }}
+                  alignItems="center"
+                  gap="0.1rem"
+                >
+                  {/* eslint-disable-next-line*/}
+                  {/* @ts-ignore*/}
+                  <ion-icon
+                    style={{
+                      color: activeEvent?.id === event.id ? '#eee' : '#156493',
+                    }}
+                    name="location-sharp"
+                  />
 
-                      {event.location}
-                    </Flex>
-                  </Flex>
-                </Card>
-              </TimelineContent>
-            </TimelineItem>
-          ))}
+                  {event.location}
+                </Flex>
+              </Flex>
+            </Card>
+          </TimelineItem>
+        ))}
       </Timeline>
       {activeEvent && <EventPage event={activeEvent} />}
     </Grid>
@@ -216,31 +229,31 @@ const MobileProgramTimeline = ({
   events,
 }: ProgramTimelineProps): JSX.Element => {
   return (
-    <Timeline
-      sx={{
-        [`& .${timelineItemClasses.root}:before`]: {
-          flex: 0,
-          padding: 0,
-        },
-      }}
-    >
+    <Timeline>
       <Collapse.Group>
         {activeDate &&
-          events[`${activeDate}`].map((event: any) => (
-            <TimelineItem key={activeDate + event.id}>
-              <TimelineSeparator>
-                <TimelineConnector />
-                <TimelineDot color="inherit"></TimelineDot>
-                <TimelineConnector />
-              </TimelineSeparator>
-
-              <TimelineContent style={{ padding: '5px 1rem 5px 2rem' }}>
-                <Collapse
-                  shadow
-                  bordered={false}
-                  title={<h5>{event.title}</h5>}
-                  subtitle={
-                    <>
+          events[`${activeDate}`].map((event: any, index: number) => (
+            <TimelineItem
+              key={activeDate + event.id}
+              prevColor={
+                hasHappened(activeDate, event.timeStart)
+                  ? timelineColors[index % timelineColors.length]
+                  : undefined
+              }
+              color={
+                hasHappened(activeDate, event.timeStart)
+                  ? timelineColors[(index + 1) % timelineColors.length]
+                  : undefined
+              }
+            >
+              <span></span>
+              <Collapse
+                shadow
+                bordered={false}
+                title={<h5>{event.title}</h5>}
+                subtitle={
+                  <>
+                    <div className="flex gap-1 items-center">
                       {/* eslint-disable-next-line*/}
                       {/* @ts-ignore*/}
                       <ion-icon
@@ -248,21 +261,27 @@ const MobileProgramTimeline = ({
                         name="location-sharp"
                       />
                       {event.location}
-                      <div>
-                        {`${eventTime({
-                          start: toDayjs(event.date, event.timeStart),
-                          end: toDayjs(event.date, event.timeEnd),
-                        })}`}
-                      </div>
-                    </>
-                  }
-                >
-                  <ReactMarkdown
-                    renderers={renderers}
-                    source={event.description}
-                  />
-                </Collapse>
-              </TimelineContent>
+                    </div>
+                    <div className="flex gap-1 items-center">
+                      {/* eslint-disable-next-line*/}
+                      {/* @ts-ignore*/}
+                      <ion-icon
+                        style={{ color: '#156493' }}
+                        name="time-sharp"
+                      />
+                      {`${eventTime({
+                        start: toDayjs(event.date, event.timeStart),
+                        end: toDayjs(event.date, event.timeEnd),
+                      })}`}
+                    </div>
+                  </>
+                }
+              >
+                <ReactMarkdown
+                  renderers={renderers}
+                  source={event.description}
+                />
+              </Collapse>
             </TimelineItem>
           ))}
       </Collapse.Group>
