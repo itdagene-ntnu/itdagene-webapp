@@ -108,8 +108,8 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
           </FlexItem>
         </Flex>
 
-        <Link href="/om-itdagene">
-          <ReadMore>Les mer</ReadMore>
+        <Link href="/program">
+          <ReadMore>Se program!</ReadMore>
         </Link>
       </MainContainer>
     </RootContainer>

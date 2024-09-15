@@ -71,7 +71,7 @@ const CompactProgram = (): JSX.Element => (
         </Link>
       </Tile>
       <Tile color={skyBlue}>
-        <Link href="/info/stands" legacyBehavior>
+        <Link href="/stands" legacyBehavior>
           <CenterIt text>
             <StyledLink>Stands</StyledLink>
           </CenterIt>
@@ -85,12 +85,6 @@ const CompactProgram = (): JSX.Element => (
         </Link>
       </Tile>
     </Flex>
-
-    <CenterIt text>
-      <Link href="/program">
-        <ReadMore>Les mer</ReadMore>
-      </Link>
-    </CenterIt>
   </Flex>
 );
 
