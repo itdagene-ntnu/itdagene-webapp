@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
 import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
+import { Button } from '@mui/material';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -60,10 +61,13 @@ const ReadMore = styled('h4')`
 const Video = styled('video')`
   margin: 0;
   width: 100%;
+  height: auto;
+  // max-height: 500px;
   @media only screen and (max-width: 800px) {
     display: none;
   }
 `;
+
 const RootContainer = styled('div')`
   max-height: 800px;
   @media only screen and (max-width: 800px) {
@@ -78,6 +82,15 @@ const RootContainer = styled('div')`
 const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
   const startDate = dayjs(currentMetaData.startDate);
   const endDate = dayjs(currentMetaData.endDate);
+  const targetRef = useRef<HTMLDivElement | null>(null);
+  const scrollToTarget = () => {
+    const targetElement = document.getElementById('interesse-skjema-div'); // Use the id of the target div
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+
 
   return (
     <RootContainer>
@@ -108,9 +121,9 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
           </FlexItem>
         </Flex>
 
-        <Link href="/program">
-          <ReadMore>Se program!</ReadMore>
-        </Link>
+        <Button onClick={scrollToTarget}>
+          <ReadMore>Meld interesse!</ReadMore>
+        </Button>
       </MainContainer>
     </RootContainer>
   );
