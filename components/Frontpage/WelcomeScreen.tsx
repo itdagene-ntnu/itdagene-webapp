@@ -1,8 +1,7 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import Countdown from '../Countdown';
-import Link from 'next/link';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 import { itdageneDarkBlue } from '../../utils/colors';
@@ -82,8 +81,8 @@ const RootContainer = styled('div')`
 const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
   const startDate = dayjs(currentMetaData.startDate);
   const endDate = dayjs(currentMetaData.endDate);
-  const scrollToTarget = () => {
-    const targetElement = document.getElementById('interesse-skjema-div'); // Use the id of the target div
+  const scrollToTarget = (): void => {
+    const targetElement = document.getElementById('interest-schema-div');
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth' });
     }
