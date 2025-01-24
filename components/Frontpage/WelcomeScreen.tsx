@@ -82,15 +82,12 @@ const RootContainer = styled('div')`
 const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
   const startDate = dayjs(currentMetaData.startDate);
   const endDate = dayjs(currentMetaData.endDate);
-  const targetRef = useRef<HTMLDivElement | null>(null);
   const scrollToTarget = () => {
     const targetElement = document.getElementById('interesse-skjema-div'); // Use the id of the target div
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-
 
   return (
     <RootContainer>
