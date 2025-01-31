@@ -30,7 +30,11 @@ type Props = {
 
 const Interest = ({ form }: Props): JSX.Element => (
   <>
-    <Flex flexWrap="wrap-reverse" alignContent="space-around">
+    <Flex
+      flexWrap="wrap-reverse"
+      alignContent="space-around"
+      id="interest-schema-div"
+    >
       <FlexItem flexBasis="700px" flexGrow="1">
         <Title>Interessert i å delta? </Title>
         <p>
