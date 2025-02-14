@@ -12,6 +12,7 @@ type Props = {
   page: PageView_page;
   hideContent?: boolean;
   hideTitle?: boolean;
+  blueBackground?: boolean;
 };
 
 const Title = styled('h1')`
@@ -19,6 +20,15 @@ const Title = styled('h1')`
   font-smoothing: antialiased;
   font-size: 3rem;
   margin-bottom: 1rem;
+  margin-top: 0.5rem;
+`;
+
+const PageContainer = styled.div<{ blueBackground?: boolean }>`
+  background-color: ${(props) =>
+    props.blueBackground ? 'rgb(2,123,180)' : 'transparent'};
+  color: ${(props) => (props.blueBackground ? 'white' : 'black')};
+  padding: 1rem;
+  border-radius: 25px;
 `;
 
 const LinkRenderer = ({
@@ -37,9 +47,14 @@ const LinkRenderer = ({
 
 const renderers = { link: LinkRenderer };
 
-const PageView = ({ page, hideContent, hideTitle }: Props): JSX.Element => {
+const PageView = ({
+  page,
+  hideContent,
+  hideTitle,
+  blueBackground,
+}: Props): JSX.Element => {
   return (
-    <>
+    <PageContainer blueBackground={blueBackground}>
       {!hideTitle && <Title>{page.title}</Title>}
       {!hideContent && (
         <Flex flexDirection="column">
@@ -54,7 +69,7 @@ const PageView = ({ page, hideContent, hideTitle }: Props): JSX.Element => {
           src={'https://itdagene.no/uploads/' + page.videoFile}
         />
       )}
-    </>
+    </PageContainer>
   );
 };
 
