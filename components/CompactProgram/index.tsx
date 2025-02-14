@@ -78,9 +78,9 @@ const CompactProgram = (): JSX.Element => (
         </Link>
       </Tile>
       <Tile color={indigoDye}>
-        <Link href="/info/bankett" legacyBehavior>
+        <Link href="/galleri" legacyBehavior>
           <CenterIt text>
-            <StyledLink>Bankett</StyledLink>
+            <StyledLink>Galleri</StyledLink>
           </CenterIt>
         </Link>
       </Tile>
