@@ -7,11 +7,13 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import Flex from '../Styled/Flex';
 import { Player } from 'video-react';
+import { itdageneBlue } from '../../utils/colors';
 
 type Props = {
   page: PageView_page;
   hideContent?: boolean;
   hideTitle?: boolean;
+  blueBackground?: boolean;
 };
 
 const Title = styled('h1')`
@@ -19,6 +21,16 @@ const Title = styled('h1')`
   font-smoothing: antialiased;
   font-size: 3rem;
   margin-bottom: 1rem;
+  margin-top: 1rem;
+`;
+
+const PageContainer = styled.div<{ blueBackground?: boolean }>`
+  background-color: ${(props) =>
+    props.blueBackground ? itdageneBlue : 'transparent'};
+  color: ${(props) => (props.blueBackground ? 'white' : 'black')};
+  padding: 2.5rem;
+  border-radius: 2rem;
+  margin-bottom: 3rem;
 `;
 
 const LinkRenderer = ({
@@ -37,9 +49,14 @@ const LinkRenderer = ({
 
 const renderers = { link: LinkRenderer };
 
-const PageView = ({ page, hideContent, hideTitle }: Props): JSX.Element => {
+const PageView = ({
+  page,
+  hideContent,
+  hideTitle,
+  blueBackground,
+}: Props): JSX.Element => {
   return (
-    <>
+    <PageContainer blueBackground={blueBackground}>
       {!hideTitle && <Title>{page.title}</Title>}
       {!hideContent && (
         <Flex flexDirection="column">
@@ -54,7 +71,7 @@ const PageView = ({ page, hideContent, hideTitle }: Props): JSX.Element => {
           src={'https://itdagene.no/uploads/' + page.videoFile}
         />
       )}
-    </>
+    </PageContainer>
   );
 };
 
