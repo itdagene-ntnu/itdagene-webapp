@@ -29,7 +29,9 @@ const Index = ({
   props,
 }: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => (
   <>
-    {props.omItdagene && <PageView page={props.omItdagene} />}
+    {props.omItdagene && (
+      <PageView page={props.omItdagene} blueBackground={true} />
+    )}
     <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
     <Flex
       flexWrap="wrap"
