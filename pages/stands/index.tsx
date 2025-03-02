@@ -14,6 +14,11 @@ const DateTitle = styled.h2`
   margin: 0 0 3rem;
 `;
 
+const InfoIngress = styled.h2`
+  font-weight: 400;
+  margin-bottom: 2rem;
+`;
+
 const StandImage = styled.img`
   margin-bottom: 3rem;
 `;
@@ -22,6 +27,10 @@ const Index = (): JSX.Element => {
   return (
     <>
       <Title>Stands</Title>
+      <InfoIngress>Oversikt over standplasser</InfoIngress>
+      <StandImage src="/static/standkart_uten_bedrifter.png" />
+      {/* Fjern kommentar når standsoversikt er ferdig */}
+      {/* <Title>Stands</Title>
       <DateTitle>Mandag</DateTitle>
       <StandImage
         src="https://cdn.itdagene.no/mandag_oppdatert.png"
@@ -31,7 +40,7 @@ const Index = (): JSX.Element => {
       <StandImage
         src="https://cdn.itdagene.no/stands_tirsdag.png"
         alt="Stands tirsdag"
-      />
+      /> */}
     </>
   );
 };
