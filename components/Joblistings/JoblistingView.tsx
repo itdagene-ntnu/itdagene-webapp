@@ -30,7 +30,7 @@ const Sidebar = styled('div')`
   text-align: center;
   flex-direction: column;
   align-items: center;
-  #border-left: 1px solid ${lightGrey};
+  //border-left: 1px solid ${lightGrey};
   margin: 20px 20px 20px 20px;
   padding: 0 20px;
 `;
