@@ -25,7 +25,7 @@ const Sidebar = styled('div')`
   text-align: center;
   flex-direction: column;
   align-items: center;
-  #border-left: 1px solid ${lightGrey};
+  //border-left: 1px solid ${lightGrey};
   margin: 10px;
   padding: 0 20px;
 `;
@@ -125,7 +125,7 @@ const OrderBySelector = withRouter(({ router }) => (
 
 export const jobTypeOptions = [
   { value: '', label: 'Alle' },
-  { value: 'pp', label: 'Fastjobb' },
+  { value: 'pp', label: 'Fast stilling' },
   { value: 'si', label: 'Sommerjobb' },
   { value: 'ot', label: 'Andre' },
 ];
