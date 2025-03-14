@@ -55,7 +55,7 @@ const CountDownComponent = ({
   minutes,
   seconds,
   completed,
-}: RendererProps) => {
+}: RendererProps): JSX.Element => {
   const [staticDate, setStaticDate] = useState(true);
   useEffect(() => {
     setStaticDate(false);
