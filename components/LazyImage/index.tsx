@@ -1,4 +1,4 @@
-import { Skeleton, SkeletonTypeMap } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import Image, { ImageProps } from 'next/image';
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -11,12 +11,12 @@ const StyledImage = styled(Image)<{
   justify-content: center;
   align-items: center;
   object-fit: cover;
-  cursor: ${(props) => props.$cursor || 'default'};
+  cursor: ${(props): string => props.$cursor || 'default'};
   transform: scale(1);
   transition: transform 0.2s ease-in-out;
 
   &:hover {
-    transform: scale(${(props) => (props.$hover ? '1.025' : '1')});
+    transform: scale(${(props): string => (props.$hover ? '1.025' : '1')});
     z-index: 99;
   }
 `;

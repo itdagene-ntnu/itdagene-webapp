@@ -4,7 +4,6 @@ import styled, { css } from 'styled-components';
 import LoadingIndicator from '../LoadingIndicator';
 import { HeaderMenu } from '../Header';
 import { itdageneBlue } from '../../utils/colors';
-import Router from 'next/router';
 import OpengraphFragmentRenderer, { CustomOpengraphRenderer } from './metadata';
 import { metadata_metadata } from '../../__generated__/metadata_metadata.graphql';
 

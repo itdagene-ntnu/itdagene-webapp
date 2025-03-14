@@ -18,7 +18,6 @@ type Props = {
 
 const Title = styled('h1')`
   font-weight: bold;
-  font-smoothing: antialiased;
   font-size: 3rem;
   margin-bottom: 1rem;
   margin-top: 1rem;
