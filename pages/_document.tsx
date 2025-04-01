@@ -9,8 +9,8 @@ import Document, {
 import * as Sentry from '@sentry/node';
 import { ServerStyleSheet } from 'styled-components';
 import * as React from 'react';
-import { itdageneBlue, itdageneLightBlue } from '../utils/colors';
 import Script from 'next/script';
+
 export default class Default extends Document<{
   styleTags: Array<React.ReactElement<{}>>;
 }> {
@@ -135,12 +135,12 @@ export default class Default extends Document<{
           <NextScript />
           <Script
             type="module"
-            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+            src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
             strategy="beforeInteractive"
           />
           <Script
             noModule
-            src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+            src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.js"
             strategy="beforeInteractive"
           />
         </body>
