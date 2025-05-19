@@ -4,7 +4,9 @@ import {
   ReactElement,
   useCallback,
   useEffect,
+  useMemo,
   useState,
+  ReactNode,
 } from 'react';
 import { itdageneBlue } from '../../utils/colors';
 import {
@@ -15,6 +17,8 @@ import {
 import { galleri_QueryResponse } from '../../__generated__/galleri_Query.graphql';
 import { graphql } from 'react-relay';
 import LazyImage from '../../components/LazyImage';
+import { sortBy } from 'lodash';
+import ClientOnly from '../../components/ClientOnly';
 
 const GalleryWrap = styled('div')`
   display: flex;
@@ -94,7 +98,7 @@ const StyledButton = ({
 const Galleri = ({
   error,
   props,
-}: WithDataAndLayoutProps<galleri_QueryResponse>): JSX.Element => {
+}: WithDataAndLayoutProps<galleri_QueryResponse>): JSX.Element | null => {
   const [slideNumber, setSlideNumber] = useState(0);
   const [openModal, setOpenModal] = useState(false);
 
@@ -171,20 +175,25 @@ const Galleri = ({
             </SliderWrap>
           )}
 
-          <GalleryWrap>
-            {props.photos.map((photo, index) => (
-              <LazyImage
-                src={`https://itdagene.no/uploads/${photo.photo}`}
-                alt={photo.photo}
-                key={photo.photo}
-                width={350}
-                height={230}
-                onClick={(): void => handleOpenModal(index)}
-                cursor="pointer"
-                hover
-              />
-            ))}
-          </GalleryWrap>
+          <ClientOnly>
+            {/* Prevents hydration errors by deferring rendering until client-side */}
+            <GalleryWrap>
+              {sortBy(props.photos, (photo) => photo.order).map(
+                (photo, index) => (
+                  <LazyImage
+                    src={`https://itdagene.no/uploads/${photo.photo}`}
+                    alt={photo.photo}
+                    key={photo.photo}
+                    width={350}
+                    height={230}
+                    onClick={(): void => handleOpenModal(index)}
+                    cursor="pointer"
+                    hover
+                  />
+                )
+              )}
+            </GalleryWrap>
+          </ClientOnly>
         </>
       ) : (
         <p>Kunne ikke hente bilder :/</p>
@@ -198,6 +207,8 @@ export default withDataAndLayout(Galleri, {
     query galleri_Query {
       photos {
         photo
+        order
+        id
       }
     }
   `,
