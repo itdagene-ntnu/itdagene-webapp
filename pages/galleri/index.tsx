@@ -15,6 +15,7 @@ import {
 import { galleri_QueryResponse } from '../../__generated__/galleri_Query.graphql';
 import { graphql } from 'react-relay';
 import LazyImage from '../../components/LazyImage';
+import ClientOnly from '../../components/ClientOnly';
 
 const GalleryWrap = styled('div')`
   display: flex;
@@ -171,20 +172,23 @@ const Galleri = ({
             </SliderWrap>
           )}
 
-          <GalleryWrap>
-            {props.photos.map((photo, index) => (
-              <LazyImage
-                src={`https://itdagene.no/uploads/${photo.photo}`}
-                alt={photo.photo}
-                key={photo.photo}
-                width={350}
-                height={230}
-                onClick={(): void => handleOpenModal(index)}
-                cursor="pointer"
-                hover
-              />
-            ))}
-          </GalleryWrap>
+          <ClientOnly>
+            {/* Prevents hydration errors by deferring rendering until client-side */}
+            <GalleryWrap>
+              {props.photos.map((photo, index) => (
+                <LazyImage
+                  src={`https://itdagene.no/uploads/${photo.photo}`}
+                  alt={photo.photo}
+                  key={photo.photo}
+                  width={350}
+                  height={230}
+                  onClick={(): void => handleOpenModal(index)}
+                  cursor="pointer"
+                  hover
+                />
+              ))}
+            </GalleryWrap>
+          </ClientOnly>
         </>
       ) : (
         <p>Kunne ikke hente bilder :/</p>
