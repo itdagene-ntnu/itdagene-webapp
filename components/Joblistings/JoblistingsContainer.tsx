@@ -52,8 +52,8 @@ export const query = graphql`
     $count: Int
     $cursor: String
     $type: String
-    $fromYear: Float
-    $toYear: Float
+    $fromGrade: Float
+    $toGrade: Float
     $company: ID
     $towns: [ID]
     $orderBy: [OrderByJoblistingType]
@@ -64,8 +64,8 @@ export const query = graphql`
         cursor: $cursor
         type: $type
         company: $company
-        fromYear: $fromYear
-        toYear: $toYear
+        fromGrade: $fromGrade
+        toGrade: $toGrade
         towns: $towns
         orderBy: $orderBy
       )
@@ -232,8 +232,8 @@ export const JoblistingsList = createPaginationContainer(
         count: { type: "Int", defaultValue: 30 }
         cursor: { type: "String" }
         type: { type: "String" }
-        fromYear: { type: "Float" }
-        toYear: { type: "Float" }
+        fromGrade: { type: "Float" }
+        toGrade: { type: "Float" }
         company: { type: "ID" }
         towns: { type: "[ID]", defaultValue: [] }
         orderBy: { type: "[OrderByJoblistingType]" }
@@ -243,16 +243,16 @@ export const JoblistingsList = createPaginationContainer(
           after: $cursor
           type: $type
           company: $company
-          fromYear: $fromYear
-          toYear: $toYear
+          fromGrade: $fromGrade
+          toGrade: $toGrade
           towns: $towns
           orderBy: $orderBy
         )
           @connection(
             key: "Joblistings_joblistings"
             filters: [
-              "toYear"
-              "fromYear"
+              "toGrade"
+              "fromGrade"
               "company"
               "type"
               "towns"
@@ -284,13 +284,13 @@ export const JoblistingsList = createPaginationContainer(
       };
     },
     getVariables(props, { cursor, count }, fragmentVariables) {
-      const { type, orderBy, company, fromYear, toYear, towns } =
+      const { type, orderBy, company, fromGrade, toGrade, towns } =
         fragmentVariables;
       return {
         count,
         orderBy,
-        fromYear,
-        toYear,
+        fromGrade,
+        toGrade,
         cursor,
         type,
         company,
