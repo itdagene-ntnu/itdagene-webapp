@@ -93,12 +93,12 @@ function joinValues(values: string[]): string | JSX.Element {
 const isCurrentYear = (day: string): boolean =>
   dayjs(day).year() === dayjs().year();
 const onlyOneYear = ({
-  fromYear,
-  toYear,
+  fromGrade,
+  toGrade,
 }: {
-  fromYear: number;
-  toYear: number;
-}): boolean => fromYear === toYear;
+  fromGrade: number;
+  toGrade: number;
+}): boolean => fromGrade === toGrade;
 
 const metaExtractor = (
   joblisting: JoblistingView_joblisting
@@ -126,8 +126,8 @@ const metaExtractor = (
   {
     key: 'Klassetrinn',
     value:
-      (onlyOneYear(joblisting) ? '' : `${joblisting.fromYear}. - `) +
-      `${joblisting.toYear}. trinn`,
+      (onlyOneYear(joblisting) ? '' : `${joblisting.fromGrade}. - `) +
+      `${joblisting.toGrade}. trinn`,
   },
   {
     key: 'Sted',
@@ -220,8 +220,8 @@ export default createFragmentContainer(Joblisting, {
       title
       type
       description
-      fromYear
-      toYear
+      fromGrade
+      toGrade
       url
       dateCreated
       videoUrl
