@@ -26,21 +26,23 @@ const StandImage = styled.img`
 const Index = (): JSX.Element => {
   return (
     <>
+      {/*
       <Title>Stands</Title>
       <InfoIngress>Oversikt over standplasser</InfoIngress>
       <StandImage src="/static/standkart_uten_bedrifter.png" />
+      /*}
       {/* Fjern kommentar når standsoversikt er ferdig */}
-      {/* <Title>Stands</Title>
+      <Title>Stands</Title>
       <DateTitle>Mandag</DateTitle>
       <StandImage
-        src="https://cdn.itdagene.no/mandag_oppdatert.png"
+        src="https://cdn.itdagene.no/standkart_mandag.png"
         alt="Stands mandag"
       />
       <DateTitle>Tirsdag</DateTitle>
       <StandImage
-        src="https://cdn.itdagene.no/stands_tirsdag.png"
+        src="https://cdn.itdagene.no/standkart_tirsdag.png"
         alt="Stands tirsdag"
-      /> */}
+      />
     </>
   );
 };
