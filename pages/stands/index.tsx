@@ -169,6 +169,30 @@ const companies: string[] = [
   'fahiuewfg',
 ];
 
+const StandNameButton = styled.button<{ x: number; y: number; isHighlighted: boolean }>`
+  position: absolute;
+  top: ${(props) => props.y}%;
+  left: ${(props) => props.x}%;
+  transform: translate(-50%, -50%);
+  background-color: ${({ isHighlighted }) => (isHighlighted ? 'yellow' : 'black')};
+  color: white;
+  width: 1.8%;
+  height: 2.5%;
+  border: none;
+  border-radius: 50%;
+  font-size: 0.6vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #333;
+  }
+`;
+
 const splitIntoColumns = (arr: string[], numCols: number): string[][] => {
   const numRows = Math.ceil(arr.length / numCols);
   return Array.from({ length: numCols }, (_, colIndex) =>
@@ -178,6 +202,7 @@ const splitIntoColumns = (arr: string[], numCols: number): string[][] => {
 
 const Index = (): JSX.Element => {
   const [hoveredStand, setHoveredStand] = useState<number | null>(null);
+  const [hoveredName, setHoveredName] = useState<number | null>(null);
 
   const numCols = 3;
   const columns = splitIntoColumns(companies, numCols);
@@ -202,6 +227,8 @@ const Index = (): JSX.Element => {
                 <CompaniesText
                   key={index}
                   isHighlighted={index === hoveredStand}
+                  onMouseEnter={() => setHoveredStand(index)}   // highlight button on text hover
+                  onMouseLeave={() => setHoveredStand(null)}   // reset when leaving text
                 >
                   {index}. {company}
                 </CompaniesText>
@@ -216,16 +243,17 @@ const Index = (): JSX.Element => {
           alt="Stands mandag"
         />
         {standsPlacement.map((stand, index) => (
-          <StandButton
+          <StandNameButton
             key={index}
             x={stand.x}
             y={stand.y}
-            onMouseEnter={() => setHoveredStand(index + 1)} // Hover triggers index change
-            onMouseLeave={() => setHoveredStand(null)} // Reset on leave
+            isHighlighted={hoveredStand === index + 1}
+            onMouseEnter={() => setHoveredStand(index + 1)}
+            onMouseLeave={() => setHoveredStand(null)}
             onClick={() => setHoveredStand(index + 1)}
           >
             {index + 1}
-          </StandButton>
+          </StandNameButton>
         ))}
       </Container>
       <DateTitle>Tirsdag</DateTitle>
