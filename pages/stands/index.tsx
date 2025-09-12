@@ -71,6 +71,7 @@ const CompaniesText = styled.div<{ isHighlighted: boolean }>`
   color: ${({ isHighlighted }) => (isHighlighted ? 'yellow' : 'white')};
   font-weight: ${({ isHighlighted }) => (isHighlighted ? 'bold' : 'normal')};
   transition: color 0.2s ease-in-out;
+  cursor: pointer; 
 `;
 
 const standsPlacement = [
@@ -169,12 +170,12 @@ const companies: string[] = [
   'fahiuewfg',
 ];
 
-const StandNameButton = styled.button<{ x: number; y: number; isHighlighted: boolean }>`
+const StandNameButton = styled.button<{ x: number; y: number; isActive: boolean }>`
   position: absolute;
   top: ${(props) => props.y}%;
   left: ${(props) => props.x}%;
   transform: translate(-50%, -50%);
-  background-color: ${({ isHighlighted }) => (isHighlighted ? 'yellow' : 'black')};
+  background-color: ${({ isActive }) => (isActive ? 'yellow' : 'black')};
   color: white;
   width: 1.8%;
   height: 2.5%;
@@ -202,7 +203,7 @@ const splitIntoColumns = (arr: string[], numCols: number): string[][] => {
 
 const Index = (): JSX.Element => {
   const [hoveredStand, setHoveredStand] = useState<number | null>(null);
-  const [hoveredName, setHoveredName] = useState<number | null>(null);
+  const [hoveredClickStandName, setHoveredClickStandName] = useState<number | null>(null);
 
   const numCols = 3;
   const columns = splitIntoColumns(companies, numCols);
@@ -224,14 +225,15 @@ const Index = (): JSX.Element => {
               const index =
                 colIndex * Math.ceil(companies.length / numCols) + rowIndex + 1;
               return (
-                <CompaniesText
-                  key={index}
-                  isHighlighted={index === hoveredStand}
-                  onMouseEnter={() => setHoveredStand(index)}   // highlight button on text hover
-                  onMouseLeave={() => setHoveredStand(null)}   // reset when leaving text
-                >
-                  {index}. {company}
-                </CompaniesText>
+              <CompaniesText
+                key={index}
+                isHighlighted={index === hoveredStand || index === hoveredClickStandName}
+                onMouseEnter={() => setHoveredStand(index)}
+                onMouseLeave={() => setHoveredStand(null)}
+                onClick={() => setHoveredClickStandName(index)}
+              >
+                {index}. {company}
+              </CompaniesText>
               );
             })}
           </div>
@@ -242,19 +244,22 @@ const Index = (): JSX.Element => {
           src="https://cdn.itdagene.no/mandag_oppdatert.png"
           alt="Stands mandag"
         />
-        {standsPlacement.map((stand, index) => (
-          <StandNameButton
-            key={index}
-            x={stand.x}
-            y={stand.y}
-            isHighlighted={hoveredStand === index + 1}
-            onMouseEnter={() => setHoveredStand(index + 1)}
-            onMouseLeave={() => setHoveredStand(null)}
-            onClick={() => setHoveredStand(index + 1)}
-          >
-            {index + 1}
-          </StandNameButton>
-        ))}
+        {standsPlacement.map((stand, index) => {
+          const standIndex = index + 1;
+          return (
+            <StandNameButton
+              key={index}
+              x={stand.x}
+              y={stand.y}
+              isActive={hoveredStand === standIndex || hoveredClickStandName === standIndex}
+              onMouseEnter={() => setHoveredStand(standIndex)}
+              onMouseLeave={() => setHoveredStand(null)}
+              onClick={() => setHoveredClickStandName(standIndex)} // stays active when clicked
+            >
+              {standIndex}
+            </StandNameButton>
+          );
+        })}
       </Container>
       <DateTitle>Tirsdag</DateTitle>
       <StandImage
