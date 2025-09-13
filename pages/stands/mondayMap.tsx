@@ -6,12 +6,12 @@ import {
   CompaniesListOverlayLeft,
   CompaniesText,
   StandButton,
-} from './styledStands';
+} from './_styledStands';
 import {
   standsPlacement,
   companiesDay1TopRight,
   companiesDay1BottomLeft,
-} from './standsData';
+} from './_standsData';
 
 const splitIntoColumns = (arr: string[], numCols: number): string[][] => {
   const numRows = Math.ceil(arr.length / numCols);

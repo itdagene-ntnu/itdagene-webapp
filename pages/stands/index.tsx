@@ -1,6 +1,6 @@
 import { graphql } from 'react-relay';
 import { withDataAndLayout } from '../../lib/withData';
-import { Title, DateTitle } from './styledStands';
+import { Title, DateTitle } from './_styledStands';
 import MondayMap from './mondayMap';
 import TuesdayMap from './tuesdayMap';
 import { useEffect, useState } from 'react';
