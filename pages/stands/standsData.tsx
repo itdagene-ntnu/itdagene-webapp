@@ -1,10 +1,10 @@
 export const standsPlacement = [
   { x: 24.0, y: 54.4 }, //1
-  { x: 22.15, y: 51.3 },//2
+  { x: 22.15, y: 51.3 }, //2
   { x: 20.3, y: 51.3 }, //3
   { x: 18.4, y: 53.4 }, //4
   { x: 18.4, y: 55.8 }, //5
-  { x: 15.95, y: 56.9 },//6
+  { x: 15.95, y: 56.9 }, //6
   { x: 13.5, y: 56.9 }, //7
   { x: 12.0, y: 51.2 }, //8
   { x: 14.5, y: 50.9 }, //9
@@ -135,4 +135,4 @@ export const companiesDay2BottomLeft: string[] = [
   'GE Vernova',
   'Å Energi',
   'H5P Group',
-]
+];

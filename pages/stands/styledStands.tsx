@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StandImage = styled.img`
   width: 100%;
@@ -32,9 +32,10 @@ export const CompaniesListOverlayLeft = styled(CompaniesListOverlayRight)`
 `;
 
 export const CompaniesText = styled.div<{ isHighlighted: boolean }>`
-  color: ${({ isHighlighted }) => (isHighlighted ? "black" : "white")};
-  background-color: ${({ isHighlighted }) => (isHighlighted ? "lightblue" : "")};
-  border-radius: ${({ isHighlighted }) => (isHighlighted ? "2rem" : "")};
+  color: ${({ isHighlighted }) => (isHighlighted ? 'black' : 'white')};
+  background-color: ${({ isHighlighted }) =>
+    isHighlighted ? 'lightblue' : ''};
+  border-radius: ${({ isHighlighted }) => (isHighlighted ? '2rem' : '')};
   transition: color 0.2s ease-in-out;
   white-space: nowrap;
   cursor: pointer;
@@ -43,12 +44,16 @@ export const CompaniesText = styled.div<{ isHighlighted: boolean }>`
   font-size: 1rem;
 `;
 
-export const StandButton = styled.button<{ x: number; y: number; isActive: boolean }>`
+export const StandButton = styled.button<{
+  x: number;
+  y: number;
+  isActive: boolean;
+}>`
   position: absolute;
   top: ${(props) => props.y}%;
   left: ${(props) => props.x}%;
   transform: translate(-50%, -50%);
-  background-color: ${({ isActive }) => (isActive ? "lightblue" : "black")};
+  background-color: ${({ isActive }) => (isActive ? 'lightblue' : 'black')};
   color: white;
   width: 1.8%;
   height: 2.5%;

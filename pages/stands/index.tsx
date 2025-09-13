@@ -1,10 +1,10 @@
-import { graphql } from "react-relay";
-import { withDataAndLayout } from "../../lib/withData";
-import { Title, DateTitle, } from "./styledStands";
-import MondayMap from "./mondayMap";
-import TuesdayMap from "./tuesdayMap";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { graphql } from 'react-relay';
+import { withDataAndLayout } from '../../lib/withData';
+import { Title, DateTitle } from './styledStands';
+import MondayMap from './mondayMap';
+import TuesdayMap from './tuesdayMap';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 const StandImage = styled.img`
   width: 100%;
@@ -17,9 +17,9 @@ const Index = () => {
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1200);
-    handleResize(); 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
@@ -61,4 +61,3 @@ export default withDataAndLayout(Index, {
   variables: {},
   layout: () => ({ responsive: true }),
 });
-
