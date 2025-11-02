@@ -106,7 +106,7 @@ const ProgramView = (props: Props): JSX.Element => {
   if (props.events.length === 0) {
     return (
       <UnderDevelopmentPlaceholder
-        alt="Programmet og nettsiden for itDAGENE 2025 er for tiden under planlegging!"
+        alt="Programmet og nettsiden for itDAGENE 2026 er for tiden under planlegging!"
         src="/static/under-development-placeholder.png"
       />
     );

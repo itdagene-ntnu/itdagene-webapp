@@ -11,6 +11,8 @@ import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
 import { Button } from '@mui/material';
 
+dayjs.locale('nb');
+
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
 };
@@ -102,14 +104,16 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
         <Flex flexDirection="column" alignContent="space-between">
           <FlexItem>
             <Header>
-              <b>it</b>DAGENE {currentMetaData.year}
+              <b>it</b>DAGENE {`${startDate.year()}`}
+              {/*Change from startDate.year to currentYear when this year matches the current year*/}
             </Header>
 
             <SubHeader>
-              {`${startDate.date()}. & ${endDate.date()}. ${endDate
-                .locale('nb')
-                .format('MMMM')} ${startDate.year()}`}
+              {`${startDate.date()}. & ${endDate.date()}. ${endDate.format(
+                'MMMM'
+              )} ${startDate.year()}`}
             </SubHeader>
+            {/* If you have problem when changing the date in the frontend, it is because you have to wait until the currentMetaData year matches this year */}
             <Location>NTNU Trondheim</Location>
           </FlexItem>
           <FlexItem>
