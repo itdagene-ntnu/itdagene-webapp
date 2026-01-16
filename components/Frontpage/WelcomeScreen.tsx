@@ -100,9 +100,10 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
       />
       <MainContainer text>
         <Flex flexDirection="column" alignContent="space-between">
-           <FlexItem>
+          <FlexItem>
             <Header>
-              <b>it</b>DAGENE {currentMetaData.year} {/*Use  {`${startDate.year()}`} when trying to set the year one year ahead*/}
+              <b>it</b>DAGENE {String(currentMetaData.year)}{' '}
+              {/*Use  {`${startDate.year()}`} when trying to set the year one year ahead*/}
             </Header>
 
             <SubHeader>
