@@ -38,11 +38,14 @@ const Collaborator = ({
   showDescription,
   showJoblistings,
   ...props
-}: Props): JSX.Element => {
-  const company: Collaborator_company = useFragment(
+}: Props): JSX.Element | null => {
+  const company: Collaborator_company | null = useFragment(
     fragmentSpec,
-    props.company
+    props.company ?? null
   );
+  if (!company) {
+    return null;
+  }
 
   return (
     <div
