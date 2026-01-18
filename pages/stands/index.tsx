@@ -24,7 +24,7 @@ const Index = () => {
 
   return (
     <>
-      <Title>Stands</Title>
+      <Title>Stands (2025)</Title>
 
       <DateTitle>Mandag</DateTitle>
       {isMobile ? (
