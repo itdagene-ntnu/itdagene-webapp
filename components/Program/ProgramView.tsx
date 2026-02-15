@@ -10,9 +10,7 @@ import EventsToggle from './Components/EventsToggle';
 import Flex from '../Styled/Flex';
 
 import ProgramTimeline from './Components/ProgramTimeline';
-import { findClosestDate } from '../../utils/findClosestDate';
 import { isMobile } from 'react-device-detect';
-import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_currentMetaData.graphql';
 import dayjs from 'dayjs';
 import { NextRouter } from 'next/router';
@@ -101,7 +99,7 @@ const ProgramView = (props: Props): JSX.Element => {
     } else {
       setActiveDate(sortedKeys[0]);
     }
-  }, []);
+  }, [endDate, parsedQueryEvent, sortedKeys, startDate]);
 
   if (props.events.length === 0) {
     return (

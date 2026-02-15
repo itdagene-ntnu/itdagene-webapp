@@ -9,7 +9,10 @@ interface ClientOnlyProps {
  * ClientOnly component renders its children only after the component has mounted client-side.
  * This prevents hydration errors when server and client renders might differ due to dynamic content that depends on client-side state
  */
-export function ClientOnly({ children, ...delegated }: ClientOnlyProps) {
+export function ClientOnly({
+  children,
+  ...delegated
+}: ClientOnlyProps): JSX.Element | null {
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {

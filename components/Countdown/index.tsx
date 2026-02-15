@@ -3,6 +3,7 @@ import Countdown from 'react-countdown-now';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { Countdown_currentMetaData } from '../../__generated__/Countdown_currentMetaData.graphql';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import styled from 'styled-components';
 import {
   blueNCS,
@@ -11,6 +12,8 @@ import {
   indigoDye,
 } from '../../utils/colors';
 import Flex from '../Styled/Flex';
+
+dayjs.extend(utc);
 
 const NumberBox = styled('div')`
   display: flex;
@@ -103,7 +106,8 @@ const CountdownComponent = (props: {
   currentMetaData: Countdown_currentMetaData;
 }): JSX.Element => (
   <Countdown
-    date={dayjs(props.currentMetaData.startDate)
+    date={dayjs
+      .utc(props.currentMetaData.startDate)
       .add(10, 'hour')
       .add(0, 'minute')
       .toDate()}

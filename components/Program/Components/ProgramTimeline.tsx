@@ -54,7 +54,7 @@ const EventCover = styled.img`
 
 const timelineColors = [indigoDye, blueNCS, princetonOrange, skyBlue];
 
-const hasHappened = (date: string, time: string) => {
+const hasHappened = (date: string, time: string): boolean => {
   return dayjs().isAfter(dayjs(`${date} ${time}`, 'YYYY-MM-DD HH:mm::ss'));
 };
 
@@ -99,7 +99,7 @@ const DesktopProgramTimeline = ({
     setActiveEvent(
       isToday && closestEvent ? closestEvent : events[activeDate][0]
     );
-  }, [events, activeDate]);
+  }, [events, activeDate, router.query.event]);
 
   if (!activeDate) return <span></span>;
 

@@ -1,7 +1,6 @@
 import { useFragment, graphql } from 'relay-hooks';
 import { ZoomImage, CenterIt } from '../Styled';
 import styled from 'styled-components';
-import { Player } from 'video-react';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
@@ -10,6 +9,12 @@ import {
 } from '../../__generated__/MainCollaborator_company.graphql';
 import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
+import dynamic from 'next/dynamic';
+
+const Player = dynamic<any>(
+  () => import('video-react').then((mod) => mod.Player),
+  { ssr: false }
+);
 
 type Props = {
   company: MainCollaborator_company$key;
@@ -61,43 +66,50 @@ const MainCollaborator = ({
 
   return (
     <Flex flexDirection="column" justifyContent="space-around">
-      <FlexItem>
-        <CenterIt text>
-          <Title>Vår hovedsamarbeidspartner</Title>
-        </CenterIt>
-      </FlexItem>
-      <FlexItem>
-        <FlexItem>
-          <a href={company.url || ''} target="_blank" rel="noreferrer">
-            <HSPLogo src={company.logo || ''} alt="Logo" />
-          </a>
-        </FlexItem>
-        <CenterIt text>
-          <p style={{ fontSize: 20 }}>
-            <b>
-              Vi er stolte av å kunne presentere {company.name} som
-              hovedsamarbeidspartner!
-            </b>
-          </p>
+      {company && (
+        <>
+          <FlexItem>
+            <CenterIt text>
+              <Title>Vår hovedsamarbeidspartner</Title>
+            </CenterIt>
+          </FlexItem>
+          <FlexItem>
+            <FlexItem>
+              <a href={company.url || ''} target="_blank" rel="noreferrer">
+                <HSPLogo src={company.logo || ''} alt="Logo" />
+              </a>
+            </FlexItem>
+            <CenterIt text>
+              <p style={{ fontSize: 20 }}>
+                <b>
+                  Vi er stolte av å kunne presentere {company.name} som
+                  hovedsamarbeidspartner!
+                </b>
+              </p>
 
-          {showDescription && <ReactMarkdown source={company.description} />}
+              {showDescription && (
+                <ReactMarkdown source={company.description} />
+              )}
 
-          {company.intro && <ReactMarkdown source={company.intro} />}
+              {company.intro && <ReactMarkdown source={company.intro} />}
 
-          {company.video && (
-            <>
-              <h3>
-                ↓ Ta en titt på hvordan sommerjobb i {company.name} kan se ut ↓
-              </h3>
-              <Player
-                playsInline
-                poster={company.poster || company.logo}
-                src={company.video}
-              />
-            </>
-          )}
-        </CenterIt>
-      </FlexItem>
+              {company.video && (
+                <>
+                  <h3>
+                    ↓ Ta en titt på hvordan sommerjobb i {company.name} kan se
+                    ut ↓
+                  </h3>
+                  <Player
+                    playsInline
+                    poster={company.poster || company.logo}
+                    src={company.video}
+                  />
+                </>
+              )}
+            </CenterIt>
+          </FlexItem>
+        </>
+      )}
     </Flex>
   );
 };

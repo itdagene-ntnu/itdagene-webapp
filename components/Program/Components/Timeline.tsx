@@ -1,13 +1,12 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
-import { blueNCS } from '../../../utils/colors';
 import Flex from '../../Styled/Flex';
 
 type TimelineProps = {
   children: ReactNode | ReactNode[];
 };
 
-export const Timeline = ({ children }: TimelineProps) => {
+export const Timeline = ({ children }: TimelineProps): JSX.Element => {
   return (
     <Flex flexDirection="column" style={{ padding: '0.5rem' }}>
       {children}
@@ -40,7 +39,7 @@ export const TimelineItem = ({
   children,
   color,
   prevColor,
-}: TimelineItemProps) => {
+}: TimelineItemProps): JSX.Element => {
   return (
     <>
       <Flex gap="1rem" alignItems="stretch">

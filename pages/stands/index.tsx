@@ -12,14 +12,14 @@ const StandImage = styled.img`
   display: block;
 `;
 
-const Index = () => {
+const Index = (): JSX.Element => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1200);
+    const handleResize = (): void => setIsMobile(window.innerWidth < 1200);
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return (): void => window.removeEventListener('resize', handleResize);
   }, []);
 
   return (
@@ -59,5 +59,5 @@ export default withDataAndLayout(Index, {
     }
   `,
   variables: {},
-  layout: () => ({ responsive: true }),
+  layout: (): any => ({ responsive: true }),
 });

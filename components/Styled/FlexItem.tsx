@@ -6,8 +6,8 @@ interface Props {
 }
 const FlexItem = styled.div<Props>`
   order: 0;
-  flex-basis: ${(p) => p.flexBasis || 'auto'};
-  flex-grow: ${(p) => p.flexGrow || '0'};
+  flex-basis: ${(p): string => p.flexBasis || 'auto'};
+  flex-grow: ${(p): string => p.flexGrow || '0'};
   flex-shrink: 1;
   display: block;
 `;

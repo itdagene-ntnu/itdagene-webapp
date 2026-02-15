@@ -193,7 +193,9 @@ const ListRenderer = (props: Props): JSX.Element => {
 
   const { setAllListings } = props;
 
-  React.useEffect(() => setAllListings(allListings), [props.root, props.other]);
+  React.useEffect(() => {
+    setAllListings(allListings);
+  }, [props.root, props.other, allListings, setAllListings]);
 
   return (
     <>
@@ -335,16 +337,16 @@ export const SummerjobMarathon = createPaginationContainer(
   },
   {
     direction: 'forward',
-    getConnectionFromProps(props) {
+    getConnectionFromProps(props): any {
       return props.root && props.root.joblistings;
     },
-    getFragmentVariables(prevVars, totalCount) {
+    getFragmentVariables(prevVars, totalCount): Variables {
       return {
         ...prevVars,
         count: totalCount,
       };
     },
-    getVariables(props, { cursor, count }, fragmentVariables) {
+    getVariables(props, { cursor, count }, fragmentVariables): Variables {
       return {
         count,
         cursor,
