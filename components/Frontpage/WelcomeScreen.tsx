@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import dynamic from 'next/dynamic'; // FIX 1: Import dynamic
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
-import Countdown from '../Countdown';
 import styled from 'styled-components';
 import { CenterIt } from '../Styled';
 import { itdageneDarkBlue, itdageneBlue } from '../../utils/colors';
-import dayjs from 'dayjs';
-import 'dayjs/locale/nb';
 import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
 import { Button } from '@mui/material';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import 'dayjs/locale/nb';
+
+dayjs.extend(utc);
+
+const Countdown = dynamic(() => import('../Countdown'), { ssr: false });
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -65,7 +70,6 @@ const Video = styled('video')`
   margin: 0;
   width: 100%;
   height: auto;
-  // max-height: 500px;
   @media only screen and (max-width: 800px) {
     display: none;
   }
@@ -83,15 +87,8 @@ const RootContainer = styled('div')`
 `;
 
 const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
-  const [isClient, setIsClient] = useState(false);
-
-  const startDate = dayjs(currentMetaData.startDate);
-  const endDate = dayjs(currentMetaData.endDate);
-
-  // Effect only runs on the client, after the first render, to avoid hydration error
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const startDate = dayjs.utc(currentMetaData.startDate);
+  const endDate = dayjs.utc(currentMetaData.endDate);
 
   const scrollToTarget = (): void => {
     const targetElement = document.getElementById('interest-schema-div');
@@ -125,7 +122,7 @@ const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
             <Location>NTNU Trondheim</Location>
           </FlexItem>
           <FlexItem>
-            {isClient ? <Countdown currentMetaData={currentMetaData} /> : null}
+            <Countdown currentMetaData={currentMetaData} />
           </FlexItem>
         </Flex>
         <Button onClick={scrollToTarget}>
