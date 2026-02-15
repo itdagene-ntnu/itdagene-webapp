@@ -10,10 +10,12 @@ import {
 import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
 import dynamic from 'next/dynamic';
+import { PlayerProps } from 'video-react';
 
-const Player = dynamic(() => import('video-react').then((mod) => mod.Player), {
-  ssr: false,
-});
+const Player = dynamic<PlayerProps>(
+  () => import('video-react').then((mod) => mod.Player),
+  { ssr: false }
+);
 
 type Props = {
   company: MainCollaborator_company$key;
