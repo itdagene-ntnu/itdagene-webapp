@@ -138,14 +138,6 @@ const metaExtractor = (
     value: dayjs(joblisting.dateCreated).format('D. MMMM YYYY'),
   },
 ];
-const GrayText = styled('div')`
-  color: gray;
-`;
-
-const CompanyDesc = styled(GrayText)`
-  font-style: italic;
-  text-align: left;
-`;
 
 const Joblisting = ({ joblisting }: Props): JSX.Element => (
   <>

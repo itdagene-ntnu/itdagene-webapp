@@ -105,25 +105,25 @@ const Galleri = ({
   };
 
   // Close Modal
-  const handleCloseModal = (): void => {
+  const handleCloseModal = useCallback((): void => {
     setOpenModal(false);
-  };
+  }, []);
 
   // Previous Image
-  const prevSlide = (): void => {
+  const prevSlide = useCallback((): void => {
     if (!props.photos) return;
     slideNumber === 0
       ? setSlideNumber(props.photos.length - 1)
       : setSlideNumber(slideNumber - 1);
-  };
+  }, [props.photos, slideNumber]);
 
   // Next Image
-  const nextSlide = (): void => {
+  const nextSlide = useCallback((): void => {
     if (!props.photos) return;
     slideNumber + 1 === props.photos.length
       ? setSlideNumber(0)
       : setSlideNumber(slideNumber + 1);
-  };
+  }, [props.photos, slideNumber]);
 
   const changeImageOnKey = useCallback(
     (event) => {
@@ -134,7 +134,7 @@ const Galleri = ({
       if (event.key === 'ArrowRight') nextSlide();
       if (event.key === 'ArrowLeft') prevSlide();
     },
-    [slideNumber]
+    [handleCloseModal, nextSlide, prevSlide]
   );
 
   useEffect(() => {
@@ -142,7 +142,7 @@ const Galleri = ({
     return function cleanup(): void {
       document.removeEventListener('keydown', changeImageOnKey);
     };
-  });
+  }, [changeImageOnKey]);
 
   return (
     <>

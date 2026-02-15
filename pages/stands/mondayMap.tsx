@@ -20,7 +20,7 @@ const splitIntoColumns = (arr: string[], numCols: number): string[][] => {
   );
 };
 
-const MondayMap = () => {
+const MondayMap = (): JSX.Element => {
   const [hoveredStand, setHoveredStand] = useState<number | null>(null);
   const [hoveredClickStand, setHoveredClickStand] = useState<number | null>(
     null
@@ -68,9 +68,9 @@ const MondayMap = () => {
                     hoveredStand === standIndex ||
                     hoveredClickStand === standIndex
                   }
-                  onMouseEnter={() => setHoveredStand(standIndex)}
-                  onMouseLeave={() => setHoveredStand(null)}
-                  onClick={() => setHoveredClickStand(standIndex)}
+                  onMouseEnter={(): void => setHoveredStand(standIndex)}
+                  onMouseLeave={(): void => setHoveredStand(null)}
+                  onClick={(): void => setHoveredClickStand(standIndex)}
                   style={{
                     fontWeight: [
                       'Computas',
@@ -133,9 +133,9 @@ const MondayMap = () => {
                     hoveredStand === standIndex ||
                     hoveredClickStand === standIndex
                   }
-                  onMouseEnter={() => setHoveredStand(standIndex)}
-                  onMouseLeave={() => setHoveredStand(null)}
-                  onClick={() => setHoveredClickStand(standIndex)}
+                  onMouseEnter={(): void => setHoveredStand(standIndex)}
+                  onMouseLeave={(): void => setHoveredStand(null)}
+                  onClick={(): void => setHoveredClickStand(standIndex)}
                   style={{
                     fontWeight: [
                       'Computas',
@@ -174,9 +174,9 @@ const MondayMap = () => {
             isActive={
               hoveredStand === standIndex || hoveredClickStand === standIndex
             }
-            onMouseEnter={() => setHoveredStand(standIndex)}
-            onMouseLeave={() => setHoveredStand(null)}
-            onClick={() => setHoveredClickStand(standIndex)}
+            onMouseEnter={(): void => setHoveredStand(standIndex)}
+            onMouseLeave={(): void => setHoveredStand(null)}
+            onClick={(): void => setHoveredClickStand(standIndex)}
             style={{
               color:
                 (hoveredStand || hoveredClickStand) === standIndex

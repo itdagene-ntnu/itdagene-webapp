@@ -1,11 +1,7 @@
 import { Collapse } from '@nextui-org/react';
 import { graphql } from 'react-relay';
 import styled from 'styled-components';
-import {
-  withDataAndLayout,
-  WithDataAndLayoutProps,
-  WithDataDataProps,
-} from '../lib/withData';
+import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { faq_QueryResponse } from '../__generated__/faq_Query.graphql';
 import ReactMarkdown from 'react-markdown';
 import Flex from '../components/Styled/Flex';

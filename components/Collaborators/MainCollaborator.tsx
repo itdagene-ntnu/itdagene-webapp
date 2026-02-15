@@ -10,9 +10,8 @@ import {
 import Flex from '../Styled/Flex';
 import FlexItem from '../Styled/FlexItem';
 import dynamic from 'next/dynamic';
-import { PlayerProps } from 'video-react';
 
-const Player = dynamic<PlayerProps>(
+const Player = dynamic<any>(
   () => import('video-react').then((mod) => mod.Player),
   { ssr: false }
 );

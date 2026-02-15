@@ -46,10 +46,6 @@ const StyledLink = styled.a`
   }
 `;
 
-const ReadMore = styled('h4')`
-  margin-top: 40px;
-`;
-
 const CompactProgram = (): JSX.Element => (
   <Flex flexDirection="column" justifyContent="space-around">
     <FlexItem>

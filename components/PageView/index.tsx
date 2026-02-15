@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { PageView_page } from '../../__generated__/PageView_page.graphql';
 import ReactMarkdown from 'react-markdown';
 import styled from 'styled-components';
-import dayjs from 'dayjs';
 import Flex from '../Styled/Flex';
 import { Player } from 'video-react';
 import { itdageneBlue } from '../../utils/colors';
@@ -24,9 +23,9 @@ const Title = styled('h1')`
 `;
 
 const PageContainer = styled.div<{ blueBackground?: boolean }>`
-  background-color: ${(props) =>
+  background-color: ${(props): string =>
     props.blueBackground ? itdageneBlue : 'transparent'};
-  color: ${(props) => (props.blueBackground ? 'white' : 'black')};
+  color: ${(props): string => (props.blueBackground ? 'white' : 'black')};
   padding: 2.5rem;
   border-radius: 2rem;
   margin-bottom: 3rem;
