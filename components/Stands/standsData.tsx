@@ -136,3 +136,124 @@ export const companiesDay2BottomLeft: string[] = [
   'Å Energi',
   'H5P Group',
 ];
+
+export type StandMapDayId = 'mandag' | 'tirsdag';
+
+export type StandMapStand = {
+  number: number;
+  companyName: string;
+  companySlug: string;
+  position: {
+    x: number;
+    y: number;
+  };
+};
+
+export type StandMapDay = {
+  id: StandMapDayId;
+  label: string;
+  mapImage: string;
+  downloadImage: string;
+  stands: StandMapStand[];
+};
+
+export type StandMapManifest = {
+  edition: number;
+  location: string;
+  days: StandMapDay[];
+};
+
+const toCompanySlug = (companyName: string): string =>
+  companyName
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+const createStands = (
+  companyNames: string[],
+  firstStandNumber = 1
+): StandMapStand[] =>
+  companyNames.flatMap((companyName, index) => {
+    const number = firstStandNumber + index;
+    const position = standsPlacement[number - 1];
+
+    if (companyName === 'SKIPPED' || !position) {
+      return [];
+    }
+
+    return [
+      {
+        number,
+        companyName,
+        companySlug: toCompanySlug(companyName),
+        position,
+      },
+    ];
+  });
+
+const createDay = ({
+  id,
+  label,
+  topRight,
+  bottomLeft,
+}: {
+  id: StandMapDayId;
+  label: string;
+  topRight: string[];
+  bottomLeft: string[];
+}): StandMapDay => ({
+  id,
+  label,
+  mapImage: `https://cdn.itdagene.no/standkart_${id}_plain.png`,
+  downloadImage: `https://cdn.itdagene.no/standkart_${id}.png`,
+  stands: [
+    ...createStands(topRight),
+    ...createStands(bottomLeft, topRight.length + 1),
+  ],
+});
+
+export const standMapManifest: StandMapManifest = {
+  edition: 2025,
+  location: 'Realfagbygget, U1',
+  days: [
+    createDay({
+      id: 'mandag',
+      label: 'Mandag',
+      topRight: companiesDay1TopRight,
+      bottomLeft: companiesDay1BottomLeft,
+    }),
+    createDay({
+      id: 'tirsdag',
+      label: 'Tirsdag',
+      topRight: companiesDay2TopRight,
+      bottomLeft: companiesDay2BottomLeft,
+    }),
+  ],
+};
+
+export const validateStandMapManifest = (
+  manifest: StandMapManifest
+): string[] =>
+  manifest.days.flatMap((day) => {
+    const standNumbers = new Set<number>();
+    return day.stands.flatMap((stand) => {
+      const errors: string[] = [];
+      if (standNumbers.has(stand.number)) {
+        errors.push(`${day.id}: stand ${stand.number} er duplisert`);
+      }
+      standNumbers.add(stand.number);
+      if (
+        stand.position.x < 0 ||
+        stand.position.x > 100 ||
+        stand.position.y < 0 ||
+        stand.position.y > 100
+      ) {
+        errors.push(
+          `${day.id}: stand ${stand.number} er plassert utenfor kartet`
+        );
+      }
+      return errors;
+    });
+  });

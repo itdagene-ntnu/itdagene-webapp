@@ -2,11 +2,16 @@ import React from 'react';
 import withData, { WithDataProps } from '../../lib/withData';
 
 import { graphql } from 'react-relay';
-import { Slug_stand_QueryResponse } from '../../__generated__/Slug_stand_Query.graphql';
+import {
+  Slug_stand_Query,
+  Slug_stand_QueryResponse,
+} from '../../__generated__/Slug_stand_Query.graphql';
 
 import Layout, { Metadata } from '../../components/Layout';
-import ServerError from '../../lib/ServerError';
 import StandView from '../../components/Stands/StandView';
+import { PublicErrorContent } from '../../components/PublicErrorPage';
+import { PageContext } from '../../utils/types';
+import { setNotFoundWhenFieldIsNull } from '../../utils/httpStatus';
 
 type RenderProps = WithDataProps<Slug_stand_QueryResponse>;
 
@@ -29,8 +34,8 @@ const Index = ({ error, props }: RenderProps): JSX.Element => (
       props.stand ? (
         <StandView stand={props.stand} />
       ) : (
-        <ServerError
-          errorCode="ENOENT"
+        <PublicErrorContent
+          description="Standen kan være fjernet, eller lenken kan være utdatert."
           statusCode={404}
           title="Fant ikke standen"
         />
@@ -38,6 +43,18 @@ const Index = ({ error, props }: RenderProps): JSX.Element => (
     }
   />
 );
+
+Index.getInitialProps = ({
+  res,
+  queryProps,
+}: PageContext<Slug_stand_Query>): Record<string, never> => {
+  setNotFoundWhenFieldIsNull({
+    response: res,
+    queryProps,
+    field: 'stand',
+  });
+  return {};
+};
 
 export default withData(Index, {
   query: graphql`

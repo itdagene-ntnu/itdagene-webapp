@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { Range } from 'rc-slider';
 import { withRouter, NextRouter } from 'next/router';
-
-import Select, { ValueType, OptionTypeBase, Styles } from 'react-select';
-
+import Select, { ValueType, Styles } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { fetchQuery, GraphQLTaggedNode } from 'relay-runtime';
 import Router from 'next/router';
 import { graphql, Variables, Environment } from 'react-relay';
 import debounce from '../../utils/debounce';
-import styled from 'styled-components';
-import { lightGrey } from '../../utils/colors';
 import {
   JoblistingsSidebar_company_search_QueryResponse,
   JoblistingsSidebar_company_search_Query,
@@ -20,34 +16,30 @@ import {
   JoblistingsSidebar_town_search_QueryResponse,
 } from '../../__generated__/JoblistingsSidebar_town_search_Query.graphql';
 
-const Sidebar = styled('div')`
-  display: flex;
-  text-align: center;
-  flex-direction: column;
-  align-items: center;
-  //border-left: 1px solid ${lightGrey};
-  margin: 10px;
-  padding: 0 20px;
-`;
-
 const customStyles: Styles = {
-  option: (base, state: any) => ({
+  control: (base, state) => ({
     ...base,
+    minHeight: 46,
+    borderColor: state.isFocused ? '#0778bc' : '#d8e2e8',
+    borderRadius: 8,
+    boxShadow: state.isFocused ? '0 0 0 3px rgba(7, 120, 188, 0.2)' : 'none',
+    ':hover': {
+      borderColor: state.isFocused ? '#0778bc' : '#9fb4c0',
+    },
   }),
-  control: (base, { isDisabled, isFocused }) => ({
+  menu: (base) => ({
     ...base,
-    //boxShadow: isFocused ? `0 0 0 1px ${itdageneBlue} !important` : null
+    zIndex: 20,
   }),
-  container: (base) => ({
+  option: (base, state) => ({
     ...base,
-    borderColor: 'pink',
+    backgroundColor: state.isSelected
+      ? '#123962'
+      : state.isFocused
+      ? '#dff3fb'
+      : '#fff',
+    color: state.isSelected ? '#fff' : '#172733',
   }),
-  singleValue: (base, state) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
-
-    return { ...base, opacity, transition };
-  },
 };
 
 const companySearchQuery = graphql`
@@ -89,11 +81,24 @@ type Option = {
   value: string;
 };
 
+const compactQuery = (
+  query: Record<string, string | string[] | number | undefined>
+): Record<string, string | string[] | number> =>
+  Object.fromEntries(
+    Object.entries(query).filter(
+      ([, value]) => value !== undefined && value !== '' && value !== '[]'
+    )
+  ) as Record<string, string | string[] | number>;
+
 const onQueryChange = (newQuery: JoblistingsQuery): void => {
-  Router.replace({
-    pathname: '/jobb',
-    query: { ...Router.query, ...newQuery },
-  });
+  Router.replace(
+    {
+      pathname: '/jobb',
+      query: compactQuery({ ...Router.query, ...newQuery }),
+    },
+    undefined,
+    { shallow: true, scroll: false }
+  );
 };
 
 export const orderByOptions = [
@@ -104,23 +109,20 @@ export const orderByOptions = [
 ];
 
 const OrderBySelector = withRouter(({ router }) => (
-  <div style={{ width: '100%' }}>
-    <Select
-      isClearable
-      placeholder="Ikke valgt"
-      styles={customStyles}
-      defaultValue={orderByOptions.find(
-        (el) => el.value === router.query.orderBy
-      )}
-      onChange={(el: ValueType<Option>): void =>
-        // See https://github.com/DefinitelyTyped/DefinitelyTyped/issues/32553
-        // and https://github.com/JedWatson/react-select/issues/2902
-        // for why we have to assert here.
-        onQueryChange({ orderBy: (el as Option)?.value })
-      }
-      options={orderByOptions}
-    />
-  </div>
+  <Select
+    inputId="job-order"
+    isClearable
+    onChange={(option: ValueType<Option>): void =>
+      onQueryChange({ orderBy: (option as Option)?.value })
+    }
+    options={orderByOptions}
+    placeholder="Ingen sortering"
+    styles={customStyles}
+    value={
+      orderByOptions.find((option) => option.value === router.query.orderBy) ||
+      null
+    }
+  />
 ));
 
 export const jobTypeOptions = [
@@ -131,20 +133,21 @@ export const jobTypeOptions = [
 ];
 
 const JobTypeSelector = withRouter(({ router }) => (
-  <div style={{ width: '100%' }}>
-    <Select
-      isClearable={false}
-      placeholder="Ikke valgt"
-      styles={customStyles}
-      defaultValue={jobTypeOptions.find(
-        (el) => el.value === (router.query.type || '')
-      )}
-      onChange={(el: ValueType<Option>): void =>
-        onQueryChange({ type: (el as Option)?.value })
-      }
-      options={jobTypeOptions}
-    />
-  </div>
+  <Select
+    inputId="job-type"
+    isClearable={false}
+    onChange={(option: ValueType<Option>): void =>
+      onQueryChange({ type: (option as Option)?.value })
+    }
+    options={jobTypeOptions}
+    placeholder="Alle"
+    styles={customStyles}
+    value={
+      jobTypeOptions.find(
+        (option) => option.value === (router.query.type || '')
+      ) || jobTypeOptions[0]
+    }
+  />
 ));
 
 type SearchQuery =
@@ -171,8 +174,7 @@ const loadOptions = async (
     query: inputValue,
   });
 
-  // See https://github.com/microsoft/TypeScript/issues/33591
-  const options = (data.search as SearchType)
+  return (data.search as SearchType)
     .filter(
       (result): result is GraphQLOption => result !== null && 'name' in result
     )
@@ -180,7 +182,6 @@ const loadOptions = async (
       value: result.id,
       label: result.name,
     }));
-  return options;
 };
 
 const CompanySelector = withRouter(
@@ -191,37 +192,48 @@ const CompanySelector = withRouter(
     router: NextRouter;
     environment: Environment;
   }) => (
-    <div style={{ width: '100%' }}>
-      <AsyncSelect
-        isClearable
-        loadOptions={debounce(
-          (input) => loadOptions(input, environment, companySearchQuery),
-          150
-        )}
-        styles={customStyles}
-        defaultValue={
-          router.query.companyName ? { label: router.query.companyName } : null
-        }
-        placeholder="Ikke valgt"
-        noOptionsMessage={(input): string =>
-          input.inputValue ? 'Fant ingen på bedrifter... :(' : 'Søk her!'
-        }
-        cacheOptions
-        filterOptions={(options: any, filter: any, currentValues: any): any => {
-          /* Do no filtering, just return all options
-    // https://github.com/JedWatson/react-select#note-about-filtering-async-options */
-          return options;
-        }}
-        onChange={(el): void =>
-          onQueryChange({
-            company: (el as Option)?.value,
-            companyName: (el as Option)?.label,
-          })
-        }
-      />
-    </div>
+    <AsyncSelect
+      cacheOptions
+      inputId="job-company"
+      isClearable
+      loadOptions={debounce(
+        (input) => loadOptions(input, environment, companySearchQuery),
+        150
+      )}
+      noOptionsMessage={({ inputValue }): string =>
+        inputValue ? 'Fant ingen bedrifter' : 'Skriv for å søke'
+      }
+      onChange={(option): void =>
+        onQueryChange({
+          company: (option as Option)?.value,
+          companyName: (option as Option)?.label,
+        })
+      }
+      placeholder="Søk etter bedrift"
+      styles={customStyles}
+      value={
+        router.query.company && router.query.companyName
+          ? {
+              value: router.query.company as string,
+              label: router.query.companyName as string,
+            }
+          : null
+      }
+    />
   )
 );
+
+const parseTownOptions = (value: NextRouter['query']['towns']): Option[] => {
+  if (typeof value !== 'string') {
+    return [];
+  }
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
 
 const TownSelector = withRouter(
   ({
@@ -231,60 +243,61 @@ const TownSelector = withRouter(
     router: NextRouter;
     environment: Environment;
   }) => (
-    <div style={{ width: '100%' }}>
-      <AsyncSelect
-        isClearable
-        isMulti
-        loadOptions={debounce(
-          (input) => loadOptions(input, environment, townSearchQuery),
-          150
-        )}
-        cacheOptions
-        placeholder="Ikke valgt"
-        noOptionsMessage={(input): string =>
-          input.inputValue ? 'Fant ingen steder... :(' : 'Søk her!'
-        }
-        styles={customStyles}
-        defaultValue={
-          router.query.towns as unknown as ValueType<OptionTypeBase>
-        }
-        filterOptions={(
-          options: Option[],
-          filter: any,
-          currentValues: any
-        ): any => options}
-        onChange={(el): void =>
-          onQueryChange({
-            towns: JSON.stringify(el),
-          })
-        }
-      />
-    </div>
+    <AsyncSelect
+      cacheOptions
+      inputId="job-town"
+      isClearable
+      isMulti
+      loadOptions={debounce(
+        (input) => loadOptions(input, environment, townSearchQuery),
+        150
+      )}
+      noOptionsMessage={({ inputValue }): string =>
+        inputValue ? 'Fant ingen steder' : 'Skriv for å søke'
+      }
+      onChange={(option): void =>
+        onQueryChange({
+          towns: JSON.stringify(option || []),
+        })
+      }
+      placeholder="Søk etter sted"
+      styles={customStyles}
+      value={parseTownOptions(router.query.towns)}
+    />
   )
 );
 
-const YearSelector = ({ variables }: { variables: Variables }): JSX.Element => (
-  <Range
-    onAfterChange={(el): void => {
-      const [fromYear, toYear] = el;
-      onQueryChange({ fromYear, toYear });
-    }}
-    marks={{
-      '1': '1.klasse',
-      '2': '2.klasse',
-      '3': '3.klasse',
-      '4': '4.klasse',
-      '5': '5.klasse',
-    }}
-    dots
-    min={1}
-    max={5}
-    defaultValue={[
-      (variables && variables.fromYear) || 1,
-      (variables && variables.toYear) || 5,
-    ]}
-  />
-);
+const YearSelector = ({ variables }: { variables: Variables }): JSX.Element => {
+  const fromGrade = Number(variables.fromGrade) || 1;
+  const toGrade = Number(variables.toGrade) || 5;
+  return (
+    <div className="job-year-range">
+      <Range
+        defaultValue={[fromGrade, toGrade]}
+        dots
+        key={`${fromGrade}-${toGrade}`}
+        marks={{
+          '1': '1.',
+          '2': '2.',
+          '3': '3.',
+          '4': '4.',
+          '5': '5.',
+        }}
+        max={5}
+        min={1}
+        onAfterChange={([fromYear, toYear]): void =>
+          onQueryChange({ fromYear, toYear })
+        }
+      />
+      <p>
+        {fromGrade === toGrade
+          ? `${fromGrade}. trinn`
+          : `${fromGrade}. til ${toGrade}. trinn`}
+      </p>
+    </div>
+  );
+};
+
 const JoblistingsSidebar = ({
   environment,
   variables,
@@ -292,18 +305,43 @@ const JoblistingsSidebar = ({
   environment: Environment;
   variables: Variables;
 }): JSX.Element => (
-  <Sidebar>
-    <h4> Type </h4>
-    <JobTypeSelector />
-    <h4> Bedrift</h4>
-    <CompanySelector environment={environment} />
-    <h4> Sted</h4>
-    <TownSelector environment={environment} />
-    <h4> Sortér på</h4>
-    <OrderBySelector />
-    <h4> Årstrinn </h4>
-    <YearSelector variables={variables} />
-  </Sidebar>
+  <aside aria-labelledby="job-filter-heading" className="job-filters">
+    <div className="job-filters__heading">
+      <div>
+        <p className="site-eyebrow">Avgrens resultatene</p>
+        <h2 id="job-filter-heading">Filtrer</h2>
+      </div>
+      <button
+        onClick={(): void => {
+          Router.replace('/jobb');
+        }}
+        type="button"
+      >
+        Nullstill
+      </button>
+    </div>
+
+    <div className="job-filter-field">
+      <label htmlFor="job-type">Type stilling</label>
+      <JobTypeSelector />
+    </div>
+    <div className="job-filter-field">
+      <label htmlFor="job-company">Bedrift</label>
+      <CompanySelector environment={environment} />
+    </div>
+    <div className="job-filter-field">
+      <label htmlFor="job-town">Sted</label>
+      <TownSelector environment={environment} />
+    </div>
+    <div className="job-filter-field">
+      <label htmlFor="job-order">Sorter etter</label>
+      <OrderBySelector />
+    </div>
+    <fieldset className="job-filter-field">
+      <legend>Aktuelt årstrinn</legend>
+      <YearSelector variables={variables} />
+    </fieldset>
+  </aside>
 );
 
 export default JoblistingsSidebar;

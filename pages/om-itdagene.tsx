@@ -9,7 +9,7 @@ import BoardMember from '../components/BoardMember';
 import { omItdagene_QueryResponse } from '../__generated__/omItdagene_Query.graphql';
 import PageView from '../components/PageView';
 import { sortBy } from 'lodash';
-import Flex from '../components/Styled/Flex';
+import { SectionHeading } from '../components/DesignSystem';
 
 const ROLES = [
   'Leder',
@@ -25,27 +25,31 @@ const ROLES = [
 ];
 
 const Index = ({
-  error,
   props,
-}: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => (
-  <>
-    {props.omItdagene && (
-      <PageView page={props.omItdagene} blueBackground={true} />
-    )}
-    <h1>Styret {props.currentMetaData && props.currentMetaData.year}</h1>
-    <Flex
-      flexWrap="wrap"
-      justifyContent="center"
-      style={{ alignItems: 'center' }}
-    >
-      {sortBy(props.currentMetaData.boardMembers, (m) =>
-        ROLES.indexOf(m.role || 'Medlem')
-      ).map((user) => (
-        <BoardMember key={user.id} user={user} />
-      ))}
-    </Flex>
-  </>
-);
+}: WithDataAndLayoutProps<omItdagene_QueryResponse>): JSX.Element => {
+  const boardMembers = props.currentMetaData?.boardMembers || [];
+  return (
+    <>
+      {props.omItdagene && <PageView page={props.omItdagene} />}
+      {boardMembers.length > 0 && (
+        <section className="board-section">
+          <SectionHeading
+            description="Studentene som planlegger og gjennomfører årets arrangement."
+            title={`Styret ${props.currentMetaData?.year || ''}`}
+          />
+          <div className="board-grid">
+            {sortBy(boardMembers, (member) => {
+              const roleIndex = ROLES.indexOf(member.role || 'Medlem');
+              return roleIndex === -1 ? ROLES.length : roleIndex;
+            }).map((user) => (
+              <BoardMember key={user.id} user={user} />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  );
+};
 
 export default withDataAndLayout(Index, {
   query: graphql`

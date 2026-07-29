@@ -2,38 +2,36 @@ import * as React from 'react';
 import { graphql } from 'react-relay';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { program_QueryResponse } from '../__generated__/program_Query.graphql';
-import PageView from '../components/PageView';
 import ProgramView from '../components/Program/ProgramView';
-import Flex from '../components/Styled/Flex';
-import FlexItem from '../components/Styled/FlexItem';
+import { ContentStatePanel } from '../components/DesignSystem';
+import PageView from '../components/PageView';
+import { Metadata } from '../components/Layout';
 
 const Index = ({
-  error,
   props,
   router,
-}: WithDataAndLayoutProps<program_QueryResponse>): JSX.Element => (
-  <>
-    {props.programPage && <PageView hideContent page={props.programPage} />}
-
-    {props.programPage && <PageView hideTitle page={props.programPage} />}
-
-    {props.events ? (
-      <ProgramView
-        events={props.events}
-        router={router}
-        currentMetaData={props.currentMetaData}
-        // showToggleButton
-        // useLinks
+}: WithDataAndLayoutProps<program_QueryResponse>): JSX.Element => {
+  if (!props.currentMetaData) {
+    return (
+      <ContentStatePanel
+        description="Last siden på nytt, eller prøv igjen om litt."
+        state="error"
+        title="Vi fikk ikke hentet programinformasjonen."
       />
-    ) : (
-      <Flex>
-        <FlexItem>
-          <h1>Programmet er tomt</h1>
-        </FlexItem>
-      </Flex>
-    )}
-  </>
-);
+    );
+  }
+
+  return (
+    <>
+      <ProgramView
+        currentMetaData={props.currentMetaData}
+        events={props.events || []}
+        router={router}
+      />
+      {props.programPage && <PageView hideTitle page={props.programPage} />}
+    </>
+  );
+};
 
 export default withDataAndLayout(Index, {
   query: graphql`
@@ -46,13 +44,19 @@ export default withDataAndLayout(Index, {
       }
       programPage: page(slug: "program") {
         ...PageView_page
-        ...metadata_metadata
+        title
+        description
+        sharingImage
       }
     }
   `,
   variables: {},
-  layout: ({ props, error }) => ({
+  layout: ({ props }) => ({
     responsive: true,
-    metadata: props && props.programPage,
+    customOpengraphMetadata: (): Metadata =>
+      props?.programPage || {
+        title: 'Program',
+        description: 'Finn tider, rom og arrangementer under itDAGENE på NTNU.',
+      },
   }),
 });

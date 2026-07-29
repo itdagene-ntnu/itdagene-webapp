@@ -9,7 +9,6 @@ import Document, {
 import * as Sentry from '@sentry/node';
 import { ServerStyleSheet } from 'styled-components';
 import * as React from 'react';
-import Script from 'next/script';
 
 export default class Default extends Document<{
   styleTags: Array<React.ReactElement<{}>>;
@@ -40,9 +39,14 @@ export default class Default extends Document<{
     return (
       <Html lang="nb">
         <Head>
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
             rel="stylesheet"
           />
           <meta name="theme-color" content="#ffffff" />
@@ -119,10 +123,6 @@ export default class Default extends Document<{
           <link rel="manifest" href="/static/manifest.json" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          />
-          <link
-            rel="stylesheet"
             href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
             integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
             crossOrigin="anonymous"
@@ -133,16 +133,6 @@ export default class Default extends Document<{
         <body>
           <Main />
           <NextScript />
-          <Script
-            type="module"
-            src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-            strategy="beforeInteractive"
-          />
-          <Script
-            noModule
-            src="https://cdn.jsdelivr.net/npm/ionicons@7.1.0/dist/ionicons/ionicons.js"
-            strategy="beforeInteractive"
-          />
         </body>
       </Html>
     );

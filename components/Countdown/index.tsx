@@ -1,119 +1,113 @@
-import { useEffect, useState } from 'react';
-import Countdown from 'react-countdown-now';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { Countdown_currentMetaData } from '../../__generated__/Countdown_currentMetaData.graphql';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import styled from 'styled-components';
+import { EventPhase } from '../../config/edition';
 import {
-  blueNCS,
-  princetonOrange,
-  skyBlue,
-  indigoDye,
-} from '../../utils/colors';
-import Flex from '../Styled/Flex';
+  CountdownParts,
+  getCountdownParts,
+  getEventStartTimestamp,
+} from '../../utils/countdown';
 
-dayjs.extend(utc);
+const labels: Array<{
+  key: keyof CountdownParts;
+  singular: string;
+  plural: string;
+}> = [
+  { key: 'days', singular: 'dag', plural: 'dager' },
+  { key: 'hours', singular: 'time', plural: 'timer' },
+  { key: 'minutes', singular: 'minutt', plural: 'minutter' },
+  { key: 'seconds', singular: 'sekund', plural: 'sekunder' },
+];
 
-const NumberBox = styled('div')`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-  letter-spacing: 2px;
-  flex: 1;
-  vertical-align: middle;
-  width: 135px;
-  height: 125px;
-  text-transform: uppercase;
-  font-size: 12px;
-  background: ${(props): any => props.color};
-  margin: 5px;
-  flex-basis: 135px;
-  color: white;
-`;
+const pad = (value: number): string => String(value).padStart(2, '0');
 
-const Number = styled('div')`
-  margin-top: 25px;
-  font-size: 52px;
-  font-weight: bold;
-`;
-
-const Text = styled('span')`
-  font-weight: bold;
-  line-height: 2;
-`;
-
-type RendererProps = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  completed: boolean;
-};
-
-const CountDownComponent = ({
-  days,
-  hours,
-  minutes,
-  seconds,
-  completed,
-}: RendererProps): JSX.Element => {
-  const [staticDate, setStaticDate] = useState(true);
-  useEffect(() => {
-    setStaticDate(false);
-  }, []);
-  return (
-    <Flex
-      flexWrap="wrap"
-      justifyContent="center"
-      style={{ alignItems: 'center' }}
-    >
-      <NumberBox color={blueNCS}>
-        <Number>{days}</Number> <Text> dager </Text>
-      </NumberBox>
-      <NumberBox color={princetonOrange}>
-        <Number>{hours}</Number> <Text> timer </Text>
-      </NumberBox>
-      <NumberBox color={skyBlue}>
-        <Number>{minutes}</Number> <Text> minutter </Text>
-      </NumberBox>
-      <NumberBox color={indigoDye}>
-        <Number>{staticDate ? 0 : seconds}</Number> <Text> sekunder </Text>
-      </NumberBox>
-    </Flex>
-  );
-};
-
-const renderer = ({
-  days,
-  hours,
-  minutes,
-  seconds,
-  completed,
-}: RendererProps): JSX.Element | boolean =>
-  !completed && (
-    <CountDownComponent
-      days={days}
-      hours={hours}
-      minutes={minutes}
-      seconds={seconds}
-      completed={completed}
-    />
-  );
-
-const CountdownComponent = (props: {
+const CountdownComponent = ({
+  currentMetaData,
+  phase,
+}: {
   currentMetaData: Countdown_currentMetaData;
-}): JSX.Element => (
-  <Countdown
-    date={dayjs
-      .utc(props.currentMetaData.startDate)
-      .add(10, 'hour')
-      .add(0, 'minute')
-      .toDate()}
-    renderer={renderer}
-  />
-);
+  phase?: EventPhase;
+}): JSX.Element => {
+  const targetTimestamp = useMemo(
+    () =>
+      currentMetaData?.startDate
+        ? getEventStartTimestamp(currentMetaData.startDate)
+        : 0,
+    [currentMetaData]
+  );
+  const [nowTimestamp, setNowTimestamp] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNowTimestamp(Date.now());
+    const interval = window.setInterval(
+      () => setNowTimestamp(Date.now()),
+      1000
+    );
+    return (): void => window.clearInterval(interval);
+  }, []);
+
+  if (!targetTimestamp) {
+    return <div className="event-countdown event-countdown--empty" />;
+  }
+
+  const countdown =
+    nowTimestamp === null
+      ? getCountdownParts(targetTimestamp, targetTimestamp - 1)
+      : getCountdownParts(targetTimestamp, nowTimestamp);
+  const completed =
+    countdown.completed || phase === 'live' || phase === 'postEvent';
+  const eventDateTime = `${currentMetaData.startDate}T10:00:00+02:00`;
+  const accessibleEventDate = new Intl.DateTimeFormat('nb-NO', {
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    month: 'long',
+    timeZone: 'Europe/Oslo',
+    year: 'numeric',
+  }).format(new Date(eventDateTime));
+
+  if (completed) {
+    return (
+      <div className="event-countdown event-countdown--complete" role="status">
+        <span className="event-countdown__kicker">
+          {phase === 'postEvent' ? 'Takk for i år' : 'itDAGENE er i gang'}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="event-countdown" data-testid="event-countdown">
+      <time className="visually-hidden" dateTime={eventDateTime}>
+        itDAGENE starter {accessibleEventDate}
+      </time>
+      <p className="event-countdown__kicker" data-countdown-content>
+        Til vi møtes på Gløshaugen
+      </p>
+      <dl
+        aria-hidden="true"
+        className="event-countdown__values"
+        data-countdown-grid
+      >
+        {labels.map(({ key, singular, plural }, index) => {
+          const value = countdown[key] as number;
+          return (
+            <div
+              className={`event-countdown__unit event-countdown__unit--${
+                index + 1
+              }`}
+              data-countdown-tile
+              key={key}
+            >
+              <dd data-countdown-content>{pad(value)}</dd>
+              <dt data-countdown-content>{value === 1 ? singular : plural}</dt>
+            </div>
+          );
+        })}
+      </dl>
+    </div>
+  );
+};
 
 export default createFragmentContainer(CountdownComponent, {
   currentMetaData: graphql`

@@ -1,198 +1,152 @@
-import styled from 'styled-components';
-import {
-  ChangeEvent,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import { itdageneBlue } from '../../utils/colors';
-import {
-  withDataAndLayout,
-  WithDataAndLayoutProps,
-  WithDataDataProps,
-} from '../../lib/withData';
+import { useCallback, useEffect, useState } from 'react';
+import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import { galleri_QueryResponse } from '../../__generated__/galleri_Query.graphql';
 import { graphql } from 'react-relay';
 import LazyImage from '../../components/LazyImage';
 import ClientOnly from '../../components/ClientOnly';
-
-const GalleryWrap = styled('div')`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  max-width: 1120px;
-  margin: 0 auto 60px;
-`;
-
-const SliderWrap = styled('div')`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 999;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  @media only screen and (max-width: 767px) {
-    display: none;
-  }
-`;
-
-const Title = styled('h1')`
-  font-weight: bold;
-  font-smoothing: antialiased;
-  font-size: 3rem;
-  margin-bottom: 1rem;
-`;
-
-const StyledButton = ({
-  name,
-  top = '50%',
-  right = '40px',
-  left,
-  rotate,
-  onClick,
-}: {
-  name: string;
-  top?: string;
-  right?: string;
-  left?: string;
-  rotate?: string;
-  onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}): ReactElement => {
-  return (
-    <>
-      {/* eslint-disable-next-line*/}
-      {/* @ts-ignore*/}
-      <ion-icon
-        onClick={(event: ChangeEvent<HTMLInputElement>): void => {
-          event.stopPropagation();
-          onClick(event);
-        }}
-        style={{
-          position: 'fixed',
-          fontSize: '65px',
-          color: itdageneBlue,
-          top: top,
-          right: right,
-          left: left,
-          cursor: 'pointer',
-          transform: rotate ? `rotate(${rotate})` : 'none',
-        }}
-        name={name}
-      />
-    </>
-  );
-};
+import Modal from 'react-modal';
+import {
+  ContentStatePanel,
+  MetadataList,
+  PageHeader,
+} from '../../components/DesignSystem';
+import { editionConfig } from '../../config/edition';
 
 const Galleri = ({
-  error,
   props,
 }: WithDataAndLayoutProps<galleri_QueryResponse>): JSX.Element => {
+  const photos = props.photos || [];
   const [slideNumber, setSlideNumber] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+  const activePhoto = photos[slideNumber];
+  const isHistoricalArchive =
+    editionConfig.modules.gallery.configuredState !== 'published';
+  const galleryEdition =
+    (isHistoricalArchive && editionConfig.modules.gallery.historicalEdition) ||
+    editionConfig.edition;
 
-  const handleOpenModal = (index: number): void => {
+  const closeModal = useCallback((): void => setOpenModal(false), []);
+  const previousPhoto = useCallback((): void => {
+    setSlideNumber((current) =>
+      current === 0 ? photos.length - 1 : current - 1
+    );
+  }, [photos.length]);
+  const nextPhoto = useCallback((): void => {
+    setSlideNumber((current) =>
+      current + 1 === photos.length ? 0 : current + 1
+    );
+  }, [photos.length]);
+
+  useEffect(() => {
+    Modal.setAppElement('#__next');
+  }, []);
+
+  useEffect(() => {
+    if (!openModal) {
+      return;
+    }
+    const handleArrowKeys = (event: KeyboardEvent): void => {
+      if (event.key === 'ArrowRight') {
+        nextPhoto();
+      }
+      if (event.key === 'ArrowLeft') {
+        previousPhoto();
+      }
+    };
+    document.addEventListener('keydown', handleArrowKeys);
+    return (): void => document.removeEventListener('keydown', handleArrowKeys);
+  }, [nextPhoto, openModal, previousPhoto]);
+
+  const openPhoto = (index: number): void => {
     setSlideNumber(index);
     setOpenModal(true);
   };
 
-  // Close Modal
-  const handleCloseModal = useCallback((): void => {
-    setOpenModal(false);
-  }, []);
-
-  // Previous Image
-  const prevSlide = useCallback((): void => {
-    if (!props.photos) return;
-    slideNumber === 0
-      ? setSlideNumber(props.photos.length - 1)
-      : setSlideNumber(slideNumber - 1);
-  }, [props.photos, slideNumber]);
-
-  // Next Image
-  const nextSlide = useCallback((): void => {
-    if (!props.photos) return;
-    slideNumber + 1 === props.photos.length
-      ? setSlideNumber(0)
-      : setSlideNumber(slideNumber + 1);
-  }, [props.photos, slideNumber]);
-
-  const changeImageOnKey = useCallback(
-    (event) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        handleCloseModal();
-      }
-      if (event.key === 'ArrowRight') nextSlide();
-      if (event.key === 'ArrowLeft') prevSlide();
-    },
-    [handleCloseModal, nextSlide, prevSlide]
-  );
-
-  useEffect(() => {
-    document.addEventListener('keydown', changeImageOnKey);
-    return function cleanup(): void {
-      document.removeEventListener('keydown', changeImageOnKey);
-    };
-  }, [changeImageOnKey]);
-
   return (
     <>
-      <Title>Galleri</Title>
-      {props.photos ? (
-        <>
-          {openModal && (
-            <SliderWrap onClick={(): void => handleCloseModal()}>
-              <StyledButton
-                name="add-outline"
-                top="40px"
-                rotate="45deg"
-                onClick={handleCloseModal}
-              />
-              <StyledButton
-                name="arrow-back-outline"
-                left="40px"
-                onClick={prevSlide}
-              />
-              <StyledButton name="arrow-forward-outline" onClick={nextSlide} />
-              <LazyImage
-                src={`https://itdagene.no/uploads/${props.photos[slideNumber].photo}`}
-                alt={props.photos[slideNumber].photo}
-                width={350 * 3}
-                height={230 * 3}
-              />
-            </SliderWrap>
-          )}
+      <PageHeader
+        description={
+          isHistoricalArchive
+            ? 'Dokumentariske glimt fra tidligere itDAGENE-arrangementer på NTNU.'
+            : `Dokumentariske glimt fra itDAGENE ${galleryEdition} på NTNU.`
+        }
+        title="Galleri"
+      >
+        {photos.length > 0 && (
+          <MetadataList
+            items={[
+              { label: 'Utgave', value: galleryEdition },
+              { label: 'Bilder', value: photos.length },
+            ]}
+          />
+        )}
+      </PageHeader>
 
-          <ClientOnly>
-            {/* Prevents hydration errors by deferring rendering until client-side */}
-            <GalleryWrap>
-              {props.photos.map((photo, index) => (
+      {photos.length > 0 ? (
+        <ClientOnly>
+          <div className="gallery-grid">
+            {photos.map((photo, index) => (
+              <button
+                aria-label={`Åpne bilde ${index + 1} av ${photos.length}`}
+                key={photo.photo}
+                onClick={(): void => openPhoto(index)}
+                type="button"
+              >
                 <LazyImage
-                  src={`https://itdagene.no/uploads/${photo.photo}`}
-                  alt={photo.photo}
-                  key={photo.photo}
-                  width={350}
-                  height={230}
-                  onClick={(): void => handleOpenModal(index)}
-                  cursor="pointer"
+                  alt={`Foto fra itDAGENE, bilde ${index + 1}`}
+                  height={460}
                   hover
+                  src={`https://itdagene.no/uploads/${photo.photo}`}
+                  width={700}
                 />
-              ))}
-            </GalleryWrap>
-          </ClientOnly>
-        </>
+              </button>
+            ))}
+          </div>
+        </ClientOnly>
       ) : (
-        <p>Kunne ikke hente bilder :/</p>
+        <div className="gallery-empty">
+          <ContentStatePanel
+            description="Vi publiserer et kuratert utvalg når bildene er klare."
+            state="unpublished"
+            title="Galleriet er ikke publisert ennå."
+          />
+        </div>
       )}
+
+      <Modal
+        className="gallery-modal"
+        contentLabel={
+          activePhoto
+            ? `Bilde ${slideNumber + 1} av ${photos.length}`
+            : 'Galleri'
+        }
+        isOpen={openModal}
+        onRequestClose={closeModal}
+        overlayClassName="gallery-modal-overlay"
+      >
+        <div className="gallery-modal__toolbar">
+          <p>
+            {slideNumber + 1} / {photos.length}
+          </p>
+          <button onClick={closeModal} type="button">
+            Lukk
+          </button>
+        </div>
+        {activePhoto && (
+          <img
+            alt={`Foto fra itDAGENE, bilde ${slideNumber + 1}`}
+            src={`https://itdagene.no/uploads/${activePhoto.photo}`}
+          />
+        )}
+        <div className="gallery-modal__navigation">
+          <button onClick={previousPhoto} type="button">
+            ← Forrige
+          </button>
+          <button onClick={nextPhoto} type="button">
+            Neste →
+          </button>
+        </div>
+      </Modal>
     </>
   );
 };
@@ -206,7 +160,11 @@ export default withDataAndLayout(Galleri, {
     }
   `,
   variables: {},
-  layout: ({ props, error }: WithDataDataProps<galleri_QueryResponse>) => ({
+  layout: {
     responsive: true,
-  }),
+    customOpengraphMetadata: (): { title: string; description: string } => ({
+      title: 'Galleri',
+      description: 'Bilder fra itDAGENE på NTNU.',
+    }),
+  },
 });

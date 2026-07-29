@@ -9,6 +9,7 @@ import { JoblistingsContainer_root } from '../__generated__/JoblistingsContainer
 import withData, { WithDataProps } from '../lib/withData';
 
 import Layout from '../components/Layout';
+import { PageHeader } from '../components/DesignSystem';
 
 type RenderProps = WithDataProps<JoblistingsContainer_root>;
 
@@ -28,19 +29,25 @@ class Index extends React.Component<RenderProps, State> {
         noLoading
         responsive
       >
-        <JoblistingsContainer environment={environment} variables={variables}>
-          {props && (
-            <JoblistingsList
-              environment={environment}
-              variables={{}}
-              loading={this.state.loading}
-              loadingStart={this.loadingStart}
-              loadingEnd={this.loadingEnd}
-              /* TODO FIXME Fragment types are not properly handled by WithData */
-              root={props as unknown as FragmentRef<typeof props>}
-            />
-          )}
-        </JoblistingsContainer>
+        <PageHeader
+          description="Finn sommerjobber, faste stillinger og andre muligheter fra bedriftene som samarbeider med itDAGENE."
+          title="Jobb"
+        />
+        <div className="jobs-content">
+          <JoblistingsContainer environment={environment} variables={variables}>
+            {props && (
+              <JoblistingsList
+                environment={environment}
+                variables={variables}
+                loading={this.state.loading}
+                loadingStart={this.loadingStart}
+                loadingEnd={this.loadingEnd}
+                /* TODO FIXME Fragment types are not properly handled by WithData */
+                root={props as unknown as FragmentRef<typeof props>}
+              />
+            )}
+          </JoblistingsContainer>
+        </div>
       </Layout>
     );
   }
@@ -63,8 +70,8 @@ export default withData(Index, {
   query,
   variables: (router: NextRouter) => ({
     type: router.query.type || '',
-    fromYear: parseYear(router.query.fromYear) || 1,
-    toYear: parseYear(router.query.toYear) || 5,
+    fromGrade: parseYear(router.query.fromYear) || 1,
+    toGrade: parseYear(router.query.toYear) || 5,
     company: router.query.company || '',
     towns:
       parseTowns(router.query) &&

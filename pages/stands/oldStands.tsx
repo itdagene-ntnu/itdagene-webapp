@@ -80,6 +80,15 @@ const Index = ({
 }: WithDataAndLayoutProps<oldStands_QueryResponse>): JSX.Element => {
   const [time, setTime] = useState(dayjs());
 
+  useEffect(() => {
+    const interval = setInterval(() => setTime(dayjs()), intervalLength);
+    return (): void => clearInterval(interval);
+  }, []);
+
+  if (!props || !props.currentMetaData) {
+    return <div>Det har skjedd en feil ved henting av data...</div>;
+  }
+
   const {
     mainCollaborator,
     collaborators,
@@ -88,11 +97,6 @@ const Index = ({
     startDate,
     endDate,
   } = props.currentMetaData;
-
-  useEffect(() => {
-    const interval = setInterval(() => setTime(dayjs()), intervalLength);
-    return (): void => clearInterval(interval);
-  }, []);
 
   let companies: Companies = [];
   if (isRespectiveDate(toDayjs(startDate)) && companiesFirstDay) {

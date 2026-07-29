@@ -1,135 +1,196 @@
+import dayjs from 'dayjs';
+import 'dayjs/locale/nb';
+import utc from 'dayjs/plugin/utc';
+import Image from 'next/image';
 import React from 'react';
-import dynamic from 'next/dynamic'; // FIX 1: Import dynamic
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
-import styled from 'styled-components';
-import { CenterIt } from '../Styled';
-import { itdageneDarkBlue, itdageneBlue } from '../../utils/colors';
-import Flex from '../Styled/Flex';
-import FlexItem from '../Styled/FlexItem';
-import { Button } from '@mui/material';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import 'dayjs/locale/nb';
+import { ContentState, editionConfig } from '../../config/edition';
+import { homepageMedia } from '../../config/homepage';
+import { phaseLabel, resolveEventPhase } from '../../utils/eventLifecycle';
+import {
+  resolveEmployerAction,
+  resolveHeroActions,
+} from '../../utils/homepageActions';
+import Countdown from '../Countdown';
+import { ActionLink } from '../DesignSystem';
+import { useHeroLogoTransition } from './useHeroLogoTransition';
 
 dayjs.extend(utc);
 
-const Countdown = dynamic(() => import('../Countdown'), { ssr: false });
-
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
+  programState: ContentState;
+  standState: ContentState;
 };
 
-const MainContainer = styled(CenterIt)`
-  @media only screen and (min-width: 800px) {
-    background: rgba(0, 0, 0, 0.2);
+const WelcomeScreen = ({
+  currentMetaData,
+  programState,
+  standState,
+}: Props): JSX.Element => {
+  const storyRef = React.useRef<HTMLElement>(null);
+  const sceneRef = React.useRef<HTMLDivElement>(null);
+  const mediaRef = React.useRef<HTMLElement>(null);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
+  const arrivalRef = React.useRef<HTMLDivElement>(null);
+  const compactRef = React.useRef<HTMLDivElement>(null);
+  const cueRef = React.useRef<HTMLParagraphElement>(null);
+  const logoAnchorRef = React.useRef<HTMLDivElement>(null);
+  const assembledLogoRef = React.useRef<HTMLDivElement>(null);
+  const interestActionRef = React.useRef<HTMLDivElement>(null);
+  const transitionRefs = React.useMemo(
+    () => ({
+      arrival: arrivalRef,
+      assembledLogo: assembledLogoRef,
+      compact: compactRef,
+      interestAction: interestActionRef,
+      logoAnchor: logoAnchorRef,
+      media: mediaRef,
+      scene: sceneRef,
+      scrollCue: cueRef,
+      story: storyRef,
+      video: videoRef,
+    }),
+    []
+  );
+  useHeroLogoTransition(transitionRefs, currentMetaData?.interestForm);
+
+  if (!currentMetaData) {
+    return <div className="event-hero event-hero--loading" />;
   }
-  height: 100%;
-  min-height: 400px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: auto;
-  right: 0;
-  width: 100%;
-  padding-bottom: 170px;
-  color: white;
-`;
 
-const Header = styled('h1')`
-  margin: 0;
-  font-size: 4em !important;
-  color: white;
-  font-weight: normal;
-  margin-bottom: 0;
-  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
-`;
-
-const SubHeader = styled('h2')`
-  margin: 0;
-  color: white;
-  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
-`;
-
-const Location = styled('h3')`
-  text-shadow: 3px 2px 3px rgba(0, 0, 0, 0.4);
-  color: white;
-`;
-
-const ReadMore = styled('span')`
-  display: inline-block;
-  font-weight: bold;
-  font-size: 1.125rem;
-  background: white;
-  border-radius: 2000px;
-  padding: 20px 40px;
-  color: ${itdageneBlue};
-`;
-
-const Video = styled('video')`
-  margin: 0;
-  width: 100%;
-  height: auto;
-  @media only screen and (max-width: 800px) {
-    display: none;
-  }
-`;
-
-const RootContainer = styled('div')`
-  max-height: 800px;
-  @media only screen and (max-width: 800px) {
-    background: ${itdageneDarkBlue};
-    min-height: 700px;
-  }
-  height: 75%;
-  position: relative;
-  overflow: hidden;
-`;
-
-const WelcomeScreen = ({ currentMetaData }: Props): JSX.Element => {
   const startDate = dayjs.utc(currentMetaData.startDate);
   const endDate = dayjs.utc(currentMetaData.endDate);
-
-  const scrollToTarget = (): void => {
-    const targetElement = document.getElementById('interest-schema-div');
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const edition = currentMetaData.year || editionConfig.edition;
+  const phase = resolveEventPhase({
+    startDate: currentMetaData.startDate,
+    endDate: currentMetaData.endDate,
+    publicLaunchAt: editionConfig.publicLaunchAt,
+  });
+  const studentActions = resolveHeroActions({
+    phase,
+    programState,
+    standState,
+  });
+  const employerAction = resolveEmployerAction(currentMetaData.interestForm);
+  const dateLabel = `${startDate.format('D')}.–${endDate.format('D')}. ${endDate
+    .locale('nb')
+    .format('MMMM')} ${edition}`;
 
   return (
-    <RootContainer>
-      <Video
-        autoPlay
-        preload="auto"
-        className="cover-video"
-        loop
-        muted
-        src="https://cdn.itdagene.no/itdagene.mp4"
-      />
-      <MainContainer text>
-        <Flex flexDirection="column" alignContent="space-between">
-          <FlexItem>
-            <Header>
-              <b>it</b>DAGENE {String(currentMetaData.year)}{' '}
-            </Header>
+    <section
+      className={`event-hero-story event-hero-story--${phase}`}
+      ref={storyRef}
+    >
+      <div className={`event-hero event-hero--${phase}`} ref={sceneRef}>
+        <figure className="event-hero__media" ref={mediaRef}>
+          <Image
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            src={homepageMedia.hero.src}
+          />
+          <video
+            aria-hidden="true"
+            muted
+            playsInline
+            preload="none"
+            ref={videoRef}
+          />
+          <div aria-hidden="true" className="event-hero__media-shade" />
+          <figcaption>{homepageMedia.hero.label}</figcaption>
+        </figure>
 
-            <SubHeader>
-              {`${startDate.date()}. & ${endDate.date()}. ${endDate
-                .locale('nb')
-                .format('MMMM')} ${startDate.year()}`}
-            </SubHeader>
-            <Location>NTNU Trondheim</Location>
-          </FlexItem>
-          <FlexItem>
-            <Countdown currentMetaData={currentMetaData} />
-          </FlexItem>
-        </Flex>
-        <Button onClick={scrollToTarget}>
-          <ReadMore>Meld interesse!</ReadMore>
-        </Button>
-      </MainContainer>
-    </RootContainer>
+        <div className="event-hero__arrival" ref={arrivalRef}>
+          <h1 className="visually-hidden">Møt arbeidslivet på Gløshaugen</h1>
+          <div className="event-hero__arrival-copy" data-arrival-copy>
+            <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
+            <span>NTNU Gløshaugen</span>
+          </div>
+          <Countdown currentMetaData={currentMetaData} phase={phase} />
+          <div className="event-hero__static-purpose">
+            <p>Møt arbeidslivet på Gløshaugen.</p>
+            <span>
+              Stands, faglige arrangementer og jobbmuligheter for teknologi- og
+              cybersikkerhetsstudenter.
+            </span>
+          </div>
+          <div
+            className="event-hero__arrival-action"
+            data-arrival-copy
+            data-hero-interest-action
+            ref={interestActionRef}
+          >
+            <ActionLink
+              external={Boolean(currentMetaData.interestForm)}
+              href={employerAction.href}
+              variant="accent"
+            >
+              {employerAction.label}
+            </ActionLink>
+          </div>
+          <p className="event-hero__scroll-cue" ref={cueRef}>
+            Scroll for å utforske
+            <span aria-hidden="true">↓</span>
+          </p>
+        </div>
+
+        <div
+          aria-hidden="true"
+          className="event-hero__logo-anchor"
+          ref={logoAnchorRef}
+        />
+        <div
+          aria-hidden="true"
+          className="event-hero__assembled-logo"
+          data-hero-logo
+          ref={assembledLogoRef}
+        >
+          <img
+            alt=""
+            height="114"
+            src="https://cdn.itdagene.no/itdagene.svg"
+            width="503"
+          />
+        </div>
+
+        <div className="event-hero__compact" ref={compactRef}>
+          <div className="event-hero__content">
+            <p className="event-hero__phase">{phaseLabel[phase]}</p>
+            <div className="event-hero__coordinates">
+              <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
+              <span>NTNU Gløshaugen</span>
+            </div>
+            <p
+              aria-hidden="true"
+              className="event-hero__resolved-title"
+              data-testid="hero-purpose"
+            >
+              Møt arbeidslivet på Gløshaugen.
+            </p>
+            <p className="event-hero__description">
+              Stands, faglige arrangementer og jobbmuligheter for teknologi- og
+              cybersikkerhetsstudenter.
+            </p>
+            <div className="event-hero__actions">
+              <ActionLink href={studentActions.primary.href}>
+                {studentActions.primary.label}
+              </ActionLink>
+              {studentActions.secondary && (
+                <ActionLink
+                  href={studentActions.secondary.href}
+                  variant="secondary"
+                >
+                  {studentActions.secondary.label}
+                </ActionLink>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -138,8 +199,9 @@ export default createFragmentContainer(WelcomeScreen, {
     fragment WelcomeScreen_currentMetaData on MetaData {
       year
       startDate
-      ...Countdown_currentMetaData
       endDate
+      interestForm
+      ...Countdown_currentMetaData
     }
   `,
 });

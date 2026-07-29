@@ -6,10 +6,8 @@ body {
   margin: 0;
   padding: 0;
   font-size: 16px;
-  color: rgba(0, 0, 0, 0.87);
-  font-smoothing: antialiased;
-  word-break: break-word;
-  font-family: Roboto, sans-serif;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
   font-variant-numeric: lining-nums;
 }
 
@@ -18,15 +16,15 @@ img {
 }
 
 p {
-  line-height: 1.4285em;
+  line-height: 1.6;
 }
 
 a {
-  color: #0778bc;
+  color: var(--color-brand);
   text-decoration: none;
 
   &:hover {
-    color: #41c0eb;
+    color: var(--color-brand-strong);
   }
 }
 
@@ -34,5 +32,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-weight: 500;
+  color: var(--color-ink);
+  font-weight: 650;
+  letter-spacing: -0.02em;
 }

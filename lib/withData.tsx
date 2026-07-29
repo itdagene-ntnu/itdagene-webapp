@@ -16,6 +16,7 @@ import {
 import { QueryRenderer } from 'react-relay';
 import { withRouter, NextRouter } from 'next/router';
 import { PageContext } from '../utils/types';
+import { resolveRelayEndpoint } from '../utils/relayEndpoint';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
 dayjs.locale('nb');
@@ -104,8 +105,11 @@ export const withData = <T extends {}, T1 extends OperationType>(
         const envSettings: EnvSettings = {
           sentryDsn: process.env.SENTRY_DSN || '',
           release: process.env.RELEASE || 'dev',
-          relayEndpoint:
-            process.env.RELAY_ENDPOINT || 'http://localhost:8000/graphql',
+          relayEndpoint: resolveRelayEndpoint({
+            configuredEndpoint: process.env.RELAY_ENDPOINT,
+            nodeEnv: process.env.NODE_ENV,
+          }),
+          browserRelayEndpoint: '/api/graphql',
         };
         // We're casting between RelayModernEnvironment and the Environment interface
         // because fetchQuery takes an environment of the interface type, which
@@ -119,11 +123,19 @@ export const withData = <T extends {}, T1 extends OperationType>(
           // const url = { query: ctx.query, pathname: ctx.pathname }
           // TODO: Consider RelayQueryResponseCache
           // https://github.com/facebook/relay/issues/1687#issuecomment-302931855
-          queryProps = await fetchQuery(
-            environment,
-            localOptions.query,
-            localOptions.variables || {}
-          );
+          try {
+            queryProps = await fetchQuery(
+              environment,
+              localOptions.query,
+              localOptions.variables || {}
+            );
+          } catch {
+            // The QueryRenderer retries in the browser and presents the
+            // route-level error state if the endpoint remains unavailable.
+            // A temporary API outage should not turn every route into a Next
+            // error document.
+            queryProps = {};
+          }
         }
 
         let composedProps;
@@ -161,7 +173,7 @@ export const withData = <T extends {}, T1 extends OperationType>(
             <QueryRenderer<T1>
               query={query}
               environment={this.environment}
-              fetchPolicy={'store-and-network'}
+              fetchPolicy={'store-or-network'}
               variables={variables}
               render={({ props, error }): JSX.Element => (
                 <ComposedComponent
@@ -189,21 +201,35 @@ export type DataLayoutOptions<T> = DataOptions & {
 export type WithDataAndLayoutProps<T> = WithDataBaseProps &
   ContentRendererProps<T>;
 
+type WithDataAndLayoutComponent<T> = React.ComponentType<
+  WithDataAndLayoutProps<T>
+> & {
+  getInitialProps?: (
+    context: PageContext<any>
+  ) => Promise<Record<string, any>> | Record<string, any>;
+};
+
 export const withDataAndLayout = <T extends {}>(
-  ComposedComponent: React.ComponentType<WithDataAndLayoutProps<T>>,
+  ComposedComponent: WithDataAndLayoutComponent<T>,
   { layout = {}, ...withDataRest }: DataLayoutOptions<T>
-): WithDataComponentType =>
-  withData(
-    ({ props, error, ...rest }: WithDataProps<T>) => (
-      <Layout
-        {...(typeof layout === 'object' ? layout : layout({ props, error }))}
-        contentRenderer={({ props, error }): JSX.Element => (
-          <ComposedComponent {...rest} props={props} error={error} />
-        )}
-        props={props}
-        error={error}
-      />
-    ),
-    withDataRest
+): WithDataComponentType => {
+  const LayoutComponent = ({
+    props,
+    error,
+    ...rest
+  }: WithDataProps<T>): JSX.Element => (
+    <Layout
+      {...(typeof layout === 'object' ? layout : layout({ props, error }))}
+      contentRenderer={({ props, error }): JSX.Element => (
+        <ComposedComponent {...rest} props={props} error={error} />
+      )}
+      props={props}
+      error={error}
+    />
   );
+
+  LayoutComponent.getInitialProps = ComposedComponent.getInitialProps;
+
+  return withData(LayoutComponent, withDataRest);
+};
 export default withData;

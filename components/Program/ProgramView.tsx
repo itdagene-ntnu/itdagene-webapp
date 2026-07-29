@@ -1,143 +1,183 @@
-import React, { useEffect, useState } from 'react';
-import { groupBy, sortBy } from 'lodash';
-
-import styled from 'styled-components';
-import { graphql, createFragmentContainer } from 'react-relay';
-
-import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
-import EventsToggle from './Components/EventsToggle';
-
-import Flex from '../Styled/Flex';
-
-import ProgramTimeline from './Components/ProgramTimeline';
-import { isMobile } from 'react-device-detect';
-import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_currentMetaData.graphql';
 import dayjs from 'dayjs';
+import 'dayjs/locale/nb';
+import { groupBy, sortBy } from 'lodash';
 import { NextRouter } from 'next/router';
-
-const Title = styled('h1')`
-  font-weight: bold;
-  font-smoothing: antialiased;
-  font-size: 3rem;
-  ${isMobile && 'margin-top: 0;'}
-  margin-bottom: 3rem;
-  white-space: nowrap;
-`;
-
-const UnderDevelopmentPlaceholder = styled('img')`
-  margin-bottom: 1rem;
-`;
+import React, { useEffect, useMemo, useState } from 'react';
+import { createFragmentContainer, graphql } from 'react-relay';
+import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_currentMetaData.graphql';
+import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
+import { editionConfig } from '../../config/edition';
+import { resolveContentState } from '../../utils/eventLifecycle';
+import { ContentStatePanel, PageHeader, MetadataList } from '../DesignSystem';
+import EventsToggle from './Components/EventsToggle';
+import ProgramTimeline from './Components/ProgramTimeline';
 
 type Props = {
   events: ProgramView_events;
   currentMetaData: ProgramView_currentMetaData;
   showToggleButton?: boolean;
-  useLinks?: boolean;
   router: NextRouter;
 };
 
-const ProgramView = (props: Props): JSX.Element => {
-  const [showPromoted, setShowPromoted] = useState('Generelt program');
+const ProgramView = ({
+  events,
+  currentMetaData,
+  showToggleButton = false,
+  router,
+}: Props): JSX.Element => {
+  const [programType, setProgramType] = useState('Generelt program');
   const [activeDate, setActiveDate] = useState('');
 
-  const updateQueryEvent = (eventId: any): void => {
-    const newQuery = { ...props.router.query, event: eventId };
-    props.router.push(
+  const filteredEvents = useMemo(
+    () =>
+      showToggleButton
+        ? events.filter((event) =>
+            programType === 'Promotert program'
+              ? event.type === 'A_7'
+              : event.type !== 'A_7'
+          )
+        : events,
+    [events, programType, showToggleButton]
+  );
+
+  const groupedEvents = useMemo(
+    () =>
+      groupBy(
+        sortBy(filteredEvents, ['date', 'timeStart']),
+        (event) => event.date
+      ),
+    [filteredEvents]
+  );
+  const sortedDates = useMemo(
+    () => Object.keys(groupedEvents).sort((a, b) => a.localeCompare(b)),
+    [groupedEvents]
+  );
+  const queryEvent =
+    typeof router.query.event === 'string'
+      ? events.find((event) => event.id === router.query.event)
+      : undefined;
+
+  useEffect(() => {
+    const today = dayjs().format('YYYY-MM-DD');
+    const preferredDate =
+      queryEvent?.date && sortedDates.includes(queryEvent.date)
+        ? queryEvent.date
+        : sortedDates.includes(today)
+        ? today
+        : sortedDates[0];
+    setActiveDate(preferredDate || '');
+  }, [queryEvent, sortedDates]);
+
+  const updateQueryEvent = (eventId: string): void => {
+    router.push(
       {
-        pathname: props.router.pathname,
-        query: newQuery,
+        pathname: router.pathname,
+        query: { ...router.query, event: eventId },
       },
       undefined,
       { shallow: true, scroll: false }
     );
   };
 
-  const updateActiveDate = (opt: string): void => {
-    setActiveDate(opt);
-    updateQueryEvent(groupedEvents[opt][0].id);
+  const updateActiveDate = (date: string): void => {
+    setActiveDate(date);
+    const firstEvent = groupedEvents[date]?.[0];
+    if (firstEvent) {
+      updateQueryEvent(firstEvent.id);
+    }
   };
 
-  const filteredEvents: ProgramView_events = props.events.filter((event) =>
-    showPromoted ? event.type === 'A_7' : event.type !== 'A_7'
-  );
+  const edition = currentMetaData.year || editionConfig.edition;
+  const startDate = dayjs(currentMetaData.startDate);
+  const endDate = dayjs(currentMetaData.endDate);
+  const dateLabel = `${startDate.format('D')}.–${endDate.format('D')}. ${endDate
+    .locale('nb')
+    .format('MMMM')} ${edition}`;
+  const contentState = resolveContentState({
+    lifecycle: editionConfig.modules.program,
+    currentEdition: edition,
+    itemCount: events.length,
+  });
 
-  // If on a company's page, don't show toggleButton and don't filter any events
-  const groupedEvents = groupBy(
-    sortBy(props.showToggleButton ? filteredEvents : props.events, 'timeStart'),
-    'date'
-  );
-
-  // const sortedEvents = sortBy(props.events, 'timeStart');
-
-  const startDate = props.currentMetaData.startDate;
-  const endDate = props.currentMetaData.endDate;
-
-  // Use for "Før itDAGENE tab, need to update find closes event logic"
-  // const otherGrouped = groupBy(sortedEvents, ({ date }) =>
-  //   date === startDate || date === endDate ? date : 'Før itDAGENE'
-  // );
-
-  const sortedKeys = sortBy(Object.keys(groupedEvents), (key) => [
-    dayjs(key).isValid(),
-    key,
-  ]);
-
-  const parsedQueryEvent =
-    typeof props.router.query.event === 'string'
-      ? props.events.find((event) => event.id === props.router.query.event)
-      : null;
-
-  useEffect(() => {
-    const parsedDate = parsedQueryEvent?.date;
-
-    const today = dayjs().format('YYYY-MM-DD');
-
-    if (parsedDate === startDate || parsedDate === endDate) {
-      setActiveDate(parsedDate);
-    } else if (sortedKeys.includes(today)) {
-      setActiveDate(today);
-    } else {
-      setActiveDate(sortedKeys[0]);
-    }
-  }, [endDate, parsedQueryEvent, sortedKeys, startDate]);
-
-  if (props.events.length === 0) {
+  if (contentState !== 'published') {
+    const isPublishedButEmpty = contentState === 'empty';
     return (
-      <UnderDevelopmentPlaceholder
-        alt="Programmet og nettsiden for itDAGENE 2026 er for tiden under planlegging!"
-        src="/static/under-development-placeholder.png"
-      />
+      <>
+        <PageHeader
+          description={
+            isPublishedButEmpty
+              ? 'Det er foreløpig ingen arrangementer i det publiserte programmet.'
+              : 'Tider, rom og arrangementer publiseres samlet når årets program er godkjent.'
+          }
+          title="Program"
+        >
+          <MetadataList
+            items={[
+              { label: 'Dato', value: dateLabel },
+              { label: 'Sted', value: 'NTNU Gløshaugen' },
+            ]}
+          />
+        </PageHeader>
+        <ContentStatePanel
+          action={{ href: '/faq', label: 'Se praktisk informasjon' }}
+          description={
+            isPublishedButEmpty
+              ? 'Siden oppdateres når det legges til arrangementer.'
+              : 'Du trenger ikke lete gjennom en tom tidsplan. Denne siden oppdateres når programmet er klart.'
+          }
+          compact
+          state={contentState}
+          title={
+            isPublishedButEmpty
+              ? `Programmet for ${edition} har ingen arrangementer ennå.`
+              : `Programmet for ${edition} er ikke publisert ennå.`
+          }
+        />
+      </>
     );
   }
 
   return (
-    <Flex flexDirection="column">
-      {props.showToggleButton && (
-        <EventsToggle
-          options={['Generelt program', 'Promotert program']}
-          activeOption={showPromoted}
-          setActiveOption={setShowPromoted}
-        />
-      )}
-      <Flex
-        alignItems="center"
-        justifyContent="space-between"
-        flexDirection={isMobile ? 'column' : 'row'}
+    <>
+      <PageHeader
+        description="Velg dag og finn tidspunkt, rom og detaljer for hvert arrangement."
+        title="Program"
       >
-        <Title>Program</Title>
+        <MetadataList
+          items={[
+            { label: 'Dato', value: dateLabel },
+            { label: 'Arrangementer', value: filteredEvents.length },
+          ]}
+        />
+      </PageHeader>
+
+      {showToggleButton && (
+        <div className="program-type-toggle">
+          <EventsToggle
+            activeOption={programType}
+            label="Velg programtype"
+            options={['Generelt program', 'Promotert program']}
+            setActiveOption={setProgramType}
+          />
+        </div>
+      )}
+
+      <div className="program-day-navigation">
+        <p className="site-eyebrow">Velg dag</p>
         <EventsToggle
-          options={sortedKeys}
           activeOption={activeDate}
+          options={sortedDates}
           setActiveOption={updateActiveDate}
         />
-      </Flex>
+      </div>
+
       <ProgramTimeline
         activeDate={activeDate}
-        updateQueryEvent={updateQueryEvent}
         events={groupedEvents}
-        router={props.router}
+        router={router}
+        updateQueryEvent={updateQueryEvent}
       />
-    </Flex>
+    </>
   );
 };
 
@@ -163,6 +203,7 @@ export default createFragmentContainer(ProgramView, {
   `,
   currentMetaData: graphql`
     fragment ProgramView_currentMetaData on MetaData {
+      year
       startDate
       endDate
     }

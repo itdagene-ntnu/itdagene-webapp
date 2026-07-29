@@ -10,6 +10,11 @@ module.exports = withSourceMaps({
         destination: '/faq',
         permanent: true,
       },
+      {
+        source: '/info/om-itdagene',
+        destination: '/om-itdagene',
+        permanent: true,
+      },
     ]
   },
   webpack: (config, { dev, isServer }) => {
