@@ -204,6 +204,118 @@ describe('Page rendering', () => {
 
     await page.evaluate(() => {
       const story = document.querySelector('.event-hero-story');
+      window.scrollTo(
+        0,
+        story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.47
+      );
+    });
+    await page.waitForFunction(
+      () =>
+        Number(
+          getComputedStyle(document.querySelector('[data-hero-logo]')).opacity
+        ) > 0.95
+    );
+
+    const mergeAlignment = await page.evaluate(() => {
+      const anchorRect = document
+        .querySelector('.event-hero__logo-anchor')
+        .getBoundingClientRect();
+      const anchorCenter = {
+        x: anchorRect.left + anchorRect.width / 2,
+        y: anchorRect.top + anchorRect.height / 2,
+      };
+      const tileRects = [
+        ...document.querySelectorAll('[data-countdown-tile]'),
+      ].map((tile) => tile.getBoundingClientRect());
+      const travellingLogoRect = document
+        .querySelector('[data-hero-logo]')
+        .getBoundingClientRect();
+      const travellingLogoSquare = {
+        height: travellingLogoRect.height,
+        left: travellingLogoRect.left,
+        top: travellingLogoRect.top,
+        width: travellingLogoRect.height,
+      };
+
+      return {
+        maxCenterOffset: Math.max(
+          ...tileRects.map((rect) =>
+            Math.hypot(
+              rect.left + rect.width / 2 - anchorCenter.x,
+              rect.top + rect.height / 2 - anchorCenter.y
+            )
+          )
+        ),
+        maxSizeOffset: Math.max(
+          ...tileRects.flatMap((rect) => [
+            Math.abs(rect.width - anchorRect.width),
+            Math.abs(rect.height - anchorRect.height),
+          ])
+        ),
+        logoSquareCenterOffset: Math.hypot(
+          travellingLogoSquare.left +
+            travellingLogoSquare.width / 2 -
+            anchorCenter.x,
+          travellingLogoSquare.top +
+            travellingLogoSquare.height / 2 -
+            anchorCenter.y
+        ),
+        logoSquareSizeOffset: Math.max(
+          Math.abs(travellingLogoSquare.width - anchorRect.width),
+          Math.abs(travellingLogoSquare.height - anchorRect.height)
+        ),
+        logoSquarePosition: {
+          left: travellingLogoSquare.left,
+          top: travellingLogoSquare.top,
+        },
+      };
+    });
+
+    expect(mergeAlignment.maxCenterOffset).toBeLessThanOrEqual(1);
+    expect(mergeAlignment.maxSizeOffset).toBeLessThanOrEqual(1);
+    expect(mergeAlignment.logoSquareCenterOffset).toBeLessThanOrEqual(1);
+    expect(mergeAlignment.logoSquareSizeOffset).toBeLessThanOrEqual(1);
+
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      window.scrollTo(
+        0,
+        story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.82
+      );
+    });
+    await page.waitForFunction(
+      ({ startLeft, startTop }) => {
+        const rect = document
+          .querySelector('[data-hero-logo]')
+          .getBoundingClientRect();
+        return rect.left < startLeft - 100 && rect.top < startTop - 100;
+      },
+      {},
+      {
+        startLeft: mergeAlignment.logoSquarePosition.left,
+        startTop: mergeAlignment.logoSquarePosition.top,
+      }
+    );
+
+    const travellingPosition = await page.$eval(
+      '[data-hero-logo]',
+      (travellingLogo) => {
+        const rect = travellingLogo.getBoundingClientRect();
+        return {
+          left: rect.left,
+          top: rect.top,
+        };
+      }
+    );
+    expect(travellingPosition.left).toBeLessThan(
+      mergeAlignment.logoSquarePosition.left
+    );
+    expect(travellingPosition.top).toBeLessThan(
+      mergeAlignment.logoSquarePosition.top
+    );
+
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
       window.scrollTo(0, story.offsetHeight - window.innerHeight);
     });
     await page.waitForFunction(

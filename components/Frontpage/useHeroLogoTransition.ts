@@ -26,6 +26,7 @@ type HeroExperienceMode = 'cinematic' | 'static';
 const HERO_VIDEO = 'https://cdn.itdagene.no/itdagene.mp4';
 const FAIR_SEQUENCE_START = 22;
 const FAIR_SEQUENCE_END = 36;
+const COUNTDOWN_MERGE_DURATION = 0.3;
 
 export const useHeroLogoTransition = (
   refs: HeroTransitionRefs,
@@ -195,19 +196,18 @@ export const useHeroLogoTransition = (
       const headerLogoRect = (): DOMRect => headerLogo.getBoundingClientRect();
       const assembledWidth = (): number => assembledLogo.offsetWidth;
       const assembledHeight = (): number => assembledLogo.offsetHeight;
-      const assembledStartX = (): number =>
-        anchorRect().left - anchorRect().width / 2 - assembledHeight() / 2;
-      const assembledStartY = (): number =>
-        anchorRect().top - anchorRect().height / 2 - assembledHeight() / 2;
+      const assembledStartScale = (): number =>
+        anchorRect().width / assembledHeight();
 
       gsapContext = gsap.context(() => {
         gsap.set(compact, { autoAlpha: 0, y: 28 });
         gsap.set(assembledLogo, {
           autoAlpha: 0,
           clipPath: 'inset(0 77.36% 0 0)',
+          scale: assembledStartScale,
           transformOrigin: 'left top',
-          x: assembledStartX,
-          y: assembledStartY,
+          x: (): number => anchorRect().left,
+          y: (): number => anchorRect().top,
         });
         gsap.set(headerLogo, { autoAlpha: 0 });
 
@@ -235,7 +235,7 @@ export const useHeroLogoTransition = (
             tile,
             {
               backgroundColor: '#007ab1',
-              duration: 0.34,
+              duration: COUNTDOWN_MERGE_DURATION,
               scale: (): number =>
                 anchorRect().width / tile.getBoundingClientRect().width,
               x: (): number => {
