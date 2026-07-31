@@ -16,8 +16,10 @@ const Footer = (): JSX.Element => (
             />
           </Link>
           <p>
-            En arbeidslivsmesse der teknologi- og cybersikkerhetsstudenter ved
-            NTNU møter fremtidige arbeidsgivere.
+            itDAGENE er et årlig møtested mellom IT-studenter og næringslivet
+            ved NTNU. Arrangementet drives av tredjeårsstudenter fra
+            Datateknologi og Cybersikkerhet og datakommunikasjon, og overskuddet
+            går til studentenes ekskursjon.
           </p>
         </div>
 

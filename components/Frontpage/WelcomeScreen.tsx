@@ -5,6 +5,7 @@ import Image from 'next/image';
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
+import { itdageneWordmark } from '../../config/brand';
 import { ContentState, editionConfig } from '../../config/edition';
 import { homepageMedia } from '../../config/homepage';
 import { phaseLabel, resolveEventPhase } from '../../utils/eventLifecycle';
@@ -17,6 +18,11 @@ import { ActionLink } from '../DesignSystem';
 import { useHeroLogoTransition } from './useHeroLogoTransition';
 
 dayjs.extend(utc);
+
+const HERO_LOCATION = 'Realfagbygget, NTNU';
+const HERO_TITLE = 'IT-studenter møter næringslivet.';
+const HERO_DESCRIPTION =
+  'To dager med stands, faglige arrangementer og møter mellom studenter og bedrifter.';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
@@ -91,6 +97,7 @@ const WelcomeScreen = ({
             priority
             sizes="100vw"
             src={homepageMedia.hero.src}
+            style={{ objectPosition: homepageMedia.hero.focalPoint }}
           />
           <video
             aria-hidden="true"
@@ -104,18 +111,15 @@ const WelcomeScreen = ({
         </figure>
 
         <div className="event-hero__arrival" ref={arrivalRef}>
-          <h1 className="visually-hidden">Møt arbeidslivet på Gløshaugen</h1>
+          <h1 className="visually-hidden">{HERO_TITLE}</h1>
           <div className="event-hero__arrival-copy" data-arrival-copy>
             <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
-            <span>NTNU Gløshaugen</span>
+            <span>{HERO_LOCATION}</span>
           </div>
           <Countdown currentMetaData={currentMetaData} phase={phase} />
           <div className="event-hero__static-purpose">
-            <p>Møt arbeidslivet på Gløshaugen.</p>
-            <span>
-              Stands, faglige arrangementer og jobbmuligheter for teknologi- og
-              cybersikkerhetsstudenter.
-            </span>
+            <p>{HERO_TITLE}</p>
+            <span>{HERO_DESCRIPTION}</span>
           </div>
           <div
             className="event-hero__arrival-action"
@@ -150,30 +154,29 @@ const WelcomeScreen = ({
         >
           <img
             alt=""
-            height="114"
-            src="https://cdn.itdagene.no/itdagene.svg"
-            width="503"
+            height={itdageneWordmark.height}
+            src={itdageneWordmark.src}
+            width={itdageneWordmark.width}
           />
         </div>
 
         <div className="event-hero__compact" ref={compactRef}>
           <div className="event-hero__content">
-            <p className="event-hero__phase">{phaseLabel[phase]}</p>
+            {phase !== 'upcoming' && (
+              <p className="event-hero__phase">{phaseLabel[phase]}</p>
+            )}
             <div className="event-hero__coordinates">
               <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
-              <span>NTNU Gløshaugen</span>
+              <span>{HERO_LOCATION}</span>
             </div>
             <p
               aria-hidden="true"
               className="event-hero__resolved-title"
               data-testid="hero-purpose"
             >
-              Møt arbeidslivet på Gløshaugen.
+              {HERO_TITLE}
             </p>
-            <p className="event-hero__description">
-              Stands, faglige arrangementer og jobbmuligheter for teknologi- og
-              cybersikkerhetsstudenter.
-            </p>
+            <p className="event-hero__description">{HERO_DESCRIPTION}</p>
             <div className="event-hero__actions">
               <ActionLink href={studentActions.primary.href}>
                 {studentActions.primary.label}

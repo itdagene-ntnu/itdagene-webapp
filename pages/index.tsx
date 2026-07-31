@@ -2,21 +2,15 @@ import React from 'react';
 import Head from 'next/head';
 import { graphql } from 'react-relay';
 import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
-import {
-  ContentStatePanel,
-  EventMarquee,
-  SiteSection,
-} from '../components/DesignSystem';
+import { ContentStatePanel, SiteSection } from '../components/DesignSystem';
+import { CompanyExposure } from '../components/Frontpage/CompanyExposure';
 import { EmployerInvitation } from '../components/Frontpage/EmployerInvitation';
 import { HomeBriefing } from '../components/Frontpage/HomeBriefing';
-import {
-  AssociatePartnerTier,
-  PrimaryPartnerTier,
-} from '../components/Frontpage/PartnerTiers';
+import { PartnerShowcase } from '../components/Frontpage/PartnerTiers';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import { editionConfig } from '../config/edition';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
-import { resolveCompanyMarquee } from '../utils/companyMarquee';
+import { resolveHistoricalCompanyMarquee } from '../utils/companyMarquee';
 import {
   resolveContentState,
   resolveEventPhase,
@@ -54,17 +48,7 @@ const Index = ({ props, error }: RenderProps): JSX.Element => {
     sourceEdition:
       editionConfig.modules.stands.historicalEdition || currentEdition,
   });
-  const companiesPublished =
-    props.currentMetaData.companiesFirstDay !== null ||
-    props.currentMetaData.companiesLastDay !== null;
-  const companyMarquee = resolveCompanyMarquee({
-    currentEdition,
-    currentCompanies: companiesPublished
-      ? [
-          ...(props.currentMetaData.companiesFirstDay || []),
-          ...(props.currentMetaData.companiesLastDay || []),
-        ]
-      : null,
+  const companyMarquee = resolveHistoricalCompanyMarquee({
     excludedCompanyNames: [
       props.currentMetaData.mainCollaborator?.name,
       ...(props.currentMetaData.collaborators || []).map(
@@ -102,30 +86,30 @@ const Index = ({ props, error }: RenderProps): JSX.Element => {
         standState={standState}
       />
 
-      <PrimaryPartnerTier partner={props.currentMetaData.mainCollaborator} />
+      <PartnerShowcase
+        mainPartner={props.currentMetaData.mainCollaborator}
+        partners={props.currentMetaData.collaborators || []}
+      />
+
+      <CompanyExposure
+        edition={currentEdition}
+        endDate={props.currentMetaData.endDate}
+        firstDay={props.currentMetaData.companiesFirstDay}
+        historicalItems={companyMarquee.items}
+        historicalLabel={companyMarquee.label}
+        lastDay={props.currentMetaData.companiesLastDay}
+        startDate={props.currentMetaData.startDate}
+      />
 
       <HomeBriefing
         edition={currentEdition}
-        endDate={props.currentMetaData.endDate}
         events={props.events || []}
         phase={phase}
         programState={programState}
         standState={standState}
-        startDate={props.currentMetaData.startDate}
       />
 
       <EmployerInvitation edition={currentEdition} />
-
-      <AssociatePartnerTier
-        partners={props.currentMetaData.collaborators || []}
-      />
-
-      {companyMarquee && (
-        <EventMarquee
-          items={companyMarquee.items}
-          label={companyMarquee.label}
-        />
-      )}
     </>
   );
 };
@@ -151,11 +135,13 @@ export default withDataAndLayout(Index, {
           id
           name
           logo(width: 320, height: 120)
+          url
         }
         companiesLastDay {
           id
           name
           logo(width: 320, height: 120)
+          url
         }
         mainCollaborator {
           id
@@ -163,6 +149,9 @@ export default withDataAndLayout(Index, {
           logo(width: 1000, height: 320)
           url
           description
+          intro
+          video
+          poster
         }
       }
       events {

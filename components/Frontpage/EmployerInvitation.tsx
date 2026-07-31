@@ -14,9 +14,9 @@ export const EmployerInvitation = ({
         <p className="employer-invitation__label">
           For bedrifter, itDAGENE {edition}
         </p>
-        <h2>Møt studentene innen teknologi og cybersikkerhet ved NTNU.</h2>
+        <h2>Vil bedriften deres delta på itDAGENE {edition}?</h2>
         <p>
-          Vis hva dere arbeider med, bli kjent med studentene og fortell om
+          Vis frem fagmiljøet deres, bli kjent med studentene og fortell om
           aktuelle jobb- og sommerjobbmuligheter.
         </p>
         <div className="employer-invitation__actions">
@@ -36,6 +36,7 @@ export const EmployerInvitation = ({
             fill
             sizes="(max-width: 800px) 100vw, 48vw"
             src={homepageMedia.employer.src}
+            style={{ objectPosition: homepageMedia.employer.focalPoint }}
           />
         </div>
         <figcaption>{homepageMedia.employer.label}</figcaption>

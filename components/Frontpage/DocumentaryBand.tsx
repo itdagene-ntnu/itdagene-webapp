@@ -13,7 +13,6 @@ export const DocumentaryBand = ({
   <section className="documentary-band" aria-labelledby="documentary-heading">
     <SiteContainer className="documentary-band__heading">
       <h2 id="documentary-heading">{title}</h2>
-      <p>Dokumentariske glimt fra itDAGENE på Gløshaugen.</p>
     </SiteContainer>
     <div className="documentary-band__grid">
       {items.map((item, index) => (
@@ -26,12 +25,11 @@ export const DocumentaryBand = ({
           <Image
             alt={item.alt}
             fill
-            sizes={
-              index === 0
-                ? '(max-width: 800px) 100vw, 48vw'
-                : '(max-width: 800px) 50vw, 30vw'
-            }
+            sizes={`(max-width: 600px) 100vw, (max-width: 800px) 50vw, ${
+              index === 0 || index === 3 ? '58vw' : '42vw'
+            }`}
             src={item.src}
+            style={{ objectPosition: item.focalPoint }}
           />
           {item.label && <figcaption>{item.label}</figcaption>}
         </figure>

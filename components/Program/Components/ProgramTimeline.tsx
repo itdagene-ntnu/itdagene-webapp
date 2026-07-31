@@ -136,17 +136,28 @@ const ProgramTimeline = ({
   router,
 }: ProgramTimelineProps): JSX.Element => {
   const [activeEvent, setActiveEvent] = useState<ProgramEvent>();
+  const [previewEvent, setPreviewEvent] = useState<ProgramEvent>();
   const eventsForDay = activeDate ? events[activeDate] || [] : [];
   const queryEvent =
     typeof router.query.event === 'string' ? router.query.event : undefined;
 
   useEffect(() => {
     setActiveEvent(findInitialEvent(eventsForDay, activeDate, queryEvent));
+    setPreviewEvent(undefined);
   }, [activeDate, eventsForDay, queryEvent]);
 
   const selectEvent = (event: ProgramEvent): void => {
     setActiveEvent(event);
+    setPreviewEvent(undefined);
     updateQueryEvent(event.id);
+  };
+  const displayedEvent = previewEvent || activeEvent;
+  const clearPreviewOnBlur = (
+    event: React.FocusEvent<HTMLDivElement>
+  ): void => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setPreviewEvent(undefined);
+    }
   };
 
   if (!activeDate || eventsForDay.length === 0) {
@@ -156,19 +167,27 @@ const ProgramTimeline = ({
   }
 
   return (
-    <div className="program-layout">
+    <div
+      className="program-layout"
+      onBlur={clearPreviewOnBlur}
+      onMouseLeave={(): void => setPreviewEvent(undefined)}
+    >
       <ol aria-label="Arrangementer" className="program-event-list">
         {eventsForDay.map((event) => {
-          const isActive = activeEvent?.id === event.id;
+          const isActive = displayedEvent?.id === event.id;
+          const isSelected = activeEvent?.id === event.id;
           const isPast = hasEnded(event.date, event.timeEnd);
 
           return (
             <li data-past={isPast} key={event.id}>
               <button
-                aria-current={isActive ? 'true' : undefined}
+                aria-current={isSelected ? 'true' : undefined}
                 className="program-event-card"
                 data-active={isActive}
+                data-event-id={event.id}
                 onClick={(): void => selectEvent(event)}
+                onFocus={(): void => setPreviewEvent(event)}
+                onMouseEnter={(): void => setPreviewEvent(event)}
                 type="button"
               >
                 <time dateTime={`${event.date}T${event.timeStart}`}>
@@ -189,9 +208,14 @@ const ProgramTimeline = ({
           );
         })}
       </ol>
-      {activeEvent && (
-        <aside aria-live="polite" className="program-detail-pane">
-          <EventDetails event={activeEvent} />
+      {displayedEvent && (
+        <aside
+          aria-live="polite"
+          className="program-detail-pane"
+          data-event-id={displayedEvent.id}
+          onMouseEnter={(): void => setPreviewEvent(displayedEvent)}
+        >
+          <EventDetails event={displayedEvent} />
         </aside>
       )}
     </div>

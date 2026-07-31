@@ -1,4 +1,4 @@
-import { standMapManifest } from '../components/Stands/standsData';
+import { historicalCompanyArchive } from '../config/companyArchive';
 
 export type CompanyMarqueeItem = {
   id: string;
@@ -12,6 +12,37 @@ type CompanyMarqueeInput = {
   logo?: string | null;
 };
 
+const COMPANY_SUFFIXES = new Set([
+  'ab',
+  'as',
+  'asa',
+  'hf',
+  'inc',
+  'ltd',
+  'llc',
+  'oy',
+  'plc',
+]);
+
+export const normalizeCompanyIdentity = (name: string): string => {
+  const words = name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('nb-NO')
+    .replace(/[^a-z0-9æøå]+/g, ' ')
+    .trim()
+    .split(/\s+/);
+
+  while (
+    words.length > 1 &&
+    COMPANY_SUFFIXES.has(words[words.length - 1] || '')
+  ) {
+    words.pop();
+  }
+
+  return words.join(' ');
+};
+
 const uniqueCompanies = (
   companies: ReadonlyArray<CompanyMarqueeInput>
 ): CompanyMarqueeItem[] => {
@@ -21,7 +52,7 @@ const uniqueCompanies = (
     const name = company.name?.trim();
     if (!name) return;
 
-    const key = name.toLocaleLowerCase();
+    const key = normalizeCompanyIdentity(name);
     const existing = unique.get(key);
     const next = {
       id: company.id || `company-${key.replace(/[^a-z0-9]+/g, '-')}`,
@@ -37,59 +68,39 @@ const uniqueCompanies = (
   return Array.from(unique.values());
 };
 
-export const resolveCompanyMarquee = ({
-  currentCompanies,
-  currentEdition,
+export const resolveHistoricalCompanyMarquee = ({
   excludedCompanyNames = [],
 }: {
-  currentCompanies: ReadonlyArray<CompanyMarqueeInput> | null;
-  currentEdition: number;
   excludedCompanyNames?: ReadonlyArray<string | null | undefined>;
 }): {
   items: CompanyMarqueeItem[];
   label: string;
   historical: boolean;
-} | null => {
-  if (currentCompanies === null) {
-    return null;
-  }
-
+} => {
   const excludedNames = new Set(
     excludedCompanyNames
-      .map((name) => name?.trim().toLocaleLowerCase())
+      .map((name) => (name ? normalizeCompanyIdentity(name) : ''))
       .filter((name): name is string => Boolean(name))
   );
   const withoutPartnerTiers = (
     companies: ReadonlyArray<CompanyMarqueeItem>
   ): CompanyMarqueeItem[] =>
     companies.filter(
-      (company) => !excludedNames.has(company.name.toLocaleLowerCase())
+      (company) => !excludedNames.has(normalizeCompanyIdentity(company.name))
     );
-  const currentItems = withoutPartnerTiers(uniqueCompanies(currentCompanies));
-
-  if (currentItems.length > 0) {
-    return {
-      items: currentItems,
-      label: `Bedrifter på itDAGENE ${currentEdition}`,
-      historical: false,
-    };
-  }
 
   const historicalItems = withoutPartnerTiers(
     uniqueCompanies(
-      standMapManifest.days.flatMap((day) =>
-        day.stands.map((stand) => ({
-          id: `archive-${stand.companySlug}`,
-          logo: null,
-          name: stand.companyName,
-        }))
-      )
+      historicalCompanyArchive.companies.map((company) => ({
+        ...company,
+        id: `archive-${company.name}`,
+      }))
     )
   );
 
   return {
     items: historicalItems,
-    label: `Bedrifter fra itDAGENE ${standMapManifest.edition}`,
+    label: `Bedrifter fra itDAGENE ${historicalCompanyArchive.edition}`,
     historical: true,
   };
 };

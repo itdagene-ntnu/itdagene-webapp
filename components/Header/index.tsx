@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
+import { itdageneWordmark } from '../../config/brand';
 import {
   HERO_HEADER_ACTION_EVENT,
   HeroHeaderAction,
@@ -31,7 +32,6 @@ const isActiveRoute = (pathname: string, target: string): boolean =>
 export const HeaderMenu = (): JSX.Element => {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [cinematicHome, setCinematicHome] = useState(false);
   const [interestForm, setInterestForm] = useState<string | null | undefined>(
     undefined
   );
@@ -75,28 +75,6 @@ export const HeaderMenu = (): JSX.Element => {
     document.addEventListener('keydown', closeOnEscape);
     return (): void => document.removeEventListener('keydown', closeOnEscape);
   }, [isOpen]);
-
-  useEffect(() => {
-    const updateHeaderMode = (): void => {
-      const supportsCinematic =
-        router.pathname === '/' &&
-        window.matchMedia('(min-width: 801px)').matches &&
-        !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
-        !(
-          navigator as Navigator & {
-            connection?: { saveData?: boolean };
-          }
-        ).connection?.saveData;
-
-      setCinematicHome(supportsCinematic);
-    };
-
-    updateHeaderMode();
-    window.addEventListener('resize', updateHeaderMode);
-    return (): void => {
-      window.removeEventListener('resize', updateHeaderMode);
-    };
-  }, [router.pathname]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -163,7 +141,10 @@ export const HeaderMenu = (): JSX.Element => {
 
   return (
     <header
-      className={['site-header', cinematicHome && 'site-header--cinematic']
+      className={[
+        'site-header',
+        router.pathname === '/' && 'site-header--cinematic',
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -172,9 +153,9 @@ export const HeaderMenu = (): JSX.Element => {
           <img
             alt=""
             data-hero-logo-target
-            height="114"
-            src="https://cdn.itdagene.no/itdagene.svg"
-            width="503"
+            height={itdageneWordmark.height}
+            src={itdageneWordmark.src}
+            width={itdageneWordmark.width}
           />
         </Link>
 

@@ -2,6 +2,7 @@ __generated__/
 coverage/
 schema/schema.graphql
 .next
+.next-dev/
 yarn-error.log
 node_modules/
 bundles/

@@ -6,6 +6,26 @@ export type CountdownParts = {
   completed: boolean;
 };
 
+const norwegianMonths = [
+  'januar',
+  'februar',
+  'mars',
+  'april',
+  'mai',
+  'juni',
+  'juli',
+  'august',
+  'september',
+  'oktober',
+  'november',
+  'desember',
+] as const;
+
+export const formatAccessibleEventStart = (startDate: string): string => {
+  const [year, month, day] = startDate.split('-').map(Number);
+  return `${day}. ${norwegianMonths[month - 1]} ${year} kl. 10:00`;
+};
+
 export const getCountdownParts = (
   targetTimestamp: number,
   nowTimestamp: number

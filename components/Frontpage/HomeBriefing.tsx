@@ -10,20 +10,16 @@ import { VisitPlanner } from './VisitPlanner';
 
 export const HomeBriefing = ({
   edition,
-  endDate,
   events,
   phase,
   programState,
   standState,
-  startDate,
 }: {
   edition: number;
-  endDate: string;
   events: ReadonlyArray<PreviewEvent>;
   phase: EventPhase;
   programState: ContentState;
   standState: ContentState;
-  startDate: string;
 }): JSX.Element => {
   const mapDay = standMapManifest.days[0];
   const historicalMap = standMapManifest.edition !== edition;
@@ -33,12 +29,9 @@ export const HomeBriefing = ({
       <VisitPlanner programState={programState} standState={standState} />
 
       <CurrentEventPreview
-        edition={edition}
-        endDate={endDate}
         events={events}
         phase={phase}
         programState={programState}
-        startDate={startDate}
       />
 
       <SiteSection className="home-stand-section">

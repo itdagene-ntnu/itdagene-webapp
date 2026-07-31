@@ -5,6 +5,7 @@ import {
   CompanyMarqueeItem,
   splitCompanyMarqueeLanes,
 } from '../../utils/companyMarquee';
+import { CompanyLogo } from './CompanyLogo';
 
 const joinClassNames = (...names: Array<string | undefined | false>): string =>
   names.filter(Boolean).join(' ');
@@ -42,6 +43,31 @@ export const SiteSection = ({
   </section>
 );
 
+const MarqueeItem = ({
+  item,
+  loading,
+}: {
+  item: CompanyMarqueeItem;
+  loading: 'eager' | 'lazy';
+}): JSX.Element => (
+  <li
+    className={`event-marquee__item event-marquee__item--${
+      item.logo ? 'logo' : 'name'
+    }`}
+  >
+    <CompanyLogo
+      className="event-marquee__asset"
+      company={item}
+      fallbackClassName="event-marquee__name"
+      height={72}
+      imageClassName="event-marquee__logo"
+      link={false}
+      loading={loading}
+      width={192}
+    />
+  </li>
+);
+
 const MarqueeGroup = ({
   items,
   hidden = false,
@@ -55,25 +81,11 @@ const MarqueeGroup = ({
     data-marquee-copy={hidden ? 'duplicate' : 'primary'}
   >
     {items.map((item, index) => (
-      <li
-        className={`event-marquee__item event-marquee__item--${
-          item.logo ? 'logo' : 'name'
-        }`}
+      <MarqueeItem
+        item={item}
         key={`${item.id}-${index}`}
-      >
-        {item.logo ? (
-          <img
-            alt={`${item.name} logo`}
-            className="event-marquee__logo"
-            height="72"
-            loading="lazy"
-            src={item.logo}
-            width="192"
-          />
-        ) : (
-          <span className="event-marquee__name">{item.name}</span>
-        )}
-      </li>
+        loading={hidden ? 'lazy' : 'eager'}
+      />
     ))}
   </ul>
 );

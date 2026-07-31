@@ -4,6 +4,7 @@ import { Countdown_currentMetaData } from '../../__generated__/Countdown_current
 import { EventPhase } from '../../config/edition';
 import {
   CountdownParts,
+  formatAccessibleEventStart,
   getCountdownParts,
   getEventStartTimestamp,
 } from '../../utils/countdown';
@@ -57,14 +58,9 @@ const CountdownComponent = ({
   const completed =
     countdown.completed || phase === 'live' || phase === 'postEvent';
   const eventDateTime = `${currentMetaData.startDate}T10:00:00+02:00`;
-  const accessibleEventDate = new Intl.DateTimeFormat('nb-NO', {
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    month: 'long',
-    timeZone: 'Europe/Oslo',
-    year: 'numeric',
-  }).format(new Date(eventDateTime));
+  const accessibleEventDate = formatAccessibleEventStart(
+    currentMetaData.startDate
+  );
 
   if (completed) {
     return (
@@ -82,7 +78,7 @@ const CountdownComponent = ({
         itDAGENE starter {accessibleEventDate}
       </time>
       <p className="event-countdown__kicker" data-countdown-content>
-        Til vi møtes på Gløshaugen
+        Til itDAGENE starter
       </p>
       <dl
         aria-hidden="true"

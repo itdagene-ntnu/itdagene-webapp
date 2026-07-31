@@ -7,10 +7,10 @@ const stateLabel = (
   state: ContentState,
   published: string,
   pending: string
-): string => {
+): string | undefined => {
   if (state === 'published') return published;
   if (state === 'error') return 'Status kunne ikke hentes';
-  if (state === 'stale') return 'Ny utgave kommer';
+  if (state === 'stale') return undefined;
   return pending;
 };
 
@@ -48,14 +48,12 @@ export const VisitPlanner = ({
       key: 'jobs',
       title: 'Jobb',
       description: 'Se jobb- og sommerjobbmuligheter.',
-      state: 'Aktive annonser samles her',
       href: '/jobb',
     },
     {
       key: 'practical',
       title: 'Praktisk',
       description: 'Finn sted, datoer og svar før besøket.',
-      state: 'For studenter og bedrifter',
       href: '/faq',
     },
   ];
@@ -64,7 +62,6 @@ export const VisitPlanner = ({
     <SiteSection className="visit-planner" id="planlegg-besoket">
       <div className="visit-planner__heading">
         <h2>Planlegg besøket</h2>
-        <p>Gå rett til informasjonen du trenger før og under messedagene.</p>
       </div>
       <nav aria-label="Planlegg besøket">
         <ul>
@@ -74,7 +71,7 @@ export const VisitPlanner = ({
                 <span aria-hidden="true" className="visit-planner__marker" />
                 <h3>{route.title}</h3>
                 <p>{route.description}</p>
-                <small>{route.state}</small>
+                {route.state && <small>{route.state}</small>}
               </Link>
             </li>
           ))}

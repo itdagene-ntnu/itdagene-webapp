@@ -31,46 +31,32 @@ const visibleProgramEvents = (
 };
 
 export const CurrentEventPreview = ({
-  edition,
-  endDate,
   events,
   phase,
   programState,
-  startDate,
 }: {
-  edition: number;
-  endDate: string;
   events: ReadonlyArray<PreviewEvent>;
   phase: EventPhase;
   programState: ContentState;
-  startDate: string;
 }): JSX.Element => {
   const published =
     programState === 'published' &&
     visibleProgramEvents(events, phase).length > 0;
   const visibleEvents = visibleProgramEvents(events, phase);
-  const start = dayjs(startDate).locale('nb');
-  const end = dayjs(endDate).locale('nb');
-  const dateLabel = `${start.format('D')}.–${end.format('D')}. ${end.format(
-    'MMMM'
-  )} ${edition}`;
 
   return (
     <SiteSection className="current-event-preview" tone="warm">
       <div className="current-event-preview__heading">
-        <p>{published ? 'Program' : 'Programmet planlegges'}</p>
         <h2>
           {published
             ? phase === 'live'
               ? 'Nå og neste'
               : 'Dette skjer under itDAGENE'
-            : `${dateLabel} på Gløshaugen`}
+            : 'Programmet publiseres fortløpende'}
         </h2>
-        <p>
-          {published
-            ? 'Et utvalg av arrangementene som er klare for årets messe.'
-            : 'Tider, rom og programpunkter publiseres når innholdet er godkjent.'}
-        </p>
+        {!published && (
+          <p>Tider, rom og arrangementer legges ut så snart de er bekreftet.</p>
+        )}
       </div>
 
       {published ? (
@@ -96,10 +82,7 @@ export const CurrentEventPreview = ({
         </>
       ) : (
         <div className="current-event-preview__planning">
-          <p>
-            Du kan fortsatt finne sted, datoer og svar på praktiske spørsmål før
-            programmet er klart.
-          </p>
+          <p>I mellomtiden finner du praktisk informasjon i FAQ-en.</p>
           <ActionLink href="/faq">Praktisk informasjon</ActionLink>
         </div>
       )}

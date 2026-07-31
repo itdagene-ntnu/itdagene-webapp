@@ -1,32 +1,79 @@
 const baseUrl =
   process.env.BASE_URL || `http://localhost:${process.env.TEST_PORT || 3000}`;
+const hydrationFailurePattern =
+  /hydration failed|text content does not match|did not match|server html|ENOENT.*\.next\/server\/pages/i;
 
 describe('Page rendering', () => {
   test('Frontpage page rendering', async () => {
-    const response = await page.goto(baseUrl);
-    expect(response.status()).toBe(200);
-    expect(
-      await page.evaluate(() =>
-        document.body.textContent.includes(
-          'Noe gikk galt da siden skulle lastes.'
+    const hydrationFailures = [];
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const captureConsoleFailure = (message) => {
+      if (hydrationFailurePattern.test(message.text())) {
+        hydrationFailures.push(message.text());
+      }
+    };
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const capturePageFailure = (error) => {
+      if (hydrationFailurePattern.test(error.message)) {
+        hydrationFailures.push(error.message);
+      }
+    };
+
+    page.on('console', captureConsoleFailure);
+    page.on('pageerror', capturePageFailure);
+
+    try {
+      const response = await page.goto(baseUrl);
+      expect(response.status()).toBe(200);
+      await page.waitForSelector('.event-hero-story[data-hero-mode]');
+      expect(
+        await page.evaluate(() =>
+          document.body.textContent.includes(
+            'Noe gikk galt da siden skulle lastes.'
+          )
         )
-      )
-    ).toBe(false);
+      ).toBe(false);
+      expect(
+        await page.evaluate(() =>
+          document.body.textContent.includes(
+            'itDAGENE er et årlig møtested mellom IT-studenter og næringslivet'
+          )
+        )
+      ).toBe(true);
+      expect(hydrationFailures).toEqual([]);
+    } finally {
+      page.removeListener('console', captureConsoleFailure);
+      page.removeListener('pageerror', capturePageFailure);
+    }
   }, 16000);
 
-  test('Frontpage respects company publication and uses two marquee lanes', async () => {
+  test('Frontpage renders exactly one current or historical company exposure', async () => {
     await page.setViewport({ width: 1280, height: 900 });
     await page.goto(baseUrl);
 
     const region = await page.$('[data-testid="event-marquee"]');
-    if (!region) {
+    const directory = await page.$('.current-company-directory');
+    const mode = await page.$eval(
+      '[data-company-exposure]',
+      (exposure) => exposure.dataset.companyExposure
+    );
+
+    expect(Number(Boolean(region)) + Number(Boolean(directory))).toBe(1);
+
+    if (mode === 'current') {
+      expect(directory).not.toBeNull();
+      expect(region).toBeNull();
       expect(
         await page.evaluate(() =>
-          document.body.textContent.includes('Bedrifter fra itDAGENE')
+          document.body.textContent.includes('Bedrifter fra itDAGENE 2025')
         )
       ).toBe(false);
       return;
     }
+
+    expect(mode).toBe('historical');
+    expect(region).not.toBeNull();
+    expect(directory).toBeNull();
 
     const marquee = await page.evaluate(() => {
       const region = document.querySelector('[data-testid="event-marquee"]');
@@ -55,7 +102,12 @@ describe('Page rendering', () => {
         labelAboveLanes: labelRect.bottom <= firstLaneRect.top + 1,
         laneCount: lanes.length,
         directions: lanes.map((lane) => lane.dataset.direction),
-        primaryText: primaryGroups.map((group) => group.textContent).join(' '),
+        primaryNames: primaryItems.map(
+          (item) =>
+            item.querySelector('img')?.getAttribute('alt') ||
+            item.querySelector('.event-marquee__name')?.textContent ||
+            ''
+        ),
         duplicateHidden: duplicateGroups.map((group) =>
           group.getAttribute('aria-hidden')
         ),
@@ -77,17 +129,18 @@ describe('Page rendering', () => {
     });
 
     expect(marquee.count).toBe(1);
-    expect(marquee.label).toContain('Bedrifter');
+    expect(marquee.label).toContain('Bedrifter fra itDAGENE 2025');
     expect(marquee.labelAboveLanes).toBe(true);
     expect(marquee.laneCount).toBe(2);
     expect(marquee.directions).toEqual(['left', 'right']);
-    expect(marquee.primaryText).not.toContain('Program');
-    expect(marquee.primaryText.length).toBeGreaterThan(30);
+    expect(marquee.primaryNames.join(' ')).not.toContain('Program');
+    expect(marquee.primaryNames.join(' ').length).toBeGreaterThan(30);
     expect(marquee.duplicateHidden).toEqual(['true', 'true']);
     expect(marquee.initialAnimationStates).toEqual(['running', 'running']);
     expect(marquee.initialPlaybackRates).toEqual([1, 1]);
     expect(marquee.controlCount).toBe(0);
     expect(marquee.semanticItems).toBeGreaterThan(1);
+    expect(marquee.logoSources.length).toBeGreaterThan(1);
     expect(marquee.logoSources.every(Boolean)).toBe(true);
     expect(marquee.logoSources.length + marquee.fallbackNames).toBe(
       marquee.semanticItems
@@ -111,12 +164,106 @@ describe('Page rendering', () => {
     });
   }, 16000);
 
-  test('Company marquee lanes are static and contained on mobile', async () => {
+  test('Company exposure follows partner, exposure, planning and invitation hierarchy', async () => {
+    await page.setViewport({ width: 1440, height: 900 });
+    await page.goto(baseUrl);
+
+    const exposure = await page.evaluate(() => {
+      const partner = document.querySelector('.partner-showcase');
+      const companyExposure = document.querySelector('[data-company-exposure]');
+      const directory = document.querySelector('.current-company-directory');
+      const planner = document.querySelector('.visit-planner');
+      const marquee = document.querySelector('[data-testid="event-marquee"]');
+      const invitation = document.querySelector('.employer-invitation');
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+      const comesBefore = (first, second) =>
+        Boolean(
+          first &&
+            second &&
+            first.compareDocumentPosition(second) &
+              Node.DOCUMENT_POSITION_FOLLOWING
+        );
+      const companyItems = directory
+        ? [...directory.querySelectorAll('[data-company-id]')]
+        : [];
+
+      return {
+        companyCount: companyItems.length,
+        currentDirectoryPublished: Boolean(directory),
+        dayCount: directory?.querySelectorAll('[data-company-day]').length || 0,
+        exposureBeforePlanner: comesBefore(companyExposure, planner),
+        externalLinksValid: companyItems
+          .flatMap((item) => [...item.querySelectorAll('a')])
+          .every(
+            (link) =>
+              link.target === '_blank' && link.relList.contains('noreferrer')
+          ),
+        hasHiddenCompanyControls: Boolean(
+          directory?.querySelector('details, [role="tab"]')
+        ),
+        historicalMarqueePublished: Boolean(marquee),
+        marqueeAfterPlanner: marquee ? comesBefore(planner, marquee) : false,
+        marqueeBeforeInvitation: comesBefore(marquee, invitation),
+        mode: companyExposure?.dataset.companyExposure,
+        partnerBeforeExposure: comesBefore(partner, companyExposure),
+        plannerBeforeInvitation: comesBefore(planner, invitation),
+        standsHref: directory
+          ?.querySelector('.current-company-directory__heading a')
+          ?.getAttribute('href'),
+        visibleCompanies: companyItems.every((item) => {
+          const style = getComputedStyle(item);
+          return style.display !== 'none' && style.visibility !== 'hidden';
+        }),
+      };
+    });
+
+    expect(exposure.partnerBeforeExposure).toBe(true);
+    expect(exposure.exposureBeforePlanner).toBe(true);
+    expect(exposure.plannerBeforeInvitation).toBe(true);
+    expect(exposure.marqueeAfterPlanner).toBe(false);
+    expect(
+      Number(exposure.currentDirectoryPublished) +
+        Number(exposure.historicalMarqueePublished)
+    ).toBe(1);
+
+    if (exposure.currentDirectoryPublished) {
+      expect(exposure.mode).toBe('current');
+      expect(exposure.historicalMarqueePublished).toBe(false);
+      expect(exposure.dayCount).toBe(2);
+      expect(exposure.companyCount).toBeGreaterThan(0);
+      expect(exposure.visibleCompanies).toBe(true);
+      expect(exposure.hasHiddenCompanyControls).toBe(false);
+      expect(exposure.externalLinksValid).toBe(true);
+      expect(exposure.standsHref).toBe('/stands');
+    } else {
+      expect(exposure.mode).toBe('historical');
+      expect(exposure.marqueeBeforeInvitation).toBe(true);
+    }
+  }, 16000);
+
+  test('Company exposure is contained on mobile', async () => {
     await page.setViewport({ width: 390, height: 844 });
     await page.goto(baseUrl);
 
     const region = await page.$('[data-testid="event-marquee"]');
-    if (!region) return;
+
+    if (!region) {
+      expect(await page.$('.current-company-directory')).not.toBeNull();
+      expect(
+        await page.evaluate(() => ({
+          documentOverflow:
+            document.documentElement.scrollWidth >
+            document.documentElement.clientWidth,
+          gridColumns: getComputedStyle(
+            document.querySelector('.current-company-directory__grid')
+          ).gridTemplateColumns.split(' ').length,
+        }))
+      ).toEqual({
+        documentOverflow: false,
+        gridColumns: 2,
+      });
+      return;
+    }
 
     expect(
       await page.$eval('[data-testid="event-marquee"]', (marquee) => {
@@ -147,13 +294,53 @@ describe('Page rendering', () => {
     });
   }, 16000);
 
+  test('Visit planner hover covers each card with its route tint', async () => {
+    await page.setViewport({ width: 1440, height: 900 });
+    await page.goto(baseUrl);
+    await page.waitForFunction(
+      () =>
+        document.querySelector('.event-hero-story')?.dataset.heroTransition ===
+        'ready'
+    );
+
+    const cardResults = [];
+
+    for (let cardIndex = 1; cardIndex <= 4; cardIndex += 1) {
+      const selector = `.visit-planner li:nth-child(${cardIndex}) a`;
+      await page.hover(selector);
+      await new Promise((resolve) => setTimeout(resolve, 220));
+      cardResults.push(
+        await page.$eval(selector, (link) => {
+          const item = link.closest('li');
+          const itemRect = item.getBoundingClientRect();
+          const linkRect = link.getBoundingClientRect();
+
+          return {
+            backgroundColor: getComputedStyle(link).backgroundColor,
+            bottomGap: Math.abs(itemRect.bottom - linkRect.bottom),
+            heightGap: Math.abs(itemRect.height - linkRect.height),
+          };
+        })
+      );
+    }
+
+    expect(
+      cardResults.every(
+        ({ bottomGap, heightGap }) => bottomGap <= 1 && heightGap <= 1
+      )
+    ).toBe(true);
+    expect(
+      new Set(cardResults.map(({ backgroundColor }) => backgroundColor)).size
+    ).toBe(4);
+  }, 16000);
+
   test('Countdown tiles form the official header identity on scroll', async () => {
     await page.setViewport({ width: 1440, height: 900 });
     await page.goto(baseUrl, { waitUntil: 'networkidle0' });
     await page.waitForFunction(
       () =>
-        document.querySelector('.event-hero-story')?.dataset.heroMode ===
-        'cinematic'
+        document.querySelector('.event-hero-story')?.dataset.heroTransition ===
+        'ready'
     );
 
     const initial = await page.evaluate(() => {
@@ -169,6 +356,9 @@ describe('Page rendering', () => {
         tileColors: [...document.querySelectorAll('[data-countdown-tile]')].map(
           (tile) => getComputedStyle(tile).backgroundColor
         ),
+        plannerColors: [
+          ...document.querySelectorAll('.visit-planner__marker'),
+        ].map((marker) => getComputedStyle(marker).backgroundColor),
         tileCount: document.querySelectorAll('[data-countdown-tile]').length,
         obsoleteWordmark: Boolean(
           document.querySelector('.event-hero__intro-title')
@@ -197,6 +387,7 @@ describe('Page rendering', () => {
 
     expect(initial.tileCount).toBe(4);
     expect(new Set(initial.tileColors).size).toBe(4);
+    expect(initial.tileColors).toEqual(initial.plannerColors);
     expect(initial.obsoleteWordmark).toBe(false);
     expect(initial.navigationTextShadow).toBe('none');
     expect(initial.headerActionHidden).toBe('true');
@@ -206,15 +397,116 @@ describe('Page rendering', () => {
       const story = document.querySelector('.event-hero-story');
       window.scrollTo(
         0,
+        story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.42
+      );
+    });
+    await new Promise((resolve) => setTimeout(resolve, 900));
+    const transitionOverlap = await page.evaluate(() => {
+      const anchorRect = document
+        .querySelector('.event-hero__logo-anchor')
+        .getBoundingClientRect();
+      const anchorCenter = {
+        x: anchorRect.left + anchorRect.width / 2,
+        y: anchorRect.top + anchorRect.height / 2,
+      };
+      const visibleTiles = [
+        ...document.querySelectorAll('[data-countdown-tile]'),
+      ].filter((tile) => Number(getComputedStyle(tile).opacity) > 0.1);
+      const maxVisibleTileCenterOffset = Math.max(
+        0,
+        ...visibleTiles.map((tile) => {
+          const rect = tile.getBoundingClientRect();
+          return Math.hypot(
+            rect.left + rect.width / 2 - anchorCenter.x,
+            rect.top + rect.height / 2 - anchorCenter.y
+          );
+        })
+      );
+
+      return {
+        logoOpacity: Number(
+          getComputedStyle(document.querySelector('[data-hero-logo]')).opacity
+        ),
+        maxVisibleTileCenterOffset,
+      };
+    });
+    expect(
+      transitionOverlap.logoOpacity > 0.1 &&
+        transitionOverlap.maxVisibleTileCenterOffset > 1
+    ).toBe(false);
+
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      window.scrollTo(
+        0,
         story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.47
       );
     });
-    await page.waitForFunction(
-      () =>
-        Number(
-          getComputedStyle(document.querySelector('[data-hero-logo]')).opacity
-        ) > 0.95
+    await page.waitForFunction(() => {
+      const travellingLogo = document.querySelector('[data-hero-logo]');
+      const image = travellingLogo.querySelector('img');
+      const style = getComputedStyle(travellingLogo);
+
+      return (
+        image.complete &&
+        image.naturalWidth > 0 &&
+        Number(style.opacity) > 0.95 &&
+        style.visibility === 'visible'
+      );
+    });
+    const mergedLogo = await page.$eval(
+      '[data-hero-logo]',
+      (travellingLogo) => ({
+        imageComplete: travellingLogo.querySelector('img').complete,
+        imageNaturalWidth: travellingLogo.querySelector('img').naturalWidth,
+        imageFilter: getComputedStyle(travellingLogo.querySelector('img'))
+          .filter,
+        opacity: Number(getComputedStyle(travellingLogo).opacity),
+        sameOrigin:
+          new URL(travellingLogo.querySelector('img').src).origin ===
+          window.location.origin,
+        visibility: getComputedStyle(travellingLogo).visibility,
+      })
     );
+    expect(mergedLogo).toEqual({
+      imageComplete: true,
+      imageFilter: expect.stringContaining('drop-shadow'),
+      imageNaturalWidth: expect.any(Number),
+      opacity: 1,
+      sameOrigin: true,
+      visibility: 'visible',
+    });
+    expect(mergedLogo.imageNaturalWidth).toBeGreaterThan(0);
+    expect(mergedLogo.imageFilter.match(/drop-shadow/g) || []).toHaveLength(4);
+    const hairlineOffsets = [
+      ...mergedLogo.imageFilter.matchAll(/(-?\d*\.?\d+)px/g),
+    ]
+      .map((match) => Math.abs(Number(match[1])))
+      .filter((offset) => offset > 0);
+    expect(hairlineOffsets).toHaveLength(4);
+    expect(hairlineOffsets.every((offset) => offset <= 0.5)).toBe(true);
+    expect(mergedLogo.imageFilter.match(/0px\)/g) || []).toHaveLength(4);
+    await page.waitForFunction(() => {
+      const anchorRect = document
+        .querySelector('.event-hero__logo-anchor')
+        .getBoundingClientRect();
+      const anchorCenter = {
+        x: anchorRect.left + anchorRect.width / 2,
+        y: anchorRect.top + anchorRect.height / 2,
+      };
+
+      return [...document.querySelectorAll('[data-countdown-tile]')].every(
+        (tile) => {
+          const tileRect = tile.getBoundingClientRect();
+          return (
+            Math.hypot(
+              tileRect.left + tileRect.width / 2 - anchorCenter.x,
+              tileRect.top + tileRect.height / 2 - anchorCenter.y
+            ) <= 1
+          );
+        }
+      );
+    });
 
     const mergeAlignment = await page.evaluate(() => {
       const anchorRect = document
@@ -391,7 +683,7 @@ describe('Page rendering', () => {
       resolved.headerRect.height,
       0
     );
-    expect(resolved.purpose).toBe('Møt arbeidslivet på Gløshaugen.');
+    expect(resolved.purpose).toBe('IT-studenter møter næringslivet.');
     expect(resolved.travellingOpacity).toBeLessThan(0.1);
     expect(resolved.headerActionHidden).toBe('false');
     expect(resolved.heroActionOpacity).toBeLessThan(0.1);
@@ -414,6 +706,249 @@ describe('Page rendering', () => {
         action.getAttribute('aria-hidden')
       )
     ).toBe('true');
+  }, 30000);
+
+  test('Hero keeps a complete identity while cinematic motion prepares', async () => {
+    await page.setViewport({ width: 1440, height: 900 });
+    await page.setRequestInterception(true);
+
+    const heldLogoRequests = [];
+    let resolveLogoRequest;
+    const logoRequestHeld = new Promise((resolve) => {
+      resolveLogoRequest = resolve;
+    });
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const holdLogoRequest = (request) => {
+      if (request.url().includes('/static/itdagene-svart.png')) {
+        heldLogoRequests.push(request);
+        resolveLogoRequest();
+        return;
+      }
+
+      request.continue();
+    };
+
+    page.on('request', holdLogoRequest);
+
+    try {
+      await Promise.all([
+        page.goto(baseUrl, { waitUntil: 'domcontentloaded' }),
+        logoRequestHeld,
+      ]);
+      await page.waitForSelector('.event-hero-story[data-hero-mode]');
+      await page.evaluate(() => window.scrollTo(0, window.innerHeight * 0.7));
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const preparing = await page.evaluate(() => {
+        const story = document.querySelector('.event-hero-story');
+        const headerLogo = document.querySelector('[data-hero-logo-target]');
+        const countdownTiles = [
+          ...document.querySelectorAll('[data-countdown-tile]'),
+        ];
+
+        return {
+          countdownVisible: countdownTiles.every(
+            (tile) =>
+              Number(getComputedStyle(tile).opacity) > 0.95 &&
+              getComputedStyle(tile).visibility === 'visible'
+          ),
+          headerLogoOpacity: Number(getComputedStyle(headerLogo).opacity),
+          mode: story.dataset.heroMode,
+          transition: story.dataset.heroTransition || null,
+        };
+      });
+
+      expect(preparing).toEqual({
+        countdownVisible: true,
+        headerLogoOpacity: 1,
+        mode: 'preparing',
+        transition: null,
+      });
+
+      await Promise.all(heldLogoRequests.map((request) => request.continue()));
+      await page.waitForFunction(
+        () =>
+          document.querySelector('.event-hero-story')?.dataset
+            .heroTransition === 'ready'
+      );
+    } finally {
+      await Promise.all(
+        heldLogoRequests.map((request) =>
+          request.continue().catch(() => undefined)
+        )
+      );
+      page.removeListener('request', holdLogoRequest);
+      await page.setRequestInterception(false);
+    }
+  }, 20000);
+
+  test('Hero identity geometry stays aligned after a viewport resize', async () => {
+    await page.setViewport({ width: 1440, height: 900 });
+    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.waitForFunction(
+      () =>
+        document.querySelector('.event-hero-story')?.dataset.heroTransition ===
+        'ready'
+    );
+
+    await page.setViewport({ width: 1024, height: 768 });
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      window.scrollTo(
+        0,
+        story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.47
+      );
+    });
+    await page.waitForFunction(
+      () =>
+        Number(
+          getComputedStyle(document.querySelector('[data-hero-logo]')).opacity
+        ) > 0.95
+    );
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const readMergeGeometry = async () =>
+      page.evaluate(() => {
+        const anchor = document
+          .querySelector('.event-hero__logo-anchor')
+          .getBoundingClientRect();
+        const logo = document
+          .querySelector('[data-hero-logo]')
+          .getBoundingClientRect();
+        const anchorCenter = {
+          x: anchor.left + anchor.width / 2,
+          y: anchor.top + anchor.height / 2,
+        };
+        const logoSquareCenter = {
+          x: logo.left + logo.height / 2,
+          y: logo.top + logo.height / 2,
+        };
+        const tileOffsets = [
+          ...document.querySelectorAll('[data-countdown-tile]'),
+        ].map((tile) => {
+          const tileRect = tile.getBoundingClientRect();
+          return {
+            center: Math.hypot(
+              tileRect.left + tileRect.width / 2 - anchorCenter.x,
+              tileRect.top + tileRect.height / 2 - anchorCenter.y
+            ),
+            size: Math.max(
+              Math.abs(tileRect.width - anchor.width),
+              Math.abs(tileRect.height - anchor.height)
+            ),
+          };
+        });
+
+        return {
+          centerOffset: Math.hypot(
+            logoSquareCenter.x - anchorCenter.x,
+            logoSquareCenter.y - anchorCenter.y
+          ),
+          sizeOffset: Math.max(
+            Math.abs(logo.height - anchor.width),
+            Math.abs(logo.height - anchor.height)
+          ),
+          tileCenterOffset: Math.max(
+            ...tileOffsets.map(({ center }) => center)
+          ),
+          tileSizeOffset: Math.max(...tileOffsets.map(({ size }) => size)),
+        };
+      });
+    const mergeGeometry = await readMergeGeometry();
+
+    expect(mergeGeometry.centerOffset).toBeLessThanOrEqual(1);
+    expect(mergeGeometry.sizeOffset).toBeLessThanOrEqual(1);
+    expect(mergeGeometry.tileCenterOffset).toBeLessThanOrEqual(1);
+    expect(mergeGeometry.tileSizeOffset).toBeLessThanOrEqual(1);
+
+    await page.setViewport({ width: 1440, height: 900 });
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      window.scrollTo(
+        0,
+        story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.47
+      );
+    });
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    const resizedMergeGeometry = await readMergeGeometry();
+
+    expect(resizedMergeGeometry.centerOffset).toBeLessThanOrEqual(1);
+    expect(resizedMergeGeometry.sizeOffset).toBeLessThanOrEqual(1);
+    expect(resizedMergeGeometry.tileCenterOffset).toBeLessThanOrEqual(1);
+    expect(resizedMergeGeometry.tileSizeOffset).toBeLessThanOrEqual(1);
+  }, 20000);
+
+  test('Hero keeps its identity when crossing the responsive motion boundary', async () => {
+    await page.setViewport({ width: 799, height: 900 });
+    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.waitForSelector('.event-hero-story[data-hero-mode="static"]');
+
+    expect(
+      await page.$eval('[data-hero-logo-target]', (logo) => ({
+        opacity: Number(getComputedStyle(logo).opacity),
+        visibility: getComputedStyle(logo).visibility,
+      }))
+    ).toEqual({
+      opacity: 1,
+      visibility: 'visible',
+    });
+
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      window.scrollTo(0, story.offsetTop + story.offsetHeight * 0.8);
+    });
+    await page.setViewport({ width: 801, height: 900 });
+    await page.waitForFunction(
+      () =>
+        document.querySelector('.event-hero-story')?.dataset.heroTransition ===
+        'ready'
+    );
+    await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      window.scrollTo(
+        0,
+        story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.69
+      );
+    });
+    await new Promise((resolve) => setTimeout(resolve, 900));
+
+    const cinematicIdentity = await page.evaluate(() => {
+      const story = document.querySelector('.event-hero-story');
+      const travellingLogo = document.querySelector('[data-hero-logo]');
+      const headerLogo = document.querySelector('[data-hero-logo-target]');
+      const scrollRange = Math.max(1, story.offsetHeight - window.innerHeight);
+
+      return {
+        headerOpacity: Number(getComputedStyle(headerLogo).opacity),
+        mode: story.dataset.heroMode,
+        progress: Math.max(
+          0,
+          Math.min(1, (window.scrollY - story.offsetTop) / scrollRange)
+        ),
+        travellingOpacity: Number(getComputedStyle(travellingLogo).opacity),
+      };
+    });
+
+    expect(cinematicIdentity.mode).toBe('cinematic');
+    expect(cinematicIdentity.progress).toBeGreaterThan(0.46);
+    expect(
+      Math.max(
+        cinematicIdentity.headerOpacity,
+        cinematicIdentity.travellingOpacity
+      )
+    ).toBeGreaterThan(0.95);
+
+    await page.setViewport({ width: 799, height: 900 });
+    await page.waitForSelector('.event-hero-story[data-hero-mode="static"]');
+    await page.waitForFunction(
+      () =>
+        Number(
+          getComputedStyle(document.querySelector('[data-hero-logo-target]'))
+            .opacity
+        ) > 0.95
+    );
   }, 20000);
 
   test('Background video plays without a visible control', async () => {
@@ -444,11 +979,7 @@ describe('Page rendering', () => {
 
     const region = await page.$('[data-testid="event-marquee"]');
     if (!region) {
-      expect(
-        await page.evaluate(() =>
-          document.body.textContent.includes('Bedrifter fra itDAGENE')
-        )
-      ).toBe(false);
+      expect(await page.$('.current-company-directory')).not.toBeNull();
       await page.emulateMediaFeatures([
         { name: 'prefers-reduced-motion', value: 'no-preference' },
       ]);
@@ -492,6 +1023,7 @@ describe('Page rendering', () => {
       { name: 'prefers-reduced-motion', value: 'reduce' },
     ]);
     await page.goto(baseUrl);
+    await page.waitForSelector('.event-hero-story[data-hero-mode="static"]');
 
     const hero = await page.evaluate(() => ({
       mode: document.querySelector('.event-hero-story').dataset.heroMode,
@@ -516,7 +1048,7 @@ describe('Page rendering', () => {
     expect(hero).toEqual({
       mode: 'static',
       videoSource: null,
-      heading: 'Møt arbeidslivet på Gløshaugen',
+      heading: 'IT-studenter møter næringslivet.',
       countdown: true,
       headerLogoOpacity: '1',
       interestAction: 'Meld interesse',
@@ -564,6 +1096,78 @@ describe('Page rendering', () => {
   test('About us page rendering', async () => {
     const response = await page.goto(baseUrl + '/om-itdagene');
     expect(response.status()).toBe(200);
+  }, 16000);
+
+  test('FAQ disclosures animate through the shared expansion motion', async () => {
+    await page.setViewport({ width: 1280, height: 900 });
+    const response = await page.goto(baseUrl + '/faq', {
+      waitUntil: 'networkidle0',
+    });
+    expect(response.status()).toBe(200);
+    await page.waitForSelector('.faq-item .smooth-disclosure__trigger');
+
+    const initialHeight = await page.$eval(
+      '.faq-item [data-disclosure-motion]',
+      (motion) => motion.getBoundingClientRect().height
+    );
+    expect(initialHeight).toBe(0);
+
+    await page.click('.faq-item .smooth-disclosure__trigger');
+    await new Promise((resolve) => setTimeout(resolve, 80));
+
+    const expanding = await page.$eval('.faq-item', (item) => {
+      const motion = item.querySelector('[data-disclosure-motion]');
+      const trigger = item.querySelector('.smooth-disclosure__trigger');
+      return {
+        activeAnimations: motion.getAnimations().length,
+        expanded: trigger.getAttribute('aria-expanded'),
+        height: motion.getBoundingClientRect().height,
+      };
+    });
+
+    expect(expanding.expanded).toBe('true');
+    expect(expanding.activeAnimations).toBeGreaterThan(0);
+    expect(expanding.height).toBeGreaterThan(0);
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const settledHeight = await page.$eval(
+      '.faq-item [data-disclosure-motion]',
+      (motion) => motion.getBoundingClientRect().height
+    );
+    expect(settledHeight).toBeGreaterThan(expanding.height);
+  }, 16000);
+
+  test('Board portraits preserve the original circular framing', async () => {
+    await page.setViewport({ width: 1680, height: 1000 });
+    const response = await page.goto(baseUrl + '/om-itdagene', {
+      waitUntil: 'networkidle0',
+    });
+    expect(response.status()).toBe(200);
+    await page.waitForSelector('.board-member__portrait img');
+
+    const portrait = await page.$eval('.board-member__portrait', (frame) => {
+      const image = frame.querySelector('img');
+      const frameRect = frame.getBoundingClientRect();
+      const frameStyle = getComputedStyle(frame);
+      const imageStyle = getComputedStyle(image);
+
+      return {
+        borderRadius: frameStyle.borderRadius,
+        height: frameRect.height,
+        imageHeight: image.naturalHeight,
+        imageWidth: image.naturalWidth,
+        objectPosition: imageStyle.objectPosition,
+        transform: imageStyle.transform,
+        width: frameRect.width,
+      };
+    });
+
+    expect(portrait.width).toBeGreaterThanOrEqual(194);
+    expect(Math.abs(portrait.width - portrait.height)).toBeLessThanOrEqual(1);
+    expect(portrait.borderRadius).toBe('50%');
+    expect(portrait.imageWidth).toBe(portrait.imageHeight);
+    expect(portrait.objectPosition).toBe('50% 50%');
+    expect(portrait.transform).toBe('none');
   }, 16000);
 
   test('Program page rendering', async () => {
@@ -699,7 +1303,7 @@ describe('Page rendering', () => {
       navigationVisible: true,
       linkCount: 7,
       horizontalOverflow: false,
-      heroHeading: 'Møt arbeidslivet på Gløshaugen',
+      heroHeading: 'IT-studenter møter næringslivet.',
       heroActionCount: 1,
       countdownTileCount: 4,
     });
@@ -727,9 +1331,9 @@ describe('Page rendering', () => {
     });
   }, 16000);
 
-  test('Navigation moves focus to the new main content', async () => {
+  test('Pointer navigation moves focus without showing a keyboard ring', async () => {
     await page.setViewport({ width: 390, height: 844 });
-    await page.goto(baseUrl);
+    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
     await page.click('.menu-toggle');
     await Promise.all([
       page.waitForNavigation({ waitUntil: 'networkidle0' }),
@@ -737,14 +1341,99 @@ describe('Page rendering', () => {
     ]);
     await page.waitForFunction(() => document.activeElement?.tagName === 'H1');
 
-    expect(await page.evaluate(() => document.activeElement.tagName)).toBe(
-      'H1'
+    const destinationFocus = await page.evaluate(() => ({
+      focusVisible: document.activeElement.matches(':focus-visible'),
+      outlineStyle: getComputedStyle(document.activeElement).outlineStyle,
+      tagName: document.activeElement.tagName,
+    }));
+
+    expect(destinationFocus).toEqual({
+      focusVisible: false,
+      outlineStyle: 'none',
+      tagName: 'H1',
+    });
+  }, 30000);
+
+  test('Keyboard navigation moves focus and keeps its visible ring', async () => {
+    await page.setViewport({ width: 390, height: 844 });
+    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.click('.menu-toggle');
+    await page.focus('.site-navigation a[href="/program"]');
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'networkidle0' }),
+      page.keyboard.press('Enter'),
+    ]);
+    await page.waitForFunction(() => document.activeElement?.tagName === 'H1');
+
+    const destinationFocus = await page.evaluate(() => ({
+      focusVisible: document.activeElement.matches(':focus-visible'),
+      outlineStyle: getComputedStyle(document.activeElement).outlineStyle,
+      tagName: document.activeElement.tagName,
+    }));
+
+    expect(destinationFocus).toEqual({
+      focusVisible: true,
+      outlineStyle: 'solid',
+      tagName: 'H1',
+    });
+  }, 30000);
+
+  test('Homepage photography keeps its source framing on small screens', async () => {
+    await page.setViewport({ width: 390, height: 844 });
+    await page.goto(baseUrl);
+    await page.$eval('.documentary-band', (section) =>
+      section.scrollIntoView({ block: 'center' })
     );
+    await page.waitForFunction(() => {
+      const images = [
+        ...document.querySelectorAll('.documentary-band__item img'),
+        document.querySelector('.employer-invitation__media img'),
+      ];
+      return images.every((image) => image?.complete && image.naturalWidth > 0);
+    });
+
+    const framing = await page.evaluate(() => {
+      const documentaryItems = [
+        ...document.querySelectorAll('.documentary-band__item'),
+      ];
+      const ratios = documentaryItems.map((item) => {
+        const bounds = item.getBoundingClientRect();
+        return bounds.width / bounds.height;
+      });
+      const leftEdges = documentaryItems.map(
+        (item) => item.getBoundingClientRect().left
+      );
+      const employerMedia = document
+        .querySelector('.employer-invitation__media')
+        .getBoundingClientRect();
+      const employerImage = document.querySelector(
+        '.employer-invitation__media img'
+      );
+
+      return {
+        documentaryRatios: ratios,
+        documentaryLeftEdges: leftEdges,
+        employerRatio: employerMedia.width / employerMedia.height,
+        employerFocalPoint: getComputedStyle(employerImage).objectPosition,
+        focalPoints: documentaryItems.map(
+          (item) => getComputedStyle(item.querySelector('img')).objectPosition
+        ),
+      };
+    });
+
     expect(
-      await page.evaluate(
-        () => getComputedStyle(document.activeElement).outlineStyle
-      )
-    ).not.toBe('none');
+      framing.documentaryRatios.every((ratio) => ratio > 1.48 && ratio < 1.52)
+    ).toBe(true);
+    expect(new Set(framing.documentaryLeftEdges).size).toBe(1);
+    expect(framing.employerRatio).toBeGreaterThan(1.48);
+    expect(framing.employerRatio).toBeLessThan(1.52);
+    expect(framing.focalPoints).toEqual([
+      '50% 55%',
+      '58% 50%',
+      '56% 48%',
+      '50% 58%',
+    ]);
+    expect(framing.employerFocalPoint).toBe('60% 50%');
   }, 16000);
 
   test('Homepage and utility pages do not overflow supported widths', async () => {
@@ -779,7 +1468,14 @@ describe('Page rendering', () => {
   ])(
     '%s exposes its legacy route accent',
     async (path, expectedColor) => {
-      await page.goto(baseUrl + path);
+      await page.goto(baseUrl + path, { waitUntil: 'networkidle0' });
+      await page.waitForFunction(
+        (color) =>
+          getComputedStyle(document.querySelector('.page-header'))
+            .borderTopColor === color,
+        {},
+        expectedColor
+      );
       expect(
         await page.$eval(
           '.page-header',
@@ -862,9 +1558,8 @@ describe('Page rendering', () => {
     await page.goto(baseUrl);
     const programPresentation = await page.evaluate(() => ({
       previewItems: document.querySelectorAll('.program-preview li').length,
-      planningLabel: document.querySelector(
-        '.current-event-preview__heading > p:first-child'
-      )?.textContent,
+      heading: document.querySelector('.current-event-preview__heading h2')
+        ?.textContent,
       primaryHeroHref: document
         .querySelector('.event-hero__actions .site-action')
         ?.getAttribute('href'),
@@ -873,11 +1568,40 @@ describe('Page rendering', () => {
 
     expect(programPresentation.mainLandmarks).toBe(1);
     if (programPresentation.previewItems > 0) {
-      expect(programPresentation.planningLabel).toBe('Program');
+      expect(programPresentation.heading).toMatch(
+        /Dette skjer under itDAGENE|Nå og neste/
+      );
       expect(programPresentation.primaryHeroHref).toBe('/program');
     } else {
-      expect(programPresentation.planningLabel).toBe('Programmet planlegges');
+      expect(programPresentation.heading).toBe(
+        'Programmet publiseres fortløpende'
+      );
       expect(programPresentation.primaryHeroHref).not.toBe('/program');
     }
+  }, 16000);
+
+  test('Homepage omits helper copy that repeats the visible content', async () => {
+    await page.goto(baseUrl);
+    const homepageCopy = await page.evaluate(() => ({
+      body: document.body.textContent,
+      heroPhase: document.querySelector('.event-hero__phase')?.textContent,
+    }));
+
+    expect(homepageCopy.body).not.toContain(
+      'Gå rett til informasjonen du trenger før og under messedagene.'
+    );
+    expect(homepageCopy.body).not.toContain(
+      'Bilder fra stands, arrangementer og bankett.'
+    );
+    expect(homepageCopy.body).not.toContain(
+      'Bedrifter med en egen samarbeidsavtale med itDAGENE.'
+    );
+    expect(homepageCopy.body).not.toContain(
+      'Et utvalg av arrangementene som er klare for årets messe.'
+    );
+    expect(homepageCopy.body).not.toContain('Ny utgave kommer');
+    expect(homepageCopy.body).not.toContain('Aktive annonser samles her');
+    expect(homepageCopy.body).not.toContain('For studenter og bedrifter');
+    expect(homepageCopy.heroPhase).not.toBe('Neste utgave');
   }, 16000);
 });

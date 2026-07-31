@@ -8,27 +8,38 @@ import {
   ContentStatePanel,
   PageHeader,
 } from '../components/DesignSystem';
+import { SmoothDisclosure } from '../components/DesignSystem/SmoothDisclosure';
 
 type QuestionType = NonNullable<
   NonNullable<faq_QueryResponse['questions']>[number]
 >;
 
-const Question = ({ question }: { question: QuestionType }): JSX.Element => (
-  <details className="faq-item">
-    <summary>{question.question || 'Spørsmål'}</summary>
-    <div className="faq-item__answer">
-      <ReactMarkdown source={question.answer || ''} />
-    </div>
-  </details>
+const Question = ({
+  contentId,
+  question,
+}: {
+  contentId: string;
+  question: QuestionType;
+}): JSX.Element => (
+  <SmoothDisclosure
+    className="faq-item"
+    contentClassName="faq-item__answer"
+    contentId={contentId}
+    summary={question.question || 'Spørsmål'}
+  >
+    <ReactMarkdown source={question.answer || ''} />
+  </SmoothDisclosure>
 );
 
 const QuestionGroup = ({
   title,
   eyebrow,
+  idPrefix,
   questions,
 }: {
   title: string;
   eyebrow: string;
+  idPrefix: string;
   questions: ReadonlyArray<QuestionType | null>;
 }): JSX.Element | null => {
   const availableQuestions = questions.filter(
@@ -46,6 +57,7 @@ const QuestionGroup = ({
       <div>
         {availableQuestions.map((question, index) => (
           <Question
+            contentId={`faq-${idPrefix}-${index}`}
             key={question.question || `question-${index}`}
             question={question}
           />
@@ -72,11 +84,13 @@ const Faq = ({
         <div className="faq-content">
           <QuestionGroup
             eyebrow="For studenter og besøkende"
+            idPrefix="general"
             questions={groupedQuestions.false || []}
             title="Generelle spørsmål"
           />
           <QuestionGroup
             eyebrow="Deltakelse og samarbeid"
+            idPrefix="companies"
             questions={groupedQuestions.true || []}
             title="For bedrifter"
           />

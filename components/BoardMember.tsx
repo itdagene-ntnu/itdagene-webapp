@@ -36,10 +36,10 @@ const BoardMember = ({
         {photo ? (
           <img
             alt={`Portrett av ${displayName}`}
-            height="600"
+            height="400"
             loading="lazy"
             src={photo}
-            width="600"
+            width="400"
           />
         ) : (
           <div aria-hidden="true" className="board-member__placeholder">
@@ -67,7 +67,7 @@ export default createFragmentContainer(BoardMember, {
   user: graphql`
     fragment BoardMember_user on User {
       id
-      photo(width: 600, height: 700)
+      photo(width: 400, height: 400)
       fullName
       role
       email

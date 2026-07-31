@@ -1,4 +1,5 @@
 import React from 'react';
+import { itdageneWordmark } from '../../config/brand';
 import { announceHeaderActionVisibility } from '../../utils/heroHeaderHandoff';
 import { resolveEmployerAction } from '../../utils/homepageActions';
 
@@ -21,19 +22,92 @@ type NavigatorWithConnection = Navigator & {
   };
 };
 
+type DocumentWithFonts = Document & {
+  fonts?: {
+    ready: Promise<unknown>;
+  };
+};
+
 type HeroExperienceMode = 'cinematic' | 'static';
+type HeroPreparationState = 'scrolled' | 'top';
 
 const HERO_VIDEO = 'https://cdn.itdagene.no/itdagene.mp4';
 const FAIR_SEQUENCE_START = 22;
 const FAIR_SEQUENCE_END = 36;
 const COUNTDOWN_MERGE_DURATION = 0.3;
+const WORDMARK_CLOSED_CLIP = `${
+  100 - (itdageneWordmark.markWidth / itdageneWordmark.width) * 100
+}%`;
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+
+const resolveExperienceMode = (): HeroExperienceMode => {
+  if (typeof window === 'undefined') {
+    return 'static';
+  }
+
+  const reducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+  const mobileLayout = window.matchMedia('(max-width: 800px)').matches;
+  const saveData = (navigator as NavigatorWithConnection).connection?.saveData;
+
+  return reducedMotion || mobileLayout || saveData ? 'static' : 'cinematic';
+};
+
+const waitForImage = async (image: HTMLImageElement): Promise<void> => {
+  if (!image.complete) {
+    try {
+      await image.decode();
+    } catch {
+      // The natural-width check below selects the static fallback if needed.
+    }
+  }
+
+  if (image.naturalWidth === 0) {
+    throw new Error('The hero identity image could not be loaded.');
+  }
+};
+
+const waitForLayout = (): Promise<void> =>
+  new Promise((resolve) => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => resolve());
+    });
+  });
+
+const getLayoutRect = (
+  element: HTMLElement
+): Pick<DOMRect, 'height' | 'left' | 'top' | 'width'> => {
+  const offsetParent = element.offsetParent;
+
+  if (!(offsetParent instanceof HTMLElement)) {
+    return element.getBoundingClientRect();
+  }
+
+  const parentRect = offsetParent.getBoundingClientRect();
+  return {
+    height: element.offsetHeight,
+    left:
+      parentRect.left +
+      offsetParent.clientLeft +
+      element.offsetLeft -
+      offsetParent.scrollLeft,
+    top:
+      parentRect.top +
+      offsetParent.clientTop +
+      element.offsetTop -
+      offsetParent.scrollTop,
+    width: element.offsetWidth,
+  };
+};
 
 export const useHeroLogoTransition = (
   refs: HeroTransitionRefs,
   interestForm?: string | null
 ): void => {
   const [experienceMode, setExperienceMode] =
-    React.useState<HeroExperienceMode>('static');
+    React.useState<HeroExperienceMode>(resolveExperienceMode);
   const headerAction = React.useMemo(() => {
     const employerAction = resolveEmployerAction(interestForm);
     return {
@@ -46,14 +120,8 @@ export const useHeroLogoTransition = (
   React.useEffect(() => {
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const mobileLayout = window.matchMedia('(max-width: 800px)');
-    const saveData = (navigator as NavigatorWithConnection).connection
-      ?.saveData;
     const updateExperienceMode = (): void => {
-      setExperienceMode(
-        reducedMotion.matches || mobileLayout.matches || saveData
-          ? 'static'
-          : 'cinematic'
-      );
+      setExperienceMode(resolveExperienceMode());
     };
 
     updateExperienceMode();
@@ -66,7 +134,7 @@ export const useHeroLogoTransition = (
     };
   }, []);
 
-  React.useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const story = refs.story.current;
     const scene = refs.scene.current;
     const media = refs.media.current;
@@ -95,10 +163,32 @@ export const useHeroLogoTransition = (
 
     const staticExperience = experienceMode === 'static';
 
-    story.dataset.heroMode = staticExperience ? 'static' : 'cinematic';
-    document.documentElement.dataset.heroMode = staticExperience
-      ? 'static'
-      : 'cinematic';
+    const setHeroMode = (
+      mode: HeroExperienceMode | 'preparing',
+      preparation?: HeroPreparationState
+    ): void => {
+      story.dataset.heroMode = mode;
+      document.documentElement.dataset.heroMode = mode;
+
+      if (preparation) {
+        document.documentElement.dataset.heroPreparation = preparation;
+      } else {
+        delete document.documentElement.dataset.heroPreparation;
+      }
+    };
+    const resolvePreparationState = (): HeroPreparationState =>
+      window.scrollY > story.offsetTop + 1 ? 'scrolled' : 'top';
+    const syncPreparationIdentity = (): void => {
+      if (story.dataset.heroMode !== 'preparing') return;
+      document.documentElement.dataset.heroPreparation =
+        resolvePreparationState();
+    };
+
+    // Keep one complete identity visible while asynchronous motion is rebuilt.
+    setHeroMode(
+      staticExperience ? 'static' : 'preparing',
+      staticExperience ? undefined : resolvePreparationState()
+    );
 
     const setupStaticHeaderAction = (): (() => void) => {
       const updateHeaderAction = (): void => {
@@ -129,12 +219,20 @@ export const useHeroLogoTransition = (
       return (): void => {
         cleanupHeaderAction();
         delete document.documentElement.dataset.heroMode;
+        delete document.documentElement.dataset.heroPreparation;
       };
     }
 
     let cancelled = false;
     let gsapContext: { revert: () => void } | undefined;
+    let heroTimeline:
+      | { progress: (value: number, suppressEvents?: boolean) => unknown }
+      | undefined;
     let cleanupFallbackHeaderAction: (() => void) | undefined;
+
+    window.addEventListener('scroll', syncPreparationIdentity, {
+      passive: true,
+    });
 
     const beginFairSequence = (): void => {
       if (
@@ -174,7 +272,10 @@ export const useHeroLogoTransition = (
 
       gsap.registerPlugin(ScrollTrigger);
       const header = document.querySelector<HTMLElement>('.site-header');
-      const headerLogo = document.querySelector<HTMLElement>('.site-logo img');
+      const headerLogo =
+        document.querySelector<HTMLImageElement>('.site-logo img');
+      const assembledLogoImage =
+        assembledLogo.querySelector<HTMLImageElement>('img');
       const navigationLinks = Array.from(
         document.querySelectorAll<HTMLElement>('.site-navigation li a')
       );
@@ -188,26 +289,32 @@ export const useHeroLogoTransition = (
         arrival.querySelectorAll<HTMLElement>('[data-arrival-copy]')
       );
 
-      if (!header || !headerLogo) {
+      if (!header || !headerLogo || !assembledLogoImage) {
         throw new Error('The hero transition requires the shared site header.');
       }
+
+      await Promise.all([
+        (document as DocumentWithFonts).fonts?.ready || Promise.resolve(),
+        waitForImage(assembledLogoImage),
+        waitForImage(headerLogo),
+      ]);
+      await waitForLayout();
+
+      if (cancelled) return;
 
       const anchorRect = (): DOMRect => logoAnchor.getBoundingClientRect();
       const headerLogoRect = (): DOMRect => headerLogo.getBoundingClientRect();
       const assembledWidth = (): number => assembledLogo.offsetWidth;
       const assembledHeight = (): number => assembledLogo.offsetHeight;
       const assembledStartScale = (): number =>
-        anchorRect().width / assembledHeight();
+        anchorRect().height / assembledHeight();
 
       gsapContext = gsap.context(() => {
         gsap.set(compact, { autoAlpha: 0, y: 28 });
         gsap.set(assembledLogo, {
           autoAlpha: 0,
-          clipPath: 'inset(0 77.36% 0 0)',
-          scale: assembledStartScale,
+          clipPath: `inset(0 ${WORDMARK_CLOSED_CLIP} 0 0)`,
           transformOrigin: 'left top',
-          x: (): number => anchorRect().left,
-          y: (): number => anchorRect().top,
         });
         gsap.set(headerLogo, { autoAlpha: 0 });
 
@@ -224,8 +331,18 @@ export const useHeroLogoTransition = (
             scrub: 0.7,
           },
         });
+        heroTimeline = timeline;
 
         timeline
+          .set(
+            assembledLogo,
+            {
+              scale: assembledStartScale,
+              x: (): number => anchorRect().left,
+              y: (): number => anchorRect().top,
+            },
+            0
+          )
           .to(arrivalCopy, { autoAlpha: 0, duration: 0.12 }, 0.04)
           .to(countdownContent, { autoAlpha: 0, duration: 0.12 }, 0.08)
           .to(scrollCue, { autoAlpha: 0, duration: 0.1 }, 0.04);
@@ -236,21 +353,25 @@ export const useHeroLogoTransition = (
             {
               backgroundColor: '#007ab1',
               duration: COUNTDOWN_MERGE_DURATION,
-              scale: (): number =>
-                anchorRect().width / tile.getBoundingClientRect().width,
+              scale: (): number => {
+                const tileRect = getLayoutRect(tile);
+                return anchorRect().width / tileRect.width;
+              },
               x: (): number => {
-                const tileRect = tile.getBoundingClientRect();
+                const tileRect = getLayoutRect(tile);
+                const targetRect = anchorRect();
                 return (
-                  anchorRect().left +
-                  anchorRect().width / 2 -
+                  targetRect.left +
+                  targetRect.width / 2 -
                   (tileRect.left + tileRect.width / 2)
                 );
               },
               y: (): number => {
-                const tileRect = tile.getBoundingClientRect();
+                const tileRect = getLayoutRect(tile);
+                const targetRect = anchorRect();
                 return (
-                  anchorRect().top +
-                  anchorRect().height / 2 -
+                  targetRect.top +
+                  targetRect.height / 2 -
                   (tileRect.top + tileRect.height / 2)
                 );
               },
@@ -310,13 +431,26 @@ export const useHeroLogoTransition = (
           .to(headerLogo, { autoAlpha: 1, duration: 0.05 }, 0.94)
           .to(assembledLogo, { autoAlpha: 0, duration: 0.05 }, 0.95);
       }, story);
+
+      ScrollTrigger.refresh();
+      const scrollRange = Math.max(1, story.offsetHeight - window.innerHeight);
+      const currentProgress = Math.max(
+        0,
+        Math.min(1, (window.scrollY - story.offsetTop) / scrollRange)
+      );
+      heroTimeline?.progress(currentProgress, false);
+      ScrollTrigger.update();
+      story.dataset.heroTransition = 'ready';
+      setHeroMode('cinematic');
+      window.removeEventListener('scroll', syncPreparationIdentity);
     };
 
     setupMotion().catch(() => {
       if (cancelled) return;
       gsapContext?.revert();
-      story.dataset.heroMode = 'static';
-      document.documentElement.dataset.heroMode = 'static';
+      delete story.dataset.heroTransition;
+      setHeroMode('static');
+      window.removeEventListener('scroll', syncPreparationIdentity);
       handleVideoFailure();
       video.pause();
       video.removeAttribute('src');
@@ -326,8 +460,11 @@ export const useHeroLogoTransition = (
 
     return (): void => {
       cancelled = true;
+      setHeroMode('preparing', resolvePreparationState());
       gsapContext?.revert();
+      delete story.dataset.heroTransition;
       cleanupFallbackHeaderAction?.();
+      window.removeEventListener('scroll', syncPreparationIdentity);
       video.removeEventListener('loadedmetadata', beginFairSequence);
       video.removeEventListener('timeupdate', keepFairSequence);
       video.removeEventListener('playing', handlePlaying);
@@ -336,7 +473,12 @@ export const useHeroLogoTransition = (
       video.removeAttribute('src');
       video.load();
       announceHeaderActionVisibility(false, headerAction);
-      delete document.documentElement.dataset.heroMode;
+      window.requestAnimationFrame(() => {
+        if (!document.querySelector('.event-hero-story')) {
+          delete document.documentElement.dataset.heroMode;
+          delete document.documentElement.dataset.heroPreparation;
+        }
+      });
     };
   }, [
     experienceMode,
