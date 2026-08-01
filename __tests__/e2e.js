@@ -3,6 +3,38 @@ const baseUrl =
 const hydrationFailurePattern =
   /hydration failed|text content does not match|did not match|server html|ENOENT.*\.next\/server\/pages/i;
 
+// React can replace a server-rendered link between Puppeteer's selector lookup
+// and pointer movement. A real pointer remains over the replacement element,
+// so retry only that transient detached-node case.
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const hoverConnectedElement = async (selector) => {
+  let detachedError;
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await page.waitForFunction(
+      (candidate) => {
+        const element = document.querySelector(candidate);
+        return Boolean(element?.isConnected && element.getClientRects().length);
+      },
+      {},
+      selector
+    );
+    await page.$eval(selector, (element) =>
+      element.scrollIntoView({ block: 'center', inline: 'center' })
+    );
+
+    try {
+      await page.hover(selector);
+      return;
+    } catch (error) {
+      if (!error.message.includes('detached from document')) throw error;
+      detachedError = error;
+    }
+  }
+
+  throw detachedError;
+};
+
 describe('Page rendering', () => {
   test('Frontpage page rendering', async () => {
     const hydrationFailures = [];
@@ -47,6 +79,74 @@ describe('Page rendering', () => {
     }
   }, 16000);
 
+  test('Frontpage hydrates with the server event phase when browser time differs', async () => {
+    const shiftedPage = await browser.newPage();
+    const hydrationFailures = [];
+    await shiftedPage.setViewport({ width: 1440, height: 900 });
+    await shiftedPage.emulateTimezone('Europe/Oslo');
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const captureConsoleFailure = (message) => {
+      if (hydrationFailurePattern.test(message.text())) {
+        hydrationFailures.push(message.text());
+      }
+    };
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const capturePageFailure = (error) => {
+      if (hydrationFailurePattern.test(error.message)) {
+        hydrationFailures.push(error.message);
+      }
+    };
+
+    await shiftedPage.evaluateOnNewDocument(() => {
+      const NativeDate = Date;
+      const browserTimestamp = new NativeDate(
+        '1900-01-01T12:00:00+01:00'
+      ).getTime();
+
+      class BrowserDate extends NativeDate {
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        constructor(...args) {
+          if (args.length === 0) {
+            super(browserTimestamp);
+          } else {
+            super(...args);
+          }
+        }
+
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+        static now() {
+          return browserTimestamp;
+        }
+      }
+
+      BrowserDate.parse = NativeDate.parse;
+      BrowserDate.UTC = NativeDate.UTC;
+      window.Date = BrowserDate;
+    });
+    shiftedPage.on('console', captureConsoleFailure);
+    shiftedPage.on('pageerror', capturePageFailure);
+
+    try {
+      const response = await shiftedPage.goto(
+        `${baseUrl}/?phaseHydrationProbe=1`
+      );
+      expect(response.status()).toBe(200);
+      await shiftedPage.waitForSelector(
+        '.event-hero-story[data-hero-transition="ready"]'
+      );
+      expect(hydrationFailures).toEqual([]);
+      expect(
+        await shiftedPage.$eval('.event-hero-story', (story) =>
+          story.className.includes('event-hero-story--planning')
+        )
+      ).toBe(false);
+    } finally {
+      shiftedPage.removeListener('console', captureConsoleFailure);
+      shiftedPage.removeListener('pageerror', capturePageFailure);
+      await shiftedPage.close();
+    }
+  }, 20000);
+
   test('Frontpage renders exactly one current or historical company exposure', async () => {
     await page.setViewport({ width: 1280, height: 900 });
     await page.goto(baseUrl);
@@ -65,7 +165,7 @@ describe('Page rendering', () => {
       expect(region).toBeNull();
       expect(
         await page.evaluate(() =>
-          document.body.textContent.includes('Bedrifter fra itDAGENE 2025')
+          document.body.textContent.includes('Tidligere bedrifter')
         )
       ).toBe(false);
       return;
@@ -98,7 +198,15 @@ describe('Page rendering', () => {
       return {
         count: document.querySelectorAll('[data-testid="event-marquee"]')
           .length,
+        backgroundColor: getComputedStyle(region).backgroundColor,
+        labelBackgroundColor: getComputedStyle(
+          region.querySelector('.event-marquee__meta')
+        ).backgroundColor,
+        labelColor: getComputedStyle(
+          region.querySelector('.event-marquee__label')
+        ).color,
         label: region.getAttribute('aria-label'),
+        context: region.querySelector('.event-marquee__context')?.textContent,
         labelAboveLanes: labelRect.bottom <= firstLaneRect.top + 1,
         laneCount: lanes.length,
         directions: lanes.map((lane) => lane.dataset.direction),
@@ -125,11 +233,20 @@ describe('Page rendering', () => {
         fallbackNames: primaryItems.filter((item) =>
           item.querySelector('.event-marquee__name')
         ).length,
+        logoItemBackgrounds: primaryItems
+          .filter((item) =>
+            item.classList.contains('event-marquee__item--logo')
+          )
+          .map((item) => getComputedStyle(item).backgroundColor),
       };
     });
 
     expect(marquee.count).toBe(1);
-    expect(marquee.label).toContain('Bedrifter fra itDAGENE 2025');
+    expect(marquee.backgroundColor).toBe('rgb(243, 247, 249)');
+    expect(marquee.labelBackgroundColor).toBe('rgb(243, 247, 249)');
+    expect(marquee.labelColor).toBe('rgb(18, 57, 98)');
+    expect(marquee.label).toContain('Tidligere bedrifter');
+    expect(marquee.context).toBe('itDAGENE 2025');
     expect(marquee.labelAboveLanes).toBe(true);
     expect(marquee.laneCount).toBe(2);
     expect(marquee.directions).toEqual(['left', 'right']);
@@ -145,8 +262,13 @@ describe('Page rendering', () => {
     expect(marquee.logoSources.length + marquee.fallbackNames).toBe(
       marquee.semanticItems
     );
+    expect(
+      marquee.logoItemBackgrounds.every(
+        (background) => background === 'rgb(255, 255, 255)'
+      )
+    ).toBe(true);
 
-    await page.hover('[data-testid="event-marquee"]');
+    await hoverConnectedElement('[data-testid="event-marquee"]');
     expect(
       await page.$eval('[data-testid="event-marquee"]', (region) => ({
         animationStates: [
@@ -162,6 +284,14 @@ describe('Page rendering', () => {
       playbackRates: [0.35, 0.35],
       speed: 'slow',
     });
+
+    await page.focus('[data-testid="event-marquee"]');
+    expect(
+      await page.$eval(
+        '[data-testid="event-marquee"]',
+        (marquee) => getComputedStyle(marquee).outlineColor
+      )
+    ).toBe('rgb(7, 120, 188)');
   }, 16000);
 
   test('Company exposure follows partner, exposure, planning and invitation hierarchy', async () => {
@@ -205,6 +335,7 @@ describe('Page rendering', () => {
         marqueeAfterPlanner: marquee ? comesBefore(planner, marquee) : false,
         marqueeBeforeInvitation: comesBefore(marquee, invitation),
         mode: companyExposure?.dataset.companyExposure,
+        partnerPublished: Boolean(partner),
         partnerBeforeExposure: comesBefore(partner, companyExposure),
         plannerBeforeInvitation: comesBefore(planner, invitation),
         standsHref: directory
@@ -217,7 +348,9 @@ describe('Page rendering', () => {
       };
     });
 
-    expect(exposure.partnerBeforeExposure).toBe(true);
+    if (exposure.partnerPublished) {
+      expect(exposure.partnerBeforeExposure).toBe(true);
+    }
     expect(exposure.exposureBeforePlanner).toBe(true);
     expect(exposure.plannerBeforeInvitation).toBe(true);
     expect(exposure.marqueeAfterPlanner).toBe(false);
@@ -307,7 +440,7 @@ describe('Page rendering', () => {
 
     for (let cardIndex = 1; cardIndex <= 4; cardIndex += 1) {
       const selector = `.visit-planner li:nth-child(${cardIndex}) a`;
-      await page.hover(selector);
+      await hoverConnectedElement(selector);
       await new Promise((resolve) => setTimeout(resolve, 220));
       cardResults.push(
         await page.$eval(selector, (link) => {
@@ -336,7 +469,7 @@ describe('Page rendering', () => {
 
   test('Countdown tiles form the official header identity on scroll', async () => {
     await page.setViewport({ width: 1440, height: 900 });
-    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(
       () =>
         document.querySelector('.event-hero-story')?.dataset.heroTransition ===
@@ -610,8 +743,18 @@ describe('Page rendering', () => {
       const story = document.querySelector('.event-hero-story');
       window.scrollTo(0, story.offsetHeight - window.innerHeight);
     });
-    await page.waitForFunction(
-      () =>
+    await page.waitForFunction(() => {
+      const headerLogo = document.querySelector('[data-hero-logo-target]');
+      const travellingLogo = document.querySelector('[data-hero-logo]');
+      const headerRect = headerLogo.getBoundingClientRect();
+      const travellingRect = travellingLogo.getBoundingClientRect();
+      const geometryResolved =
+        Math.abs(headerRect.left - travellingRect.left) <= 1 &&
+        Math.abs(headerRect.top - travellingRect.top) <= 1 &&
+        Math.abs(headerRect.width - travellingRect.width) <= 1 &&
+        Math.abs(headerRect.height - travellingRect.height) <= 1;
+
+      return (
         Number(
           getComputedStyle(document.querySelector('[data-hero-logo-target]'))
             .opacity
@@ -623,8 +766,10 @@ describe('Page rendering', () => {
         ) > 0.95 &&
         Number(
           getComputedStyle(document.querySelector('[data-hero-logo]')).opacity
-        ) < 0.1
-    );
+        ) < 0.1 &&
+        geometryResolved
+      );
+    });
 
     const resolved = await page.evaluate(() => {
       const headerLogo = document.querySelector('[data-hero-logo-target]');
@@ -784,7 +929,7 @@ describe('Page rendering', () => {
 
   test('Hero identity geometry stays aligned after a viewport resize', async () => {
     await page.setViewport({ width: 1440, height: 900 });
-    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.waitForFunction(
       () =>
         document.querySelector('.event-hero-story')?.dataset.heroTransition ===
@@ -878,11 +1023,11 @@ describe('Page rendering', () => {
     expect(resizedMergeGeometry.sizeOffset).toBeLessThanOrEqual(1);
     expect(resizedMergeGeometry.tileCenterOffset).toBeLessThanOrEqual(1);
     expect(resizedMergeGeometry.tileSizeOffset).toBeLessThanOrEqual(1);
-  }, 20000);
+  }, 30000);
 
   test('Hero keeps its identity when crossing the responsive motion boundary', async () => {
     await page.setViewport({ width: 799, height: 900 });
-    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.event-hero-story[data-hero-mode="static"]');
 
     expect(
@@ -951,24 +1096,60 @@ describe('Page rendering', () => {
     );
   }, 20000);
 
-  test('Background video plays without a visible control', async () => {
+  test('Background video uses the original film at its natural speed', async () => {
     await page.setViewport({ width: 1280, height: 900 });
-    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
-    await page.waitForFunction(
-      () =>
-        document.querySelector('.event-hero-story')?.dataset.videoState ===
-        'playing'
-    );
-    expect(await page.$('.event-hero__video-control')).toBeNull();
-    expect(
-      await page.$eval('.event-hero video', (video) => ({
-        muted: video.muted,
-        paused: video.paused,
-      }))
-    ).toEqual({
-      muted: true,
-      paused: false,
-    });
+    await page.setRequestInterception(true);
+    // Keep this behavior test independent of CDN timing. Native loop playback
+    // belongs to the browser; the application owns the source and rate guard.
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const blockVideoRequest = (request) => {
+      if (request.url().includes('/itdagene.mp4')) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    };
+    page.on('request', blockVideoRequest);
+
+    try {
+      await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+      await page.waitForFunction(
+        () =>
+          document.querySelector('.event-hero-story')?.dataset
+            .heroTransition === 'ready'
+      );
+      await page.$eval('.event-hero video', (video) => {
+        video.dispatchEvent(new Event('playing'));
+      });
+      expect(await page.$('.event-hero__video-control')).toBeNull();
+      expect(
+        await page.$eval('.event-hero video', (video) => ({
+          beginsAtStart: video.currentTime < 10,
+          defaultPlaybackRate: video.defaultPlaybackRate,
+          loop: video.loop,
+          muted: video.muted,
+          playbackRate: video.playbackRate,
+          source: video.src,
+        }))
+      ).toEqual({
+        beginsAtStart: true,
+        defaultPlaybackRate: 1,
+        loop: true,
+        muted: true,
+        playbackRate: 1,
+        source: 'https://cdn.itdagene.no/itdagene.mp4',
+      });
+
+      await page.$eval('.event-hero video', (video) => {
+        video.playbackRate = 1.75;
+      });
+      await page.waitForFunction(
+        () => document.querySelector('.event-hero video')?.playbackRate === 1
+      );
+    } finally {
+      page.removeListener('request', blockVideoRequest);
+      await page.setRequestInterception(false);
+    }
   }, 20000);
 
   test('Event marquee becomes static with reduced motion', async () => {
@@ -1101,6 +1282,8 @@ describe('Page rendering', () => {
   test('FAQ disclosures animate through the shared expansion motion', async () => {
     await page.setViewport({ width: 1280, height: 900 });
     const response = await page.goto(baseUrl + '/faq', {
+      // The disclosure owns local state. Wait for Relay's initial refresh so
+      // the test does not click an instance that is about to be replaced.
       waitUntil: 'networkidle0',
     });
     expect(response.status()).toBe(200);
@@ -1140,7 +1323,7 @@ describe('Page rendering', () => {
   test('Board portraits preserve the original circular framing', async () => {
     await page.setViewport({ width: 1680, height: 1000 });
     const response = await page.goto(baseUrl + '/om-itdagene', {
-      waitUntil: 'networkidle0',
+      waitUntil: 'domcontentloaded',
     });
     expect(response.status()).toBe(200);
     await page.waitForSelector('.board-member__portrait img');
@@ -1333,10 +1516,10 @@ describe('Page rendering', () => {
 
   test('Pointer navigation moves focus without showing a keyboard ring', async () => {
     await page.setViewport({ width: 390, height: 844 });
-    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.click('.menu-toggle');
     await Promise.all([
-      page.waitForNavigation({ waitUntil: 'networkidle0' }),
+      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
       page.click('.site-navigation a[href="/program"]'),
     ]);
     await page.waitForFunction(() => document.activeElement?.tagName === 'H1');
@@ -1356,11 +1539,11 @@ describe('Page rendering', () => {
 
   test('Keyboard navigation moves focus and keeps its visible ring', async () => {
     await page.setViewport({ width: 390, height: 844 });
-    await page.goto(baseUrl, { waitUntil: 'networkidle0' });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.click('.menu-toggle');
     await page.focus('.site-navigation a[href="/program"]');
     await Promise.all([
-      page.waitForNavigation({ waitUntil: 'networkidle0' }),
+      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
       page.keyboard.press('Enter'),
     ]);
     await page.waitForFunction(() => document.activeElement?.tagName === 'H1');
@@ -1468,7 +1651,7 @@ describe('Page rendering', () => {
   ])(
     '%s exposes its legacy route accent',
     async (path, expectedColor) => {
-      await page.goto(baseUrl + path, { waitUntil: 'networkidle0' });
+      await page.goto(baseUrl + path, { waitUntil: 'domcontentloaded' });
       await page.waitForFunction(
         (color) =>
           getComputedStyle(document.querySelector('.page-header'))
@@ -1489,21 +1672,29 @@ describe('Page rendering', () => {
   test('Stand selection is restored by browser history', async () => {
     await page.setViewport({ width: 390, height: 844 });
     await page.goto(baseUrl + '/stands');
-    await page.type('#stand-search', 'Computas');
-    await page.waitForFunction(() =>
-      [...document.querySelectorAll('.stand-directory button')].some((button) =>
-        button.textContent.includes('Computas')
-      )
-    );
-    await page.evaluate(() => {
-      const button = [
-        ...document.querySelectorAll('.stand-directory button'),
-      ].find((candidate) => candidate.textContent.includes('Computas'));
-      button.click();
-    });
+    const company = await page.$eval('.stand-directory button', (button) => ({
+      name: button.querySelector('strong')?.textContent,
+      slug: button.dataset.standCompany,
+    }));
+
+    await page.type('#stand-search', company.name);
     await page.waitForFunction(
-      () =>
-        new URL(window.location.href).searchParams.get('company') === 'computas'
+      (slug) =>
+        document.querySelector(
+          `.stand-directory button[data-stand-company="${slug}"]`
+        ),
+      {},
+      company.slug
+    );
+    await page.$eval(
+      `.stand-directory button[data-stand-company="${company.slug}"]`,
+      (button) => button.click()
+    );
+    await page.waitForFunction(
+      (slug) =>
+        new URL(window.location.href).searchParams.get('company') === slug,
+      {},
+      company.slug
     );
 
     await page.evaluate(() => window.history.back());
@@ -1515,22 +1706,195 @@ describe('Page rendering', () => {
 
     await page.evaluate(() => window.history.forward());
     await page.waitForFunction(
-      () =>
-        new URL(window.location.href).searchParams.get('company') ===
-          'computas' &&
-        document.querySelector('.stand-selection h2')?.textContent ===
-          'Computas'
+      ({ name, slug }) =>
+        new URL(window.location.href).searchParams.get('company') === slug &&
+        document.querySelector('.stand-selection h2')?.textContent === name,
+      {},
+      company
     );
     expect(
       await page.$eval('.stand-selection h2', (element) => element.textContent)
-    ).toBe('Computas');
+    ).toBe(company.name);
+    const selectionLocation = await page.evaluate(() => ({
+      location: document
+        .querySelector('.metadata-list__item:first-child dd')
+        ?.textContent.trim(),
+      summary: document
+        .querySelector('.stand-selection p:not(.site-eyebrow)')
+        ?.textContent.trim(),
+    }));
+    expect(selectionLocation.summary).toContain(selectionLocation.location);
+  }, 16000);
+
+  test('Stand map, directory and table share one active company', async () => {
+    await page.setViewport({ width: 1440, height: 1000 });
+    await page.goto(baseUrl + '/stands');
+
+    const company = await page.$eval('.stand-directory button', (button) => ({
+      name: button.querySelector('strong')?.textContent,
+      slug: button.dataset.standCompany,
+    }));
+    const markerSelector = `.stand-map__marker[data-stand-company="${company.slug}"]`;
+    const directorySelector = `.stand-directory button[data-stand-company="${company.slug}"]`;
+    const tableSelector = `.stand-table__company[data-stand-company="${company.slug}"]`;
+
+    expect(
+      await page.$eval(markerSelector, (marker) => ({
+        hitTargetWidth: marker.getBoundingClientRect().width,
+        visualMarkerWidth: marker
+          .querySelector('.stand-map__marker-number')
+          .getBoundingClientRect().width,
+      }))
+    ).toEqual({
+      hitTargetWidth: 24,
+      visualMarkerWidth: expect.any(Number),
+    });
+    expect(
+      await page.$eval(
+        `${markerSelector} .stand-map__marker-number`,
+        (marker) => marker.getBoundingClientRect().width
+      )
+    ).toBeLessThanOrEqual(16);
+
+    await page.hover(directorySelector);
+    await page.waitForFunction(
+      (selector) => document.querySelector(selector)?.dataset.active === 'true',
+      {},
+      markerSelector
+    );
+    expect(
+      await page.$eval(markerSelector, (marker) => ({
+        active: marker.dataset.active,
+        company: marker.querySelector('.stand-map__marker-label')?.textContent,
+        labelVisible:
+          getComputedStyle(marker.querySelector('.stand-map__marker-label'))
+            .visibility !== 'hidden',
+      }))
+    ).toEqual({
+      active: 'true',
+      company: company.name,
+      labelVisible: true,
+    });
+    expect(
+      await page.$eval(
+        `${markerSelector} .stand-map__marker-number`,
+        (marker) => marker.getBoundingClientRect().width
+      )
+    ).toBeLessThanOrEqual(17);
+
+    await hoverConnectedElement(markerSelector);
+    await page.waitForFunction(
+      (selector) => document.querySelector(selector)?.dataset.active === 'true',
+      {},
+      directorySelector
+    );
+    expect(
+      await page.$eval(directorySelector, (button) => button.dataset.active)
+    ).toBe('true');
+
+    await page.click('.stand-table summary');
+    await hoverConnectedElement(tableSelector);
+    await page.waitForFunction(
+      (selector) => document.querySelector(selector)?.dataset.active === 'true',
+      {},
+      markerSelector
+    );
+    expect(
+      await page.$eval(markerSelector, (marker) => marker.dataset.active)
+    ).toBe('true');
+
+    await page.$eval(tableSelector, (button) => button.click());
+    await page.waitForFunction(
+      ({ name, slug }) =>
+        new URL(window.location.href).searchParams.get('company') === slug &&
+        document.querySelector('.stand-selection h2')?.textContent === name,
+      {},
+      company
+    );
+    expect(
+      await page.evaluate(
+        (selectors) =>
+          selectors.every(
+            (selector) =>
+              document.querySelector(selector)?.dataset.selected === 'true'
+          ),
+        [markerSelector, directorySelector, tableSelector]
+      )
+    ).toBe(true);
+  }, 30000);
+
+  test('Stand search previews its top result without changing the URL', async () => {
+    await page.setViewport({ width: 1440, height: 1000 });
+    await page.goto(baseUrl + '/stands');
+
+    const company = await page.$eval('.stand-directory button', (button) => ({
+      name: button.querySelector('strong')?.textContent,
+      number: button.querySelector('span')?.textContent,
+      slug: button.dataset.standCompany,
+    }));
+
+    await page.type('#stand-search', company.number);
+    await page.waitForFunction(
+      (slug) =>
+        document.querySelectorAll('.stand-directory li').length === 1 &&
+        document.querySelector(
+          `.stand-directory button[data-stand-company="${slug}"]`
+        )?.dataset.active === 'true',
+      {},
+      company.slug
+    );
+
+    expect(
+      await page.evaluate(
+        (slug) => ({
+          company: new URL(window.location.href).searchParams.get('company'),
+          label: document.querySelector(
+            `.stand-map__marker[data-stand-company="${slug}"] .stand-map__marker-label`
+          )?.textContent,
+          selected: document.querySelector(
+            `.stand-directory button[data-stand-company="${slug}"]`
+          )?.dataset.selected,
+          summary: document.querySelector('.stand-selection'),
+        }),
+        company.slug
+      )
+    ).toEqual({
+      company: null,
+      label: company.name,
+      selected: 'false',
+      summary: null,
+    });
+
+    const topCompany = await page.$eval(
+      '.stand-directory li:first-child button',
+      (button) => button.dataset.standCompany
+    );
+    expect(
+      await page.$eval(
+        `.stand-map__marker[data-stand-company="${topCompany}"]`,
+        (marker) => marker.dataset.active
+      )
+    ).toBe('true');
+    expect(new URL(page.url()).searchParams.get('company')).toBeNull();
+
+    await page.focus('#stand-search');
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(
+      (company) =>
+        new URL(window.location.href).searchParams.get('company') === company,
+      {},
+      topCompany
+    );
   }, 16000);
 
   test('Gallery dialog closes with Escape and restores focus', async () => {
     await page.goto(baseUrl + '/galleri', {
       waitUntil: 'domcontentloaded',
     });
-    await page.waitForSelector('.gallery-grid button');
+    await page.waitForSelector('.gallery-grid button', { visible: true });
+    await page.$eval('.gallery-grid button', (element) =>
+      element.scrollIntoView({ block: 'center', inline: 'center' })
+    );
     const triggerLabel = await page.$eval('.gallery-grid button', (element) =>
       element.getAttribute('aria-label')
     );

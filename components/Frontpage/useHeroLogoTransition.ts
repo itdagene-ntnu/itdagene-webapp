@@ -32,8 +32,6 @@ type HeroExperienceMode = 'cinematic' | 'static';
 type HeroPreparationState = 'scrolled' | 'top';
 
 const HERO_VIDEO = 'https://cdn.itdagene.no/itdagene.mp4';
-const FAIR_SEQUENCE_START = 22;
-const FAIR_SEQUENCE_END = 36;
 const COUNTDOWN_MERGE_DURATION = 0.3;
 const WORDMARK_CLOSED_CLIP = `${
   100 - (itdageneWordmark.markWidth / itdageneWordmark.width) * 100
@@ -234,30 +232,22 @@ export const useHeroLogoTransition = (
       passive: true,
     });
 
-    const beginFairSequence = (): void => {
-      if (
-        Number.isFinite(video.duration) &&
-        video.duration > FAIR_SEQUENCE_START
-      ) {
-        video.currentTime = FAIR_SEQUENCE_START;
-      }
-    };
-    const keepFairSequence = (): void => {
-      if (video.currentTime >= FAIR_SEQUENCE_END) {
-        video.currentTime = FAIR_SEQUENCE_START;
-      }
-    };
-    const handlePlaying = (): void => {
-      story.dataset.videoState = 'playing';
-    };
     const handleVideoFailure = (): void => {
       story.dataset.videoState = 'poster';
     };
+    const enforceNaturalPlaybackRate = (): void => {
+      video.defaultPlaybackRate = 1;
+      if (video.playbackRate !== 1) video.playbackRate = 1;
+    };
+    const handlePlaying = (): void => {
+      enforceNaturalPlaybackRate();
+      story.dataset.videoState = 'playing';
+    };
 
-    video.addEventListener('loadedmetadata', beginFairSequence);
-    video.addEventListener('timeupdate', keepFairSequence);
     video.addEventListener('playing', handlePlaying);
+    video.addEventListener('ratechange', enforceNaturalPlaybackRate);
     video.addEventListener('error', handleVideoFailure);
+    enforceNaturalPlaybackRate();
     video.src = HERO_VIDEO;
     video.load();
     video.play().catch(handleVideoFailure);
@@ -465,9 +455,8 @@ export const useHeroLogoTransition = (
       delete story.dataset.heroTransition;
       cleanupFallbackHeaderAction?.();
       window.removeEventListener('scroll', syncPreparationIdentity);
-      video.removeEventListener('loadedmetadata', beginFairSequence);
-      video.removeEventListener('timeupdate', keepFairSequence);
       video.removeEventListener('playing', handlePlaying);
+      video.removeEventListener('ratechange', enforceNaturalPlaybackRate);
       video.removeEventListener('error', handleVideoFailure);
       video.pause();
       video.removeAttribute('src');

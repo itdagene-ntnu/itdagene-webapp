@@ -8,7 +8,8 @@ describe('historical company marquee', () => {
     const result = resolveHistoricalCompanyMarquee({});
 
     expect(result.historical).toBe(true);
-    expect(result.label).toBe('Bedrifter fra itDAGENE 2025');
+    expect(result.edition).toBe(2025);
+    expect(result.label).toBe('Tidligere bedrifter');
     expect(result.items.length).toBeGreaterThan(1);
     expect(result.items.every((item) => Boolean(item.logo))).toBe(true);
     expect(result.items).toEqual(

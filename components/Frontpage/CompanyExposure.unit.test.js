@@ -32,8 +32,9 @@ const renderExposure = ({
       edition={2026}
       endDate="2026-09-15"
       firstDay={firstDay}
+      historicalEdition={2025}
       historicalItems={historicalItems}
-      historicalLabel="Bedrifter fra itDAGENE 2025"
+      historicalLabel="Tidligere bedrifter"
       lastDay={lastDay}
       startDate="2026-09-14"
     />
@@ -45,7 +46,8 @@ describe('CompanyExposure', () => {
 
     expect(markup).toContain('data-company-exposure="historical"');
     expect(markup).toContain('data-testid="event-marquee"');
-    expect(markup).toContain('Bedrifter fra itDAGENE 2025');
+    expect(markup).toContain('Tidligere bedrifter');
+    expect(markup).toContain('itDAGENE 2025');
     expect(markup).not.toContain('current-company-directory');
   });
 
@@ -60,7 +62,7 @@ describe('CompanyExposure', () => {
     expect(markup).toContain('data-company-state="published"');
     expect(markup).toContain('data-company-state="unpublished"');
     expect(markup).not.toContain('data-testid="event-marquee"');
-    expect(markup).not.toContain('Bedrifter fra itDAGENE 2025');
+    expect(markup).not.toContain('Tidligere bedrifter');
   });
 
   it('keeps a genuine current-year empty state instead of falling back to history', () => {
@@ -69,7 +71,7 @@ describe('CompanyExposure', () => {
     expect(markup).toContain('data-company-exposure="current"');
     expect(markup.match(/data-company-state="empty"/g)).toHaveLength(2);
     expect(markup).not.toContain('data-testid="event-marquee"');
-    expect(markup).not.toContain('Bedrifter fra itDAGENE 2025');
+    expect(markup).not.toContain('Tidligere bedrifter');
   });
 
   it('never renders current and historical company presentations together', () => {

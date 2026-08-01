@@ -1,5 +1,6 @@
 import {
   formatAccessibleEventStart,
+  formatEventStartDateTime,
   getCountdownParts,
   getEventStartTimestamp,
 } from '../../utils/countdown';
@@ -9,11 +10,23 @@ describe('event countdown', () => {
     expect(formatAccessibleEventStart('2026-09-14')).toBe(
       '14. september 2026 kl. 10:00'
     );
+    expect(formatAccessibleEventStart('2026-09-14', '08:30:00')).toBe(
+      '14. september 2026 kl. 08:30'
+    );
+    expect(formatEventStartDateTime('2026-09-14', '08:30:00')).toBe(
+      '2026-09-14T08:30:00+02:00'
+    );
+    expect(formatEventStartDateTime('2026-01-14', '08:30:00')).toBe(
+      '2026-01-14T08:30:00+01:00'
+    );
   });
 
   it('counts down to the configured 10:00 event opening', () => {
     expect(getEventStartTimestamp('2026-09-14')).toBe(
       new Date('2026-09-14T10:00:00+02:00').getTime()
+    );
+    expect(getEventStartTimestamp('2026-01-14', '08:30:00')).toBe(
+      new Date('2026-01-14T08:30:00+01:00').getTime()
     );
   });
 

@@ -10,16 +10,20 @@ import {
 } from '../../components/DesignSystem';
 import { StandMap } from '../../components/Stands/StandMap';
 import {
-  standMapManifest,
+  standMapManifest as historicalStandMap,
   StandMapDayId,
+  StandMapManifest,
   validateStandMapManifest,
 } from '../../components/Stands/standsData';
 import { editionConfig } from '../../config/edition';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import { resolveContentState } from '../../utils/eventLifecycle';
+import { toStandMapManifest } from '../../utils/standMap';
 
-const isStandMapDay = (value: string): value is StandMapDayId =>
-  value === 'mandag' || value === 'tirsdag';
+const isStandMapDay = (
+  value: string,
+  manifest: StandMapManifest
+): value is StandMapDayId => manifest.days.some((day) => day.id === value);
 
 const updateStandQuery = (
   router: NextRouter,
@@ -39,6 +43,8 @@ const Index = ({
   props,
   router,
 }: WithDataAndLayoutProps<stands_new_QueryResponse>): JSX.Element => {
+  const currentStandMap = toStandMapManifest(props.currentStandMap);
+  const standMapManifest = currentStandMap || historicalStandMap;
   const validationErrors = validateStandMapManifest(standMapManifest);
   if (validationErrors.length > 0) {
     return (
@@ -55,9 +61,12 @@ const Index = ({
     lifecycle: editionConfig.modules.stands,
     currentEdition,
     sourceEdition: standMapManifest.edition,
+    itemCount: standMapManifest.days.length,
+    isPublished: Boolean(currentStandMap),
   });
   const requestedDay =
-    typeof router.query.day === 'string' && isStandMapDay(router.query.day)
+    typeof router.query.day === 'string' &&
+    isStandMapDay(router.query.day, standMapManifest)
       ? router.query.day
       : standMapManifest.days[0].id;
   const activeDay =
@@ -74,7 +83,7 @@ const Index = ({
       >
         <MetadataList
           items={[
-            { label: 'Sted', value: standMapManifest.location },
+            { label: 'Sted', value: activeDay.location },
             { label: 'Kartgrunnlag', value: standMapManifest.edition },
           ]}
         />
@@ -105,7 +114,7 @@ const Index = ({
             activeValue={activeDay.id}
             label="Velg messedag"
             onChange={(value): void => {
-              if (isStandMapDay(value)) {
+              if (isStandMapDay(value, standMapManifest)) {
                 updateStandQuery(router, { day: value });
               }
             }}
@@ -138,6 +147,23 @@ export default withDataAndLayout(Index, {
         year
         startDate
         endDate
+      }
+      currentStandMap {
+        edition
+        revision
+        maps {
+          date
+          label
+          location
+          backgroundImage
+          placements {
+            standNumber
+            companyName
+            companySlug
+            xPercent
+            yPercent
+          }
+        }
       }
     }
   `,

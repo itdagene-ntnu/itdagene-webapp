@@ -1,4 +1,4 @@
-import { resolveContentState } from './eventLifecycle';
+import { resolveContentState, resolveEventPhase } from './eventLifecycle';
 
 const lifecycle = {
   edition: 2026,
@@ -8,6 +8,33 @@ const lifecycle = {
 };
 
 describe('content lifecycle resolution', () => {
+  it('uses an explicit admin publication state before record counts', () => {
+    expect(
+      resolveContentState({
+        lifecycle: { ...lifecycle, configuredState: 'published' },
+        currentEdition: 2026,
+        itemCount: 4,
+        isPublished: false,
+      })
+    ).toBe('unpublished');
+    expect(
+      resolveContentState({
+        lifecycle,
+        currentEdition: 2026,
+        itemCount: 0,
+        isPublished: true,
+      })
+    ).toBe('empty');
+    expect(
+      resolveContentState({
+        lifecycle,
+        currentEdition: 2026,
+        itemCount: 2,
+        isPublished: true,
+      })
+    ).toBe('published');
+  });
+
   it('lets current approved GraphQL data override an unpublished fallback', () => {
     expect(
       resolveContentState({
@@ -100,5 +127,43 @@ describe('content lifecycle resolution', () => {
         hasError: true,
       })
     ).toBe('error');
+  });
+});
+
+describe('event phase resolution', () => {
+  const event = {
+    publicLaunchAt: '2026-01-01',
+    startDate: '2026-09-22',
+    endDate: '2026-09-22',
+  };
+
+  it('starts the event day at midnight in Europe/Oslo', () => {
+    expect(
+      resolveEventPhase({
+        ...event,
+        now: '2026-09-21T21:59:59.999Z',
+      })
+    ).toBe('upcoming');
+    expect(
+      resolveEventPhase({
+        ...event,
+        now: '2026-09-21T22:00:00.000Z',
+      })
+    ).toBe('live');
+  });
+
+  it('ends the event day at midnight in Europe/Oslo', () => {
+    expect(
+      resolveEventPhase({
+        ...event,
+        now: '2026-09-22T21:59:59.999Z',
+      })
+    ).toBe('live');
+    expect(
+      resolveEventPhase({
+        ...event,
+        now: '2026-09-22T22:00:00.000Z',
+      })
+    ).toBe('postEvent');
   });
 });

@@ -15,10 +15,19 @@ import {
   resolveContentState,
   resolveEventPhase,
 } from '../utils/eventLifecycle';
+import { useAdvancingReferenceTime } from '../utils/useAdvancingReferenceTime';
+import { toStandMapManifest } from '../utils/standMap';
+import { standMapManifest as historicalStandMap } from '../components/Stands/standsData';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
-const Index = ({ props, error }: RenderProps): JSX.Element => {
+const Index = ({
+  props,
+  error,
+  initialRenderTimestamp,
+}: RenderProps): JSX.Element => {
+  const referenceTime = useAdvancingReferenceTime(initialRenderTimestamp);
+
   if (!props || !props.currentMetaData) {
     return (
       <SiteSection>
@@ -36,17 +45,22 @@ const Index = ({ props, error }: RenderProps): JSX.Element => {
     startDate: props.currentMetaData.startDate,
     endDate: props.currentMetaData.endDate,
     publicLaunchAt: editionConfig.publicLaunchAt,
+    now: referenceTime,
   });
   const programState = resolveContentState({
     lifecycle: editionConfig.modules.program,
     currentEdition,
     itemCount: props.events?.length || 0,
+    isPublished: props.currentMetaData.programPublished,
   });
+  const currentStandMap = toStandMapManifest(props.currentStandMap);
+  const visibleStandMap = currentStandMap || historicalStandMap;
   const standState = resolveContentState({
     lifecycle: editionConfig.modules.stands,
     currentEdition,
-    sourceEdition:
-      editionConfig.modules.stands.historicalEdition || currentEdition,
+    sourceEdition: visibleStandMap.edition,
+    itemCount: visibleStandMap.days.length,
+    isPublished: Boolean(currentStandMap),
   });
   const companyMarquee = resolveHistoricalCompanyMarquee({
     excludedCompanyNames: [
@@ -82,6 +96,7 @@ const Index = ({ props, error }: RenderProps): JSX.Element => {
       </Head>
       <WelcomeScreen
         currentMetaData={props.currentMetaData}
+        phase={phase}
         programState={programState}
         standState={standState}
       />
@@ -96,6 +111,7 @@ const Index = ({ props, error }: RenderProps): JSX.Element => {
         endDate={props.currentMetaData.endDate}
         firstDay={props.currentMetaData.companiesFirstDay}
         historicalItems={companyMarquee.items}
+        historicalEdition={companyMarquee.edition}
         historicalLabel={companyMarquee.label}
         lastDay={props.currentMetaData.companiesLastDay}
         startDate={props.currentMetaData.startDate}
@@ -106,6 +122,8 @@ const Index = ({ props, error }: RenderProps): JSX.Element => {
         events={props.events || []}
         phase={phase}
         programState={programState}
+        referenceTime={referenceTime}
+        standMap={visibleStandMap}
         standState={standState}
       />
 
@@ -124,6 +142,8 @@ export default withDataAndLayout(Index, {
         startDate
         endDate
         interestForm
+        programPublished
+        venue
         collaborators {
           id
           name
@@ -161,6 +181,23 @@ export default withDataAndLayout(Index, {
         timeStart
         timeEnd
         location
+      }
+      currentStandMap {
+        edition
+        revision
+        maps {
+          date
+          label
+          location
+          backgroundImage
+          placements {
+            standNumber
+            companyName
+            companySlug
+            xPercent
+            yPercent
+          }
+        }
       }
     }
   `,

@@ -74,6 +74,7 @@ export const resolveHistoricalCompanyMarquee = ({
   excludedCompanyNames?: ReadonlyArray<string | null | undefined>;
 }): {
   items: CompanyMarqueeItem[];
+  edition: number;
   label: string;
   historical: boolean;
 } => {
@@ -100,7 +101,8 @@ export const resolveHistoricalCompanyMarquee = ({
 
   return {
     items: historicalItems,
-    label: `Bedrifter fra itDAGENE ${historicalCompanyArchive.edition}`,
+    edition: historicalCompanyArchive.edition,
+    label: 'Tidligere bedrifter',
     historical: true,
   };
 };

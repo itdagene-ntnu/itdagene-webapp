@@ -5,6 +5,7 @@ import { EventPhase } from '../../config/edition';
 import {
   CountdownParts,
   formatAccessibleEventStart,
+  formatEventStartDateTime,
   getCountdownParts,
   getEventStartTimestamp,
 } from '../../utils/countdown';
@@ -32,7 +33,10 @@ const CountdownComponent = ({
   const targetTimestamp = useMemo(
     () =>
       currentMetaData?.startDate
-        ? getEventStartTimestamp(currentMetaData.startDate)
+        ? getEventStartTimestamp(
+            currentMetaData.startDate,
+            currentMetaData.eventStartTime
+          )
         : 0,
     [currentMetaData]
   );
@@ -57,9 +61,13 @@ const CountdownComponent = ({
       : getCountdownParts(targetTimestamp, nowTimestamp);
   const completed =
     countdown.completed || phase === 'live' || phase === 'postEvent';
-  const eventDateTime = `${currentMetaData.startDate}T10:00:00+02:00`;
+  const eventDateTime = formatEventStartDateTime(
+    currentMetaData.startDate,
+    currentMetaData.eventStartTime
+  );
   const accessibleEventDate = formatAccessibleEventStart(
-    currentMetaData.startDate
+    currentMetaData.startDate,
+    currentMetaData.eventStartTime
   );
 
   if (completed) {
@@ -109,6 +117,7 @@ export default createFragmentContainer(CountdownComponent, {
   currentMetaData: graphql`
     fragment Countdown_currentMetaData on MetaData {
       startDate
+      eventStartTime
     }
   `,
 });

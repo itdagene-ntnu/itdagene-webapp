@@ -91,9 +91,11 @@ const MarqueeGroup = ({
 );
 
 export const EventMarquee = ({
+  context,
   items,
   label,
 }: {
+  context?: string;
   items: CompanyMarqueeItem[];
   label: string;
 }): JSX.Element => {
@@ -121,7 +123,9 @@ export const EventMarquee = ({
 
   return (
     <aside
-      aria-label={`${label}. To bedriftsløp i motsatt retning.`}
+      aria-label={`${label}${
+        context ? `, ${context}` : ''
+      }. To bedriftsløp i motsatt retning.`}
       className="event-marquee"
       data-testid="event-marquee"
       onBlur={(): void => updatePlaybackRate(1)}
@@ -133,7 +137,8 @@ export const EventMarquee = ({
     >
       <div className="event-marquee__meta">
         <p className="event-marquee__label" data-marquee-label>
-          {label}
+          <span>{label}</span>
+          {context && <span className="event-marquee__context">{context}</span>}
         </p>
       </div>
       {lanes.map((lane, index) => {

@@ -4,6 +4,7 @@ import {
   ContentState,
   EventPhase,
 } from '../config/edition';
+import { eventInstant, eventLocalTime } from './eventTime';
 
 export const resolveEventPhase = ({
   startDate,
@@ -14,15 +15,16 @@ export const resolveEventPhase = ({
   startDate: string;
   endDate: string;
   publicLaunchAt: string;
-  now?: Dayjs;
+  now?: string | Dayjs;
 }): EventPhase => {
-  const launch = dayjs(publicLaunchAt).startOf('day');
-  const start = dayjs(startDate).startOf('day');
-  const end = dayjs(endDate).endOf('day');
+  const current = eventInstant(now);
+  const launch = eventLocalTime(publicLaunchAt).startOf('day');
+  const start = eventLocalTime(startDate).startOf('day');
+  const end = eventLocalTime(endDate).endOf('day');
 
-  if (now.isBefore(launch)) return 'planning';
-  if (now.isBefore(start)) return 'upcoming';
-  if (now.isAfter(end)) return 'postEvent';
+  if (current.isBefore(launch)) return 'planning';
+  if (current.isBefore(start)) return 'upcoming';
+  if (current.isAfter(end)) return 'postEvent';
   return 'live';
 };
 
@@ -31,12 +33,14 @@ export const resolveContentState = ({
   currentEdition,
   sourceEdition,
   itemCount,
+  isPublished,
   hasError = false,
 }: {
   lifecycle: ContentLifecycleConfig;
   currentEdition: number;
   sourceEdition?: number;
   itemCount?: number;
+  isPublished?: boolean;
   hasError?: boolean;
 }): ContentState => {
   if (hasError) return 'error';
@@ -44,6 +48,14 @@ export const resolveContentState = ({
   const resolvedSourceEdition = sourceEdition ?? lifecycle.edition;
   if (resolvedSourceEdition !== currentEdition) return 'stale';
   if (lifecycle.configuredState === 'unavailable') return 'unavailable';
+
+  // An admin-owned publication switch is authoritative when the source
+  // provides one. A published empty program is meaningfully different from a
+  // draft, even though both return an empty event array.
+  if (isPublished === false) return 'unpublished';
+  if (isPublished === true) {
+    return itemCount === 0 ? 'empty' : 'published';
+  }
 
   const hasPublishedItems = typeof itemCount === 'number' && itemCount > 0;
   const isManagedContentSource =

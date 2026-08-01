@@ -21,6 +21,7 @@ export const CompanyExposure = ({
   edition,
   endDate,
   firstDay,
+  historicalEdition,
   historicalItems,
   historicalLabel,
   lastDay,
@@ -29,6 +30,7 @@ export const CompanyExposure = ({
   edition: number;
   endDate: string;
   firstDay: ReadonlyArray<DirectoryCompany> | null;
+  historicalEdition: number;
   historicalItems: CompanyMarqueeItem[];
   historicalLabel: string;
   lastDay: ReadonlyArray<DirectoryCompany> | null;
@@ -42,7 +44,11 @@ export const CompanyExposure = ({
       data-company-exposure={mode}
     >
       {mode === 'historical' ? (
-        <EventMarquee items={historicalItems} label={historicalLabel} />
+        <EventMarquee
+          context={`itDAGENE ${historicalEdition}`}
+          items={historicalItems}
+          label={historicalLabel}
+        />
       ) : (
         <CurrentCompanyDirectory
           edition={edition}

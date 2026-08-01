@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { ProgramView_events } from '../../../__generated__/ProgramView_events.graphql';
 import { findClosestDate } from '../../../utils/findClosestDate';
+import { eventInstant, eventLocalTime } from '../../../utils/eventTime';
 import { eventTime, toDayjs } from '../../../utils/time';
 import { ArrayElement } from '../../../utils/types';
 
@@ -22,7 +23,9 @@ type ProgramTimelineProps = {
 };
 
 const hasEnded = (date: string, time: string): boolean =>
-  dayjs().isAfter(dayjs(`${date} ${time}`, 'YYYY-MM-DD HH:mm:ss'));
+  eventInstant(new Date().toISOString()).isAfter(
+    eventLocalTime(`${date} ${time}`)
+  );
 
 const findInitialEvent = (
   events: ProgramView_events,
@@ -37,7 +40,10 @@ const findInitialEvent = (
     return selectedFromQuery;
   }
 
-  const isToday = dayjs(activeDate).isSame(dayjs(), 'day');
+  const isToday = eventLocalTime(activeDate).isSame(
+    eventInstant(new Date().toISOString()),
+    'day'
+  );
   if (!isToday) {
     return events[0];
   }
@@ -93,7 +99,9 @@ const EventDetails = ({
       />
     )}
     <p className="program-detail__coordinate">
-      {capitalize(dayjs(event.date).format('dddd DD. MMMM'))}
+      {capitalize(
+        eventLocalTime(event.date).locale('nb').format('dddd DD. MMMM')
+      )}
     </p>
     {!compact && <h2>{event.title}</h2>}
     <dl className="program-detail__metadata">

@@ -137,10 +137,10 @@ export const companiesDay2BottomLeft: string[] = [
   'H5P Group',
 ];
 
-export type StandMapDayId = 'mandag' | 'tirsdag';
+export type StandMapDayId = string;
 
 export type StandMapStand = {
-  number: number;
+  number: number | string;
   companyName: string;
   companySlug: string;
   position: {
@@ -152,6 +152,7 @@ export type StandMapStand = {
 export type StandMapDay = {
   id: StandMapDayId;
   label: string;
+  location: string;
   mapImage: string;
   downloadImage: string;
   stands: StandMapStand[];
@@ -206,6 +207,7 @@ const createDay = ({
 }): StandMapDay => ({
   id,
   label,
+  location: 'Realfagbygget, U1',
   mapImage: `https://cdn.itdagene.no/standkart_${id}_plain.png`,
   downloadImage: `https://cdn.itdagene.no/standkart_${id}.png`,
   stands: [
@@ -237,13 +239,14 @@ export const validateStandMapManifest = (
   manifest: StandMapManifest
 ): string[] =>
   manifest.days.flatMap((day) => {
-    const standNumbers = new Set<number>();
+    const standNumbers = new Set<string>();
     return day.stands.flatMap((stand) => {
       const errors: string[] = [];
-      if (standNumbers.has(stand.number)) {
+      const standNumber = String(stand.number);
+      if (standNumbers.has(standNumber)) {
         errors.push(`${day.id}: stand ${stand.number} er duplisert`);
       }
-      standNumbers.add(stand.number);
+      standNumbers.add(standNumber);
       if (
         stand.position.x < 0 ||
         stand.position.x > 100 ||

@@ -58,6 +58,7 @@ describe('ProgramTimeline', () => {
       root.unmount();
     });
     container.remove();
+    jest.useRealTimers();
   });
 
   it('links list hover and detail presentation without changing the selected event', () => {
@@ -122,5 +123,43 @@ describe('ProgramTimeline', () => {
       'Teknologi for et bedre samfunn'
     );
     expect(updateQueryEvent).toHaveBeenCalledWith('event-2');
+  });
+
+  it('selects the next event using Europe/Oslo time around midnight', () => {
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(new Date('2026-09-13T22:30:00.000Z'));
+    const midnightEvents = {
+      '2026-09-14': [
+        {
+          ...events['2026-09-14'][0],
+          id: 'midnight-ended',
+          timeStart: '00:00:00',
+          timeEnd: '00:20:00',
+          title: 'Avsluttet i Oslo',
+        },
+        {
+          ...events['2026-09-14'][1],
+          id: 'midnight-next',
+          timeStart: '01:00:00',
+          timeEnd: '01:30:00',
+          title: 'Neste i Oslo',
+        },
+      ],
+    };
+
+    act(() => {
+      root.render(
+        <ProgramTimeline
+          activeDate="2026-09-14"
+          events={midnightEvents}
+          router={{ query: {} }}
+          updateQueryEvent={jest.fn()}
+        />
+      );
+    });
+
+    expect(container.querySelector('.program-detail-pane h2').textContent).toBe(
+      'Neste i Oslo'
+    );
   });
 });

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React from 'react';
 import { ContentState, EventPhase } from '../../config/edition';
 import { homepageMedia } from '../../config/homepage';
-import { standMapManifest } from '../Stands/standsData';
+import { StandMapManifest } from '../Stands/standsData';
 import { ActionLink, SiteSection } from '../DesignSystem';
 import { CurrentEventPreview, PreviewEvent } from './CurrentEventPreview';
 import { DocumentaryBand } from './DocumentaryBand';
@@ -13,16 +13,20 @@ export const HomeBriefing = ({
   events,
   phase,
   programState,
+  referenceTime,
+  standMap,
   standState,
 }: {
   edition: number;
   events: ReadonlyArray<PreviewEvent>;
   phase: EventPhase;
   programState: ContentState;
+  referenceTime: string;
+  standMap: StandMapManifest;
   standState: ContentState;
 }): JSX.Element => {
-  const mapDay = standMapManifest.days[0];
-  const historicalMap = standMapManifest.edition !== edition;
+  const mapDay = standMap.days[0];
+  const historicalMap = standMap.edition !== edition;
 
   return (
     <>
@@ -32,6 +36,7 @@ export const HomeBriefing = ({
         events={events}
         phase={phase}
         programState={programState}
+        referenceTime={referenceTime}
       />
 
       <SiteSection className="home-stand-section">
@@ -39,7 +44,7 @@ export const HomeBriefing = ({
           <figure className="home-stand-feature__map">
             <Image
               alt={`Standkart for ${mapDay.label.toLowerCase()} under itDAGENE ${
-                standMapManifest.edition
+                standMap.edition
               }`}
               height={1131}
               sizes="(max-width: 800px) 100vw, 62vw"
@@ -48,12 +53,12 @@ export const HomeBriefing = ({
             />
             <figcaption>
               {historicalMap
-                ? `Eksempel fra ${standMapManifest.edition}`
-                : `Standkart ${standMapManifest.edition}`}
+                ? `Eksempel fra ${standMap.edition}`
+                : `Standkart ${standMap.edition}`}
             </figcaption>
           </figure>
           <div className="home-stand-feature__copy">
-            <p className="home-stand-feature__location">Realfagbygget, U1</p>
+            <p className="home-stand-feature__location">{standMap.location}</p>
             <h2>Finn bedriftene du vil møte</h2>
             <p>
               Bruk bedriftslisten og kartet sammen for å finne riktig stand og
@@ -61,9 +66,8 @@ export const HomeBriefing = ({
             </p>
             {historicalMap && (
               <p className="home-stand-feature__status">
-                Kartet er et tydelig merket eksempel fra{' '}
-                {standMapManifest.edition}. Standfordelingen for {edition}{' '}
-                publiseres når den er klar.
+                Kartet er et tydelig merket eksempel fra {standMap.edition}.
+                Standfordelingen for {edition} publiseres når den er klar.
               </p>
             )}
             {!historicalMap && standState !== 'published' && (

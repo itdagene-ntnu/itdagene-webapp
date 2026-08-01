@@ -1,14 +1,13 @@
-import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
-import utc from 'dayjs/plugin/utc';
 import Image from 'next/image';
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 import { WelcomeScreen_currentMetaData } from '../../__generated__/WelcomeScreen_currentMetaData.graphql';
 import { itdageneWordmark } from '../../config/brand';
-import { ContentState, editionConfig } from '../../config/edition';
+import { ContentState, editionConfig, EventPhase } from '../../config/edition';
 import { homepageMedia } from '../../config/homepage';
-import { phaseLabel, resolveEventPhase } from '../../utils/eventLifecycle';
+import { phaseLabel } from '../../utils/eventLifecycle';
+import { eventLocalTime } from '../../utils/eventTime';
 import {
   resolveEmployerAction,
   resolveHeroActions,
@@ -17,21 +16,20 @@ import Countdown from '../Countdown';
 import { ActionLink } from '../DesignSystem';
 import { useHeroLogoTransition } from './useHeroLogoTransition';
 
-dayjs.extend(utc);
-
-const HERO_LOCATION = 'Realfagbygget, NTNU';
 const HERO_TITLE = 'IT-studenter møter næringslivet.';
 const HERO_DESCRIPTION =
   'To dager med stands, faglige arrangementer og møter mellom studenter og bedrifter.';
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
+  phase: EventPhase;
   programState: ContentState;
   standState: ContentState;
 };
 
 const WelcomeScreen = ({
   currentMetaData,
+  phase,
   programState,
   standState,
 }: Props): JSX.Element => {
@@ -66,14 +64,9 @@ const WelcomeScreen = ({
     return <div className="event-hero event-hero--loading" />;
   }
 
-  const startDate = dayjs.utc(currentMetaData.startDate);
-  const endDate = dayjs.utc(currentMetaData.endDate);
+  const startDate = eventLocalTime(currentMetaData.startDate);
+  const endDate = eventLocalTime(currentMetaData.endDate);
   const edition = currentMetaData.year || editionConfig.edition;
-  const phase = resolveEventPhase({
-    startDate: currentMetaData.startDate,
-    endDate: currentMetaData.endDate,
-    publicLaunchAt: editionConfig.publicLaunchAt,
-  });
   const studentActions = resolveHeroActions({
     phase,
     programState,
@@ -101,6 +94,7 @@ const WelcomeScreen = ({
           />
           <video
             aria-hidden="true"
+            loop
             muted
             playsInline
             preload="none"
@@ -114,7 +108,7 @@ const WelcomeScreen = ({
           <h1 className="visually-hidden">{HERO_TITLE}</h1>
           <div className="event-hero__arrival-copy" data-arrival-copy>
             <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
-            <span>{HERO_LOCATION}</span>
+            <span>{currentMetaData.venue}</span>
           </div>
           <Countdown currentMetaData={currentMetaData} phase={phase} />
           <div className="event-hero__static-purpose">
@@ -167,7 +161,7 @@ const WelcomeScreen = ({
             )}
             <div className="event-hero__coordinates">
               <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
-              <span>{HERO_LOCATION}</span>
+              <span>{currentMetaData.venue}</span>
             </div>
             <p
               aria-hidden="true"
@@ -204,6 +198,7 @@ export default createFragmentContainer(WelcomeScreen, {
       startDate
       endDate
       interestForm
+      venue
       ...Countdown_currentMetaData
     }
   `,

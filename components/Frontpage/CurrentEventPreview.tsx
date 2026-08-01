@@ -1,7 +1,6 @@
-import dayjs from 'dayjs';
-import 'dayjs/locale/nb';
 import React from 'react';
 import { ContentState, EventPhase } from '../../config/edition';
+import { eventInstant, eventLocalTime } from '../../utils/eventTime';
 import { ActionLink, SiteSection } from '../DesignSystem';
 
 export type PreviewEvent = {
@@ -15,7 +14,8 @@ export type PreviewEvent = {
 
 const visibleProgramEvents = (
   events: ReadonlyArray<PreviewEvent>,
-  phase: EventPhase
+  phase: EventPhase,
+  referenceTime: string
 ): PreviewEvent[] => {
   const sortedEvents = [...events].sort((first, second) =>
     `${first.date}T${first.timeStart}`.localeCompare(
@@ -24,8 +24,9 @@ const visibleProgramEvents = (
   );
   if (phase !== 'live') return sortedEvents.slice(0, 3);
 
+  const now = eventInstant(referenceTime);
   const remaining = sortedEvents.filter((event) =>
-    dayjs().isBefore(dayjs(`${event.date}T${event.timeEnd}`))
+    now.isBefore(eventLocalTime(`${event.date}T${event.timeEnd}`))
   );
   return (remaining.length > 0 ? remaining : sortedEvents).slice(0, 3);
 };
@@ -34,15 +35,15 @@ export const CurrentEventPreview = ({
   events,
   phase,
   programState,
+  referenceTime,
 }: {
   events: ReadonlyArray<PreviewEvent>;
   phase: EventPhase;
   programState: ContentState;
+  referenceTime: string;
 }): JSX.Element => {
-  const published =
-    programState === 'published' &&
-    visibleProgramEvents(events, phase).length > 0;
-  const visibleEvents = visibleProgramEvents(events, phase);
+  const visibleEvents = visibleProgramEvents(events, phase, referenceTime);
+  const published = programState === 'published' && visibleEvents.length > 0;
 
   return (
     <SiteSection className="current-event-preview" tone="warm">
@@ -70,7 +71,8 @@ export const CurrentEventPreview = ({
                 <div>
                   <h3>{event.title}</h3>
                   <p>
-                    {event.location}, {dayjs(event.date).format('DD.MM')}
+                    {event.location},{' '}
+                    {eventLocalTime(event.date).format('DD.MM')}
                   </p>
                 </div>
               </li>

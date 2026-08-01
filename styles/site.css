@@ -257,7 +257,6 @@ a {
 .site-section--brand :focus-visible,
 .site-section--dark :focus-visible,
 .event-hero :focus-visible,
-.event-marquee:focus-visible,
 .site-footer :focus-visible {
   outline-color: #fff;
 }
@@ -479,14 +478,14 @@ a {
 .event-marquee {
   width: 100%;
   overflow: hidden;
-  border-block: 1px solid rgba(255, 255, 255, 0.2);
-  background: var(--color-surface-deep);
-  color: #fff;
+  border-block: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-ink);
 }
 
 .event-marquee__lane {
   overflow: hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 1px solid var(--color-border);
 }
 
 .event-marquee__track {
@@ -513,10 +512,10 @@ a {
   width: clamp(10rem, 15vw, 13.5rem);
   min-height: 5.25rem;
   padding: 0.8rem 1.35rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.16);
+  border-right: 1px solid var(--color-border);
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--color-ink);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 700;
@@ -540,8 +539,7 @@ a {
 }
 
 .event-marquee__item--logo {
-  border-color: rgba(5, 25, 40, 0.14);
-  background: #f7f5ef;
+  background: var(--color-surface);
 }
 
 .event-marquee__name {
@@ -1748,29 +1746,76 @@ a {
 
 .stand-map__marker {
   position: absolute;
+  z-index: 1;
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   padding: 0;
-  border: 2px solid #fff;
+  border: 0;
   border-radius: 50%;
   place-items: center;
-  background: var(--color-brand-dark);
-  box-shadow: 0 0.15rem 0.4rem rgba(8, 34, 56, 0.28);
-  color: #fff;
+  background: transparent;
   cursor: pointer;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
   font-weight: 700;
   transform: translate(-50%, -50%);
 }
 
 .stand-map__marker:hover,
+.stand-map__marker[data-active='true'],
 .stand-map__marker[data-selected='true'] {
+  z-index: 3;
+}
+
+.stand-map__marker-number {
+  display: grid;
+  width: 0.95rem;
+  height: 0.95rem;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  place-items: center;
+  background: var(--color-brand-dark);
+  box-shadow: 0 0.08rem 0.2rem rgba(8, 34, 56, 0.24);
+  color: #fff;
+  font-size: 0.52rem;
+  line-height: 1;
+  transition: background-color 140ms ease, border-color 140ms ease,
+    transform 140ms ease;
+}
+
+.stand-map__marker:hover .stand-map__marker-number,
+.stand-map__marker[data-active='true'] .stand-map__marker-number,
+.stand-map__marker[data-selected='true'] .stand-map__marker-number {
   border-color: var(--color-brand-dark);
   background: var(--color-accent);
+  transform: scale(1.06);
+}
+
+.stand-map__marker-label {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + 0.2rem);
+  width: max-content;
+  max-width: 13rem;
+  padding: 0.42rem 0.58rem;
+  border: 1px solid var(--color-route-stands);
+  background: var(--color-brand-dark);
+  box-shadow: 0 0.25rem 0.65rem rgba(8, 34, 56, 0.22);
   color: #fff;
-  transform: translate(-50%, -50%) scale(1.15);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  pointer-events: none;
+  text-align: left;
+  transform: translateY(-50%) scale(0.93);
+  transform-origin: left center;
+}
+
+.stand-map__marker[data-label-side='left'] .stand-map__marker-label {
+  right: calc(100% + 0.2rem);
+  left: auto;
+  transform-origin: right center;
 }
 
 .stand-map__download {
@@ -1812,6 +1857,7 @@ a {
 }
 
 .stand-directory button:hover,
+.stand-directory button[data-active='true'],
 .stand-directory button[data-selected='true'] {
   background: var(--color-brand-soft);
 }
@@ -1855,6 +1901,31 @@ a {
   padding: var(--space-3);
   border-top: 1px solid var(--color-border);
   text-align: left;
+}
+
+.stand-table tr[data-active='true'],
+.stand-table tr[data-selected='true'] {
+  background: var(--color-brand-soft);
+}
+
+.stand-table__company {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-brand-dark);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 650;
+  text-align: left;
+}
+
+.stand-table__company:hover,
+.stand-table__company[data-active='true'],
+.stand-table__company[data-selected='true'] {
+  color: var(--color-brand-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 0.09em;
+  text-underline-offset: 0.18em;
 }
 
 .jobs-content {
@@ -3974,16 +4045,27 @@ a.current-company-directory__logo:active {
   position: relative;
   z-index: 2;
   padding: 0.9rem max(1rem, calc((100vw - var(--site-width)) / 2));
-  background: var(--color-route-gallery);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
 }
 
 .event-marquee__label {
+  display: flex;
   margin: 0;
-  color: #fff;
+  align-items: baseline;
+  gap: var(--space-2);
+  color: var(--color-brand-dark);
   font-size: 0.76rem;
   font-weight: 650;
   letter-spacing: 0.02em;
   line-height: 1.2;
+}
+
+.event-marquee__context {
+  color: var(--color-ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
 }
 
 .event-marquee__group {
@@ -4030,8 +4112,15 @@ a.current-company-directory__logo:active {
   background: var(--color-accent-soft);
 }
 
-.site-root[data-route='stands'] .stand-map__marker:hover,
-.site-root[data-route='stands'] .stand-map__marker[data-selected='true'] {
+.site-root[data-route='stands']
+  .stand-map__marker:hover
+  .stand-map__marker-number,
+.site-root[data-route='stands']
+  .stand-map__marker[data-active='true']
+  .stand-map__marker-number,
+.site-root[data-route='stands']
+  .stand-map__marker[data-selected='true']
+  .stand-map__marker-number {
   border-color: var(--color-route-gallery);
   background: var(--color-route-stands);
   color: var(--color-surface-deep);
@@ -4258,6 +4347,7 @@ a.current-company-directory__logo:active {
   }
 
   .event-marquee__label {
+    justify-content: center;
     margin: 0;
     text-align: center;
   }

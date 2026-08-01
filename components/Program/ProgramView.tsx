@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
 import { groupBy, sortBy } from 'lodash';
 import { NextRouter } from 'next/router';
@@ -8,6 +7,7 @@ import { ProgramView_currentMetaData } from '../../__generated__/ProgramView_cur
 import { ProgramView_events } from '../../__generated__/ProgramView_events.graphql';
 import { editionConfig } from '../../config/edition';
 import { resolveContentState } from '../../utils/eventLifecycle';
+import { eventInstant, eventLocalTime } from '../../utils/eventTime';
 import { ContentStatePanel, PageHeader, MetadataList } from '../DesignSystem';
 import EventsToggle from './Components/EventsToggle';
 import ProgramTimeline from './Components/ProgramTimeline';
@@ -58,7 +58,7 @@ const ProgramView = ({
       : undefined;
 
   useEffect(() => {
-    const today = dayjs().format('YYYY-MM-DD');
+    const today = eventInstant(new Date().toISOString()).format('YYYY-MM-DD');
     const preferredDate =
       queryEvent?.date && sortedDates.includes(queryEvent.date)
         ? queryEvent.date
@@ -88,8 +88,8 @@ const ProgramView = ({
   };
 
   const edition = currentMetaData.year || editionConfig.edition;
-  const startDate = dayjs(currentMetaData.startDate);
-  const endDate = dayjs(currentMetaData.endDate);
+  const startDate = eventLocalTime(currentMetaData.startDate);
+  const endDate = eventLocalTime(currentMetaData.endDate);
   const dateLabel = `${startDate.format('D')}.–${endDate.format('D')}. ${endDate
     .locale('nb')
     .format('MMMM')} ${edition}`;
@@ -97,6 +97,7 @@ const ProgramView = ({
     lifecycle: editionConfig.modules.program,
     currentEdition: edition,
     itemCount: events.length,
+    isPublished: currentMetaData.programPublished,
   });
 
   if (contentState !== 'published') {
@@ -114,7 +115,7 @@ const ProgramView = ({
           <MetadataList
             items={[
               { label: 'Dato', value: dateLabel },
-              { label: 'Sted', value: 'NTNU Gløshaugen' },
+              { label: 'Sted', value: currentMetaData.venue },
             ]}
           />
         </PageHeader>
@@ -206,6 +207,8 @@ export default createFragmentContainer(ProgramView, {
       year
       startDate
       endDate
+      programPublished
+      venue
     }
   `,
 });

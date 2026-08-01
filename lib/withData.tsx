@@ -17,6 +17,7 @@ import { QueryRenderer } from 'react-relay';
 import { withRouter, NextRouter } from 'next/router';
 import { PageContext } from '../utils/types';
 import { resolveRelayEndpoint } from '../utils/relayEndpoint';
+import { selectHydrationQueryProps } from '../utils/hydrationSnapshot';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
 dayjs.locale('nb');
@@ -36,6 +37,7 @@ export type QueryProps<T extends OperationType> = T['response'];
 export type WithDataBaseProps = {
   variables: Variables;
   environment: Environment;
+  initialRenderTimestamp: string;
   query: GraphQLTaggedNode;
   queryProps?: any;
   router: NextRouter;
@@ -47,11 +49,15 @@ export type WithDataDataProps<T> = {
 
 export type WithDataProps<T> = WithDataDataProps<T> & WithDataBaseProps;
 
-type State = {};
+type State = {
+  hasHydrated: boolean;
+};
 type Props = {
   queryRecords: ConstructorParameters<typeof RecordSource>[0];
+  queryProps?: any;
   router: NextRouter;
   envSettings: EnvSettings;
+  initialRenderTimestamp: string;
   ctx: NextRouter;
 };
 
@@ -94,9 +100,12 @@ export const withData = <T extends {}, T1 extends OperationType>(
         const localOptions = getOptions(options, ctx);
         if (process.browser) {
           if (!ComposedComponent.getInitialProps) {
-            return {};
+            return { initialRenderTimestamp: new Date().toISOString() };
           }
-          return await ComposedComponent.getInitialProps(ctx);
+          return {
+            ...(await ComposedComponent.getInitialProps(ctx)),
+            initialRenderTimestamp: new Date().toISOString(),
+          };
         }
 
         let queryProps: QueryProps<T1> = {};
@@ -147,23 +156,30 @@ export const withData = <T extends {}, T1 extends OperationType>(
           });
 
         queryRecords = environment.getStore().getSource().toJSON();
+        const initialRenderTimestamp = new Date().toISOString();
 
         return {
           ...composedProps,
           queryProps,
           queryRecords,
           envSettings,
+          initialRenderTimestamp,
         };
       }
 
       constructor(props: Props) {
         super(props);
+        this.state = { hasHydrated: false };
         const { envSettings } = props;
         // The same type casting here.
         this.environment = initEnvironment({
           records: props.queryRecords,
           envSettings,
         }) as Environment;
+      }
+
+      componentDidMount(): void {
+        this.setState({ hasHydrated: true });
       }
 
       render(): JSX.Element {
@@ -175,16 +191,28 @@ export const withData = <T extends {}, T1 extends OperationType>(
               environment={this.environment}
               fetchPolicy={'store-or-network'}
               variables={variables}
-              render={({ props, error }): JSX.Element => (
-                <ComposedComponent
-                  router={this.props.router}
-                  props={props as T | null}
-                  error={error}
-                  environment={this.environment}
-                  query={query}
-                  variables={variables}
-                />
-              )}
+              render={({ props, error }): JSX.Element => {
+                // Relay may finish a browser refetch while React is still
+                // hydrating. Keep the serialized SSR snapshot for the first
+                // client render, then adopt the live store after mount.
+                const renderedProps = selectHydrationQueryProps<T>({
+                  hasHydrated: this.state.hasHydrated,
+                  initialQueryProps: this.props.queryProps as T | undefined,
+                  liveQueryProps: props as T | null,
+                });
+
+                return (
+                  <ComposedComponent
+                    router={this.props.router}
+                    props={renderedProps}
+                    error={error}
+                    environment={this.environment}
+                    initialRenderTimestamp={this.props.initialRenderTimestamp}
+                    query={query}
+                    variables={variables}
+                  />
+                );
+              }}
             />
           </ErrorBoundary>
         );

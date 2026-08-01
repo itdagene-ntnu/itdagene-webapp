@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StandMapDay, StandMapStand } from './standsData';
 
 const normaliseSearch = (value: string): string =>
@@ -14,9 +14,11 @@ const matchesSearch = (stand: StandMapStand, search: string): boolean => {
 };
 
 const StandSummary = ({
+  location,
   stand,
   onClear,
 }: {
+  location: string;
   stand: StandMapStand;
   onClear: () => void;
 }): JSX.Element => (
@@ -24,7 +26,9 @@ const StandSummary = ({
     <div>
       <p className="site-eyebrow">Valgt stand</p>
       <h2>{stand.companyName}</h2>
-      <p>Stand {stand.number} i Realfagbygget U1.</p>
+      <p>
+        Stand {stand.number} i {location}.
+      </p>
     </div>
     <button className="stand-selection__clear" onClick={onClear} type="button">
       Fjern valg
@@ -42,6 +46,8 @@ export const StandMap = ({
   onSelect: (companySlug?: string) => void;
 }): JSX.Element => {
   const [search, setSearch] = useState('');
+  const [hoveredCompany, setHoveredCompany] = useState<string>();
+  const [focusedCompany, setFocusedCompany] = useState<string>();
   const filteredStands = useMemo(
     () => day.stands.filter((stand) => matchesSearch(stand, search)),
     [day.stands, search]
@@ -49,6 +55,43 @@ export const StandMap = ({
   const selectedStand = day.stands.find(
     (stand) => stand.companySlug === selectedCompany
   );
+  const searchPreviewStand = normaliseSearch(search)
+    ? filteredStands[0]
+    : undefined;
+  const activeCompany =
+    hoveredCompany ||
+    focusedCompany ||
+    searchPreviewStand?.companySlug ||
+    selectedCompany;
+  const activeStand = day.stands.find(
+    (stand) => stand.companySlug === activeCompany
+  );
+  const isActive = (stand: StandMapStand): boolean =>
+    stand.companySlug === activeStand?.companySlug;
+  const interactionProps = (
+    stand: StandMapStand
+  ): {
+    onBlur: () => void;
+    onFocus: () => void;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+  } => ({
+    onBlur: (): void =>
+      setFocusedCompany((current) =>
+        current === stand.companySlug ? undefined : current
+      ),
+    onFocus: (): void => setFocusedCompany(stand.companySlug),
+    onMouseEnter: (): void => setHoveredCompany(stand.companySlug),
+    onMouseLeave: (): void =>
+      setHoveredCompany((current) =>
+        current === stand.companySlug ? undefined : current
+      ),
+  });
+
+  useEffect(() => {
+    setHoveredCompany(undefined);
+    setFocusedCompany(undefined);
+  }, [day.id]);
 
   return (
     <div className="stand-explorer">
@@ -60,6 +103,11 @@ export const StandMap = ({
           autoComplete="off"
           id="stand-search"
           onChange={(event): void => setSearch(event.target.value)}
+          onKeyDown={(event): void => {
+            if (event.key !== 'Enter' || !searchPreviewStand) return;
+            event.preventDefault();
+            onSelect(searchPreviewStand.companySlug);
+          }}
           placeholder="For eksempel Computas eller 27"
           type="search"
           value={search}
@@ -70,7 +118,11 @@ export const StandMap = ({
       </div>
 
       {selectedStand && (
-        <StandSummary onClear={(): void => onSelect()} stand={selectedStand} />
+        <StandSummary
+          location={day.location}
+          onClear={(): void => onSelect()}
+          stand={selectedStand}
+        />
       )}
 
       <div className="stand-explorer__layout">
@@ -88,16 +140,30 @@ export const StandMap = ({
                 <button
                   aria-label={`Stand ${stand.number}, ${stand.companyName}`}
                   className="stand-map__marker"
+                  data-active={isActive(stand)}
+                  data-label-side={stand.position.x > 64 ? 'left' : 'right'}
                   data-selected={stand.companySlug === selectedCompany}
+                  data-stand-company={stand.companySlug}
                   key={stand.number}
                   onClick={(): void => onSelect(stand.companySlug)}
+                  {...interactionProps(stand)}
                   style={{
                     left: `${stand.position.x}%`,
                     top: `${stand.position.y}%`,
                   }}
                   type="button"
                 >
-                  {stand.number}
+                  <span className="stand-map__marker-number">
+                    {stand.number}
+                  </span>
+                  {isActive(stand) && (
+                    <span
+                      aria-hidden="true"
+                      className="stand-map__marker-label"
+                    >
+                      {stand.companyName}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -120,8 +186,11 @@ export const StandMap = ({
                   aria-current={
                     stand.companySlug === selectedCompany ? 'true' : undefined
                   }
+                  data-active={isActive(stand)}
                   data-selected={stand.companySlug === selectedCompany}
+                  data-stand-company={stand.companySlug}
                   onClick={(): void => onSelect(stand.companySlug)}
+                  {...interactionProps(stand)}
                   type="button"
                 >
                   <span>{stand.number}</span>
@@ -154,9 +223,28 @@ export const StandMap = ({
           </thead>
           <tbody>
             {day.stands.map((stand) => (
-              <tr key={stand.number}>
+              <tr
+                data-active={isActive(stand)}
+                data-selected={stand.companySlug === selectedCompany}
+                key={stand.number}
+              >
                 <td>{stand.number}</td>
-                <td>{stand.companyName}</td>
+                <td>
+                  <button
+                    aria-current={
+                      stand.companySlug === selectedCompany ? 'true' : undefined
+                    }
+                    className="stand-table__company"
+                    data-active={isActive(stand)}
+                    data-selected={stand.companySlug === selectedCompany}
+                    data-stand-company={stand.companySlug}
+                    onClick={(): void => onSelect(stand.companySlug)}
+                    {...interactionProps(stand)}
+                    type="button"
+                  >
+                    {stand.companyName}
+                  </button>
+                </td>
                 <td>{day.label}</td>
               </tr>
             ))}
