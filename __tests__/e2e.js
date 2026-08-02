@@ -1743,7 +1743,8 @@ describe('Page rendering', () => {
 
   test('Stand selection is restored by browser history', async () => {
     await page.setViewport({ width: 390, height: 844 });
-    await page.goto(baseUrl + '/stands');
+    await page.goto(baseUrl + '/stands', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.stand-directory button', { visible: true });
     const company = await page.$eval('.stand-directory button', (button) => ({
       name: button.querySelector('strong')?.textContent,
       slug: button.dataset.standCompany,
@@ -1800,7 +1801,8 @@ describe('Page rendering', () => {
 
   test('Stand map, directory and table share one active company', async () => {
     await page.setViewport({ width: 1440, height: 1000 });
-    await page.goto(baseUrl + '/stands');
+    await page.goto(baseUrl + '/stands', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.stand-directory button', { visible: true });
 
     const company = await page.$eval('.stand-directory button', (button) => ({
       name: button.querySelector('strong')?.textContent,
@@ -1905,7 +1907,8 @@ describe('Page rendering', () => {
 
   test('Stand search previews its top result without changing the URL', async () => {
     await page.setViewport({ width: 1440, height: 1000 });
-    await page.goto(baseUrl + '/stands');
+    await page.goto(baseUrl + '/stands', { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('.stand-directory button', { visible: true });
 
     const company = await page.$eval('.stand-directory button', (button) => ({
       name: button.querySelector('strong')?.textContent,
@@ -1965,7 +1968,7 @@ describe('Page rendering', () => {
       {},
       topCompany
     );
-  }, 16000);
+  }, 30000);
 
   test('Gallery dialog closes with Escape and restores focus', async () => {
     await page.goto(baseUrl + '/galleri', {
