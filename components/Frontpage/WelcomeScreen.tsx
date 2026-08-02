@@ -22,16 +22,20 @@ const HERO_DESCRIPTION =
 
 type Props = {
   currentMetaData: WelcomeScreen_currentMetaData;
+  eventStartTime?: string;
   phase: EventPhase;
   programState: ContentState;
   standState: ContentState;
+  venue: string;
 };
 
 const WelcomeScreen = ({
   currentMetaData,
+  eventStartTime,
   phase,
   programState,
   standState,
+  venue,
 }: Props): JSX.Element => {
   const storyRef = React.useRef<HTMLElement>(null);
   const sceneRef = React.useRef<HTMLDivElement>(null);
@@ -108,9 +112,13 @@ const WelcomeScreen = ({
           <h1 className="visually-hidden">{HERO_TITLE}</h1>
           <div className="event-hero__arrival-copy" data-arrival-copy>
             <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
-            <span>{currentMetaData.venue}</span>
+            <span>{venue}</span>
           </div>
-          <Countdown currentMetaData={currentMetaData} phase={phase} />
+          <Countdown
+            currentMetaData={currentMetaData}
+            eventStartTime={eventStartTime}
+            phase={phase}
+          />
           <div className="event-hero__static-purpose">
             <p>{HERO_TITLE}</p>
             <span>{HERO_DESCRIPTION}</span>
@@ -161,7 +169,7 @@ const WelcomeScreen = ({
             )}
             <div className="event-hero__coordinates">
               <time dateTime={currentMetaData.startDate}>{dateLabel}</time>
-              <span>{currentMetaData.venue}</span>
+              <span>{venue}</span>
             </div>
             <p
               aria-hidden="true"
@@ -198,7 +206,6 @@ export default createFragmentContainer(WelcomeScreen, {
       startDate
       endDate
       interestForm
-      venue
       ...Countdown_currentMetaData
     }
   `,

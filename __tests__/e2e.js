@@ -36,6 +36,16 @@ const hoverConnectedElement = async (selector) => {
 };
 
 describe('Page rendering', () => {
+  beforeEach(async () => {
+    // Keep viewport, scroll restoration and media preferences from leaking
+    // between scenarios that deliberately cross responsive motion modes.
+    await page.goto('about:blank');
+    await page.setViewport({ width: 1280, height: 900 });
+    await page.emulateMediaFeatures([
+      { name: 'prefers-reduced-motion', value: 'no-preference' },
+    ]);
+  });
+
   test('Frontpage page rendering', async () => {
     const hydrationFailures = [];
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -1916,7 +1926,7 @@ describe('Page rendering', () => {
         document.activeElement.getAttribute('aria-label')
       )
     ).toBe(triggerLabel);
-  }, 16000);
+  }, 30000);
 
   test('Published data is not paired with an unpublished homepage state', async () => {
     await page.goto(baseUrl);

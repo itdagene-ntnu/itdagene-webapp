@@ -40,10 +40,13 @@ const updateStandQuery = (
 };
 
 const Index = ({
+  optionalEventConfiguration,
   props,
   router,
 }: WithDataAndLayoutProps<stands_new_QueryResponse>): JSX.Element => {
-  const currentStandMap = toStandMapManifest(props.currentStandMap);
+  const currentStandMap = toStandMapManifest(
+    optionalEventConfiguration.currentStandMap
+  );
   const standMapManifest = currentStandMap || historicalStandMap;
   const validationErrors = validateStandMapManifest(standMapManifest);
   if (validationErrors.length > 0) {
@@ -141,29 +144,13 @@ const Index = ({
 };
 
 export default withDataAndLayout(Index, {
+  includeEventConfiguration: true,
   query: graphql`
     query stands_new_Query {
       currentMetaData {
         year
         startDate
         endDate
-      }
-      currentStandMap {
-        edition
-        revision
-        maps {
-          date
-          label
-          location
-          backgroundImage
-          placements {
-            standNumber
-            companyName
-            companySlug
-            xPercent
-            yPercent
-          }
-        }
       }
     }
   `,

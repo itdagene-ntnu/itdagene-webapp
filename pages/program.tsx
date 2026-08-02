@@ -6,8 +6,10 @@ import ProgramView from '../components/Program/ProgramView';
 import { ContentStatePanel } from '../components/DesignSystem';
 import PageView from '../components/PageView';
 import { Metadata } from '../components/Layout';
+import { DEFAULT_EVENT_VENUE } from '../utils/optionalEventConfiguration';
 
 const Index = ({
+  optionalEventConfiguration,
   props,
   router,
 }: WithDataAndLayoutProps<program_QueryResponse>): JSX.Element => {
@@ -26,7 +28,9 @@ const Index = ({
       <ProgramView
         currentMetaData={props.currentMetaData}
         events={props.events || []}
+        programPublished={optionalEventConfiguration.programPublished ?? false}
         router={router}
+        venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
       />
       {props.programPage && <PageView hideTitle page={props.programPage} />}
     </>
@@ -34,6 +38,7 @@ const Index = ({
 };
 
 export default withDataAndLayout(Index, {
+  includeEventConfiguration: true,
   query: graphql`
     query program_Query {
       events {

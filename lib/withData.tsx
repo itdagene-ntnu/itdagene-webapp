@@ -20,14 +20,22 @@ import { resolveRelayEndpoint } from '../utils/relayEndpoint';
 import { selectHydrationQueryProps } from '../utils/hydrationSnapshot';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
+import {
+  cacheOptionalEventConfiguration,
+  fetchOptionalEventConfiguration,
+  getCachedOptionalEventConfiguration,
+  OptionalEventConfiguration,
+} from '../utils/optionalEventConfiguration';
 dayjs.locale('nb');
 
 export type DataOptions = {
+  includeEventConfiguration?: boolean;
   variables: Variables | ((arg0: NextRouter) => Variables);
   query: GraphQLTaggedNode;
 };
 
 export type DataOptionsFinal = {
+  includeEventConfiguration: boolean;
   variables: Variables;
   query: GraphQLTaggedNode;
 };
@@ -38,6 +46,7 @@ export type WithDataBaseProps = {
   variables: Variables;
   environment: Environment;
   initialRenderTimestamp: string;
+  optionalEventConfiguration: OptionalEventConfiguration;
   query: GraphQLTaggedNode;
   queryProps?: any;
   router: NextRouter;
@@ -58,6 +67,7 @@ type Props = {
   router: NextRouter;
   envSettings: EnvSettings;
   initialRenderTimestamp: string;
+  optionalEventConfiguration: OptionalEventConfiguration;
   ctx: NextRouter;
 };
 
@@ -75,13 +85,17 @@ const getOptions = (
   options: DataOptions,
   router: NextRouter
 ): DataOptionsFinal => {
-  const { variables: localVariables, query } = options;
+  const {
+    includeEventConfiguration = false,
+    variables: localVariables,
+    query,
+  } = options;
   const variables =
     typeof localVariables === 'function'
       ? localVariables(router)
       : localVariables;
 
-  return { variables, query };
+  return { includeEventConfiguration, variables, query };
 };
 
 /**
@@ -99,12 +113,24 @@ export const withData = <T extends {}, T1 extends OperationType>(
       static async getInitialProps(ctx: any): Promise<WithDataProps<T> | {}> {
         const localOptions = getOptions(options, ctx);
         if (process.browser) {
+          const optionalEventConfiguration =
+            localOptions.includeEventConfiguration
+              ? getCachedOptionalEventConfiguration() ||
+                (await fetchOptionalEventConfiguration('/api/graphql'))
+              : {};
+          if (localOptions.includeEventConfiguration) {
+            cacheOptionalEventConfiguration(optionalEventConfiguration);
+          }
           if (!ComposedComponent.getInitialProps) {
-            return { initialRenderTimestamp: new Date().toISOString() };
+            return {
+              initialRenderTimestamp: new Date().toISOString(),
+              optionalEventConfiguration,
+            };
           }
           return {
             ...(await ComposedComponent.getInitialProps(ctx)),
             initialRenderTimestamp: new Date().toISOString(),
+            optionalEventConfiguration,
           };
         }
 
@@ -126,6 +152,10 @@ export const withData = <T extends {}, T1 extends OperationType>(
         const environment = initEnvironment({
           envSettings,
         }) as Environment;
+        const optionalEventConfigurationPromise =
+          localOptions.includeEventConfiguration
+            ? fetchOptionalEventConfiguration(envSettings.relayEndpoint)
+            : Promise.resolve({});
 
         if (localOptions.query) {
           // Provide the `url` prop data in case a graphql query uses it
@@ -157,6 +187,8 @@ export const withData = <T extends {}, T1 extends OperationType>(
 
         queryRecords = environment.getStore().getSource().toJSON();
         const initialRenderTimestamp = new Date().toISOString();
+        const optionalEventConfiguration =
+          await optionalEventConfigurationPromise;
 
         return {
           ...composedProps,
@@ -164,12 +196,20 @@ export const withData = <T extends {}, T1 extends OperationType>(
           queryRecords,
           envSettings,
           initialRenderTimestamp,
+          optionalEventConfiguration,
         };
       }
 
       constructor(props: Props) {
         super(props);
         this.state = { hasHydrated: false };
+        if (
+          process.browser &&
+          options.includeEventConfiguration &&
+          props.optionalEventConfiguration
+        ) {
+          cacheOptionalEventConfiguration(props.optionalEventConfiguration);
+        }
         const { envSettings } = props;
         // The same type casting here.
         this.environment = initEnvironment({
@@ -208,6 +248,9 @@ export const withData = <T extends {}, T1 extends OperationType>(
                     error={error}
                     environment={this.environment}
                     initialRenderTimestamp={this.props.initialRenderTimestamp}
+                    optionalEventConfiguration={
+                      this.props.optionalEventConfiguration || {}
+                    }
                     query={query}
                     variables={variables}
                   />

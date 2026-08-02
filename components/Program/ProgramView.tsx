@@ -15,15 +15,19 @@ import ProgramTimeline from './Components/ProgramTimeline';
 type Props = {
   events: ProgramView_events;
   currentMetaData: ProgramView_currentMetaData;
+  programPublished: boolean;
   showToggleButton?: boolean;
   router: NextRouter;
+  venue: string;
 };
 
 const ProgramView = ({
   events,
   currentMetaData,
+  programPublished,
   showToggleButton = false,
   router,
+  venue,
 }: Props): JSX.Element => {
   const [programType, setProgramType] = useState('Generelt program');
   const [activeDate, setActiveDate] = useState('');
@@ -97,7 +101,7 @@ const ProgramView = ({
     lifecycle: editionConfig.modules.program,
     currentEdition: edition,
     itemCount: events.length,
-    isPublished: currentMetaData.programPublished,
+    isPublished: programPublished,
   });
 
   if (contentState !== 'published') {
@@ -115,7 +119,7 @@ const ProgramView = ({
           <MetadataList
             items={[
               { label: 'Dato', value: dateLabel },
-              { label: 'Sted', value: currentMetaData.venue },
+              { label: 'Sted', value: venue },
             ]}
           />
         </PageHeader>
@@ -207,8 +211,6 @@ export default createFragmentContainer(ProgramView, {
       year
       startDate
       endDate
-      programPublished
-      venue
     }
   `,
 });

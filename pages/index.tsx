@@ -17,6 +17,10 @@ import {
 } from '../utils/eventLifecycle';
 import { useAdvancingReferenceTime } from '../utils/useAdvancingReferenceTime';
 import { toStandMapManifest } from '../utils/standMap';
+import {
+  DEFAULT_EVENT_START_TIME,
+  DEFAULT_EVENT_VENUE,
+} from '../utils/optionalEventConfiguration';
 import { standMapManifest as historicalStandMap } from '../components/Stands/standsData';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
@@ -25,6 +29,7 @@ const Index = ({
   props,
   error,
   initialRenderTimestamp,
+  optionalEventConfiguration,
 }: RenderProps): JSX.Element => {
   const referenceTime = useAdvancingReferenceTime(initialRenderTimestamp);
 
@@ -51,9 +56,11 @@ const Index = ({
     lifecycle: editionConfig.modules.program,
     currentEdition,
     itemCount: props.events?.length || 0,
-    isPublished: props.currentMetaData.programPublished,
+    isPublished: optionalEventConfiguration.programPublished ?? false,
   });
-  const currentStandMap = toStandMapManifest(props.currentStandMap);
+  const currentStandMap = toStandMapManifest(
+    optionalEventConfiguration.currentStandMap
+  );
   const visibleStandMap = currentStandMap || historicalStandMap;
   const standState = resolveContentState({
     lifecycle: editionConfig.modules.stands,
@@ -96,9 +103,13 @@ const Index = ({
       </Head>
       <WelcomeScreen
         currentMetaData={props.currentMetaData}
+        eventStartTime={
+          optionalEventConfiguration.eventStartTime || DEFAULT_EVENT_START_TIME
+        }
         phase={phase}
         programState={programState}
         standState={standState}
+        venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
       />
 
       <PartnerShowcase
@@ -133,6 +144,7 @@ const Index = ({
 };
 
 export default withDataAndLayout(Index, {
+  includeEventConfiguration: true,
   query: graphql`
     query pages_index_Query {
       currentMetaData {
@@ -142,8 +154,6 @@ export default withDataAndLayout(Index, {
         startDate
         endDate
         interestForm
-        programPublished
-        venue
         collaborators {
           id
           name
@@ -181,23 +191,6 @@ export default withDataAndLayout(Index, {
         timeStart
         timeEnd
         location
-      }
-      currentStandMap {
-        edition
-        revision
-        maps {
-          date
-          label
-          location
-          backgroundImage
-          placements {
-            standNumber
-            companyName
-            companySlug
-            xPercent
-            yPercent
-          }
-        }
       }
     }
   `,

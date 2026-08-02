@@ -59,9 +59,9 @@ export const StandMap = ({
     ? filteredStands[0]
     : undefined;
   const activeCompany =
+    searchPreviewStand?.companySlug ||
     hoveredCompany ||
     focusedCompany ||
-    searchPreviewStand?.companySlug ||
     selectedCompany;
   const activeStand = day.stands.find(
     (stand) => stand.companySlug === activeCompany

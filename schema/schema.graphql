@@ -1,0 +1,412 @@
+"""Company entity"""
+type Company implements Node {
+  """The ID of the object."""
+  id: ID!
+  name: String!
+  url: String
+  logo(height: Int, width: Int, padding: Boolean): String
+  description: String!
+  joblistings(before: String, after: String, first: Int, last: Int): JoblistingConnection
+
+  """Key information about the company."""
+  keyInformation: [KeyInformation!]
+}
+
+type CurrentStandMap {
+  edition: Int!
+  revision: Int!
+  maps: [CurrentStandMapDay!]!
+}
+
+type CurrentStandMapDay {
+  date: String!
+  label: String!
+  location: String!
+  backgroundImage: String!
+  placements: [CurrentStandMapPlacement!]!
+}
+
+type CurrentStandMapPlacement {
+  standNumber: String!
+  companyName: String!
+  companySlug: String!
+  xPercent: Float!
+  yPercent: Float!
+}
+
+"""
+The `Date` scalar type represents a Date
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Date
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+"""Small event type"""
+type Event implements Node {
+  """The ID of the object."""
+  id: ID!
+  title: String!
+  date: Date!
+  timeStart: Time!
+  timeEnd: Time!
+  description: String!
+  type: EventType!
+  location: String!
+  coverImage: String
+  company: Company
+  usesTickets: Boolean!
+  maxParticipants: Int
+}
+
+"""An enumeration."""
+enum EventType {
+  """Kurs"""
+  A_0
+
+  """Bedriftspresentasjon"""
+  A_1
+
+  """Bankett"""
+  A_2
+
+  """Sommerjobbmaraton"""
+  A_3
+
+  """Ballongslipp"""
+  A_4
+
+  """Konkurranse"""
+  A_5
+
+  """Annet"""
+  A_6
+
+  """Promotert bedriftsarrangement"""
+  A_7
+}
+
+"""Joblisting entity"""
+type Joblisting implements Node & OpengraphMetadata {
+  """The ID of the object."""
+  id: ID!
+  dateCreated: DateTime!
+  company: Company!
+  title: String!
+  type: JoblistingType!
+  description: String
+  image: String
+  deadline: DateTime
+  fromGrade: Int!
+  toGrade: Int!
+  towns: [Town!]!
+  url: String!
+  isActive: Boolean!
+  slug: String!
+  videoUrl: String
+  isSummerjobMarathon: Boolean!
+  isDisplayed: Boolean!
+  sharingImage: String
+}
+
+type JoblistingConnection {
+  """Pagination data for this connection."""
+  pageInfo: PageInfo!
+
+  """Contains the nodes in this connection."""
+  edges: [JoblistingEdge]!
+  totalCount: Int
+}
+
+"""A Relay edge containing a `Joblisting` and its cursor."""
+type JoblistingEdge {
+  """The item at the end of the edge"""
+  node: Joblisting
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""An enumeration."""
+enum JoblistingType {
+  """Sommerjobb"""
+  SI
+
+  """Permanent Stilling"""
+  PP
+
+  """Annet"""
+  OT
+}
+
+"""Key information about a company"""
+type KeyInformation implements Node {
+  """The ID of the object."""
+  id: ID!
+  name: String!
+  value: String!
+}
+
+"""Main collaborator company entity"""
+type MainCollaborator implements Node {
+  """The ID of the object."""
+  id: ID!
+  name: String!
+  url: String
+  logo(height: Int, width: Int, padding: Boolean): String
+  description: String!
+
+  """Key information about the company."""
+  keyInformation: [KeyInformation!]
+  intro: String
+  video: String
+  poster: String
+}
+
+"""Metadata about the current years itdagene"""
+type MetaData implements Node {
+  """The ID of the object."""
+  id: ID!
+  year: Int
+  startDate: Date!
+  endDate: Date!
+
+  """Dette gjelder per dag, ikke totalt."""
+  nrOfStands: Int!
+
+  """Whether the public program may be displayed."""
+  programPublished: Boolean!
+  venue: String!
+  eventStartTime: Time!
+  companiesFirstDay: [Company!]
+  companiesLastDay: [Company!]
+
+  """List the collaborators, not including the main collaborator"""
+  collaborators: [Company!]
+
+  """Main collaborator for current years event"""
+  mainCollaborator: MainCollaborator
+  boardMembers: [User!]!
+  interestForm: String
+}
+
+"""An object with an ID"""
+interface Node {
+  """The ID of the object."""
+  id: ID!
+}
+
+interface OpengraphMetadata {
+  title: String!
+  description: String
+  sharingImage: String
+}
+
+enum OrderByJoblistingType {
+  DEADLINE
+  DEADLINE_INVERSE
+  CREATED
+  CREATED_INVERSE
+  TYPE
+  TYPE_INVERSE
+  ID
+  ID_INVERSE
+  COMPANY_NAME
+  COMPANY_NAME_INVERSE
+}
+
+"""(info)Page entity"""
+type Page implements Node & OpengraphMetadata {
+  dateCreated: DateTime!
+  dateSaved: DateTime!
+  title: String!
+  slug: String!
+  content: String!
+  ingress: String!
+  language: PageLanguage!
+  menu: Boolean!
+  videoFile: String
+
+  """The ID of the object."""
+  id: ID!
+  description: String
+  sharingImage: String
+}
+
+"""
+The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+"""
+type PageInfo {
+  """When paginating forwards, are there more items?"""
+  hasNextPage: Boolean!
+
+  """When paginating backwards, are there more items?"""
+  hasPreviousPage: Boolean!
+
+  """When paginating backwards, the cursor to continue."""
+  startCursor: String
+
+  """When paginating forwards, the cursor to continue."""
+  endCursor: String
+}
+
+"""An enumeration."""
+enum PageLanguage {
+  """Norsk"""
+  NB
+
+  """English"""
+  EN
+}
+
+"""A photo for the gallery"""
+type Photo implements Node {
+  photo: String!
+  order: Int!
+
+  """The ID of the object."""
+  id: ID!
+}
+
+type Query {
+  """Get node by ID"""
+  node(
+    """The ID of the object"""
+    id: ID!
+  ): Node
+
+  """Get nodes by IDs"""
+  nodes(ids: [ID!]!): [Node]!
+
+  """
+  Search for different types of objects. Will return max 10 of each type.
+  """
+  search(query: String, types: [SearchType]!): [SearchResult]!
+
+  """Get a joblisting by its slug."""
+  joblisting(slug: String!): Joblisting
+
+  """List and paginate joblistings"""
+  joblistings(orderBy: [OrderByJoblistingType], before: String, after: String, first: Int, last: Int, type: String, company: ID, toGrade: Float, fromGrade: Float, towns: [ID], isSummerjobMarathon: Boolean): JoblistingConnection
+
+  """Metadata about the current years event"""
+  currentMetaData: MetaData!
+
+  """Published stand map for the current edition."""
+  currentStandMap: CurrentStandMap
+
+  """
+  Get info page.
+
+   Each page identified with a slug can be translated into multiple languages.
+  Each entity is identified by an id or the unique together pair (slug, language)
+  """
+  page(language: String = "nb", slug: String!, videoFile: String): Page
+
+  """
+  Get info page.
+
+   Each page identified with a slug can be translated into multiple languages.
+  Each entity is identified by an id or the unique together pair (slug,
+  language). If slugs are left empty, it will return all pages
+  """
+  pages(language: String = "nb", slugs: [String!], infopage: Boolean): [Page]
+
+  """Get all questions"""
+  questions: [Question]
+
+  """Get all photos"""
+  photos: [Photo!]
+
+  """Get all stands"""
+  stands(
+    """Randomize the order of the the stands (optional argument)"""
+    shuffle: Boolean
+  ): [Stand!]
+
+  """Get a stand by slug."""
+  stand(slug: String!): Stand
+
+  """All the events"""
+  events: [Event!]
+
+  """ping -> pong"""
+  ping: String
+
+  """Resolve count"""
+  resolveCount: Int
+}
+
+"""A question for the FAQ"""
+type Question implements Node {
+  question: String!
+  answer: String!
+  isForCompanies: Boolean!
+
+  """The ID of the object."""
+  id: ID!
+}
+
+union SearchResult = Joblisting | Company | Page | Town
+
+enum SearchType {
+  COMPANY
+
+  """Search for companies with one or more joblisting. Useful for filtering"""
+  COMPANY_WITH_JOBLISTING
+  TOWNS_WITH_JOBLISTING
+  JOBLISTING
+  PAGE
+}
+
+"""A company stand"""
+type Stand implements Node {
+  """Slug for stand. Blir autogenerert om tom."""
+  slug: String!
+  livestreamUrl: String!
+  qaUrl: String!
+  chatUrl: String!
+  active: Boolean!
+  company: Company!
+  description: String!
+
+  """The ID of the object."""
+  id: ID!
+
+  """The stand's associated events"""
+  events: [Event!]
+}
+
+"""
+The `Time` scalar type represents a Time value as
+specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Time
+
+"""Town entity"""
+type Town implements Node {
+  """The ID of the object."""
+  id: ID!
+  name: String!
+}
+
+"""User entity"""
+type User implements Node {
+  """The ID of the object."""
+  id: ID!
+  email: String!
+  linkedin: String
+
+  """År brukeren var aktiv"""
+  year: Int
+  fullName: String
+  role: String
+  photo(height: Int, width: Int): String
+}

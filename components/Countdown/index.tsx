@@ -25,20 +25,19 @@ const pad = (value: number): string => String(value).padStart(2, '0');
 
 const CountdownComponent = ({
   currentMetaData,
+  eventStartTime = '10:00:00',
   phase,
 }: {
   currentMetaData: Countdown_currentMetaData;
+  eventStartTime?: string;
   phase?: EventPhase;
 }): JSX.Element => {
   const targetTimestamp = useMemo(
     () =>
       currentMetaData?.startDate
-        ? getEventStartTimestamp(
-            currentMetaData.startDate,
-            currentMetaData.eventStartTime
-          )
+        ? getEventStartTimestamp(currentMetaData.startDate, eventStartTime)
         : 0,
-    [currentMetaData]
+    [currentMetaData, eventStartTime]
   );
   const [nowTimestamp, setNowTimestamp] = useState<number | null>(null);
 
@@ -63,11 +62,11 @@ const CountdownComponent = ({
     countdown.completed || phase === 'live' || phase === 'postEvent';
   const eventDateTime = formatEventStartDateTime(
     currentMetaData.startDate,
-    currentMetaData.eventStartTime
+    eventStartTime
   );
   const accessibleEventDate = formatAccessibleEventStart(
     currentMetaData.startDate,
-    currentMetaData.eventStartTime
+    eventStartTime
   );
 
   if (completed) {
@@ -117,7 +116,6 @@ export default createFragmentContainer(CountdownComponent, {
   currentMetaData: graphql`
     fragment Countdown_currentMetaData on MetaData {
       startDate
-      eventStartTime
     }
   `,
 });
