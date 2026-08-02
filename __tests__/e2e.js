@@ -35,6 +35,43 @@ const hoverConnectedElement = async (selector) => {
   throw detachedError;
 };
 
+// Keep pointer-based assertions resilient when Relay replaces a hydrated node
+// between selector lookup and Puppeteer's clickable-point calculation.
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const clickConnectedElement = async (selector) => {
+  let transientError;
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await page.waitForFunction(
+      (candidate) => {
+        const element = document.querySelector(candidate);
+        return Boolean(element?.isConnected && element.getClientRects().length);
+      },
+      {},
+      selector
+    );
+    const element = await page.$(selector);
+    if (!element) continue;
+
+    try {
+      await element.evaluate((node) =>
+        node.scrollIntoView({ block: 'center', inline: 'center' })
+      );
+      await element.click();
+      await element.dispose();
+      return;
+    } catch (error) {
+      await element.dispose();
+      if (!/detached|not visible|not an HTMLElement/i.test(error.message)) {
+        throw error;
+      }
+      transientError = error;
+    }
+  }
+
+  throw transientError;
+};
+
 describe('Page rendering', () => {
   beforeEach(async () => {
     // Keep viewport, scroll restoration and media preferences from leaking
@@ -1950,13 +1987,10 @@ describe('Page rendering', () => {
       waitUntil: 'domcontentloaded',
     });
     await page.waitForSelector('.gallery-grid button', { visible: true });
-    await page.$eval('.gallery-grid button', (element) =>
-      element.scrollIntoView({ block: 'center', inline: 'center' })
-    );
     const triggerLabel = await page.$eval('.gallery-grid button', (element) =>
       element.getAttribute('aria-label')
     );
-    await page.click('.gallery-grid button');
+    await clickConnectedElement('.gallery-grid button');
     await page.waitForSelector('[role="dialog"]');
 
     expect(
