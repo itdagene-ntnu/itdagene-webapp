@@ -50,6 +50,8 @@ jobs:
       - run:
           name: test
           command: |
+            export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome-stable)"
+            google-chrome-stable --version
             RELAY_ENDPOINT=https://itdagene.no/graphql yarn test
 
   build-docker:

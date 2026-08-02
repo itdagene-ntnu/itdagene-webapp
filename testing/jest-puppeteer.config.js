@@ -6,11 +6,15 @@ const relayEndpoint =
   process.env.TEST_RELAY_ENDPOINT || 'https://itdagene.no/graphql';
 const macChromePath =
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const linuxChromePaths = [
+  '/usr/bin/google-chrome-stable',
+  '/usr/bin/google-chrome',
+];
+const installedChromePath = [macChromePath, ...linuxChromePaths].find((path) =>
+  fs.existsSync(path)
+);
 const executablePath =
-  process.env.PUPPETEER_EXECUTABLE_PATH ||
-  (process.platform === 'darwin' && fs.existsSync(macChromePath)
-    ? macChromePath
-    : undefined);
+  process.env.PUPPETEER_EXECUTABLE_PATH || installedChromePath;
 
 module.exports = {
   server: {
