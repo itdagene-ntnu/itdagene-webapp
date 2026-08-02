@@ -1026,7 +1026,42 @@ describe('Page rendering', () => {
         story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.47
       );
     });
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    await page.waitForFunction(() => {
+      const anchor = document
+        .querySelector('.event-hero__logo-anchor')
+        ?.getBoundingClientRect();
+      const logo = document
+        .querySelector('[data-hero-logo]')
+        ?.getBoundingClientRect();
+      if (!anchor || !logo) return false;
+
+      const anchorCenter = {
+        x: anchor.left + anchor.width / 2,
+        y: anchor.top + anchor.height / 2,
+      };
+      const logoSquareCenter = {
+        x: logo.left + logo.height / 2,
+        y: logo.top + logo.height / 2,
+      };
+
+      return (
+        Math.hypot(
+          logoSquareCenter.x - anchorCenter.x,
+          logoSquareCenter.y - anchorCenter.y
+        ) <= 1 &&
+        [...document.querySelectorAll('[data-countdown-tile]')].every(
+          (tile) => {
+            const tileRect = tile.getBoundingClientRect();
+            return (
+              Math.hypot(
+                tileRect.left + tileRect.width / 2 - anchorCenter.x,
+                tileRect.top + tileRect.height / 2 - anchorCenter.y
+              ) <= 1
+            );
+          }
+        )
+      );
+    });
     const resizedMergeGeometry = await readMergeGeometry();
 
     expect(resizedMergeGeometry.centerOffset).toBeLessThanOrEqual(1);
@@ -1039,6 +1074,9 @@ describe('Page rendering', () => {
     await page.setViewport({ width: 799, height: 900 });
     await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.event-hero-story[data-hero-mode="static"]');
+    await page.evaluate(() => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    });
 
     expect(
       await page.$eval('[data-hero-logo-target]', (logo) => ({
@@ -1067,6 +1105,18 @@ describe('Page rendering', () => {
         story.offsetTop + (story.offsetHeight - window.innerHeight) * 0.69
       );
     });
+    await page.waitForFunction(
+      () => {
+        const story = document.querySelector('.event-hero-story');
+        if (!story) return false;
+        const scrollRange = Math.max(
+          1,
+          story.offsetHeight - window.innerHeight
+        );
+        return (window.scrollY - story.offsetTop) / scrollRange > 0.46;
+      },
+      { timeout: 8000 }
+    );
     await new Promise((resolve) => setTimeout(resolve, 900));
 
     const cinematicIdentity = await page.evaluate(() => {
@@ -1662,19 +1712,17 @@ describe('Page rendering', () => {
     '%s exposes its legacy route accent',
     async (path, expectedColor) => {
       await page.goto(baseUrl + path, { waitUntil: 'domcontentloaded' });
-      await page.waitForFunction(
-        (color) =>
-          getComputedStyle(document.querySelector('.page-header'))
-            .borderTopColor === color,
+      const resolvedAccent = await page.waitForFunction(
+        (color) => {
+          const header = document.querySelector('.page-header');
+          if (!header) return false;
+          const renderedColor = getComputedStyle(header).borderTopColor;
+          return renderedColor === color ? renderedColor : false;
+        },
         {},
         expectedColor
       );
-      expect(
-        await page.$eval(
-          '.page-header',
-          (header) => getComputedStyle(header).borderTopColor
-        )
-      ).toBe(expectedColor);
+      expect(await resolvedAccent.jsonValue()).toBe(expectedColor);
     },
     16000
   );

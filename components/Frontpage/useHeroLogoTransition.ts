@@ -227,6 +227,7 @@ export const useHeroLogoTransition = (
       | { progress: (value: number, suppressEvents?: boolean) => unknown }
       | undefined;
     let cleanupFallbackHeaderAction: (() => void) | undefined;
+    let cleanupMotionResize: (() => void) | undefined;
 
     window.addEventListener('scroll', syncPreparationIdentity, {
       passive: true,
@@ -422,14 +423,33 @@ export const useHeroLogoTransition = (
           .to(assembledLogo, { autoAlpha: 0, duration: 0.05 }, 0.95);
       }, story);
 
-      ScrollTrigger.refresh();
-      const scrollRange = Math.max(1, story.offsetHeight - window.innerHeight);
-      const currentProgress = Math.max(
-        0,
-        Math.min(1, (window.scrollY - story.offsetTop) / scrollRange)
-      );
-      heroTimeline?.progress(currentProgress, false);
-      ScrollTrigger.update();
+      const synchronizeMotion = (): void => {
+        ScrollTrigger.refresh();
+        const scrollRange = Math.max(
+          1,
+          story.offsetHeight - window.innerHeight
+        );
+        const currentProgress = Math.max(
+          0,
+          Math.min(1, (window.scrollY - story.offsetTop) / scrollRange)
+        );
+        heroTimeline?.progress(currentProgress, false);
+        ScrollTrigger.update();
+      };
+      let resizeFrame = 0;
+      const handleMotionResize = (): void => {
+        window.cancelAnimationFrame(resizeFrame);
+        resizeFrame = window.requestAnimationFrame(() => {
+          resizeFrame = window.requestAnimationFrame(synchronizeMotion);
+        });
+      };
+
+      synchronizeMotion();
+      window.addEventListener('resize', handleMotionResize);
+      cleanupMotionResize = (): void => {
+        window.removeEventListener('resize', handleMotionResize);
+        window.cancelAnimationFrame(resizeFrame);
+      };
       story.dataset.heroTransition = 'ready';
       setHeroMode('cinematic');
       window.removeEventListener('scroll', syncPreparationIdentity);
@@ -437,6 +457,7 @@ export const useHeroLogoTransition = (
 
     setupMotion().catch(() => {
       if (cancelled) return;
+      cleanupMotionResize?.();
       gsapContext?.revert();
       delete story.dataset.heroTransition;
       setHeroMode('static');
@@ -451,6 +472,7 @@ export const useHeroLogoTransition = (
     return (): void => {
       cancelled = true;
       setHeroMode('preparing', resolvePreparationState());
+      cleanupMotionResize?.();
       gsapContext?.revert();
       delete story.dataset.heroTransition;
       cleanupFallbackHeaderAction?.();
