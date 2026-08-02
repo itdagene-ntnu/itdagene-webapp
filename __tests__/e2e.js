@@ -3,42 +3,13 @@ const baseUrl =
 const hydrationFailurePattern =
   /hydration failed|text content does not match|did not match|server html|ENOENT.*\.next\/server\/pages/i;
 
-// React can replace a server-rendered link between Puppeteer's selector lookup
-// and pointer movement. A real pointer remains over the replacement element,
-// so retry only that transient detached-node case.
+const transientPointerErrorPattern = /detached|not visible|not an HTMLElement/i;
+
+// React can replace a server-rendered element between Puppeteer's selector
+// lookup and pointer movement. A real pointer remains at the same coordinates,
+// so retry the interaction against the connected replacement element.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const hoverConnectedElement = async (selector) => {
-  let detachedError;
-
-  for (let attempt = 0; attempt < 3; attempt += 1) {
-    await page.waitForFunction(
-      (candidate) => {
-        const element = document.querySelector(candidate);
-        return Boolean(element?.isConnected && element.getClientRects().length);
-      },
-      {},
-      selector
-    );
-    await page.$eval(selector, (element) =>
-      element.scrollIntoView({ block: 'center', inline: 'center' })
-    );
-
-    try {
-      await page.hover(selector);
-      return;
-    } catch (error) {
-      if (!error.message.includes('detached from document')) throw error;
-      detachedError = error;
-    }
-  }
-
-  throw detachedError;
-};
-
-// Keep pointer-based assertions resilient when Relay replaces a hydrated node
-// between selector lookup and Puppeteer's clickable-point calculation.
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const clickConnectedElement = async (selector) => {
+const interactWithConnectedElement = async (selector, interaction) => {
   let transientError;
 
   for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -57,20 +28,26 @@ const clickConnectedElement = async (selector) => {
       await element.evaluate((node) =>
         node.scrollIntoView({ block: 'center', inline: 'center' })
       );
-      await element.click();
+      await interaction(element);
       await element.dispose();
       return;
     } catch (error) {
       await element.dispose();
-      if (!/detached|not visible|not an HTMLElement/i.test(error.message)) {
-        throw error;
-      }
+      if (!transientPointerErrorPattern.test(error.message)) throw error;
       transientError = error;
     }
   }
 
-  throw transientError;
+  throw transientError || new Error(`Unable to interact with ${selector}`);
 };
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const hoverConnectedElement = async (selector) =>
+  interactWithConnectedElement(selector, (element) => element.hover());
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const clickConnectedElement = async (selector) =>
+  interactWithConnectedElement(selector, (element) => element.click());
 
 describe('Page rendering', () => {
   beforeEach(async () => {
@@ -1851,21 +1828,29 @@ describe('Page rendering', () => {
       )
     ).toBeLessThanOrEqual(16);
 
-    await page.hover(directorySelector);
-    await page.waitForFunction(
-      (selector) => document.querySelector(selector)?.dataset.active === 'true',
+    await hoverConnectedElement(directorySelector);
+    const activeMarker = await page.waitForFunction(
+      (selector) => {
+        const marker = document.querySelector(selector);
+        const label = marker?.querySelector('.stand-map__marker-label');
+        if (
+          marker?.dataset.active !== 'true' ||
+          !label ||
+          getComputedStyle(label).visibility === 'hidden'
+        ) {
+          return false;
+        }
+
+        return {
+          active: marker.dataset.active,
+          company: label.textContent,
+          labelVisible: true,
+        };
+      },
       {},
       markerSelector
     );
-    expect(
-      await page.$eval(markerSelector, (marker) => ({
-        active: marker.dataset.active,
-        company: marker.querySelector('.stand-map__marker-label')?.textContent,
-        labelVisible:
-          getComputedStyle(marker.querySelector('.stand-map__marker-label'))
-            .visibility !== 'hidden',
-      }))
-    ).toEqual({
+    expect(await activeMarker.jsonValue()).toEqual({
       active: 'true',
       company: company.name,
       labelVisible: true,
