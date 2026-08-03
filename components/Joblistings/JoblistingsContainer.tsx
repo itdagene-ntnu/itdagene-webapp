@@ -98,7 +98,7 @@ export const JoblistingItem = ({
       <Link href={`/jobb/${joblisting.slug}`}>
         <div className="job-card__logo">
           <img
-            alt={`${joblisting.company.name} logo`}
+            alt={`Logo for ${joblisting.company.name}`}
             loading="lazy"
             src={joblisting.company.logo || '/static/itdagene-gray.png'}
           />

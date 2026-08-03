@@ -10,10 +10,6 @@ import { metadata_metadata } from '../../__generated__/metadata_metadata.graphql
 
 import Footer from '../Footer';
 import { ContentStatePanel } from '../DesignSystem';
-import {
-  consumeMainFocusRequest,
-  focusRouteContent,
-} from '../../utils/navigationFocus';
 
 const MainFlex = styled('div')`
   display: flex;
@@ -107,16 +103,6 @@ export const Layout = <T extends {}>({
     : router.pathname.startsWith('/galleri')
     ? 'gallery'
     : 'default';
-
-  React.useEffect(() => {
-    if (!noLoading && !props) return;
-    if (!consumeMainFocusRequest()) return;
-
-    const frame = window.requestAnimationFrame(() => {
-      focusRouteContent();
-    });
-    return (): void => window.cancelAnimationFrame(frame);
-  }, [noLoading, props]);
 
   if (error)
     return (

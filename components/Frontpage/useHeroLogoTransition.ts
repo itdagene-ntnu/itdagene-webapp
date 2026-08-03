@@ -1,5 +1,6 @@
 import React from 'react';
 import { itdageneWordmark } from '../../config/brand';
+import { homepageMedia } from '../../config/homepage';
 import { announceHeaderActionVisibility } from '../../utils/heroHeaderHandoff';
 import { resolveEmployerAction } from '../../utils/homepageActions';
 
@@ -31,7 +32,7 @@ type DocumentWithFonts = Document & {
 type HeroExperienceMode = 'cinematic' | 'static';
 type HeroPreparationState = 'scrolled' | 'top';
 
-const HERO_VIDEO = 'https://cdn.itdagene.no/itdagene.mp4';
+const HERO_VIDEO = homepageMedia.hero.videoSrc;
 const COUNTDOWN_MERGE_DURATION = 0.3;
 const WORDMARK_CLOSED_CLIP = `${
   100 - (itdageneWordmark.markWidth / itdageneWordmark.width) * 100

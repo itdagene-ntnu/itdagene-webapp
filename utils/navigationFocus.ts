@@ -8,6 +8,14 @@ export const requestMainFocusAfterNavigation = (): void => {
   }
 };
 
+export const hasMainFocusRequest = (): boolean => {
+  try {
+    return window.sessionStorage.getItem(MAIN_FOCUS_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
 export const consumeMainFocusRequest = (): boolean => {
   try {
     if (window.sessionStorage.getItem(MAIN_FOCUS_KEY) !== 'true') return false;

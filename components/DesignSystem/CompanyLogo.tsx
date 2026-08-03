@@ -41,7 +41,7 @@ export const CompanyLogo = ({
   );
   const content = showsLogo ? (
     <img
-      alt={`${company.name} logo`}
+      alt={`Logo for ${company.name}`}
       className={imageClassName}
       decoding="async"
       height={height}
@@ -63,10 +63,11 @@ export const CompanyLogo = ({
   if (link && company.url) {
     return (
       <a
+        aria-label={`${company.name} - åpnes i nytt vindu`}
         className={rootClassName}
         data-logo-state={showsLogo ? 'image' : 'fallback'}
         href={company.url}
-        rel="noreferrer"
+        rel="noopener noreferrer"
         target="_blank"
       >
         {content}

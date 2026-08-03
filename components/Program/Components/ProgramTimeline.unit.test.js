@@ -61,6 +61,25 @@ describe('ProgramTimeline', () => {
     jest.useRealTimers();
   });
 
+  it('does not parse an empty date while the initial program day is resolving', () => {
+    expect(() => {
+      act(() => {
+        root.render(
+          <ProgramTimeline
+            activeDate=""
+            events={events}
+            router={{ query: {} }}
+            updateQueryEvent={jest.fn()}
+          />
+        );
+      });
+    }).not.toThrow();
+
+    expect(container.querySelector('.program-empty-day').textContent).toBe(
+      'Ingen arrangementer denne dagen.'
+    );
+  });
+
   it('links list hover and detail presentation without changing the selected event', () => {
     const updateQueryEvent = jest.fn();
 

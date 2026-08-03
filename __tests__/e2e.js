@@ -45,9 +45,44 @@ const interactWithConnectedElement = async (selector, interaction) => {
 const hoverConnectedElement = async (selector) =>
   interactWithConnectedElement(selector, (element) => element.hover());
 
+// The public stand map is controlled by the current edition's publication
+// state. Interaction scenarios run only when a map is published; otherwise
+// they verify the deliberate placeholder instead of waiting for stale data.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const clickConnectedElement = async (selector) =>
-  interactWithConnectedElement(selector, (element) => element.click());
+const hasPublishedStandMap = async () => {
+  await page.waitForSelector(
+    '.stand-directory button, .stand-state .content-state'
+  );
+  const directory = await page.$('.stand-directory button');
+
+  if (directory) return true;
+
+  expect(
+    await page.$eval('.stand-state .content-state', (state) =>
+      state.textContent.trim()
+    )
+  ).toContain('ikke publisert ennå');
+  return false;
+};
+
+// Program data is publication-controlled. Visual interaction checks run only
+// when the current program is published; otherwise the route must expose its
+// deliberate publication state rather than wait for a date control forever.
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const hasPublishedProgram = async () => {
+  await page.waitForSelector('[data-program-date], .content-state');
+  const date = await page.$('[data-program-date]');
+  if (date) return true;
+
+  const state = await page.$eval('.content-state', (element) =>
+    element.textContent.trim()
+  );
+  expect(
+    state.includes('ikke publisert ennå') ||
+      state.includes('ingen arrangementer ennå')
+  ).toBe(true);
+  return false;
+};
 
 describe('Page rendering', () => {
   beforeEach(async () => {
@@ -292,7 +327,12 @@ describe('Page rendering', () => {
       )
     ).toBe(true);
 
-    await hoverConnectedElement('[data-testid="event-marquee"]');
+    // Hover the fixed metadata strip rather than the geometric centre of the
+    // marquee. The centre is occupied by continuously moving tracks, which can
+    // move away from Chromium's pointer between hit testing and event dispatch.
+    await hoverConnectedElement(
+      '[data-testid="event-marquee"] .event-marquee__meta'
+    );
     expect(
       await page.$eval('[data-testid="event-marquee"]', (region) => ({
         animationStates: [
@@ -1192,6 +1232,44 @@ describe('Page rendering', () => {
           document.querySelector('.event-hero-story')?.dataset
             .heroTransition === 'ready'
       );
+      await page.waitForFunction(
+        () =>
+          document.querySelector('.event-hero-story')?.dataset.videoState ===
+          'poster'
+      );
+      const initialFrame = await page.$eval('.event-hero__media', (media) => {
+        const image = media.querySelector('img');
+        const video = media.querySelector('video');
+        const imageUrl = new URL(image.currentSrc);
+
+        return {
+          fallback:
+            imageUrl.pathname === '/_next/image'
+              ? imageUrl.searchParams.get('url')
+              : image.getAttribute('src'),
+          fallbackComplete: image.complete,
+          fallbackWidth: image.naturalWidth,
+          poster: video.getAttribute('poster'),
+          videoOpacity: getComputedStyle(video).opacity,
+        };
+      });
+      expect(initialFrame).toEqual({
+        fallback: '/static/itdagene-video-first-frame.jpg',
+        fallbackComplete: true,
+        fallbackWidth: expect.any(Number),
+        poster: '/static/itdagene-video-first-frame.jpg',
+        videoOpacity: '0',
+      });
+      expect(initialFrame.fallbackWidth).toBeGreaterThan(0);
+      expect(
+        await page.evaluate(async () => {
+          const response = await fetch(
+            '/static/itdagene-video-first-frame.jpg',
+            { cache: 'no-store' }
+          );
+          return { ok: response.ok, status: response.status };
+        })
+      ).toEqual({ ok: true, status: 200 });
       await page.$eval('.event-hero video', (video) => {
         video.dispatchEvent(new Event('playing'));
       });
@@ -1428,8 +1506,67 @@ describe('Page rendering', () => {
   }, 16000);
 
   test('Program page rendering', async () => {
-    const response = await page.goto(baseUrl + '/program');
+    const response = await page.goto(baseUrl + '/program', {
+      waitUntil: 'domcontentloaded',
+    });
     expect(response.status()).toBe(200);
+    if (!(await hasPublishedProgram())) return;
+
+    await page.waitForSelector('[data-program-date][data-active="true"]');
+    expect(
+      await page.$eval('[data-program-date][data-active="true"]', (button) => ({
+        marker: getComputedStyle(button, '::after').content,
+        textAlign: getComputedStyle(button).textAlign,
+        dateAlignment: getComputedStyle(button.querySelector('time'))
+          .alignItems,
+      }))
+    ).toEqual({
+      marker: 'none',
+      textAlign: 'center',
+      dateAlignment: 'center',
+    });
+  }, 30000);
+
+  test('Program date indicator keeps its current motion across rapid selections', async () => {
+    await page.setViewport({ width: 1440, height: 900 });
+    await page.goto(baseUrl + '/program', { waitUntil: 'domcontentloaded' });
+    if (!(await hasPublishedProgram())) return;
+    await page.waitForFunction(
+      () =>
+        document.querySelector('.program-date-navigator__indicator')?.dataset
+          .ready === 'true'
+    );
+
+    const dates = await page.$$eval('[data-program-date]', (buttons) =>
+      buttons.map((button) => button.dataset.programDate)
+    );
+    if (dates.length < 3) return;
+
+    await page.$eval('.program-date-navigator__indicator', (indicator) => {
+      indicator.dataset.continuityProbe = 'original';
+    });
+
+    for (const date of [dates[dates.length - 1], dates[1]]) {
+      await page.$eval(`[data-program-date="${date}"]`, (button) =>
+        button.click()
+      );
+      await page.waitForFunction(
+        (selectedDate) =>
+          document.querySelector(
+            `[data-program-date="${selectedDate}"][data-active="true"]`
+          ),
+        {},
+        date
+      );
+      await new Promise((resolve) => setTimeout(resolve, 70));
+    }
+
+    expect(
+      await page.$eval(
+        '.program-date-navigator__indicator',
+        (indicator) => indicator.dataset.continuityProbe
+      )
+    ).toBe('original');
   }, 16000);
 
   test('Joblistings page rendering', async () => {
@@ -1452,6 +1589,32 @@ describe('Page rendering', () => {
     });
     expect(response.status()).toBe(200);
     expect(page.url()).toBe(baseUrl + '/om-itdagene');
+  }, 16000);
+
+  test('Legacy stand pages redirect to the current stand page', async () => {
+    for (const path of [
+      '/stands/mondayMap',
+      '/stands/tuesdayMap',
+      '/stands/oldStands',
+    ]) {
+      const response = await page.goto(baseUrl + path, {
+        waitUntil: 'domcontentloaded',
+      });
+      expect(response.status()).toBe(200);
+      expect(page.url()).toBe(baseUrl + '/stands');
+      expect(
+        await page.evaluate(() =>
+          document.body.textContent.includes('Standplasseringer 2025')
+        )
+      ).toBe(false);
+      expect(
+        await page.evaluate(() =>
+          document.body.textContent.includes(
+            'Det har skjedd en feil ved henting'
+          )
+        )
+      ).toBe(false);
+    }
   }, 16000);
 
   test('Unknown routes use the shared not-found page', async () => {
@@ -1588,14 +1751,92 @@ describe('Page rendering', () => {
     });
   }, 16000);
 
-  test('Pointer navigation moves focus without showing a keyboard ring', async () => {
+  test('Desktop navigation underlines links from left to right', async () => {
+    await page.goto(`${baseUrl}/program`, { waitUntil: 'domcontentloaded' });
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const readUnderline = (selector) =>
+      page.$eval(selector, (link) => {
+        const label = link.querySelector('span');
+        const style = getComputedStyle(label, '::after');
+        const match = style.transform.match(/^matrix\(([^,]+)/);
+
+        return {
+          origin: style.transformOrigin.split(' ')[0],
+          scale: match ? Number(match[1]) : style.transform === 'none' ? 1 : 0,
+        };
+      });
+
+    const activeUnderline = await readUnderline(
+      '.site-navigation__link--program'
+    );
+    const idleUnderline = await readUnderline('.site-navigation__link--stands');
+
+    expect(activeUnderline.scale).toBe(1);
+    expect(idleUnderline).toEqual({ origin: '0px', scale: 0 });
+
+    await hoverConnectedElement('.site-navigation__link--stands');
+    await page.waitForFunction(() => {
+      const label = document.querySelector(
+        '.site-navigation__link--stands > span'
+      );
+      const transform = getComputedStyle(label, '::after').transform;
+      const match = transform.match(/^matrix\(([^,]+)/);
+      return match && Number(match[1]) > 0.99;
+    });
+
+    expect(
+      (await readUnderline('.site-navigation__link--stands')).scale
+    ).toBeGreaterThan(0.99);
+
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+    expect(
+      await page.$eval(
+        '.site-navigation__link--stands',
+        (link) =>
+          getComputedStyle(link.querySelector('span'), '::after')
+            .backgroundColor
+      )
+    ).toBe('rgb(124, 209, 238)');
+
+    await page.emulateMediaFeatures([
+      { name: 'prefers-reduced-motion', value: 'reduce' },
+    ]);
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+    expect(
+      await page.$eval(
+        '.site-navigation__link--stands',
+        (link) =>
+          getComputedStyle(link.querySelector('span'), '::after')
+            .backgroundColor
+      )
+    ).toBe('rgb(124, 209, 238)');
+
+    await page.emulateMediaFeatures([
+      { name: 'prefers-reduced-motion', value: 'no-preference' },
+    ]);
     await page.setViewport({ width: 390, height: 844 });
     await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
     await page.click('.menu-toggle');
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-      page.click('.site-navigation a[href="/program"]'),
-    ]);
+    expect(
+      await page.$eval(
+        '.site-navigation__link--stands',
+        (link) =>
+          getComputedStyle(link.querySelector('span'), '::after')
+            .backgroundColor
+      )
+    ).toBe('rgb(124, 209, 238)');
+  }, 30000);
+
+  test('Pointer navigation moves focus without showing a keyboard ring', async () => {
+    await page.setViewport({ width: 390, height: 844 });
+    await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector(
+      '.site-navigation[data-navigation-ready="true"]'
+    );
+    await page.click('.menu-toggle');
+    await page.click('.site-navigation a[href="/program"]');
+    await page.waitForFunction(() => window.location.pathname === '/program');
     await page.waitForFunction(() => document.activeElement?.tagName === 'H1');
 
     const destinationFocus = await page.evaluate(() => ({
@@ -1614,12 +1855,13 @@ describe('Page rendering', () => {
   test('Keyboard navigation moves focus and keeps its visible ring', async () => {
     await page.setViewport({ width: 390, height: 844 });
     await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector(
+      '.site-navigation[data-navigation-ready="true"]'
+    );
     await page.click('.menu-toggle');
     await page.focus('.site-navigation a[href="/program"]');
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-      page.keyboard.press('Enter'),
-    ]);
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => window.location.pathname === '/program');
     await page.waitForFunction(() => document.activeElement?.tagName === 'H1');
 
     const destinationFocus = await page.evaluate(() => ({
@@ -1741,10 +1983,10 @@ describe('Page rendering', () => {
     16000
   );
 
-  test('Stand selection is restored by browser history', async () => {
+  test('Stand history works when published, otherwise the placeholder is explicit', async () => {
     await page.setViewport({ width: 390, height: 844 });
     await page.goto(baseUrl + '/stands', { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.stand-directory button', { visible: true });
+    if (!(await hasPublishedStandMap())) return;
     const company = await page.$eval('.stand-directory button', (button) => ({
       name: button.querySelector('strong')?.textContent,
       slug: button.dataset.standCompany,
@@ -1799,10 +2041,10 @@ describe('Page rendering', () => {
     expect(selectionLocation.summary).toContain(selectionLocation.location);
   }, 16000);
 
-  test('Stand map, directory and table share one active company', async () => {
+  test('Published stand surfaces share one active company', async () => {
     await page.setViewport({ width: 1440, height: 1000 });
     await page.goto(baseUrl + '/stands', { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.stand-directory button', { visible: true });
+    if (!(await hasPublishedStandMap())) return;
 
     const company = await page.$eval('.stand-directory button', (button) => ({
       name: button.querySelector('strong')?.textContent,
@@ -1905,10 +2147,10 @@ describe('Page rendering', () => {
     ).toBe(true);
   }, 30000);
 
-  test('Stand search previews its top result without changing the URL', async () => {
+  test('Published stand search previews its top result without changing the URL', async () => {
     await page.setViewport({ width: 1440, height: 1000 });
     await page.goto(baseUrl + '/stands', { waitUntil: 'domcontentloaded' });
-    await page.waitForSelector('.stand-directory button', { visible: true });
+    if (!(await hasPublishedStandMap())) return;
 
     const company = await page.$eval('.stand-directory button', (button) => ({
       name: button.querySelector('strong')?.textContent,
@@ -1937,7 +2179,10 @@ describe('Page rendering', () => {
           selected: document.querySelector(
             `.stand-directory button[data-stand-company="${slug}"]`
           )?.dataset.selected,
-          summary: document.querySelector('.stand-selection'),
+          summaryCompany: document.querySelector('.stand-selection h2')
+            ?.textContent,
+          summaryLabel: document.querySelector('.stand-selection .site-eyebrow')
+            ?.textContent,
         }),
         company.slug
       )
@@ -1945,7 +2190,8 @@ describe('Page rendering', () => {
       company: null,
       label: company.name,
       selected: 'false',
-      summary: null,
+      summaryCompany: company.name,
+      summaryLabel: 'Øverste søkeresultat',
     });
 
     const topCompany = await page.$eval(
@@ -1975,11 +2221,22 @@ describe('Page rendering', () => {
       waitUntil: 'domcontentloaded',
     });
     await page.waitForSelector('.gallery-grid button', { visible: true });
-    const triggerLabel = await page.$eval('.gallery-grid button', (element) =>
-      element.getAttribute('aria-label')
+    // Use one connected handle for the label and real pointer activation. The
+    // Relay store can replace the gallery grid during hydration.
+    let triggerLabel;
+    await interactWithConnectedElement(
+      '.gallery-grid button',
+      async (element) => {
+        triggerLabel = await element.evaluate((node) =>
+          node.getAttribute('aria-label')
+        );
+        await element.click();
+      }
     );
-    await clickConnectedElement('.gallery-grid button');
     await page.waitForSelector('[role="dialog"]');
+    await page.waitForFunction(() =>
+      Boolean(document.activeElement.closest('[role="dialog"]'))
+    );
 
     expect(
       await page.evaluate(() =>

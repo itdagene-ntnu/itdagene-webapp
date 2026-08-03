@@ -21,9 +21,7 @@ import { selectHydrationQueryProps } from '../utils/hydrationSnapshot';
 import dayjs from 'dayjs';
 import 'dayjs/locale/nb';
 import {
-  cacheOptionalEventConfiguration,
   fetchOptionalEventConfiguration,
-  getCachedOptionalEventConfiguration,
   OptionalEventConfiguration,
 } from '../utils/optionalEventConfiguration';
 dayjs.locale('nb');
@@ -115,12 +113,8 @@ export const withData = <T extends {}, T1 extends OperationType>(
         if (process.browser) {
           const optionalEventConfiguration =
             localOptions.includeEventConfiguration
-              ? getCachedOptionalEventConfiguration() ||
-                (await fetchOptionalEventConfiguration('/api/graphql'))
+              ? await fetchOptionalEventConfiguration('/api/graphql')
               : {};
-          if (localOptions.includeEventConfiguration) {
-            cacheOptionalEventConfiguration(optionalEventConfiguration);
-          }
           if (!ComposedComponent.getInitialProps) {
             return {
               initialRenderTimestamp: new Date().toISOString(),
@@ -203,13 +197,6 @@ export const withData = <T extends {}, T1 extends OperationType>(
       constructor(props: Props) {
         super(props);
         this.state = { hasHydrated: false };
-        if (
-          process.browser &&
-          options.includeEventConfiguration &&
-          props.optionalEventConfiguration
-        ) {
-          cacheOptionalEventConfiguration(props.optionalEventConfiguration);
-        }
         const { envSettings } = props;
         // The same type casting here.
         this.environment = initEnvironment({
@@ -288,16 +275,18 @@ export const withDataAndLayout = <T extends {}>(
     props,
     error,
     ...rest
-  }: WithDataProps<T>): JSX.Element => (
-    <Layout
-      {...(typeof layout === 'object' ? layout : layout({ props, error }))}
-      contentRenderer={({ props, error }): JSX.Element => (
-        <ComposedComponent {...rest} props={props} error={error} />
-      )}
-      props={props}
-      error={error}
-    />
-  );
+  }: WithDataProps<T>): JSX.Element => {
+    const layoutSettings =
+      typeof layout === 'object' ? layout : layout({ props, error });
+
+    return (
+      <Layout {...layoutSettings} props={props} error={error}>
+        {props ? (
+          <ComposedComponent {...rest} props={props} error={error} />
+        ) : null}
+      </Layout>
+    );
+  };
 
   LayoutComponent.getInitialProps = ComposedComponent.getInitialProps;
 

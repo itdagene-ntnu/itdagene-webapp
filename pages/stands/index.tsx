@@ -10,11 +10,11 @@ import {
 } from '../../components/DesignSystem';
 import { StandMap } from '../../components/Stands/StandMap';
 import {
-  standMapManifest as historicalStandMap,
   StandMapDayId,
   StandMapManifest,
   validateStandMapManifest,
 } from '../../components/Stands/standsData';
+import { StandMapPlaceholder } from '../../components/Stands/StandMapPlaceholder';
 import { editionConfig } from '../../config/edition';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import { resolveContentState } from '../../utils/eventLifecycle';
@@ -47,7 +47,29 @@ const Index = ({
   const currentStandMap = toStandMapManifest(
     optionalEventConfiguration.currentStandMap
   );
-  const standMapManifest = currentStandMap || historicalStandMap;
+  const currentEdition = props.currentMetaData?.year || editionConfig.edition;
+  const contentState = resolveContentState({
+    lifecycle: editionConfig.modules.stands,
+    currentEdition,
+    sourceEdition: currentStandMap?.edition,
+    itemCount: currentStandMap?.days.length || 0,
+    isPublished: optionalEventConfiguration.standsPublished === true,
+  });
+
+  if (!currentStandMap || contentState !== 'published') {
+    return (
+      <>
+        <PageHeader title="Standkart">
+          <MetadataList items={[{ label: 'Utgave', value: currentEdition }]} />
+        </PageHeader>
+        <div className="stand-state">
+          <StandMapPlaceholder edition={currentEdition} />
+        </div>
+      </>
+    );
+  }
+
+  const standMapManifest = currentStandMap;
   const validationErrors = validateStandMapManifest(standMapManifest);
   if (validationErrors.length > 0) {
     return (
@@ -58,15 +80,6 @@ const Index = ({
       />
     );
   }
-
-  const currentEdition = props.currentMetaData?.year || editionConfig.edition;
-  const contentState = resolveContentState({
-    lifecycle: editionConfig.modules.stands,
-    currentEdition,
-    sourceEdition: standMapManifest.edition,
-    itemCount: standMapManifest.days.length,
-    isPublished: Boolean(currentStandMap),
-  });
   const requestedDay =
     typeof router.query.day === 'string' &&
     isStandMapDay(router.query.day, standMapManifest)
@@ -92,24 +105,10 @@ const Index = ({
         />
       </PageHeader>
 
-      {contentState !== 'published' && (
-        <div className="stand-state">
-          <ContentStatePanel
-            compact
-            description={`Kartet nedenfor er arkivet fra ${standMapManifest.edition}. Det er kun ment som et eksempel på oppsettet, og viser ikke årets plasseringer.`}
-            state={contentState}
-            title={`Standfordelingen for ${currentEdition} er ikke publisert ennå.`}
-          />
-        </div>
-      )}
-
-      <section
-        aria-labelledby="historical-map-heading"
-        className="stand-content"
-      >
+      <section aria-labelledby="stand-map-heading" className="stand-content">
         <div className="stand-content__heading">
           <div>
-            <h2 id="historical-map-heading">
+            <h2 id="stand-map-heading">
               Standplasseringer {standMapManifest.edition}
             </h2>
           </div>

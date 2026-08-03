@@ -5,16 +5,21 @@ export type HomepageMediaItem = {
   focalPoint?: string;
 };
 
+export type HomepageHeroMediaItem = HomepageMediaItem & {
+  videoSrc: string;
+};
+
 export const homepageMedia: {
-  hero: HomepageMediaItem;
+  hero: HomepageHeroMediaItem;
   employer: HomepageMediaItem;
   documentary: HomepageMediaItem[];
 } = {
   hero: {
-    src: 'https://itdagene.no/uploads/gallery/IMG_1877.JPG',
-    alt: 'Studenter besøker bedriftsstands i Realfagbygget',
-    label: 'Studenter i standområdet under itDAGENE 2025',
-    focalPoint: '58% center',
+    src: '/static/itdagene-video-first-frame.jpg',
+    alt: 'NTNU-skiltet utenfor Hovedbygningen på Gløshaugen',
+    label: 'itDAGENE på NTNU Gløshaugen',
+    focalPoint: 'center',
+    videoSrc: 'https://cdn.itdagene.no/itdagene.mp4',
   },
   employer: {
     src: 'https://itdagene.no/uploads/gallery/IMG_5296.JPG',

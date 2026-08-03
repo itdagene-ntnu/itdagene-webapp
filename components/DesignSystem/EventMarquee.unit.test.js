@@ -24,7 +24,7 @@ describe('EventMarquee', () => {
 
     expect(markup).toContain('data-direction="left"');
     expect(markup).toContain('data-direction="right"');
-    expect(markup).toContain('Logo Company logo');
+    expect(markup).toContain('Logo for Logo Company');
     expect(markup).toContain('https://cdn.example/logo.png');
     expect(markup).toContain('Text Company');
     expect(markup).toContain('data-marquee-label="true"');

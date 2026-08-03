@@ -8,4 +8,5 @@ bundles/
 *.mp4
 .DS_Store
 .vscode/
+.idea/
 .env

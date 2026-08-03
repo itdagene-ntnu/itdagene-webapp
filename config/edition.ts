@@ -44,10 +44,9 @@ export const editionConfig: EditionConfig = {
     },
     stands: {
       edition: 2026,
-      source: 'manifest',
+      source: 'graphql',
       owner: 'Logistikk og web',
       configuredState: 'unpublished',
-      historicalEdition: 2025,
     },
     jobs: {
       edition: 2026,

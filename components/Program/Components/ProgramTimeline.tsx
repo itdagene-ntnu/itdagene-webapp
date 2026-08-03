@@ -32,6 +32,10 @@ const findInitialEvent = (
   activeDate: string,
   queryEvent?: string
 ): ProgramEvent | undefined => {
+  if (!activeDate || events.length === 0) {
+    return undefined;
+  }
+
   const selectedFromQuery = queryEvent
     ? events.find((event) => event.id === queryEvent)
     : undefined;

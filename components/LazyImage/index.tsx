@@ -21,6 +21,25 @@ const StyledImage = styled(Image)<{
   }
 `;
 
+const ImageFrame = styled.div`
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface-muted);
+`;
+
+const ImageError = styled.span`
+  position: absolute;
+  display: grid;
+  padding: var(--space-4);
+  color: var(--color-ink-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  inset: 0;
+  place-items: center;
+  text-align: center;
+`;
+
 type LazyImageProps = ImageProps & {
   skeletonVariant?: 'text' | 'rectangular' | 'rounded' | 'circular' | undefined;
   hover?: boolean;
@@ -47,23 +66,19 @@ const LazyImage = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   return (
-    <>
-      <div
-        style={{
-          width: width,
-          height: height,
-          display: error ? 'none' : 'block',
-        }}
-      >
-        {loading && (
-          <Skeleton
-            variant={skeletonVariant}
-            animation="wave"
-            width={width}
-            height={height}
-            style={{ position: 'absolute' }}
-          />
-        )}
+    <ImageFrame style={{ width, height }}>
+      {loading && !error && (
+        <Skeleton
+          variant={skeletonVariant}
+          animation="wave"
+          width={width}
+          height={height}
+          style={{ position: 'absolute' }}
+        />
+      )}
+      {error ? (
+        <ImageError aria-hidden="true">Bildet kunne ikke lastes</ImageError>
+      ) : (
         <StyledImage
           $hover={hover}
           $cursor={cursor}
@@ -71,14 +86,17 @@ const LazyImage = ({
           alt={alt}
           loading="lazy"
           onLoad={(): void => setLoading(false)}
-          onError={(): void => setError(true)}
+          onError={(): void => {
+            setError(true);
+            setLoading(false);
+          }}
           onClick={onClick}
           width={width}
           height={height}
           quality={100}
         />
-      </div>
-    </>
+      )}
+    </ImageFrame>
   );
 };
 

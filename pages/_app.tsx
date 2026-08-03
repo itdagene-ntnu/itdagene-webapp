@@ -13,7 +13,11 @@ import './test.css';
 import 'video-react/dist/video-react.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import 'rc-slider/assets/index.css';
-import { focusRouteContent } from '../utils/navigationFocus';
+import {
+  consumeMainFocusRequest,
+  focusRouteContent,
+  hasMainFocusRequest,
+} from '../utils/navigationFocus';
 
 Sentry.init({
   enabled: process.env.NODE_ENV === 'production',
@@ -22,17 +26,51 @@ Sentry.init({
 
 const RouteFocusManager = (): null => {
   const router = useRouter();
-  const previousPathname = useRef(router.pathname);
+  const previousHeading = useRef<HTMLElement | null>(null);
+  const pendingFrame = useRef<number | null>(null);
 
   useEffect(() => {
-    if (previousPathname.current === router.pathname) return;
-    previousPathname.current = router.pathname;
+    const cancelPendingFocus = (): void => {
+      if (pendingFrame.current === null) return;
+      window.cancelAnimationFrame(pendingFrame.current);
+      pendingFrame.current = null;
+    };
 
-    const timeout = window.setTimeout(() => {
-      focusRouteContent();
-    }, 0);
-    return (): void => window.clearTimeout(timeout);
-  }, [router.pathname]);
+    const rememberCurrentHeading = (): void => {
+      cancelPendingFocus();
+      previousHeading.current = document.querySelector('#main-content h1');
+    };
+
+    const focusWhenDestinationIsReady = (): void => {
+      if (!hasMainFocusRequest()) return;
+
+      const heading = document.querySelector<HTMLElement>('#main-content h1');
+      const destinationReplacedPreviousHeading =
+        heading && heading !== previousHeading.current;
+
+      if (destinationReplacedPreviousHeading) {
+        consumeMainFocusRequest();
+        focusRouteContent();
+        pendingFrame.current = null;
+        return;
+      }
+
+      pendingFrame.current = window.requestAnimationFrame(
+        focusWhenDestinationIsReady
+      );
+    };
+
+    router.events.on('routeChangeStart', rememberCurrentHeading);
+    router.events.on('routeChangeComplete', focusWhenDestinationIsReady);
+    router.events.on('routeChangeError', cancelPendingFocus);
+
+    return (): void => {
+      cancelPendingFocus();
+      router.events.off('routeChangeStart', rememberCurrentHeading);
+      router.events.off('routeChangeComplete', focusWhenDestinationIsReady);
+      router.events.off('routeChangeError', cancelPendingFocus);
+    };
+  }, [router.events]);
 
   return null;
 };

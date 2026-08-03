@@ -8,19 +8,8 @@ export type OptionalEventConfiguration = {
   currentStandMap?: PublishedStandMap | null;
   eventStartTime?: string;
   programPublished?: boolean;
+  standsPublished?: boolean;
   venue?: string;
-};
-
-let browserConfigurationCache: OptionalEventConfiguration | undefined;
-
-export const getCachedOptionalEventConfiguration = ():
-  | OptionalEventConfiguration
-  | undefined => browserConfigurationCache;
-
-export const cacheOptionalEventConfiguration = (
-  configuration: OptionalEventConfiguration
-): void => {
-  browserConfigurationCache = configuration;
 };
 
 type OptionalEventConfigurationResponse = {
@@ -28,6 +17,7 @@ type OptionalEventConfigurationResponse = {
     currentMetaData?: {
       eventStartTime?: unknown;
       programPublished?: unknown;
+      standsPublished?: unknown;
       venue?: unknown;
     } | null;
     currentStandMap?: PublishedStandMap | null;
@@ -39,6 +29,7 @@ export const OPTIONAL_EVENT_CONFIGURATION_QUERY = `
   query OptionalEventConfigurationQuery {
     currentMetaData {
       programPublished
+      standsPublished
       venue
       eventStartTime
     }
@@ -68,9 +59,16 @@ export const parseOptionalEventConfiguration = (
   if (response.errors?.length || !response.data) return {};
 
   const metadata = response.data.currentMetaData;
+  const standsPublished =
+    typeof metadata?.standsPublished === 'boolean'
+      ? metadata.standsPublished
+      : undefined;
 
   return {
-    currentStandMap: response.data.currentStandMap,
+    // The visibility switch is authoritative. Fail closed when an older
+    // backend omits it or malformed metadata reaches the frontend.
+    currentStandMap:
+      standsPublished === true ? response.data.currentStandMap : null,
     eventStartTime:
       typeof metadata?.eventStartTime === 'string'
         ? metadata.eventStartTime
@@ -79,6 +77,7 @@ export const parseOptionalEventConfiguration = (
       typeof metadata?.programPublished === 'boolean'
         ? metadata.programPublished
         : undefined,
+    standsPublished,
     venue: typeof metadata?.venue === 'string' ? metadata.venue : undefined,
   };
 };

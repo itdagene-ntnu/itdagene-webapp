@@ -120,7 +120,7 @@ describe('CurrentCompanyDirectory', () => {
   it('falls back to the company name when a logo fails to load', () => {
     renderDirectory();
 
-    const bekkImage = container.querySelector('img[alt="Bekk logo"]');
+    const bekkImage = container.querySelector('img[alt="Logo for Bekk"]');
     act(() => {
       bekkImage.dispatchEvent(new Event('error'));
     });

@@ -182,6 +182,9 @@ type MetaData implements Node {
 
   """Whether the public program may be displayed."""
   programPublished: Boolean!
+
+  """Whether the current stand map may be displayed."""
+  standsPublished: Boolean!
   venue: String!
   eventStartTime: Time!
   companiesFirstDay: [Company!]

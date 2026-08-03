@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import { galleri_QueryResponse } from '../../__generated__/galleri_Query.graphql';
 import { graphql } from 'react-relay';
@@ -18,6 +18,7 @@ const Galleri = ({
   const photos = props.photos || [];
   const [slideNumber, setSlideNumber] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const activePhoto = photos[slideNumber];
   const isHistoricalArchive =
     editionConfig.modules.gallery.configuredState !== 'published';
@@ -121,6 +122,7 @@ const Galleri = ({
             : 'Galleri'
         }
         isOpen={openModal}
+        onAfterOpen={(): void => closeButtonRef.current?.focus()}
         onRequestClose={closeModal}
         overlayClassName="gallery-modal-overlay"
       >
@@ -128,7 +130,7 @@ const Galleri = ({
           <p>
             {slideNumber + 1} / {photos.length}
           </p>
-          <button onClick={closeModal} type="button">
+          <button onClick={closeModal} ref={closeButtonRef} type="button">
             Lukk
           </button>
         </div>

@@ -34,6 +34,7 @@ describe('optional event configuration', () => {
           currentMetaData: {
             eventStartTime: '09:30:00',
             programPublished: true,
+            standsPublished: true,
             venue: 'Realfagbygget',
           },
           currentStandMap,
@@ -43,6 +44,7 @@ describe('optional event configuration', () => {
       currentStandMap,
       eventStartTime: '09:30:00',
       programPublished: true,
+      standsPublished: true,
       venue: 'Realfagbygget',
     });
   });
@@ -62,12 +64,30 @@ describe('optional event configuration', () => {
           currentMetaData: {
             eventStartTime: null,
             programPublished: 'yes',
+            standsPublished: 'yes',
             venue: 2026,
           },
           currentStandMap: null,
         },
       })
-    ).toEqual({ currentStandMap: null });
+    ).toEqual({ currentStandMap: null, standsPublished: undefined });
+  });
+
+  test('hides a returned stand map when the visibility setting is off', () => {
+    expect(
+      parseOptionalEventConfiguration({
+        data: {
+          currentMetaData: {
+            standsPublished: false,
+          },
+          currentStandMap: {
+            edition: 2025,
+            revision: 9,
+            maps: [],
+          },
+        },
+      })
+    ).toEqual({ currentStandMap: null, standsPublished: false });
   });
 
   test('fetches the extended contract from the selected GraphQL endpoint', async () => {
@@ -77,6 +97,7 @@ describe('optional event configuration', () => {
           currentMetaData: {
             eventStartTime: '09:00:00',
             programPublished: false,
+            standsPublished: false,
             venue: 'Realfagbygget, NTNU',
           },
           currentStandMap: null,
@@ -91,6 +112,7 @@ describe('optional event configuration', () => {
       currentStandMap: null,
       eventStartTime: '09:00:00',
       programPublished: false,
+      standsPublished: false,
       venue: 'Realfagbygget, NTNU',
     });
 

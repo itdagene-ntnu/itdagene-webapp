@@ -65,6 +65,18 @@ describe('content lifecycle resolution', () => {
     ).toBe('stale');
   });
 
+  it('accepts published GraphQL content owned by a newer active edition', () => {
+    expect(
+      resolveContentState({
+        lifecycle,
+        currentEdition: 2027,
+        sourceEdition: 2027,
+        itemCount: 1,
+        isPublished: true,
+      })
+    ).toBe('published');
+  });
+
   it('publishes approved non-empty data', () => {
     expect(
       resolveContentState({

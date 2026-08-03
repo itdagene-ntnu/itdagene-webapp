@@ -8,8 +8,13 @@ import { ProgramView_events } from '../../__generated__/ProgramView_events.graph
 import { editionConfig } from '../../config/edition';
 import { resolveContentState } from '../../utils/eventLifecycle';
 import { eventInstant, eventLocalTime } from '../../utils/eventTime';
+import {
+  buildProgramDates,
+  resolveInitialProgramDate,
+} from '../../utils/programDates';
 import { ContentStatePanel, PageHeader, MetadataList } from '../DesignSystem';
 import EventsToggle from './Components/EventsToggle';
+import ProgramDateNavigator from './Components/ProgramDateNavigator';
 import ProgramTimeline from './Components/ProgramTimeline';
 
 type Props = {
@@ -21,7 +26,23 @@ type Props = {
   venue: string;
 };
 
-const ProgramView = ({
+const formatProgramPeriod = (dates: string[]): string => {
+  if (dates.length === 0) return '';
+
+  const start = eventLocalTime(dates[0]).locale('nb');
+  const end = eventLocalTime(dates[dates.length - 1]).locale('nb');
+
+  if (start.isSame(end, 'day')) return start.format('D. MMMM YYYY');
+  if (start.isSame(end, 'month')) {
+    return `${start.format('D')}.–${end.format('D. MMMM YYYY')}`;
+  }
+  if (start.isSame(end, 'year')) {
+    return `${start.format('D. MMMM')}–${end.format('D. MMMM YYYY')}`;
+  }
+  return `${start.format('D. MMMM YYYY')}–${end.format('D. MMMM YYYY')}`;
+};
+
+export const ProgramView = ({
   events,
   currentMetaData,
   programPublished,
@@ -30,9 +51,8 @@ const ProgramView = ({
   venue,
 }: Props): JSX.Element => {
   const [programType, setProgramType] = useState('Generelt program');
-  const [activeDate, setActiveDate] = useState('');
 
-  const filteredEvents = useMemo(
+  const programEvents = useMemo(
     () =>
       showToggleButton
         ? events.filter((event) =>
@@ -47,36 +67,53 @@ const ProgramView = ({
   const groupedEvents = useMemo(
     () =>
       groupBy(
-        sortBy(filteredEvents, ['date', 'timeStart']),
+        sortBy(programEvents, ['date', 'timeStart']),
         (event) => event.date
       ),
-    [filteredEvents]
+    [programEvents]
   );
-  const sortedDates = useMemo(
-    () => Object.keys(groupedEvents).sort((a, b) => a.localeCompare(b)),
-    [groupedEvents]
+  const eventDates = useMemo(
+    () => buildProgramDates(programEvents.map((event) => event.date)),
+    [programEvents]
   );
   const queryEvent =
     typeof router.query.event === 'string'
-      ? events.find((event) => event.id === router.query.event)
+      ? programEvents.find((event) => event.id === router.query.event)
       : undefined;
-
+  const [activeDate, setActiveDate] = useState(() =>
+    resolveInitialProgramDate({
+      programDates: eventDates,
+      queryEventDate: queryEvent?.date,
+      today: '',
+    })
+  );
+  const eventCounts = useMemo(
+    () =>
+      eventDates.reduce<Record<string, number>>((counts, date) => {
+        counts[date] = groupedEvents[date]?.length || 0;
+        return counts;
+      }, {}),
+    [eventDates, groupedEvents]
+  );
   useEffect(() => {
     const today = eventInstant(new Date().toISOString()).format('YYYY-MM-DD');
-    const preferredDate =
-      queryEvent?.date && sortedDates.includes(queryEvent.date)
-        ? queryEvent.date
-        : sortedDates.includes(today)
-        ? today
-        : sortedDates[0];
-    setActiveDate(preferredDate || '');
-  }, [queryEvent, sortedDates]);
+    setActiveDate(
+      resolveInitialProgramDate({
+        programDates: eventDates,
+        queryEventDate: queryEvent?.date,
+        today,
+      })
+    );
+  }, [eventDates, queryEvent]);
 
-  const updateQueryEvent = (eventId: string): void => {
+  const updateQueryEvent = (eventId?: string): void => {
+    const query = { ...router.query };
+    if (eventId) query.event = eventId;
+    else delete query.event;
     router.push(
       {
         pathname: router.pathname,
-        query: { ...router.query, event: eventId },
+        query,
       },
       undefined,
       { shallow: true, scroll: false }
@@ -88,6 +125,8 @@ const ProgramView = ({
     const firstEvent = groupedEvents[date]?.[0];
     if (firstEvent) {
       updateQueryEvent(firstEvent.id);
+    } else {
+      updateQueryEvent();
     }
   };
 
@@ -97,9 +136,11 @@ const ProgramView = ({
   const dateLabel = `${startDate.format('D')}.–${endDate.format('D')}. ${endDate
     .locale('nb')
     .format('MMMM')} ${edition}`;
+  const programDateLabel = formatProgramPeriod(eventDates) || dateLabel;
   const contentState = resolveContentState({
     lifecycle: editionConfig.modules.program,
     currentEdition: edition,
+    sourceEdition: edition,
     itemCount: events.length,
     isPublished: programPublished,
   });
@@ -118,7 +159,7 @@ const ProgramView = ({
         >
           <MetadataList
             items={[
-              { label: 'Dato', value: dateLabel },
+              { label: 'Messedager', value: dateLabel },
               { label: 'Sted', value: venue },
             ]}
           />
@@ -150,8 +191,8 @@ const ProgramView = ({
       >
         <MetadataList
           items={[
-            { label: 'Dato', value: dateLabel },
-            { label: 'Arrangementer', value: filteredEvents.length },
+            { label: 'Programperiode', value: programDateLabel },
+            { label: 'Arrangementer', value: programEvents.length },
           ]}
         />
       </PageHeader>
@@ -167,14 +208,12 @@ const ProgramView = ({
         </div>
       )}
 
-      <div className="program-day-navigation">
-        <p className="site-eyebrow">Velg dag</p>
-        <EventsToggle
-          activeOption={activeDate}
-          options={sortedDates}
-          setActiveOption={updateActiveDate}
-        />
-      </div>
+      <ProgramDateNavigator
+        activeDate={activeDate}
+        dates={eventDates}
+        eventCounts={eventCounts}
+        onChange={updateActiveDate}
+      />
 
       <ProgramTimeline
         activeDate={activeDate}

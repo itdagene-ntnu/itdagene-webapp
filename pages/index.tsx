@@ -21,7 +21,6 @@ import {
   DEFAULT_EVENT_START_TIME,
   DEFAULT_EVENT_VENUE,
 } from '../utils/optionalEventConfiguration';
-import { standMapManifest as historicalStandMap } from '../components/Stands/standsData';
 
 type RenderProps = WithDataAndLayoutProps<pages_index_QueryResponse>;
 
@@ -55,19 +54,19 @@ const Index = ({
   const programState = resolveContentState({
     lifecycle: editionConfig.modules.program,
     currentEdition,
+    sourceEdition: currentEdition,
     itemCount: props.events?.length || 0,
     isPublished: optionalEventConfiguration.programPublished ?? false,
   });
   const currentStandMap = toStandMapManifest(
     optionalEventConfiguration.currentStandMap
   );
-  const visibleStandMap = currentStandMap || historicalStandMap;
   const standState = resolveContentState({
     lifecycle: editionConfig.modules.stands,
     currentEdition,
-    sourceEdition: visibleStandMap.edition,
-    itemCount: visibleStandMap.days.length,
-    isPublished: Boolean(currentStandMap),
+    sourceEdition: currentStandMap?.edition,
+    itemCount: currentStandMap?.days.length || 0,
+    isPublished: optionalEventConfiguration.standsPublished === true,
   });
   const companyMarquee = resolveHistoricalCompanyMarquee({
     excludedCompanyNames: [
@@ -134,7 +133,7 @@ const Index = ({
         phase={phase}
         programState={programState}
         referenceTime={referenceTime}
-        standMap={visibleStandMap}
+        standMap={currentStandMap || undefined}
         standState={standState}
       />
 

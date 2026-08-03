@@ -40,7 +40,10 @@ export const HeaderMenu = (): JSX.Element => {
   );
   const [heroEmployerAction, setHeroEmployerAction] =
     useState<HeroHeaderAction>();
+  const [navigationReady, setNavigationReady] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => setNavigationReady(true), []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -176,6 +179,7 @@ export const HeaderMenu = (): JSX.Element => {
         <nav
           aria-label="Hovedmeny"
           className={`site-navigation${isOpen ? ' is-open' : ''}`}
+          data-navigation-ready={navigationReady}
           id="primary-navigation"
         >
           <ul>
@@ -189,7 +193,7 @@ export const HeaderMenu = (): JSX.Element => {
                   href={item.to}
                   onClick={(event): void => navigateAndFocus(event, item.to)}
                 >
-                  {item.name}
+                  <span>{item.name}</span>
                 </Link>
               </li>
             ))}

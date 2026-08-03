@@ -101,6 +101,7 @@ const WelcomeScreen = ({
             loop
             muted
             playsInline
+            poster={homepageMedia.hero.src}
             preload="none"
             ref={videoRef}
           />

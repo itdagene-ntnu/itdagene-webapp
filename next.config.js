@@ -34,6 +34,21 @@ module.exports = withSourceMaps({
         destination: '/om-itdagene',
         permanent: true,
       },
+      {
+        source: '/stands/mondayMap',
+        destination: '/stands',
+        permanent: true,
+      },
+      {
+        source: '/stands/tuesdayMap',
+        destination: '/stands',
+        permanent: true,
+      },
+      {
+        source: '/stands/oldStands',
+        destination: '/stands',
+        permanent: true,
+      },
     ]
   },
   webpack: (config, { dev, isServer }) => {

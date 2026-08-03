@@ -14,24 +14,28 @@ const matchesSearch = (stand: StandMapStand, search: string): boolean => {
 };
 
 const StandSummary = ({
+  clearLabel = 'Fjern valg',
+  eyebrow = 'Valgt stand',
   location,
   stand,
   onClear,
 }: {
+  clearLabel?: string;
+  eyebrow?: string;
   location: string;
   stand: StandMapStand;
   onClear: () => void;
 }): JSX.Element => (
   <aside aria-live="polite" className="stand-selection">
     <div>
-      <p className="site-eyebrow">Valgt stand</p>
+      <p className="site-eyebrow">{eyebrow}</p>
       <h2>{stand.companyName}</h2>
       <p>
         Stand {stand.number} i {location}.
       </p>
     </div>
     <button className="stand-selection__clear" onClick={onClear} type="button">
-      Fjern valg
+      {clearLabel}
     </button>
   </aside>
 );
@@ -58,6 +62,7 @@ export const StandMap = ({
   const searchPreviewStand = normaliseSearch(search)
     ? filteredStands[0]
     : undefined;
+  const displayedStand = searchPreviewStand || selectedStand;
   const activeCompany =
     searchPreviewStand?.companySlug ||
     hoveredCompany ||
@@ -89,6 +94,7 @@ export const StandMap = ({
   });
 
   useEffect(() => {
+    setSearch('');
     setHoveredCompany(undefined);
     setFocusedCompany(undefined);
   }, [day.id]);
@@ -117,11 +123,16 @@ export const StandMap = ({
         </p>
       </div>
 
-      {selectedStand && (
+      {displayedStand && (
         <StandSummary
+          clearLabel={searchPreviewStand ? 'Nullstill søket' : undefined}
+          eyebrow={searchPreviewStand ? 'Øverste søkeresultat' : undefined}
           location={day.location}
-          onClear={(): void => onSelect()}
-          stand={selectedStand}
+          onClear={(): void => {
+            if (searchPreviewStand) setSearch('');
+            else onSelect();
+          }}
+          stand={displayedStand}
         />
       )}
 
