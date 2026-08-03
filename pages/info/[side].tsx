@@ -1,13 +1,18 @@
 import React from 'react';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../../lib/withData';
 import Navbar from '../../components/Navbar';
-import ServerError from '../../lib/ServerError';
 import styled from 'styled-components';
 
 import { graphql } from 'react-relay';
-import { Side_info_QueryResponse } from '../../__generated__/Side_info_Query.graphql';
+import {
+  Side_info_Query,
+  Side_info_QueryResponse,
+} from '../../__generated__/Side_info_Query.graphql';
 
 import PageView from '../../components/PageView';
+import { PublicErrorContent } from '../../components/PublicErrorPage';
+import { PageContext } from '../../utils/types';
+import { setNotFoundWhenFieldIsNull } from '../../utils/httpStatus';
 
 type RenderProps = WithDataAndLayoutProps<Side_info_QueryResponse>;
 
@@ -41,10 +46,26 @@ const Index = ({ props }: RenderProps): JSX.Element => {
           <PageView page={page} />
         </StyledPageView>
       ) : (
-        <ServerError statusCode={404} errorCode="ENOENT" />
+        <PublicErrorContent
+          description="Lenken kan være utdatert, eller siden kan ha fått en ny adresse."
+          statusCode={404}
+          title="Vi finner ikke siden."
+        />
       )}
     </>
   );
+};
+
+Index.getInitialProps = ({
+  res,
+  queryProps,
+}: PageContext<Side_info_Query>): Record<string, never> => {
+  setNotFoundWhenFieldIsNull({
+    response: res,
+    queryProps,
+    field: 'page',
+  });
+  return {};
 };
 
 export default withDataAndLayout(Index, {

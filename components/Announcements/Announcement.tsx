@@ -7,7 +7,7 @@ const Announcement: React.FC = () => {
       <InfoContainer>
         <img
           src="/static/outline_info_white_48dp.png"
-          alt="InfoIcon"
+          alt="Informasjon"
           style={{
             marginRight: '20px',
             marginLeft: '20px',

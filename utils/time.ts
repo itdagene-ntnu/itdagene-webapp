@@ -6,7 +6,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export const toDayjs = (date: string, time?: string): Dayjs => {
-  return time ? dayjs(date + time) : dayjs(date);
+  return time ? dayjs(`${date} ${time}`) : dayjs(date);
 };
 
 export const timeIsBetween = ({
@@ -18,7 +18,10 @@ export const timeIsBetween = ({
   start: Dayjs;
   end: Dayjs;
 }): boolean => {
-  return start.isBefore(time) && end.isAfter(time);
+  return (
+    (start.isBefore(time) || start.isSame(time)) &&
+    (end.isAfter(time) || end.isSame(time))
+  );
 };
 
 export const currentHalfhour = (time: Dayjs): string => {
@@ -46,5 +49,5 @@ export const timeIsAfter = ({
 
 export const isRespectiveDate = (date: Dayjs): boolean => {
   const now = dayjs();
-  return now.date() === date.date();
+  return now.isSame(date, 'day');
 };

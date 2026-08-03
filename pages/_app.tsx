@@ -1,20 +1,79 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import App from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import * as Sentry from '@sentry/node';
 // import { NextUIProvider } from '@nextui-org/react';
 
 // All css imports go here
+import '../styles/tokens.css';
+import '../styles/site.css';
 import './global.css';
 import './test.css';
 import 'video-react/dist/video-react.css';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import 'rc-slider/assets/index.css';
+import {
+  consumeMainFocusRequest,
+  focusRouteContent,
+  hasMainFocusRequest,
+} from '../utils/navigationFocus';
 
 Sentry.init({
   enabled: process.env.NODE_ENV === 'production',
   dsn: process.env.SENTRY_DSN,
 });
+
+const RouteFocusManager = (): null => {
+  const router = useRouter();
+  const previousHeading = useRef<HTMLElement | null>(null);
+  const pendingFrame = useRef<number | null>(null);
+
+  useEffect(() => {
+    const cancelPendingFocus = (): void => {
+      if (pendingFrame.current === null) return;
+      window.cancelAnimationFrame(pendingFrame.current);
+      pendingFrame.current = null;
+    };
+
+    const rememberCurrentHeading = (): void => {
+      cancelPendingFocus();
+      previousHeading.current = document.querySelector('#main-content h1');
+    };
+
+    const focusWhenDestinationIsReady = (): void => {
+      if (!hasMainFocusRequest()) return;
+
+      const heading = document.querySelector<HTMLElement>('#main-content h1');
+      const destinationReplacedPreviousHeading =
+        heading && heading !== previousHeading.current;
+
+      if (destinationReplacedPreviousHeading) {
+        consumeMainFocusRequest();
+        focusRouteContent();
+        pendingFrame.current = null;
+        return;
+      }
+
+      pendingFrame.current = window.requestAnimationFrame(
+        focusWhenDestinationIsReady
+      );
+    };
+
+    router.events.on('routeChangeStart', rememberCurrentHeading);
+    router.events.on('routeChangeComplete', focusWhenDestinationIsReady);
+    router.events.on('routeChangeError', cancelPendingFocus);
+
+    return (): void => {
+      cancelPendingFocus();
+      router.events.off('routeChangeStart', rememberCurrentHeading);
+      router.events.off('routeChangeComplete', focusWhenDestinationIsReady);
+      router.events.off('routeChangeError', cancelPendingFocus);
+    };
+  }, [router.events]);
+
+  return null;
+};
 
 export default class MyApp extends App {
   render(): JSX.Element {
@@ -28,12 +87,10 @@ export default class MyApp extends App {
     return (
       <>
         <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1"
-          />
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
 
+        <RouteFocusManager />
         <Component {...modifiedPageProps} />
       </>
     );

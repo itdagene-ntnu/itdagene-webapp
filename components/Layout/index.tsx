@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useRouter } from 'next/router';
 import { ContainerProps } from 'react-relay';
 import styled, { css } from 'styled-components';
 import LoadingIndicator from '../LoadingIndicator';
@@ -8,16 +9,18 @@ import OpengraphFragmentRenderer, { CustomOpengraphRenderer } from './metadata';
 import { metadata_metadata } from '../../__generated__/metadata_metadata.graphql';
 
 import Footer from '../Footer';
+import { ContentStatePanel } from '../DesignSystem';
 
 const MainFlex = styled('div')`
   display: flex;
   min-height: 100vh;
   justify-content: center;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
 `;
 
-const Content = styled('div')`
+const Content = styled('main')`
   min-height: 50vh;
+  width: 100%;
   flex: 1;
   ${({ center = false }: { center?: boolean; responsive?: boolean }): any =>
     center &&
@@ -30,28 +33,21 @@ const Content = styled('div')`
   ${({ responsive = false }: { center?: boolean; responsive?: boolean }): any =>
     responsive &&
     css`
-      @media only screen and (min-width: 1200px) {
-        width: 1127px;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-      @media only screen and (max-width: 1199px) and (min-width: 992px) {
-        width: 933px;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-      @media only screen and (max-width: 991px) and (min-width: 768px) {
-        width: 723px;
-        margin-left: auto !important;
-        margin-right: auto !important;
-      }
-      @media only screen and (max-width: 767px) {
-        width: auto !important;
-        margin-left: 1em !important;
-        margin-right: 1em !important;
+      width: min(calc(100% - 2rem), var(--site-width));
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 3.75rem) 0;
+
+      @media only screen and (max-width: 700px) {
+        width: min(calc(100% - 1.25rem), var(--site-width));
       }
     `};
 `;
+
+const SkipLink = (): JSX.Element => (
+  <a className="skip-link" href="#main-content">
+    Hopp til hovedinnhold
+  </a>
+);
 
 export const BlueSection = styled.div`
   background: ${itdageneBlue};
@@ -97,17 +93,30 @@ export const Layout = <T extends {}>({
   metadata,
   children,
 }: LayoutProps<T> & LayoutSettings<T>): JSX.Element => {
+  const router = useRouter();
+  const routeName = router.pathname.startsWith('/program')
+    ? 'program'
+    : router.pathname.startsWith('/stands')
+    ? 'stands'
+    : router.pathname.startsWith('/jobb')
+    ? 'jobs'
+    : router.pathname.startsWith('/galleri')
+    ? 'gallery'
+    : 'default';
+
   if (error)
     return (
       <Wrapper>
         <CustomOpengraphRenderer />
+        <SkipLink />
         <HeaderMenu />
-        <Content center>
-          <h1>Det har skjedd en feil...</h1>
-          <h2>
-            Forsøk å refreshe siden eller ta kontakt med <b>web@itdagene.no</b>{' '}
-            dersom feilen vedvarer
-          </h2>
+        <Content center id="main-content" tabIndex={-1}>
+          <ContentStatePanel
+            action={{ href: 'mailto:web@itdagene.no', label: 'Kontakt web' }}
+            description="Prøv å laste siden på nytt. Ta kontakt med webansvarlig dersom problemet fortsetter."
+            state="error"
+            title="Noe gikk galt da siden skulle lastes."
+          />
         </Content>
       </Wrapper>
     );
@@ -116,16 +125,18 @@ export const Layout = <T extends {}>({
     return (
       <Wrapper>
         <CustomOpengraphRenderer />
+        <SkipLink />
         <HeaderMenu />
-        <Content center>
+        <Content center id="main-content" tabIndex={-1}>
           <LoadingIndicator />
         </Content>
       </Wrapper>
     );
 
   return (
-    <div>
+    <div className="site-root" data-route={routeName}>
       <Wrapper>
+        <SkipLink />
         <HeaderMenu />
         {customOpengraphMetadata ? (
           <CustomOpengraphRenderer
@@ -140,7 +151,12 @@ export const Layout = <T extends {}>({
         ) : (
           <CustomOpengraphRenderer />
         )}
-        <Content center={shouldCenter} responsive={responsive}>
+        <Content
+          center={shouldCenter}
+          id="main-content"
+          responsive={responsive}
+          tabIndex={-1}
+        >
           {props && ContentRenderer ? (
             <ContentRenderer error={error} props={props} />
           ) : null}

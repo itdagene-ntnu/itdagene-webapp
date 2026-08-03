@@ -103,7 +103,7 @@ const SubPage = ({
     case 'joblistings':
       return <JobListingsPage company={stand.company} />;
     default:
-      return <div>Noe gikk galt. Forsøk å refresh siden</div>;
+      return <div>Noe gikk galt. Prøv å laste siden på nytt.</div>;
   }
 };
 
@@ -164,7 +164,7 @@ const Stand = ({ stand }: Props): JSX.Element => {
           <Back />
           <CompanyImg
             src={stand.company.logo || undefined}
-            alt={`${stand.company.name} logo`}
+            alt={`Logo for ${stand.company.name}`}
           />
         </Header>
         <LivePlayer qaUrl={stand.qaUrl} livestreamUrl={stand.livestreamUrl} />

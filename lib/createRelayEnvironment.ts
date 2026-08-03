@@ -17,14 +17,14 @@ let relayEnvironment: EnvironmentType | null = null;
 
 // Define a function that fetches the results of an operation (query/mutation/etc)
 // and returns its results as a Promise:
-function fetchQuery(
+async function fetchQuery(
   operation: RequestParameters,
   variables: Variables,
   cacheConfig: CacheConfig,
   uploadables: UploadableMap | undefined | null,
   envSettings: EnvSettings
 ): Promise<GraphQLResponse> {
-  return fetch(envSettings.relayEndpoint, {
+  const response = await fetch(envSettings.relayEndpoint, {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -35,7 +35,17 @@ function fetchQuery(
       query: operation.text, // GraphQL text from input
       variables,
     }),
-  }).then((response) => response.json());
+  });
+
+  if (!response.ok) {
+    throw new Error(`GraphQL request failed with HTTP ${response.status}.`);
+  }
+
+  try {
+    return (await response.json()) as GraphQLResponse;
+  } catch {
+    throw new Error('GraphQL returned an invalid JSON response.');
+  }
 }
 
 function fetchQueryWithSentry(envSettings: EnvSettings) {
@@ -61,6 +71,7 @@ export type EnvSettings = {
   sentryDsn: string;
   release: string;
   relayEndpoint: string;
+  browserRelayEndpoint?: string;
 };
 
 export default function initEnvironment({
@@ -74,7 +85,14 @@ export default function initEnvironment({
     return relayEnvironment;
   }
   // Create a network layer from the fetch function
-  const network = Network.create(fetchQueryWithSentry(envSettings));
+  const networkSettings =
+    process.browser && envSettings.browserRelayEndpoint
+      ? {
+          ...envSettings,
+          relayEndpoint: envSettings.browserRelayEndpoint,
+        }
+      : envSettings;
+  const network = Network.create(fetchQueryWithSentry(networkSettings));
   const store = new Store(new RecordSource(records));
   const localRelayEnvironment = new Environment({
     network,

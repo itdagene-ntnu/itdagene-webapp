@@ -1,13 +1,52 @@
 const withSourceMaps = require('@zeit/next-source-maps')();
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 const { SENTRY_ORG, SENTRY_PROJECT, RELEASE, COMMIT_SHA } = process.env
+const distDir = process.env.NEXT_DIST_DIR || '.next'
+const localImagePatterns =
+  process.env.NODE_ENV === 'production'
+    ? []
+    : [
+        {
+          protocol: 'http',
+          hostname: 'localhost',
+          port: '8000',
+          pathname: '/stands/maps/**',
+        },
+        {
+          protocol: 'http',
+          hostname: '127.0.0.1',
+          port: '8000',
+          pathname: '/stands/maps/**',
+        },
+      ]
 
 module.exports = withSourceMaps({
+  distDir,
   async redirects() {
     return [
       {
         source: '/company-information',
         destination: '/faq',
+        permanent: true,
+      },
+      {
+        source: '/info/om-itdagene',
+        destination: '/om-itdagene',
+        permanent: true,
+      },
+      {
+        source: '/stands/mondayMap',
+        destination: '/stands',
+        permanent: true,
+      },
+      {
+        source: '/stands/tuesdayMap',
+        destination: '/stands',
+        permanent: true,
+      },
+      {
+        source: '/stands/oldStands',
+        destination: '/stands',
         permanent: true,
       },
     ]
@@ -33,7 +72,7 @@ module.exports = withSourceMaps({
     if (SENTRY_ORG && SENTRY_PROJECT) {
       config.plugins.push(
       new SentryWebpackPlugin({
-        include: '.next',
+        include: distDir,
         ignore: ['node_modules'],
         urlPrefix: '/app/.next',
         release: RELEASE,
@@ -49,6 +88,7 @@ module.exports = withSourceMaps({
   },
   images: {
     remotePatterns: [
+      ...localImagePatterns,
       {
         protocol: 'https',
         hostname: 'cdn.itdagene.no',

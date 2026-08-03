@@ -181,7 +181,7 @@ const ListRenderer = (props: Props): JSX.Element => {
       props.collaborators.currentMetaData?.mainCollaborator?.id
   );
   const collaboratorListings = allListings?.filter((e) =>
-    props.collaborators.currentMetaData.collaborators?.some(
+    props.collaborators.currentMetaData?.collaborators?.some(
       (c) => c.id === e.node.company.id
     )
   );

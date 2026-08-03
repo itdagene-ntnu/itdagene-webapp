@@ -1,45 +1,23 @@
-import * as React from 'react';
-import { withRouter, NextRouter } from 'next/router';
-import { ResponsiveContent } from '../Styled';
 import Link from 'next/link';
-import styled, { css } from 'styled-components';
-import HamburgerMenu from 'react-hamburger-menu';
-import Flex from '../Styled/Flex';
-import FlexItem from '../Styled/FlexItem';
-
-const Header = styled('header')`
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background: white;
-`;
-
-const StyledMenuItem = styled('span')`
-  color: #3f4e59;
-  font-size: 20px;
-  padding: 0 20px;
-  opacity: 0.75;
-  transition: all 100ms ease-in-out;
-  ${({ active = false }: { active?: boolean }): any =>
-    active &&
-    css`
-      text-shadow: 0px 0px 0.25px black;
-      opacity: 1;
-    `};
-  :hover {
-    text-shadow: 0px 0px 0.25px black;
-    opacity: 1;
-  }
-`;
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
+import { itdageneWordmark } from '../../config/brand';
+import {
+  HERO_HEADER_ACTION_EVENT,
+  HeroHeaderAction,
+  HeroHeaderActionEvent,
+} from '../../utils/heroHeaderHandoff';
+import { resolveEmployerAction } from '../../utils/homepageActions';
+import { requestMainFocusAfterNavigation } from '../../utils/navigationFocus';
+import { SiteContainer } from '../DesignSystem';
 
 type MenuItem = {
   key: string;
   name: string;
   to: string;
-  as?: string;
 };
 
 const items: MenuItem[] = [
-  //{ key: 'home', name: 'Hjem', to: '/' },
   { key: 'program', name: 'Program', to: '/program' },
   { key: 'stands', name: 'Stands', to: '/stands' },
   { key: 'joblistings', name: 'Jobb', to: '/jobb' },
@@ -48,101 +26,198 @@ const items: MenuItem[] = [
   { key: 'about-us', name: 'Om oss', to: '/om-itdagene' },
 ];
 
-const MenuItem = withRouter(
-  ({ item, router }: { item: MenuItem; router: NextRouter }) => {
-    const { to, name, as } = item;
-    return (
-      <Link href={to} as={as}>
-        <StyledMenuItem
-          active={
-            item.to.split(/[/s?]+/)[1] === router.asPath.split(/[/s?]+/)[1]
-          }
-        >
-          {name}
-        </StyledMenuItem>
-      </Link>
-    );
-  }
-);
+const isActiveRoute = (pathname: string, target: string): boolean =>
+  pathname === target || pathname.startsWith(`${target}/`);
 
-type State = {
-  open: boolean;
-};
+export const HeaderMenu = (): JSX.Element => {
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [interestForm, setInterestForm] = useState<string | null | undefined>(
+    undefined
+  );
+  const [showEmployerAction, setShowEmployerAction] = useState(
+    router.pathname !== '/'
+  );
+  const [heroEmployerAction, setHeroEmployerAction] =
+    useState<HeroHeaderAction>();
+  const [navigationReady, setNavigationReady] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-export const OnOther = styled('div')`
-  @media only screen and (max-width: 991px) {
-    display: none;
-  }
-`;
-export const OnMobile = styled('div')`
-  display: none;
+  useEffect(() => setNavigationReady(true), []);
 
-  @media only screen and (max-width: 991px) {
-    display: block;
-  }
-`;
-const ItdageneLogo = styled('img')`
-  height: 60px;
-  @media only screen and (max-width: 991px) {
-    height: 35px;
-  }
-`;
-class StatefulDropdown extends React.Component<{}, State> {
-  state = {
-    open: false,
+  useEffect(() => {
+    setIsOpen(false);
+  }, [router.asPath]);
+
+  useEffect(() => {
+    if (router.pathname !== '/') {
+      setShowEmployerAction(true);
+      return;
+    }
+
+    setShowEmployerAction(false);
+    const handleHandoff = (event: Event): void => {
+      const handoff = event as CustomEvent<HeroHeaderActionEvent>;
+      setHeroEmployerAction(handoff.detail.action);
+      setShowEmployerAction(handoff.detail.visible);
+    };
+
+    window.addEventListener(HERO_HEADER_ACTION_EVENT, handleHandoff);
+    return (): void => {
+      window.removeEventListener(HERO_HEADER_ACTION_EVENT, handleHandoff);
+    };
+  }, [router.pathname]);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', closeOnEscape);
+    return (): void => document.removeEventListener('keydown', closeOnEscape);
+  }, [isOpen]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch('/api/graphql', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: '{ currentMetaData { interestForm } }',
+      }),
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Could not load interest registration state.');
+        }
+        return response.json() as Promise<{
+          data?: { currentMetaData?: { interestForm?: string | null } | null };
+        }>;
+      })
+      .then((response) =>
+        setInterestForm(response.data?.currentMetaData?.interestForm || null)
+      )
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          setInterestForm(undefined);
+        }
+      });
+
+    return (): void => controller.abort();
+  }, []);
+
+  const resolvedEmployerAction =
+    interestForm === undefined
+      ? { href: '/faq', label: 'For bedrifter' }
+      : resolveEmployerAction(interestForm);
+  const employerAction =
+    router.pathname === '/' && heroEmployerAction
+      ? heroEmployerAction
+      : resolvedEmployerAction;
+
+  const navigateAndFocus = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ): void => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    setIsOpen(false);
+    requestMainFocusAfterNavigation();
+    router.push(href);
   };
-  onMenuClicked = (): void =>
-    this.setState((prevState) => ({
-      open: !prevState.open,
-    }));
 
-  render(): JSX.Element {
-    return (
-      <Header>
-        <ResponsiveContent>
-          <Flex justifyContent="space-between" style={{ padding: '20px 0' }}>
-            <FlexItem>
-              <Link href="/">
-                <ItdageneLogo
-                  src="/static/itdagene-gray2.png"
-                  alt="Hvit itDAGENE logo"
-                />
-              </Link>
-            </FlexItem>
-            <Flex style={{ alignItems: 'center' }}>
-              <OnOther>
-                {items.map((item) => (
-                  <MenuItem key={item.key} item={item} />
-                ))}
-              </OnOther>
-              <OnMobile>
-                <HamburgerMenu
-                  aria-label="Meny"
-                  isOpen={this.state.open}
-                  menuClicked={this.onMenuClicked}
-                  width={18}
-                  height={15}
-                  strokeWidth={2}
-                  rotate={0}
-                  color="black"
-                  borderRadius={0}
-                  animationDuration={0.5}
-                />
-              </OnMobile>
-            </Flex>
-          </Flex>
-          <OnMobile>
-            <Flex flexDirection="column" style={{ lineHeight: '42px' }}>
-              {this.state.open &&
-                items.map((item) => <MenuItem key={item.key} item={item} />)}
-            </Flex>
-          </OnMobile>
-        </ResponsiveContent>
-      </Header>
-    );
-  }
-}
+  return (
+    <header
+      className={[
+        'site-header',
+        router.pathname === '/' && 'site-header--cinematic',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <SiteContainer className="site-header__inner">
+        <Link aria-label="itDAGENE - forsiden" className="site-logo" href="/">
+          <img
+            alt=""
+            data-hero-logo-target
+            height={itdageneWordmark.height}
+            src={itdageneWordmark.src}
+            width={itdageneWordmark.width}
+          />
+        </Link>
 
-export const HeaderMenu = (): JSX.Element => <StatefulDropdown />;
+        <button
+          aria-controls="primary-navigation"
+          aria-expanded={isOpen}
+          aria-label={isOpen ? 'Lukk meny' : 'Åpne meny'}
+          className="menu-toggle"
+          onClick={(): void => setIsOpen((open) => !open)}
+          ref={menuButtonRef}
+          type="button"
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <nav
+          aria-label="Hovedmeny"
+          className={`site-navigation${isOpen ? ' is-open' : ''}`}
+          data-navigation-ready={navigationReady}
+          id="primary-navigation"
+        >
+          <ul>
+            {items.map((item) => (
+              <li key={item.key}>
+                <Link
+                  aria-current={
+                    isActiveRoute(router.pathname, item.to) ? 'page' : undefined
+                  }
+                  className={`site-navigation__link site-navigation__link--${item.key}`}
+                  href={item.to}
+                  onClick={(event): void => navigateAndFocus(event, item.to)}
+                >
+                  <span>{item.name}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <a
+            className={`site-navigation__employer${
+              interestForm ? ' site-navigation__employer--open' : ''
+            }${
+              showEmployerAction
+                ? ' site-navigation__employer--visible'
+                : ' site-navigation__employer--hidden'
+            }`}
+            href={employerAction.href}
+            aria-hidden={!showEmployerAction}
+            rel={interestForm ? 'noreferrer' : undefined}
+            tabIndex={showEmployerAction ? undefined : -1}
+            target={interestForm ? '_blank' : undefined}
+          >
+            {employerAction.label}
+          </a>
+        </nav>
+      </SiteContainer>
+    </header>
+  );
+};
 
 export default HeaderMenu;

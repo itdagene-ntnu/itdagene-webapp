@@ -2,11 +2,7 @@ import React from 'react';
 import * as Sentry from '@sentry/node';
 import { NextPageContext } from 'next';
 import NextError, { ErrorProps } from 'next/error';
-import Layout from '../components/Layout';
-import { CenterIt } from '../components/Styled';
-import styled from 'styled-components';
-import FlexItem from '../components/Styled/FlexItem';
-import Flex from '../components/Styled/Flex';
+import { PublicErrorPage } from '../components/PublicErrorPage';
 
 type Props = {
   statusCode: number;
@@ -19,16 +15,18 @@ type ExtendedErrorProps = ErrorProps & {
   hasGetInitialPropsRun?: boolean;
 };
 
-const ERROR_TITLES: Record<string, string> = {
-  '404': 'Fant ikke siden :(',
-  '500': 'Vi jobber med siden frem mot neste itDAGENE, kom tilbake senere.',
+const ERROR_CONTENT: Record<string, { title: string; description: string }> = {
+  '404': {
+    title: 'Vi finner ikke siden.',
+    description:
+      'Lenken kan være utdatert, eller siden kan ha fått en ny adresse.',
+  },
+  '500': {
+    title: 'Siden kunne ikke lastes.',
+    description:
+      'Prøv å laste siden på nytt. Ta kontakt med webansvarlig dersom problemet fortsetter.',
+  },
 };
-
-const H1 = styled('h1')`
-  font-size: 8em;
-  margin-bottom: 10px;
-  font-weight: 100;
-`;
 
 const MyError = ({
   statusCode,
@@ -39,25 +37,17 @@ const MyError = ({
   if (!hasGetInitialPropsRun && err) {
     Sentry.captureException(err);
   }
+  const content = ERROR_CONTENT[String(statusCode)] || {
+    title: title || 'En feil oppsto.',
+    description: 'Prøv igjen om litt.',
+  };
+
   return (
-    <Layout noLoading>
-      <Flex
-        justifyContent="center"
-        style={{
-          alignItems: 'center',
-          width: '100%',
-          height: '100%',
-          flexBasis: '100%',
-        }}
-      >
-        <FlexItem>
-          <CenterIt text>
-            <H1>{statusCode}</H1>
-            <h2>{title || ERROR_TITLES[statusCode] || 'En feil oppsto'}</h2>
-          </CenterIt>
-        </FlexItem>
-      </Flex>
-    </Layout>
+    <PublicErrorPage
+      description={content.description}
+      statusCode={statusCode}
+      title={content.title}
+    />
   );
 };
 

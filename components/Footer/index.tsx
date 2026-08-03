@@ -1,128 +1,68 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import { ResponsiveContent, NoBulletUl } from '../Styled';
-import { lightGrey } from '../../utils/colors';
-
-const DivItem = styled('div')`
-  order: 0;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 1;
-  display: block;
-`;
-
-const Container = styled('div')`
-  padding: 2.5em 0em;
-  border-top: 1px solid ${lightGrey};
-  background-color: #f7f9fb;
-`;
-
-const InnerContainer = styled('div')`
-  display: flex;
-  wrap: nowrap;
-
-  @media only screen and (max-width: 800px) {
-    flex-direction: column;
-  }
-`;
-
-const RightBorderFlex = styled(DivItem)`
-  border-right: 1px solid ${lightGrey};
-  margin-right: 20px;
-  padding-right: 20px;
-
-  @media only screen and (max-width: 800px) {
-    border-right: 0;
-    margin-right: 10px;
-  }
-`;
-
-const BottomAbout = styled('div')`
-  width: 600px;
-
-  @media only screen and (max-width: 800px) {
-    width: 100%;
-  }
-`;
+import Link from 'next/link';
+import React from 'react';
+import { SiteContainer } from '../DesignSystem';
 
 const Footer = (): JSX.Element => (
-  <Container>
-    <ResponsiveContent>
-      <InnerContainer>
-        <RightBorderFlex>
-          <NoBulletUl>
+  <footer className="site-footer">
+    <SiteContainer>
+      <div className="site-footer__top">
+        <div className="site-footer__identity">
+          <Link aria-label="itDAGENE - forsiden" href="/">
+            <img
+              alt=""
+              height="48"
+              src="/static/itdagene-white.png"
+              width="225"
+            />
+          </Link>
+          <p>
+            itDAGENE er et årlig møtested mellom IT-studenter og næringslivet
+            ved NTNU. Arrangementet drives av tredjeårsstudenter fra
+            Datateknologi og Cybersikkerhet og datakommunikasjon, og overskuddet
+            går til studentenes ekskursjon.
+          </p>
+        </div>
+
+        <div>
+          <h2>Finn frem</h2>
+          <ul>
             <li>
-              <img
-                style={{ width: 150 }}
-                src="https://cdn.itdagene.no/itdagene-svart.png"
-                alt="itDAGENE logo"
-              />
-            </li>
-            <li>Sem Sælands vei 7-9</li>
-            <li>7034 Trondheim</li>
-            <li>Orgnr. 912 601 625 </li>
-          </NoBulletUl>
-        </RightBorderFlex>
-        <RightBorderFlex>
-          <NoBulletUl>
-            <li>
-              <strong>Kontakt</strong>
-            </li>
-            <li>
-              Styret •{' '}
-              <a href="mailto:styret@itdagene.no">styret@itdagene.no </a>
-            </li>
-            <li>
-              Webansvarlige •{' '}
-              <a href="mailto:web@itdagene.no">web@itdagene.no </a>
-            </li>
-          </NoBulletUl>
-          <NoBulletUl>
-            <li>
-              <strong>Teknologi</strong>
+              <Link href="/program">Program</Link>
             </li>
             <li>
-              Github •{' '}
-              <a
-                href="https://github.com/itdagene-ntnu"
-                target="_blank"
-                rel="noreferrer"
-              >
-                itdagene-ntnu
-              </a>
+              <Link href="/stands">Stands</Link>
             </li>
             <li>
-              Docs •{' '}
-              <a
-                href="https://docs.itdagene.no"
-                target="_blank"
-                rel="noreferrer"
-              >
-                docs.itdagene.no
-              </a>
-            </li>
-          </NoBulletUl>
-        </RightBorderFlex>
-        <BottomAbout>
-          <NoBulletUl>
-            <li>
-              <strong>Om oss</strong>
+              <Link href="/jobb">Jobbannonser</Link>
             </li>
             <li>
-              itDAGENE er en arbeidslivsmesse hvor studenter blir kjent med
-              fremtidige arbeidsgivere. Messen arrangeres én gang i året av
-              data- og cybersikkerhetsstudenter ved NTNU i Trondheim.
-              Overskuddet går til studentenes ekskursjon i tredjeklasse.
+              <Link href="/faq">Praktisk informasjon</Link>
             </li>
-          </NoBulletUl>
-        </BottomAbout>
-      </InnerContainer>
-    </ResponsiveContent>
-  </Container>
+          </ul>
+        </div>
+
+        <div>
+          <h2>Kontakt</h2>
+          <ul>
+            <li>
+              <a href="mailto:styret@itdagene.no">styret@itdagene.no</a>
+            </li>
+            <li>
+              <a href="mailto:web@itdagene.no">web@itdagene.no</a>
+            </li>
+            <li>
+              <a href="https://github.com/itdagene-ntnu">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="site-footer__bottom">
+        <p>Sem Sælands vei 7-9, 7034 Trondheim</p>
+        <p>Organisasjonsnummer 912 601 625</p>
+      </div>
+    </SiteContainer>
+  </footer>
 );
 
-export default styled(Footer)`
-  padding: 5em 0em;
-  border-top: 1px solid ${lightGrey};
-  background-color: #f7f9fb;
-`;
+export default Footer;

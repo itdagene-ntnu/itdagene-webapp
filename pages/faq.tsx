@@ -1,71 +1,123 @@
-import { Collapse } from '@nextui-org/react';
 import { graphql } from 'react-relay';
-import styled from 'styled-components';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
 import { faq_QueryResponse } from '../__generated__/faq_Query.graphql';
 import ReactMarkdown from 'react-markdown';
-import Flex from '../components/Styled/Flex';
-import FlexItem from '../components/Styled/FlexItem';
 import { groupBy } from 'lodash';
+import {
+  ActionLink,
+  ContentStatePanel,
+  PageHeader,
+} from '../components/DesignSystem';
+import { SmoothDisclosure } from '../components/DesignSystem/SmoothDisclosure';
 
-const Title = styled('h1')`
-  font-weight: bold;
-  font-smoothing: antialiased;
-  font-size: 3rem;
-  margin-bottom: 1rem;
-`;
-
-const SubTitle = styled('h2')`
-  font-weight: normal;
-`;
+type QuestionType = NonNullable<
+  NonNullable<faq_QueryResponse['questions']>[number]
+>;
 
 const Question = ({
+  contentId,
   question,
 }: {
-  question: { question: string; answer: string };
-}): JSX.Element => {
+  contentId: string;
+  question: QuestionType;
+}): JSX.Element => (
+  <SmoothDisclosure
+    className="faq-item"
+    contentClassName="faq-item__answer"
+    contentId={contentId}
+    summary={question.question || 'Spørsmål'}
+  >
+    <ReactMarkdown source={question.answer || ''} />
+  </SmoothDisclosure>
+);
+
+const QuestionGroup = ({
+  title,
+  eyebrow,
+  idPrefix,
+  questions,
+}: {
+  title: string;
+  eyebrow: string;
+  idPrefix: string;
+  questions: ReadonlyArray<QuestionType | null>;
+}): JSX.Element | null => {
+  const availableQuestions = questions.filter(
+    (question): question is QuestionType => question !== null
+  );
+  if (availableQuestions.length === 0) {
+    return null;
+  }
   return (
-    <Collapse title={question.question}>
-      <ReactMarkdown source={question.answer} />
-    </Collapse>
+    <section className="faq-group">
+      <div className="faq-group__heading">
+        <p className="site-eyebrow">{eyebrow}</p>
+        <h2>{title}</h2>
+      </div>
+      <div>
+        {availableQuestions.map((question, index) => (
+          <Question
+            contentId={`faq-${idPrefix}-${index}`}
+            key={question.question || `question-${index}`}
+            question={question}
+          />
+        ))}
+      </div>
+    </section>
   );
 };
 
 const Faq = ({
-  error,
   props,
 }: WithDataAndLayoutProps<faq_QueryResponse>): JSX.Element => {
-  const groupedQuestions = groupBy(props.questions, 'isForCompanies');
+  const questions = props.questions || [];
+  const groupedQuestions = groupBy(questions, 'isForCompanies');
+
   return (
     <>
-      <Title>Ofte stilte spørsmål</Title>
-      {props.questions ? (
-        <>
-          <SubTitle>Generelle spørsmål</SubTitle>
-          <Collapse.Group>
-            {groupedQuestions['false'].map(
-              (question, index) =>
-                question && <Question key={index} question={question} />
-            )}
-          </Collapse.Group>
-          <SubTitle>For Bedrifter</SubTitle>
-          <Collapse.Group>
-            {groupedQuestions['true'].map(
-              (question, index) =>
-                question && <Question key={index} question={question} />
-            )}
-          </Collapse.Group>
-        </>
+      <PageHeader
+        description="Finn praktiske svar om messen, deltakelse, påmelding og bedriftsreisen."
+        title="Ofte stilte spørsmål"
+      />
+
+      {questions.length > 0 ? (
+        <div className="faq-content">
+          <QuestionGroup
+            eyebrow="For studenter og besøkende"
+            idPrefix="general"
+            questions={groupedQuestions.false || []}
+            title="Generelle spørsmål"
+          />
+          <QuestionGroup
+            eyebrow="Deltakelse og samarbeid"
+            idPrefix="companies"
+            questions={groupedQuestions.true || []}
+            title="For bedrifter"
+          />
+        </div>
       ) : (
-        <Flex>
-          <FlexItem>
-            <h1>
-              Send spørsmål til{' '}
-              <a href="mailto:styret@itdagene.no">styret@itdagene.no</a>!
-            </h1>
-          </FlexItem>
-        </Flex>
+        <div className="faq-content">
+          <ContentStatePanel
+            action={{
+              href: 'mailto:styret@itdagene.no',
+              label: 'Send oss et spørsmål',
+            }}
+            description="Vi hjelper gjerne dersom du ikke finner svaret på nettsiden."
+            state="empty"
+            title="Spørsmålene er ikke publisert ennå."
+          />
+        </div>
       )}
+
+      <aside className="faq-contact">
+        <div>
+          <h2>Snakk med arrangørene.</h2>
+          <p>Finner du ikke svaret, hjelper vi deg gjerne direkte.</p>
+        </div>
+        <ActionLink href="mailto:styret@itdagene.no">
+          styret@itdagene.no
+        </ActionLink>
+      </aside>
     </>
   );
 };
@@ -78,16 +130,14 @@ export default withDataAndLayout(Faq, {
         answer
         isForCompanies
       }
-
-      omItdagene: page(slug: "om-itdagene") {
-        ...PageView_page
-        ...metadata_metadata
-      }
     }
   `,
   variables: {},
-  layout: ({ props, error }) => ({
+  layout: {
     responsive: true,
-    metadata: props ? props.omItdagene : undefined,
-  }),
+    customOpengraphMetadata: (): { title: string; description: string } => ({
+      title: 'Ofte stilte spørsmål',
+      description: 'Praktiske svar for studenter og bedrifter om itDAGENE.',
+    }),
+  },
 });
