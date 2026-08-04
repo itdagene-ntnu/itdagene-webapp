@@ -3687,6 +3687,10 @@ html[data-hero-mode='static'] .site-header--cinematic .site-navigation li a {
   background: #f8fbfc;
 }
 
+.homepage-company-sections__switcher {
+  display: none;
+}
+
 .current-company-directory__heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -4086,10 +4090,15 @@ a.current-company-directory__logo:active {
 .visit-planner__marker {
   display: block;
   width: 1.15rem;
-  margin-bottom: auto;
+  margin-bottom: var(--space-7);
   aspect-ratio: 1;
   background: var(--route-color);
   transition: transform 180ms ease;
+}
+
+.visit-planner__copy {
+  display: block;
+  min-width: 0;
 }
 
 .visit-planner a:hover .visit-planner__marker {
@@ -4113,7 +4122,7 @@ a.current-company-directory__logo:active {
 }
 
 .visit-planner h3 {
-  margin: var(--space-7) 0 var(--space-3);
+  margin: 0 0 var(--space-3);
   font-size: clamp(1.45rem, 2.2vw, 2rem);
   letter-spacing: -0.025em;
 }
@@ -4121,6 +4130,7 @@ a.current-company-directory__logo:active {
 .visit-planner p {
   margin: 0;
   color: var(--color-ink-muted);
+  overflow-wrap: break-word;
 }
 
 .visit-planner small {
@@ -4129,6 +4139,13 @@ a.current-company-directory__logo:active {
   color: var(--color-ink-muted);
   font-size: 0.78rem;
   font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 1025px) {
+  .visit-planner p {
+    min-height: 3.2em;
+  }
 }
 
 .current-event-preview > .site-container {
@@ -4462,6 +4479,10 @@ a.current-company-directory__logo:active {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .visit-planner p {
+    min-height: 3.2em;
+  }
+
   .visit-planner li:nth-child(even) {
     border-left: 1px solid var(--color-border);
   }
@@ -4507,6 +4528,60 @@ a.current-company-directory__logo:active {
 
   .site-header--cinematic .site-navigation__link {
     --navigation-underline: var(--navigation-route-underline);
+  }
+
+  .homepage-company-sections__switcher {
+    position: sticky;
+    z-index: 4;
+    top: 4.5rem;
+    display: block;
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(14px);
+  }
+
+  .homepage-company-sections__switcher .segmented-control {
+    display: grid;
+    width: 100%;
+    padding: 0;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 0;
+    overflow: hidden;
+  }
+
+  .homepage-company-sections__switcher .segmented-control__item {
+    min-width: 0;
+    min-height: 3.25rem;
+    padding-inline: var(--space-2);
+    border-radius: 0;
+    font-size: clamp(0.72rem, 3.2vw, 0.9rem);
+    hyphens: auto;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .homepage-company-sections__switcher .segmented-control__item:first-child {
+    border-radius: calc(var(--radius-control) - 1px) 0 0
+      calc(var(--radius-control) - 1px);
+  }
+
+  .homepage-company-sections__switcher .segmented-control__item:last-child {
+    border-radius: 0 calc(var(--radius-control) - 1px)
+      calc(var(--radius-control) - 1px) 0;
+  }
+
+  .homepage-company-sections__switcher .segmented-control__item:focus-visible {
+    outline-offset: -3px;
+  }
+
+  .homepage-company-sections
+    [data-company-mobile-panel][data-mobile-active='false'],
+  .homepage-company-sections
+    .current-company-directory__day[data-mobile-active='false'] {
+    display: none;
   }
 
   .current-company-directory__heading {
@@ -4605,7 +4680,11 @@ a.current-company-directory__logo:active {
   }
 
   .visit-planner h3 {
-    margin-top: var(--space-5);
+    margin-top: 0;
+  }
+
+  .visit-planner__marker {
+    margin-bottom: var(--space-5);
   }
 
   .current-event-preview__planning {
@@ -4710,6 +4789,10 @@ a.current-company-directory__logo:active {
     display: block;
   }
 
+  .visit-planner p {
+    min-height: 4.8em;
+  }
+
   .current-company-directory__day-heading p {
     margin-top: var(--space-2);
   }
@@ -4768,6 +4851,10 @@ a.current-company-directory__logo:active {
 
   .event-countdown__values {
     gap: 0.2rem;
+  }
+
+  .visit-planner p {
+    min-height: 0;
   }
 
   .event-countdown__unit {
@@ -4835,5 +4922,107 @@ a.current-company-directory__logo:active {
 
   .event-hero__media video {
     display: none;
+  }
+}
+
+@media (min-width: 1441px) {
+  .homepage {
+    --site-width: calc(100vw - clamp(8rem, 8vw, 10rem));
+  }
+
+  .homepage .event-hero__intro {
+    width: 92vw;
+  }
+
+  .homepage .event-hero__intro-title {
+    font-size: clamp(12rem, 13vw, 16rem);
+  }
+
+  .homepage .event-hero__arrival {
+    width: min(calc(100% - 4rem), 92vw);
+  }
+
+  .homepage .event-hero__arrival-copy {
+    font-size: clamp(0.95rem, 0.8vw, 1.2rem);
+  }
+
+  .homepage .event-hero__arrival-copy span {
+    font-size: clamp(1.1rem, 0.9vw, 1.35rem);
+  }
+
+  .homepage .event-hero__static-purpose {
+    max-width: 64rem;
+  }
+
+  .homepage .event-hero__static-purpose p {
+    font-size: clamp(4.5rem, 5vw, 7.5rem);
+  }
+
+  .homepage .event-hero__static-purpose span {
+    max-width: 48rem;
+    font-size: clamp(1.05rem, 1vw, 1.35rem);
+  }
+
+  .homepage .event-hero__logo-anchor {
+    width: clamp(7.25rem, 8vw, 10rem);
+  }
+
+  .homepage .event-hero__assembled-logo {
+    width: clamp(31rem, 34vw, 50rem);
+  }
+
+  .homepage .event-hero__content {
+    width: min(52vw, 72rem);
+  }
+
+  .homepage .event-hero__coordinates {
+    font-size: clamp(0.92rem, 0.75vw, 1.1rem);
+  }
+
+  .homepage .event-hero__resolved-title {
+    font-size: clamp(5.6rem, 5.6vw, 9rem);
+  }
+
+  .homepage .event-hero__description {
+    max-width: 48rem;
+    font-size: clamp(1.18rem, 1vw, 1.5rem);
+  }
+
+  .homepage .event-countdown {
+    width: min(100%, clamp(36rem, 30vw, 48rem));
+  }
+
+  .homepage .event-countdown__unit dd {
+    font-size: clamp(2.75rem, 2.25vw, 3.5rem);
+  }
+
+  .homepage .current-company-directory__heading h2,
+  .homepage .partner-showcase__primary-copy h2,
+  .homepage .visit-planner__heading h2,
+  .homepage .current-event-preview__heading h2,
+  .homepage .documentary-band__heading h2,
+  .homepage .employer-invitation h2 {
+    font-size: clamp(4rem, 3.8vw, 5.75rem);
+  }
+
+  .homepage .visit-planner h3 {
+    font-size: clamp(2rem, 1.8vw, 2.75rem);
+  }
+
+  .homepage .visit-planner p,
+  .homepage .current-event-preview__heading > p:last-child,
+  .homepage .documentary-band__heading > p,
+  .homepage .employer-invitation p {
+    font-size: clamp(1rem, 0.85vw, 1.3rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  .homepage .current-company-directory__grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .homepage .current-company-directory__grid li {
+    min-height: clamp(8.5rem, 8vw, 11rem);
   }
 }

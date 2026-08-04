@@ -218,7 +218,7 @@ export const SegmentedControl = ({
   onChange,
   label,
 }: {
-  options: Array<{ value: string; label: string }>;
+  options: Array<{ value: string; label: string; controls?: string }>;
   activeValue: string;
   onChange: (value: string) => void;
   label: string;
@@ -226,6 +226,7 @@ export const SegmentedControl = ({
   <div aria-label={label} className="segmented-control" role="group">
     {options.map((option) => (
       <button
+        aria-controls={option.controls}
         aria-pressed={option.value === activeValue}
         className="segmented-control__item"
         data-active={option.value === activeValue}

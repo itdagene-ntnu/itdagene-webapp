@@ -3,10 +3,9 @@ import Head from 'next/head';
 import { graphql } from 'react-relay';
 import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
 import { ContentStatePanel, SiteSection } from '../components/DesignSystem';
-import { CompanyExposure } from '../components/Frontpage/CompanyExposure';
 import { EmployerInvitation } from '../components/Frontpage/EmployerInvitation';
 import { HomeBriefing } from '../components/Frontpage/HomeBriefing';
-import { PartnerShowcase } from '../components/Frontpage/PartnerTiers';
+import { HomepageCompanySections } from '../components/Frontpage/HomepageCompanySections';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import { editionConfig } from '../config/edition';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
@@ -100,44 +99,44 @@ const Index = ({
           type="application/ld+json"
         />
       </Head>
-      <WelcomeScreen
-        currentMetaData={props.currentMetaData}
-        eventStartTime={
-          optionalEventConfiguration.eventStartTime || DEFAULT_EVENT_START_TIME
-        }
-        phase={phase}
-        programState={programState}
-        standState={standState}
-        venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
-      />
+      <div className="homepage">
+        <WelcomeScreen
+          currentMetaData={props.currentMetaData}
+          eventStartTime={
+            optionalEventConfiguration.eventStartTime ||
+            DEFAULT_EVENT_START_TIME
+          }
+          phase={phase}
+          programState={programState}
+          standState={standState}
+          venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
+        />
 
-      <PartnerShowcase
-        mainPartner={props.currentMetaData.mainCollaborator}
-        partners={props.currentMetaData.collaborators || []}
-      />
+        <HomepageCompanySections
+          edition={currentEdition}
+          endDate={props.currentMetaData.endDate}
+          firstDay={props.currentMetaData.companiesFirstDay}
+          historicalItems={companyMarquee.items}
+          historicalEdition={companyMarquee.edition}
+          historicalLabel={companyMarquee.label}
+          lastDay={props.currentMetaData.companiesLastDay}
+          mainPartner={props.currentMetaData.mainCollaborator}
+          partners={props.currentMetaData.collaborators || []}
+          startDate={props.currentMetaData.startDate}
+        />
 
-      <CompanyExposure
-        edition={currentEdition}
-        endDate={props.currentMetaData.endDate}
-        firstDay={props.currentMetaData.companiesFirstDay}
-        historicalItems={companyMarquee.items}
-        historicalEdition={companyMarquee.edition}
-        historicalLabel={companyMarquee.label}
-        lastDay={props.currentMetaData.companiesLastDay}
-        startDate={props.currentMetaData.startDate}
-      />
+        <HomeBriefing
+          edition={currentEdition}
+          events={props.events || []}
+          phase={phase}
+          programState={programState}
+          referenceTime={referenceTime}
+          standMap={currentStandMap || undefined}
+          standState={standState}
+        />
 
-      <HomeBriefing
-        edition={currentEdition}
-        events={props.events || []}
-        phase={phase}
-        programState={programState}
-        referenceTime={referenceTime}
-        standMap={currentStandMap || undefined}
-        standState={standState}
-      />
-
-      <EmployerInvitation edition={currentEdition} />
+        <EmployerInvitation edition={currentEdition} />
+      </div>
     </>
   );
 };
