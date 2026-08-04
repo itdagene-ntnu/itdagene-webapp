@@ -3,10 +3,9 @@ import Head from 'next/head';
 import { graphql } from 'react-relay';
 import { pages_index_QueryResponse } from '../__generated__/pages_index_Query.graphql';
 import { ContentStatePanel, SiteSection } from '../components/DesignSystem';
-import { CompanyExposure } from '../components/Frontpage/CompanyExposure';
 import { EmployerInvitation } from '../components/Frontpage/EmployerInvitation';
 import { HomeBriefing } from '../components/Frontpage/HomeBriefing';
-import { PartnerShowcase } from '../components/Frontpage/PartnerTiers';
+import { HomepageCompanySections } from '../components/Frontpage/HomepageCompanySections';
 import WelcomeScreen from '../components/Frontpage/WelcomeScreen';
 import { editionConfig } from '../config/edition';
 import { withDataAndLayout, WithDataAndLayoutProps } from '../lib/withData';
@@ -111,12 +110,7 @@ const Index = ({
         venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
       />
 
-      <PartnerShowcase
-        mainPartner={props.currentMetaData.mainCollaborator}
-        partners={props.currentMetaData.collaborators || []}
-      />
-
-      <CompanyExposure
+      <HomepageCompanySections
         edition={currentEdition}
         endDate={props.currentMetaData.endDate}
         firstDay={props.currentMetaData.companiesFirstDay}
@@ -124,6 +118,8 @@ const Index = ({
         historicalEdition={companyMarquee.edition}
         historicalLabel={companyMarquee.label}
         lastDay={props.currentMetaData.companiesLastDay}
+        mainPartner={props.currentMetaData.mainCollaborator}
+        partners={props.currentMetaData.collaborators || []}
         startDate={props.currentMetaData.startDate}
       />
 

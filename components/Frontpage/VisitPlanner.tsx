@@ -47,7 +47,7 @@ export const VisitPlanner = ({
     {
       key: 'jobs',
       title: 'Jobb',
-      description: 'Se jobb- og sommerjobbmuligheter.',
+      description: 'Se ledige jobber og sommerjobber.',
       href: '/jobb',
     },
     {
@@ -69,9 +69,11 @@ export const VisitPlanner = ({
             <li className={`visit-planner__item--${route.key}`} key={route.key}>
               <Link href={route.href}>
                 <span aria-hidden="true" className="visit-planner__marker" />
-                <h3>{route.title}</h3>
-                <p>{route.description}</p>
-                {route.state && <small>{route.state}</small>}
+                <span className="visit-planner__copy">
+                  <h3>{route.title}</h3>
+                  <p>{route.description}</p>
+                  {route.state && <small>{route.state}</small>}
+                </span>
               </Link>
             </li>
           ))}

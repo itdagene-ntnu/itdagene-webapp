@@ -78,11 +78,13 @@ const CompanyDay = ({
   date,
   fallbackLabel,
   id,
+  mobileActive,
 }: {
   companies: ReadonlyArray<DirectoryCompany> | null;
   date: string;
   fallbackLabel: string;
   id: string;
+  mobileActive: boolean;
 }): JSX.Element => {
   const headingId = `company-day-${id}`;
   const sortedCompanies =
@@ -94,6 +96,7 @@ const CompanyDay = ({
       aria-labelledby={headingId}
       className="current-company-directory__day"
       data-company-day={id}
+      data-mobile-active={mobileActive}
       data-company-state={
         companies === null ? 'unpublished' : count === 0 ? 'empty' : 'published'
       }
@@ -138,12 +141,14 @@ export const CurrentCompanyDirectory = ({
   endDate,
   firstDay,
   lastDay,
+  mobileActiveDay = 'first',
   startDate,
 }: {
   edition: number;
   endDate: string;
   firstDay: ReadonlyArray<DirectoryCompany> | null;
   lastDay: ReadonlyArray<DirectoryCompany> | null;
+  mobileActiveDay?: 'first' | 'last';
   startDate: string;
 }): JSX.Element | null => {
   if (firstDay === null && lastDay === null) return null;
@@ -163,12 +168,14 @@ export const CurrentCompanyDirectory = ({
           date={startDate}
           fallbackLabel="Første messedag"
           id="first"
+          mobileActive={mobileActiveDay === 'first'}
         />
         <CompanyDay
           companies={lastDay}
           date={endDate}
           fallbackLabel="Andre messedag"
           id="last"
+          mobileActive={mobileActiveDay === 'last'}
         />
       </div>
     </SiteSection>

@@ -369,6 +369,9 @@ describe('Page rendering', () => {
       const planner = document.querySelector('.visit-planner');
       const marquee = document.querySelector('[data-testid="event-marquee"]');
       const invitation = document.querySelector('.employer-invitation');
+      const mobileSwitcher = document.querySelector(
+        '.homepage-company-sections__switcher'
+      );
       // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
       const comesBefore = (first, second) =>
         Boolean(
@@ -395,6 +398,9 @@ describe('Page rendering', () => {
         hasHiddenCompanyControls: Boolean(
           directory?.querySelector('details, [role="tab"]')
         ),
+        mobileSwitcherHidden:
+          !mobileSwitcher ||
+          getComputedStyle(mobileSwitcher).display === 'none',
         historicalMarqueePublished: Boolean(marquee),
         marqueeAfterPlanner: marquee ? comesBefore(planner, marquee) : false,
         marqueeBeforeInvitation: comesBefore(marquee, invitation),
@@ -430,6 +436,7 @@ describe('Page rendering', () => {
       expect(exposure.companyCount).toBeGreaterThan(0);
       expect(exposure.visibleCompanies).toBe(true);
       expect(exposure.hasHiddenCompanyControls).toBe(false);
+      expect(exposure.mobileSwitcherHidden).toBe(true);
       expect(exposure.externalLinksValid).toBe(true);
       expect(exposure.standsHref).toBe('/stands');
     } else {
@@ -439,28 +446,108 @@ describe('Page rendering', () => {
   }, 16000);
 
   test('Company exposure is contained on mobile', async () => {
-    await page.setViewport({ width: 390, height: 844 });
+    await page.setViewport({ width: 320, height: 844 });
     await page.goto(baseUrl);
 
     const region = await page.$('[data-testid="event-marquee"]');
 
     if (!region) {
       expect(await page.$('.current-company-directory')).not.toBeNull();
-      expect(
-        await page.evaluate(() => ({
+      const mobileExposure = await page.evaluate(() => {
+        const switcher = document.querySelector(
+          '.homepage-company-sections__switcher'
+        );
+        const buttons = [...switcher.querySelectorAll('button')];
+        const partnerPanel = document.querySelector(
+          '[data-company-mobile-panel="partners"]'
+        );
+        const dayLabels = [
+          ...document.querySelectorAll('[data-company-day] h3'),
+        ].map((heading) => heading.textContent.trim().split(' ')[0]);
+        const controlRect = switcher
+          .querySelector('.segmented-control')
+          .getBoundingClientRect();
+        const activeRect = switcher
+          .querySelector('[data-active="true"]')
+          .getBoundingClientRect();
+        return {
+          activeSegmentFits:
+            activeRect.top - controlRect.top <= 1 &&
+            controlRect.bottom - activeRect.bottom <= 1,
+          buttonLabels: buttons.map((button) => button.textContent.trim()),
+          buttonTextContained: buttons.every(
+            (button) => button.scrollWidth <= button.clientWidth + 1
+          ),
+          controlsValid: buttons.every((button) => {
+            const controlledId = button.getAttribute('aria-controls');
+            return controlledId && document.getElementById(controlledId);
+          }),
           documentOverflow:
             document.documentElement.scrollWidth >
             document.documentElement.clientWidth,
-          gridColumns: getComputedStyle(
-            document.querySelector('.current-company-directory__grid')
-          ).gridTemplateColumns.split(' ').length,
+          expectedLabels: [
+            ...(partnerPanel ? ['Samarbeidspartnere'] : []),
+            ...dayLabels,
+          ],
+          pressedCount: buttons.filter(
+            (button) => button.getAttribute('aria-pressed') === 'true'
+          ).length,
+          switcherDisplay: getComputedStyle(switcher).display,
+          visiblePanels: [
+            ...document.querySelectorAll('[data-company-mobile-panel]'),
+          ]
+            .filter((panel) => getComputedStyle(panel).display !== 'none')
+            .map((panel) => panel.dataset.companyMobilePanel),
+        };
+      });
+
+      expect(mobileExposure.buttonLabels).toEqual(
+        mobileExposure.expectedLabels
+      );
+      expect(mobileExposure.activeSegmentFits).toBe(true);
+      expect(mobileExposure.buttonTextContained).toBe(true);
+      expect(mobileExposure.controlsValid).toBe(true);
+      expect(mobileExposure.documentOverflow).toBe(false);
+      expect(mobileExposure.pressedCount).toBe(1);
+      expect(mobileExposure.switcherDisplay).not.toBe('none');
+      expect(mobileExposure.visiblePanels).toEqual([
+        mobileExposure.buttonLabels[0] === 'Samarbeidspartnere'
+          ? 'partners'
+          : 'directory',
+      ]);
+
+      await page.focus(
+        '.homepage-company-sections__switcher button[aria-controls="homepage-company-directory"]'
+      );
+      await page.keyboard.press('Space');
+      expect(
+        await page.evaluate(() => ({
+          visibleDay: document.querySelector(
+            '.current-company-directory__day[data-mobile-active="true"]'
+          ).dataset.companyDay,
+          visiblePanels: [
+            ...document.querySelectorAll('[data-company-mobile-panel]'),
+          ]
+            .filter((panel) => getComputedStyle(panel).display !== 'none')
+            .map((panel) => panel.dataset.companyMobilePanel),
         }))
       ).toEqual({
-        documentOverflow: false,
-        gridColumns: 2,
+        visibleDay: 'first',
+        visiblePanels: ['directory'],
       });
+
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Space');
+      expect(
+        await page.$eval(
+          '.current-company-directory__day[data-mobile-active="true"]',
+          (day) => day.dataset.companyDay
+        )
+      ).toBe('last');
       return;
     }
+
+    expect(await page.$('.homepage-company-sections__switcher')).toBeNull();
 
     expect(
       await page.$eval('[data-testid="event-marquee"]', (marquee) => {
@@ -491,6 +578,50 @@ describe('Page rendering', () => {
     });
   }, 16000);
 
+  test('Visit planner stays aligned and contained on narrow screens', async () => {
+    for (const width of [320, 375, 390]) {
+      await page.setViewport({ width, height: 844 });
+      await page.goto(baseUrl);
+
+      const layout = await page.evaluate(() => {
+        const items = [...document.querySelectorAll('.visit-planner li')];
+        const headingOffsets = items.map((item) => {
+          const linkRect = item.querySelector('a').getBoundingClientRect();
+          const headingRect = item.querySelector('h3').getBoundingClientRect();
+          return Math.round(headingRect.top - linkRect.top);
+        });
+
+        return {
+          columns: getComputedStyle(
+            document.querySelector('.visit-planner ul')
+          ).gridTemplateColumns.split(' ').length,
+          headingOffsets,
+          statusOffsets: items
+            .filter((item) => item.querySelector('small'))
+            .map((item) => {
+              const linkRect = item.querySelector('a').getBoundingClientRect();
+              const statusRect = item
+                .querySelector('small')
+                .getBoundingClientRect();
+              return Math.round(statusRect.top - linkRect.top);
+            }),
+          textContained: items.every((item) =>
+            [...item.querySelectorAll('p, small')].every(
+              (text) => text.scrollWidth <= text.clientWidth + 1
+            )
+          ),
+        };
+      });
+
+      expect(layout.columns).toBe(width <= 340 ? 1 : 2);
+      expect(new Set(layout.headingOffsets).size).toBe(1);
+      if (width > 340) {
+        expect(new Set(layout.statusOffsets).size).toBe(1);
+      }
+      expect(layout.textContained).toBe(true);
+    }
+  }, 24000);
+
   test('Visit planner hover covers each card with its route tint', async () => {
     await page.setViewport({ width: 1440, height: 900 });
     await page.goto(baseUrl);
@@ -499,6 +630,29 @@ describe('Page rendering', () => {
         document.querySelector('.event-hero-story')?.dataset.heroTransition ===
         'ready'
     );
+
+    const desktopAlignment = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('.visit-planner li')];
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+      const relativeTop = (card, selector) => {
+        const cardTop = card.querySelector('a').getBoundingClientRect().top;
+        return Math.round(
+          card.querySelector(selector).getBoundingClientRect().top - cardTop
+        );
+      };
+
+      return {
+        descriptionOffsets: cards.map((card) => relativeTop(card, 'p')),
+        headingOffsets: cards.map((card) => relativeTop(card, 'h3')),
+        statusOffsets: cards
+          .filter((card) => card.querySelector('small'))
+          .map((card) => relativeTop(card, 'small')),
+      };
+    });
+
+    expect(new Set(desktopAlignment.headingOffsets).size).toBe(1);
+    expect(new Set(desktopAlignment.descriptionOffsets).size).toBe(1);
+    expect(new Set(desktopAlignment.statusOffsets).size).toBe(1);
 
     const cardResults = [];
 

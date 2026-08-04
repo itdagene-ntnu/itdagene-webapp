@@ -25,6 +25,7 @@ export const CompanyExposure = ({
   historicalItems,
   historicalLabel,
   lastDay,
+  mobileActiveDay,
   startDate,
 }: {
   edition: number;
@@ -34,6 +35,7 @@ export const CompanyExposure = ({
   historicalItems: CompanyMarqueeItem[];
   historicalLabel: string;
   lastDay: ReadonlyArray<DirectoryCompany> | null;
+  mobileActiveDay?: 'first' | 'last';
   startDate: string;
 }): JSX.Element => {
   const mode = resolveCompanyExposureMode({ firstDay, lastDay });
@@ -55,6 +57,7 @@ export const CompanyExposure = ({
           endDate={endDate}
           firstDay={firstDay}
           lastDay={lastDay}
+          mobileActiveDay={mobileActiveDay}
           startDate={startDate}
         />
       )}
