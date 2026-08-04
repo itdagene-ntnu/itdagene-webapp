@@ -4924,3 +4924,105 @@ a.current-company-directory__logo:active {
     display: none;
   }
 }
+
+@media (min-width: 1441px) {
+  .homepage {
+    --site-width: calc(100vw - clamp(8rem, 8vw, 10rem));
+  }
+
+  .homepage .event-hero__intro {
+    width: 92vw;
+  }
+
+  .homepage .event-hero__intro-title {
+    font-size: clamp(12rem, 13vw, 16rem);
+  }
+
+  .homepage .event-hero__arrival {
+    width: min(calc(100% - 4rem), 92vw);
+  }
+
+  .homepage .event-hero__arrival-copy {
+    font-size: clamp(0.95rem, 0.8vw, 1.2rem);
+  }
+
+  .homepage .event-hero__arrival-copy span {
+    font-size: clamp(1.1rem, 0.9vw, 1.35rem);
+  }
+
+  .homepage .event-hero__static-purpose {
+    max-width: 64rem;
+  }
+
+  .homepage .event-hero__static-purpose p {
+    font-size: clamp(4.5rem, 5vw, 7.5rem);
+  }
+
+  .homepage .event-hero__static-purpose span {
+    max-width: 48rem;
+    font-size: clamp(1.05rem, 1vw, 1.35rem);
+  }
+
+  .homepage .event-hero__logo-anchor {
+    width: clamp(7.25rem, 8vw, 10rem);
+  }
+
+  .homepage .event-hero__assembled-logo {
+    width: clamp(31rem, 34vw, 50rem);
+  }
+
+  .homepage .event-hero__content {
+    width: min(52vw, 72rem);
+  }
+
+  .homepage .event-hero__coordinates {
+    font-size: clamp(0.92rem, 0.75vw, 1.1rem);
+  }
+
+  .homepage .event-hero__resolved-title {
+    font-size: clamp(5.6rem, 5.6vw, 9rem);
+  }
+
+  .homepage .event-hero__description {
+    max-width: 48rem;
+    font-size: clamp(1.18rem, 1vw, 1.5rem);
+  }
+
+  .homepage .event-countdown {
+    width: min(100%, clamp(36rem, 30vw, 48rem));
+  }
+
+  .homepage .event-countdown__unit dd {
+    font-size: clamp(2.75rem, 2.25vw, 3.5rem);
+  }
+
+  .homepage .current-company-directory__heading h2,
+  .homepage .partner-showcase__primary-copy h2,
+  .homepage .visit-planner__heading h2,
+  .homepage .current-event-preview__heading h2,
+  .homepage .documentary-band__heading h2,
+  .homepage .employer-invitation h2 {
+    font-size: clamp(4rem, 3.8vw, 5.75rem);
+  }
+
+  .homepage .visit-planner h3 {
+    font-size: clamp(2rem, 1.8vw, 2.75rem);
+  }
+
+  .homepage .visit-planner p,
+  .homepage .current-event-preview__heading > p:last-child,
+  .homepage .documentary-band__heading > p,
+  .homepage .employer-invitation p {
+    font-size: clamp(1rem, 0.85vw, 1.3rem);
+  }
+}
+
+@media (min-width: 1920px) {
+  .homepage .current-company-directory__grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .homepage .current-company-directory__grid li {
+    min-height: clamp(8.5rem, 8vw, 11rem);
+  }
+}

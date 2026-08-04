@@ -99,41 +99,44 @@ const Index = ({
           type="application/ld+json"
         />
       </Head>
-      <WelcomeScreen
-        currentMetaData={props.currentMetaData}
-        eventStartTime={
-          optionalEventConfiguration.eventStartTime || DEFAULT_EVENT_START_TIME
-        }
-        phase={phase}
-        programState={programState}
-        standState={standState}
-        venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
-      />
+      <div className="homepage">
+        <WelcomeScreen
+          currentMetaData={props.currentMetaData}
+          eventStartTime={
+            optionalEventConfiguration.eventStartTime ||
+            DEFAULT_EVENT_START_TIME
+          }
+          phase={phase}
+          programState={programState}
+          standState={standState}
+          venue={optionalEventConfiguration.venue || DEFAULT_EVENT_VENUE}
+        />
 
-      <HomepageCompanySections
-        edition={currentEdition}
-        endDate={props.currentMetaData.endDate}
-        firstDay={props.currentMetaData.companiesFirstDay}
-        historicalItems={companyMarquee.items}
-        historicalEdition={companyMarquee.edition}
-        historicalLabel={companyMarquee.label}
-        lastDay={props.currentMetaData.companiesLastDay}
-        mainPartner={props.currentMetaData.mainCollaborator}
-        partners={props.currentMetaData.collaborators || []}
-        startDate={props.currentMetaData.startDate}
-      />
+        <HomepageCompanySections
+          edition={currentEdition}
+          endDate={props.currentMetaData.endDate}
+          firstDay={props.currentMetaData.companiesFirstDay}
+          historicalItems={companyMarquee.items}
+          historicalEdition={companyMarquee.edition}
+          historicalLabel={companyMarquee.label}
+          lastDay={props.currentMetaData.companiesLastDay}
+          mainPartner={props.currentMetaData.mainCollaborator}
+          partners={props.currentMetaData.collaborators || []}
+          startDate={props.currentMetaData.startDate}
+        />
 
-      <HomeBriefing
-        edition={currentEdition}
-        events={props.events || []}
-        phase={phase}
-        programState={programState}
-        referenceTime={referenceTime}
-        standMap={currentStandMap || undefined}
-        standState={standState}
-      />
+        <HomeBriefing
+          edition={currentEdition}
+          events={props.events || []}
+          phase={phase}
+          programState={programState}
+          referenceTime={referenceTime}
+          standMap={currentStandMap || undefined}
+          standState={standState}
+        />
 
-      <EmployerInvitation edition={currentEdition} />
+        <EmployerInvitation edition={currentEdition} />
+      </div>
     </>
   );
 };

@@ -2113,6 +2113,39 @@ describe('Page rendering', () => {
     ).toBe(false);
   }, 30000);
 
+  test('Homepage layout continues scaling on wide screens', async () => {
+    await page.setViewport({ width: 2560, height: 1440 });
+    await page.goto(baseUrl);
+
+    const layout = await page.evaluate(() => {
+      const sectionContainer = document.querySelector(
+        '.homepage .site-section .site-container'
+      );
+      const heroContent = document.querySelector('.event-hero__content');
+      const heroTitle = document.querySelector('.event-hero__resolved-title');
+      const countdown = document.querySelector('.event-countdown');
+
+      return {
+        countdownWidth: countdown.getBoundingClientRect().width,
+        documentOverflow:
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+        heroContentWidth: heroContent.getBoundingClientRect().width,
+        heroTitleFontSize: Number.parseFloat(
+          getComputedStyle(heroTitle).fontSize
+        ),
+        sectionWidth: sectionContainer.getBoundingClientRect().width,
+        viewportWidth: window.innerWidth,
+      };
+    });
+
+    expect(layout.documentOverflow).toBe(false);
+    expect(layout.sectionWidth / layout.viewportWidth).toBeGreaterThan(0.88);
+    expect(layout.heroContentWidth / layout.viewportWidth).toBeGreaterThan(0.4);
+    expect(layout.heroTitleFontSize).toBeGreaterThanOrEqual(120);
+    expect(layout.countdownWidth).toBeGreaterThanOrEqual(700);
+  }, 16000);
+
   test.each([
     ['/program', 'rgb(245, 130, 30)'],
     ['/stands', 'rgb(124, 209, 238)'],
