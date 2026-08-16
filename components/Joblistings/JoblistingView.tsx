@@ -55,7 +55,7 @@ const List = ({
               style={{
                 marginRight: 5,
                 overflowWrap: 'anywhere',
-                wordBreak: 'break-word'
+                wordBreak: 'break-word',
               }}
             >
               <i>{key}</i>:

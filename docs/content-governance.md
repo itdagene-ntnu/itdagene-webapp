@@ -16,16 +16,16 @@ The structured event query remains the source of truth for dates, times, rooms, 
 The optional `program` CMS page is rendered as supporting editorial context and supplies metadata when it exists.
 Deleting that page must never remove or unpublish the structured program.
 
-| Module        | Source                             | Owner                | Publish trigger                                   | Fallback                                               | Expiry behavior                                      |
-| ------------- | ---------------------------------- | -------------------- | ------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------- |
-| Event dates   | GraphQL metadata                   | Leadership and web   | Dates are confirmed                               | Show that the date is coming                           | Never show a previous date as current                |
-| Program       | GraphQL                            | Program lead and web | At least one approved public event exists         | Explain that the program is unpublished                | Preserve the year in the archive                     |
-| Stands        | Yearly map manifest                | Logistics and web    | Company allocation and coordinates are final      | Show the previous map only as a labelled archive       | A mismatched year is always stale                    |
-| Jobs          | GraphQL                            | Company team         | At least one active listing exists                | Show useful no-listings guidance                       | Expired listings stay outside the active query       |
-| Companies     | GraphQL metadata and stand archive | Company team         | At least one public company list exists           | Show a previous-edition roster only with its year       | Never imply historical participants are current      |
-| Gallery       | GraphQL plus edition configuration | Marketing            | A curated and approved set is available           | Hide an empty grid and explain publication status      | Every visible archive must show its edition          |
-| Interest form | Separate React app and API         | Company team         | The form is open for the configured year          | Show the responsible contact                           | Closed periods must explain the next step            |
-| FAQ           | GraphQL                            | Leadership and web   | Answers have been checked for the current edition | Show direct contact information                        | Fixed dates and deadlines must be reviewed each year |
+| Module        | Source                             | Owner                | Publish trigger                                   | Fallback                                          | Expiry behavior                                      |
+| ------------- | ---------------------------------- | -------------------- | ------------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------- |
+| Event dates   | GraphQL metadata                   | Leadership and web   | Dates are confirmed                               | Show that the date is coming                      | Never show a previous date as current                |
+| Program       | GraphQL                            | Program lead and web | At least one approved public event exists         | Explain that the program is unpublished           | Preserve the year in the archive                     |
+| Stands        | Yearly map manifest                | Logistics and web    | Company allocation and coordinates are final      | Show the previous map only as a labelled archive  | A mismatched year is always stale                    |
+| Jobs          | GraphQL                            | Company team         | At least one active listing exists                | Show useful no-listings guidance                  | Expired listings stay outside the active query       |
+| Companies     | GraphQL metadata and stand archive | Company team         | At least one public company list exists           | Show a previous-edition roster only with its year | Never imply historical participants are current      |
+| Gallery       | GraphQL plus edition configuration | Marketing            | A curated and approved set is available           | Hide an empty grid and explain publication status | Every visible archive must show its edition          |
+| Interest form | Separate React app and API         | Company team         | The form is open for the configured year          | Show the responsible contact                      | Closed periods must explain the next step            |
+| FAQ           | GraphQL                            | Leadership and web   | Answers have been checked for the current edition | Show direct contact information                   | Fixed dates and deadlines must be reviewed each year |
 
 ## Annual rollover checklist
 

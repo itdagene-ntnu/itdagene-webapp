@@ -1,9 +1,7 @@
 {
-  "presets": [
-    "next/babel",
-  ],
+  "presets": ["next/babel"],
   "plugins": [
-    ["relay", {"artifactDirectory": "./__generated__"}],
+    ["relay", { "artifactDirectory": "./__generated__" }],
     [
       "styled-components",
       {
@@ -17,11 +15,14 @@
     "test": {
       "plugins": ["relay"],
       "presets": [
-        ["next/babel", {
-          "preset-env": {
-            "modules": "commonjs"
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "modules": "commonjs"
+            }
           }
-        }],
+        ]
       ]
     }
   }
