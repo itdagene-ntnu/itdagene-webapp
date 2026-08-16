@@ -2164,6 +2164,32 @@ a {
   grid-template-columns: minmax(0, 1fr);
 }
 
+@media (max-width: 800px) {
+  .jobs-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .jobs-results,
+  .job-filters {
+    width: 100%;
+  }
+
+  .job-filters {
+    position: static;
+    order: -1;
+  }
+
+  .job-card > a {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .job-card__logo {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
 .job-filters {
   position: sticky;
   top: 7.25rem;
@@ -2256,6 +2282,7 @@ a {
 .job-card > a {
   display: grid;
   height: 100%;
+  min-width: 0;
   grid-template-columns: 10rem minmax(0, 1fr);
   color: var(--color-ink);
   text-decoration: none;
@@ -2269,6 +2296,7 @@ a {
 
 .job-card__logo {
   display: grid;
+  min-width: 0;
   min-height: 100%;
   padding: var(--space-5);
   border-right: 1px solid var(--color-border);
@@ -2283,7 +2311,10 @@ a {
 }
 
 .job-card__body {
+  min-width: 0;
   padding: var(--space-6);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .job-card__type {
@@ -2294,11 +2325,16 @@ a {
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .job-card h2 {
   margin: 0;
+  min-width: 0;
   padding-right: var(--space-5);
+  overflow-wrap: anywhere;
+  word-break: break-word;
   font-size: clamp(1.3rem, 2.5vw, 1.8rem);
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -2306,6 +2342,8 @@ a {
 
 .job-card__company {
   margin: var(--space-2) 0 var(--space-5);
+  overflow-wrap: anywhere;
+  word-break: break-word;
   color: var(--color-ink-muted);
 }
 
@@ -2316,6 +2354,11 @@ a {
   border-top: 1px solid var(--color-border);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
+}
+
+.job-card dt,
+.job-card dd {
+  overflow-wrap: anywhere;
 }
 
 .job-card dt {
@@ -2343,6 +2386,30 @@ a {
   color: var(--color-ink-muted);
   font-size: 1.05rem;
   line-height: 1.75;
+}
+
+.cms-page__body p,
+.cms-page__body li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.cms-page__body ul,
+.cms-page__body ol {
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-inline-start: 40px;
+  list-style-position: outside;
+}
+
+.cms-page__body li {
+  min-width: 0;
+  width: auto;
+}
+
+.cms-page__body pre,
+.cms-page__body pre code,
+.cms-page__body code {
 }
 
 .cms-page__body h2,
@@ -2376,6 +2443,38 @@ a {
 .cms-page__body img {
   max-width: 100%;
   height: auto;
+}
+
+
+.job-description p,
+.job-description li {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.job-description ul,
+.job-description ol {
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-inline-start: 40px;
+  list-style-position: outside;
+}
+
+.job-description li {
+  min-width: 0;
+}
+
+.job-description pre,
+.job-description pre code,
+.job-description code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  display: block;
+  max-width: 100%;
+  margin: 0 0 1rem;
 }
 
 .cms-page__video {
@@ -3063,21 +3162,22 @@ a {
     grid-template-columns: 1fr;
   }
 
-  .job-card dl {
-    grid-template-columns: 1fr;
+  .job-card > a {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .job-card > a {
-    grid-template-columns: 6.5rem minmax(0, 1fr);
+  .job-card__logo {
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .job-card dl {
+    grid-template-columns: 1fr;
   }
 
   .job-card__logo,
   .job-card__body {
     padding: var(--space-4);
-  }
-
-  .job-card__logo {
-    border-right: 1px solid var(--color-border);
   }
 
   .faq-group {
