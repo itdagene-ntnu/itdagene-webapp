@@ -50,13 +50,26 @@ const List = ({
       .filter((e) => !!e.value)
       .map(({ key, value }) => (
         <li key={key}>
-          <Flex justifyContent="space-between">
+          <Flex flexWrap="wrap" justifyContent="space-between" gap="0.5rem">
             <span
-              style={{ marginRight: 5, wordBreak: 'normal', color: 'gray ' }}
+              style={{
+                marginRight: 5,
+                overflowWrap: 'anywhere',
+                wordBreak: 'break-word',
+              }}
             >
               <i>{key}</i>:
             </span>
-            <strong style={{ textAlign: 'right' }}>{value}</strong>
+            <strong
+              style={{
+                flex: '1 1 12rem',
+                textAlign: 'right',
+                overflowWrap: 'anywhere',
+                wordBreak: 'break-word',
+              }}
+            >
+              {value}
+            </strong>
           </Flex>
         </li>
       ))}
@@ -165,7 +178,9 @@ const Joblisting = ({ joblisting }: Props): JSX.Element => (
     <Flex flexWrap="wrap-reverse">
       <FlexItem flexBasis="600px" flexGrow="3">
         <Flex flexDirection="column">
-          <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
+          <div className="job-description">
+            <ReactMarkdown>{joblisting.description || ''}</ReactMarkdown>
+          </div>
 
           {joblisting.videoUrl && (
             <PlayerView>

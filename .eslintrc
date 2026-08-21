@@ -10,11 +10,7 @@
     "prettier/@typescript-eslint",
     "prettier/react"
   ],
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "relay"
-  ],
+  "plugins": ["react", "@typescript-eslint", "relay"],
   "globals": {
     "log": true,
     "expect": true,
