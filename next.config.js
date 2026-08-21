@@ -69,6 +69,7 @@ module.exports = withSourceMaps({
     if (!isServer) {
       config.resolve.alias['@sentry/node'] = '@sentry/browser'
     }
+    config.resolve.preferRelative = true;
     if (SENTRY_ORG && SENTRY_PROJECT) {
       config.plugins.push(
       new SentryWebpackPlugin({
