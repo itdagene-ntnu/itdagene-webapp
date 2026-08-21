@@ -28,7 +28,7 @@
     "@mui/core": "^5.0.0-alpha.54",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.18",
-    "@next/bundle-analyzer": "^10.0.3",
+    "@next/bundle-analyzer": "^16.3.1",
     "@nextui-org/react": "^1.0.0-beta.12",
     "@sentry/browser": "^6.17.9",
     "@sentry/node": "^5.29.2",
