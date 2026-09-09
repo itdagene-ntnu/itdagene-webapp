@@ -5025,8 +5025,17 @@ a.current-company-directory__logo:active {
 }
 
 @media (min-width: 1441px) {
-  .homepage {
-    --site-width: calc(100vw - clamp(8rem, 8vw, 10rem));
+  :root {
+    --homepage-gutter: clamp(8rem, 8vw, 10rem);
+  }
+
+  /* The homepage widens its content column past the standard 80rem container.
+     The header is rendered outside .homepage, so it has to be given the same
+     --site-width to keep the logo flush with the hero copy on the left and the
+     Meld interesse action flush with the content edge on the right. */
+  .homepage,
+  .site-header--cinematic .site-header__inner {
+    --site-width: calc(100vw - var(--homepage-gutter));
   }
 
   .homepage .event-hero__intro {

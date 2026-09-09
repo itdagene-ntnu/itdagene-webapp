@@ -180,10 +180,10 @@ type MetaData implements Node {
   """Dette gjelder per dag, ikke totalt."""
   nrOfStands: Int!
 
-  """Whether the public program may be displayed."""
+  """Skal programmet for itDAGENE vises på nettsiden?"""
   programPublished: Boolean!
 
-  """Whether the current stand map may be displayed."""
+  """Skal årets standkart og standplasseringer vises på nettsiden?"""
   standsPublished: Boolean!
   venue: String!
   eventStartTime: Time!
@@ -306,7 +306,7 @@ type Query {
 
   """
   Get info page.
-
+  
    Each page identified with a slug can be translated into multiple languages.
   Each entity is identified by an id or the unique together pair (slug, language)
   """
@@ -314,7 +314,7 @@ type Query {
 
   """
   Get info page.
-
+  
    Each page identified with a slug can be translated into multiple languages.
   Each entity is identified by an id or the unique together pair (slug,
   language). If slugs are left empty, it will return all pages
@@ -413,3 +413,4 @@ type User implements Node {
   role: String
   photo(height: Int, width: Int): String
 }
+
