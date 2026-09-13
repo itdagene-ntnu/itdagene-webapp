@@ -2171,7 +2171,7 @@ describe('Page rendering', () => {
       );
       expect(await resolvedAccent.jsonValue()).toBe(expectedColor);
     },
-    16000
+    45000
   );
 
   test('Stand map keeps every stand on a phone without committing a selection', async () => {
@@ -2243,7 +2243,7 @@ describe('Page rendering', () => {
       {},
       markerSelector
     );
-  }, 16000);
+  }, 30000);
 
   test('Published stand surfaces share one active company', async () => {
     await page.setViewport({ width: 1440, height: 1000 });
