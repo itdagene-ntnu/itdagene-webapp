@@ -25,18 +25,12 @@ const isStandMapDay = (
   manifest: StandMapManifest
 ): value is StandMapDayId => manifest.days.some((day) => day.id === value);
 
-const updateStandQuery = (
-  router: NextRouter,
-  changes: { day?: StandMapDayId; company?: string }
-): void => {
-  const query = { ...router.query, ...changes };
-  if (!changes.company) {
-    delete query.company;
-  }
-  router.push({ pathname: router.pathname, query }, undefined, {
-    shallow: true,
-    scroll: false,
-  });
+const selectStandMapDay = (router: NextRouter, day: StandMapDayId): void => {
+  router.push(
+    { pathname: router.pathname, query: { ...router.query, day } },
+    undefined,
+    { shallow: true, scroll: false }
+  );
 };
 
 const Index = ({
@@ -88,13 +82,11 @@ const Index = ({
   const activeDay =
     standMapManifest.days.find((day) => day.id === requestedDay) ||
     standMapManifest.days[0];
-  const selectedCompany =
-    typeof router.query.company === 'string' ? router.query.company : undefined;
 
   return (
     <>
       <PageHeader
-        description="Søk i bedriftslisten eller bruk standnumrene i plantegningen. Kart og liste fungerer sammen."
+        description="Søk i bedriftslisten eller velg et standnummer i plantegningen. Kart og liste peker på den samme bedriften."
         title="Standkart"
       >
         <MetadataList
@@ -117,7 +109,7 @@ const Index = ({
             label="Velg messedag"
             onChange={(value): void => {
               if (isStandMapDay(value, standMapManifest)) {
-                updateStandQuery(router, { day: value });
+                selectStandMapDay(router, value);
               }
             }}
             options={standMapManifest.days.map((day) => ({
@@ -127,16 +119,7 @@ const Index = ({
           />
         </div>
 
-        <StandMap
-          day={activeDay}
-          onSelect={(company): void =>
-            updateStandQuery(router, {
-              day: activeDay.id,
-              company,
-            })
-          }
-          selectedCompany={selectedCompany}
-        />
+        <StandMap day={activeDay} />
       </section>
     </>
   );

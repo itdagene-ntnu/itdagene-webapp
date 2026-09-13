@@ -75,6 +75,63 @@ describe('stand map API adapter', () => {
     });
   });
 
+  test('carries the collaborator tier through and drops an unknown one', () => {
+    const stands = toStandMapManifest({
+      edition: 2026,
+      revision: 1,
+      maps: [
+        {
+          backgroundImage: 'https://itdagene.no/uploads/monday.png',
+          date: '2026-09-14',
+          label: 'Mandag',
+          location: 'Realfagbygget, U1',
+          placements: [
+            {
+              collaboratorTier: 'main',
+              companyName: 'Hoved',
+              companySlug: 'hoved',
+              standNumber: '1',
+              xPercent: 10,
+              yPercent: 10,
+            },
+            {
+              collaboratorTier: 'collaborator',
+              companyName: 'Partner',
+              companySlug: 'partner',
+              standNumber: '2',
+              xPercent: 20,
+              yPercent: 20,
+            },
+            {
+              collaboratorTier: 'gullpakke',
+              companyName: 'Ukjent',
+              companySlug: 'ukjent',
+              standNumber: '3',
+              xPercent: 30,
+              yPercent: 30,
+            },
+            {
+              companyName: 'Vanlig',
+              companySlug: 'vanlig',
+              standNumber: '4',
+              xPercent: 40,
+              yPercent: 40,
+            },
+          ],
+        },
+      ],
+    }).days[0].stands;
+
+    expect(
+      stands.map((stand) => [stand.companySlug, stand.collaboratorTier])
+    ).toEqual([
+      ['hoved', 'main'],
+      ['partner', 'collaborator'],
+      ['ukjent', undefined],
+      ['vanlig', undefined],
+    ]);
+  });
+
   test('does not invent a current map when no release is published', () => {
     expect(toStandMapManifest(null)).toBeNull();
     expect(

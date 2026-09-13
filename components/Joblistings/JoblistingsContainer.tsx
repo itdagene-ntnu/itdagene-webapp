@@ -12,6 +12,7 @@ import { JoblistingsContainer_root } from '../../__generated__/JoblistingsContai
 import { JoblistingsContainer_joblisting$key } from '../../__generated__/JoblistingsContainer_joblisting.graphql';
 import LoadingIndicator from '../LoadingIndicator';
 import Sidebar, { jobTypeOptions } from './JoblistingsSidebar';
+import { hasActiveFilters } from '../../utils/joblistingFilters';
 import InfiniteScroll from 'react-infinite-scroller';
 import dayjs from 'dayjs';
 import { ContentStatePanel } from '../DesignSystem';
@@ -134,15 +135,6 @@ export const JoblistingItem = ({
     </article>
   );
 };
-
-const hasActiveFilters = (variables: Variables): boolean =>
-  Boolean(
-    variables.type ||
-      variables.company ||
-      (Array.isArray(variables.towns) && variables.towns.length > 0) ||
-      Number(variables.fromGrade) > 1 ||
-      Number(variables.toGrade) < 5
-  );
 
 const ListRenderer = (props: Props): JSX.Element => {
   const edges = props.root?.joblistings?.edges || [];

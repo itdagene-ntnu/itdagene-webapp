@@ -129,26 +129,6 @@ const ProgramDateNavigator = ({
 
   if (dates.length === 0) return null;
 
-  const monthGroups = dates.reduce<
-    Array<{ key: string; label: string; dates: string[] }>
-  >((groups, date) => {
-    const calendarDate = eventLocalTime(date).locale('nb');
-    const key = calendarDate.format('YYYY-MM');
-    const currentGroup = groups[groups.length - 1];
-
-    if (currentGroup?.key === key) {
-      currentGroup.dates.push(date);
-    } else {
-      groups.push({
-        key,
-        label: capitalize(calendarDate.format('MMMM YYYY')),
-        dates: [date],
-      });
-    }
-
-    return groups;
-  }, []);
-
   const selectDate = (index: number, moveFocus = false): void => {
     const date = dates[index];
     if (!date) return;
@@ -182,33 +162,7 @@ const ProgramDateNavigator = ({
   return (
     <nav aria-label="Velg programdag" className="program-date-navigator">
       <div className="program-date-navigator__heading">
-        <p className="site-eyebrow">Programdager</p>
         <div className="program-date-navigator__actions">
-          <label className="program-date-navigator__picker">
-            <span>Alle datoer</span>
-            <select
-              aria-label="Alle programdatoer"
-              onChange={(event): void => onChange(event.target.value)}
-              value={activeIndex >= 0 ? activeDate : ''}
-            >
-              {activeIndex < 0 && (
-                <option disabled value="">
-                  Velg dato
-                </option>
-              )}
-              {monthGroups.map((group) => (
-                <optgroup key={group.key} label={group.label}>
-                  {group.dates.map((date) => (
-                    <option key={date} value={date}>
-                      {capitalize(
-                        eventLocalTime(date).locale('nb').format('dddd D. MMMM')
-                      )}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </label>
           {dates.length > 1 && (
             <div
               aria-label="Bytt programdag"

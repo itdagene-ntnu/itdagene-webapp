@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { buildSchema, parse, validate } from 'graphql';
 import {
+  LEGACY_OPTIONAL_EVENT_CONFIGURATION_QUERY,
   OPTIONAL_EVENT_CONFIGURATION_QUERY,
   fetchOptionalEventConfiguration,
   parseOptionalEventConfiguration,
@@ -18,6 +19,13 @@ describe('optional event configuration', () => {
 
     expect(validate(schema, parse(OPTIONAL_EVENT_CONFIGURATION_QUERY))).toEqual(
       []
+    );
+    expect(
+      validate(schema, parse(LEGACY_OPTIONAL_EVENT_CONFIGURATION_QUERY))
+    ).toEqual([]);
+    expect(OPTIONAL_EVENT_CONFIGURATION_QUERY).toContain('collaboratorTier');
+    expect(LEGACY_OPTIONAL_EVENT_CONFIGURATION_QUERY).not.toContain(
+      'collaboratorTier'
     );
   });
 
@@ -122,6 +130,47 @@ describe('optional event configuration', () => {
       operationName: 'OptionalEventConfigurationQuery',
       variables: {},
     });
+  });
+
+  test('retries without the partner tier when the backend rejects it', async () => {
+    const currentStandMap = { edition: 2026, revision: 3, maps: [] };
+    const request = jest
+      .fn()
+      .mockResolvedValueOnce({
+        json: async () => ({
+          errors: [{ message: 'Cannot query field "collaboratorTier"' }],
+        }),
+        ok: true,
+      })
+      .mockResolvedValueOnce({
+        json: async () => ({
+          data: {
+            currentMetaData: {
+              eventStartTime: '09:00:00',
+              programPublished: true,
+              standsPublished: true,
+              venue: 'Realfagbygget, NTNU',
+            },
+            currentStandMap,
+          },
+        }),
+        ok: true,
+      });
+
+    await expect(
+      fetchOptionalEventConfiguration('https://example.test/graphql', request)
+    ).resolves.toEqual({
+      currentStandMap,
+      eventStartTime: '09:00:00',
+      programPublished: true,
+      standsPublished: true,
+      venue: 'Realfagbygget, NTNU',
+    });
+
+    expect(request).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(request.mock.calls[1][1].body).query).toBe(
+      LEGACY_OPTIONAL_EVENT_CONFIGURATION_QUERY
+    );
   });
 
   test('uses unpublished-safe defaults when the extended contract is absent', async () => {

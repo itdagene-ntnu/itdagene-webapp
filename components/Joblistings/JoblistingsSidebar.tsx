@@ -7,6 +7,7 @@ import { fetchQuery, GraphQLTaggedNode } from 'relay-runtime';
 import Router from 'next/router';
 import { graphql, Variables, Environment } from 'react-relay';
 import debounce from '../../utils/debounce';
+import { countActiveFilters } from '../../utils/joblistingFilters';
 import {
   JoblistingsSidebar_company_search_QueryResponse,
   JoblistingsSidebar_company_search_Query,
@@ -298,50 +299,90 @@ const YearSelector = ({ variables }: { variables: Variables }): JSX.Element => {
   );
 };
 
+// Choosing a filter changes the Relay variables, which rebuilds the jobs tree
+// and unmounts this panel. Component state would therefore snap shut on every
+// pick, so the disclosure is remembered in module scope: it survives the
+// remount and resets on a full page load, which is what a visitor expects.
+let panelExpanded = false;
+
 const JoblistingsSidebar = ({
   environment,
   variables,
 }: {
   environment: Environment;
   variables: Variables;
-}): JSX.Element => (
-  <aside aria-labelledby="job-filter-heading" className="job-filters">
-    <div className="job-filters__heading">
-      <div>
-        <p className="site-eyebrow">Avgrens resultatene</p>
-        <h2 id="job-filter-heading">Filtrer</h2>
+}): JSX.Element => {
+  // The panel is a sidebar on wide screens and a disclosure below 800px, where
+  // laying every filter out costs about three quarters of the screen before
+  // the first advert. The stylesheet decides which one applies; this state is
+  // inert on wide screens, where the toggle is not rendered to the user.
+  const [expanded, setExpandedState] = React.useState(panelExpanded);
+  const setExpanded = (next: boolean): void => {
+    panelExpanded = next;
+    setExpandedState(next);
+  };
+  const activeFilters = countActiveFilters(variables);
+
+  return (
+    <aside
+      aria-labelledby="job-filter-heading"
+      className="job-filters"
+      data-expanded={expanded}
+    >
+      <div className="job-filters__heading">
+        <div>
+          <p className="site-eyebrow">Avgrens resultatene</p>
+          <h2 id="job-filter-heading">Filtrer</h2>
+        </div>
+        <button
+          onClick={(): void => {
+            Router.replace('/jobb');
+          }}
+          type="button"
+        >
+          Nullstill
+        </button>
       </div>
+
       <button
-        onClick={(): void => {
-          Router.replace('/jobb');
-        }}
+        aria-controls="job-filter-fields"
+        aria-expanded={expanded}
+        className="job-filters__toggle"
+        onClick={(): void => setExpanded(!expanded)}
         type="button"
       >
-        Nullstill
+        <span>{expanded ? 'Skjul filtrene' : 'Vis filtrene'}</span>
+        {activeFilters > 0 && (
+          <span className="job-filters__count">
+            {activeFilters} {activeFilters === 1 ? 'aktivt' : 'aktive'}
+          </span>
+        )}
       </button>
-    </div>
 
-    <div className="job-filter-field">
-      <label htmlFor="job-type">Type stilling</label>
-      <JobTypeSelector />
-    </div>
-    <div className="job-filter-field">
-      <label htmlFor="job-company">Bedrift</label>
-      <CompanySelector environment={environment} />
-    </div>
-    <div className="job-filter-field">
-      <label htmlFor="job-town">Sted</label>
-      <TownSelector environment={environment} />
-    </div>
-    <div className="job-filter-field">
-      <label htmlFor="job-order">Sorter etter</label>
-      <OrderBySelector />
-    </div>
-    <fieldset className="job-filter-field">
-      <legend>Aktuelt årstrinn</legend>
-      <YearSelector variables={variables} />
-    </fieldset>
-  </aside>
-);
+      <div className="job-filters__fields" id="job-filter-fields">
+        <div className="job-filter-field">
+          <label htmlFor="job-type">Type stilling</label>
+          <JobTypeSelector />
+        </div>
+        <div className="job-filter-field">
+          <label htmlFor="job-company">Bedrift</label>
+          <CompanySelector environment={environment} />
+        </div>
+        <div className="job-filter-field">
+          <label htmlFor="job-town">Sted</label>
+          <TownSelector environment={environment} />
+        </div>
+        <div className="job-filter-field">
+          <label htmlFor="job-order">Sorter etter</label>
+          <OrderBySelector />
+        </div>
+        <fieldset className="job-filter-field">
+          <legend>Aktuelt årstrinn</legend>
+          <YearSelector variables={variables} />
+        </fieldset>
+      </div>
+    </aside>
+  );
+};
 
 export default JoblistingsSidebar;

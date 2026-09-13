@@ -41,6 +41,11 @@ describe('ProgramView', () => {
   let root;
 
   beforeEach(() => {
+    // ProgramView opens on today's programme day when today is one of them.
+    // Without a pinned clock these tests assert a different day whenever the
+    // suite runs on one of the fixture's dates.
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(new Date('2026-06-01T10:00:00.000Z'));
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
@@ -49,6 +54,7 @@ describe('ProgramView', () => {
   afterEach(() => {
     act(() => root.unmount());
     container.remove();
+    jest.useRealTimers();
   });
 
   it('uses published event dates instead of the fair dates for navigation', () => {
@@ -83,6 +89,36 @@ describe('ProgramView', () => {
     expect(container.textContent).toContain('2. august–11. september 2026');
     expect(container.textContent).not.toContain('Messedager');
     expect(container.textContent).toContain('August event');
+  });
+
+  it('opens on today when the fair is running, not on the first day', () => {
+    jest.setSystemTime(new Date('2026-09-11T10:00:00.000Z'));
+
+    act(() => {
+      root.render(
+        <ProgramView
+          currentMetaData={{
+            year: 2026,
+            startDate: '2026-09-11',
+            endDate: '2026-09-12',
+          }}
+          events={[
+            event('august-event', '2026-08-02', 'August event'),
+            event('fair-event', '2026-09-11', 'Fair event'),
+          ]}
+          programPublished
+          router={{
+            pathname: '/program',
+            push: jest.fn(),
+            query: {},
+          }}
+          venue="Realfagbygget, NTNU"
+        />
+      );
+    });
+
+    expect(container.textContent).toContain('Fair event');
+    expect(container.textContent).not.toContain('August event');
   });
 
   it('server-renders the first published program day without an empty flash', () => {

@@ -1,6 +1,7 @@
 import {
   StandMapManifest,
   StandMapStand,
+  toCollaboratorTier,
 } from '../components/Stands/standsData';
 
 export type PublishedStandMap = {
@@ -12,6 +13,7 @@ export type PublishedStandMap = {
     readonly label: string;
     readonly location: string;
     readonly placements: ReadonlyArray<{
+      readonly collaboratorTier?: string | null;
       readonly companyName: string;
       readonly companySlug: string;
       readonly standNumber: string;
@@ -28,15 +30,21 @@ const standNumberCollator = new Intl.Collator('nb', {
 
 const toStand = (
   placement: PublishedStandMap['maps'][number]['placements'][number]
-): StandMapStand => ({
-  number: placement.standNumber,
-  companyName: placement.companyName,
-  companySlug: placement.companySlug,
-  position: {
-    x: placement.xPercent,
-    y: placement.yPercent,
-  },
-});
+): StandMapStand => {
+  const collaboratorTier = toCollaboratorTier(placement.collaboratorTier);
+  return {
+    number: placement.standNumber,
+    companyName: placement.companyName,
+    companySlug: placement.companySlug,
+    // Kept off the object entirely for a regular company so the manifest stays
+    // comparable with the maps published before partner tiers existed.
+    ...(collaboratorTier ? { collaboratorTier } : {}),
+    position: {
+      x: placement.xPercent,
+      y: placement.yPercent,
+    },
+  };
+};
 
 export const toStandMapManifest = (
   release?: PublishedStandMap | null

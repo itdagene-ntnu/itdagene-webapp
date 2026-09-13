@@ -589,6 +589,12 @@ a {
   gap: var(--space-7);
 }
 
+.site-footer__identity a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+}
+
 .site-footer__identity img {
   width: 12rem;
   height: auto;
@@ -615,6 +621,12 @@ a {
 
 .site-footer li + li {
   margin-top: var(--space-2);
+}
+
+.site-footer li a {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
 }
 
 .site-footer a {
@@ -901,6 +913,44 @@ a {
   padding: 0.75rem clamp(0.45rem, 1.5vw, 1rem);
 }
 
+/* While the fair runs, the same tiles carry the days instead of a countdown, so
+   the hero keeps its shape and the logo-merge animation keeps something to
+   animate. The tiles are square (aspect-ratio: 1), so the track is capped at a
+   quarter of the row rather than stretched: two days must not become two huge
+   blocks where four small ones used to sit. */
+.event-countdown--complete .event-countdown__values {
+  /* Tiles are square and their type scales with the viewport rather than with
+     the tile, so a long edition squeezed into one row gives 56px boxes with 7px
+     labels. Equal columns shrink to a legible floor and only then wrap, while
+     the max-width keeps a short edition at the same tile size as the countdown
+     instead of stretching two days across the whole hero. */
+  --fair-day-gap: clamp(0.35rem, 1vw, 0.7rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(4.75rem, 100%), 1fr));
+  max-width: calc(
+    var(--fair-day-count, 2) * 8.25rem + (var(--fair-day-count, 2) - 1) *
+      var(--fair-day-gap)
+  );
+  margin-inline: auto;
+  /* aspect-ratio sets the height; stretch would override it on a wrapped row. */
+  align-items: start;
+  gap: var(--fair-day-gap);
+  border-block: 0;
+}
+
+.event-countdown--complete .event-countdown__unit {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+}
+
+.event-countdown--complete .event-countdown__unit[data-fair-day='today'] {
+  background: var(--color-accent);
+  color: var(--color-surface-deep);
+}
+
+.event-countdown--complete .event-countdown__unit dt {
+  text-transform: none;
+}
+
 .event-countdown__unit + .event-countdown__unit {
   border-left: 1px solid rgba(255, 255, 255, 0.26);
 }
@@ -922,7 +972,7 @@ a {
   margin-top: 0.35rem;
   color: inherit;
   font-family: var(--font-mono);
-  font-size: clamp(0.56rem, 0.9vw, 0.68rem);
+  font-size: clamp(0.62rem, 0.9vw, 0.68rem);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -1486,7 +1536,7 @@ a {
 .program-date-navigator__heading {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--space-4);
 }
 
@@ -1498,10 +1548,6 @@ a {
   display: flex;
   align-items: flex-end;
   gap: var(--space-3);
-}
-
-.program-date-navigator__picker {
-  display: none;
 }
 
 .program-date-navigator__controls {
@@ -1760,8 +1806,8 @@ a {
   color: var(--color-ink-muted);
 }
 
-.program-event-card__mobile-detail {
-  display: none;
+.program-event-disclosure {
+  position: relative;
 }
 
 .program-detail-pane {
@@ -1983,8 +2029,7 @@ a {
 }
 
 .stand-map__marker:hover,
-.stand-map__marker[data-active='true'],
-.stand-map__marker[data-selected='true'] {
+.stand-map__marker[data-active='true'] {
   z-index: 3;
 }
 
@@ -2005,11 +2050,25 @@ a {
 }
 
 .stand-map__marker:hover .stand-map__marker-number,
-.stand-map__marker[data-active='true'] .stand-map__marker-number,
-.stand-map__marker[data-selected='true'] .stand-map__marker-number {
+.stand-map__marker[data-active='true'] .stand-map__marker-number {
   border-color: var(--color-brand-dark);
   background: var(--color-accent);
   transform: scale(1.06);
+}
+
+/* Partner stands stay recognisable without a pointer: the ring survives the
+   hover swap of the marker fill. */
+.stand-map__marker[data-collaborator-tier] .stand-map__marker-number {
+  box-shadow: 0 0 0 0.11rem var(--color-route-stands),
+    0 0.08rem 0.2rem rgba(8, 34, 56, 0.24);
+}
+
+.stand-map__marker[data-collaborator-tier='main'] .stand-map__marker-number {
+  width: 1.15rem;
+  height: 1.15rem;
+  box-shadow: 0 0 0 0.13rem var(--color-accent),
+    0 0.08rem 0.2rem rgba(8, 34, 56, 0.24);
+  font-size: 0.58rem;
 }
 
 .stand-map__marker-label {
@@ -2040,7 +2099,9 @@ a {
 }
 
 .stand-map__download {
-  display: inline-block;
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
   margin-top: var(--space-3);
   color: var(--color-brand-strong);
   font-weight: 650;
@@ -2068,9 +2129,9 @@ a {
   min-height: 3.25rem;
   padding: var(--space-3);
   border: 0;
-  grid-template-columns: 2.25rem 1fr;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2) var(--space-3);
   background: transparent;
   color: var(--color-ink);
   cursor: pointer;
@@ -2078,9 +2139,16 @@ a {
 }
 
 .stand-directory button:hover,
-.stand-directory button[data-active='true'],
-.stand-directory button[data-selected='true'] {
+.stand-directory button[data-active='true'] {
   background: var(--color-brand-soft);
+}
+
+.stand-directory button[data-collaborator-tier] {
+  box-shadow: inset 0.2rem 0 0 var(--color-brand-strong);
+}
+
+.stand-directory button[data-collaborator-tier='main'] {
+  box-shadow: inset 0.2rem 0 0 var(--color-accent);
 }
 
 .stand-directory button > span {
@@ -2097,6 +2165,33 @@ a {
 .stand-directory__empty h2 {
   margin-top: 0;
   color: var(--color-ink);
+}
+
+.stand-collaborator-badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-control);
+  background: var(--color-brand-soft);
+  color: var(--color-brand-strong);
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stand-collaborator-badge[data-collaborator-tier='main'] {
+  background: var(--color-accent-soft);
+  color: var(--color-warning);
+}
+
+.stand-selection h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
 }
 
 .stand-table {
@@ -2124,12 +2219,18 @@ a {
   text-align: left;
 }
 
-.stand-table tr[data-active='true'],
-.stand-table tr[data-selected='true'] {
+.stand-table tr[data-active='true'] {
   background: var(--color-brand-soft);
 }
 
+.stand-table td .stand-collaborator-badge {
+  margin-left: var(--space-2);
+}
+
 .stand-table__company {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
   padding: 0;
   border: 0;
   background: transparent;
@@ -2141,8 +2242,7 @@ a {
 }
 
 .stand-table__company:hover,
-.stand-table__company[data-active='true'],
-.stand-table__company[data-selected='true'] {
+.stand-table__company[data-active='true'] {
   color: var(--color-brand-strong);
   text-decoration: underline;
   text-decoration-thickness: 0.09em;
@@ -2162,32 +2262,6 @@ a {
 
 .jobs-layout--single {
   grid-template-columns: minmax(0, 1fr);
-}
-
-@media (max-width: 800px) {
-  .jobs-layout {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .jobs-results,
-  .job-filters {
-    width: 100%;
-  }
-
-  .job-filters {
-    position: static;
-    order: -1;
-  }
-
-  .job-card > a {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .job-card__logo {
-    border-right: 0;
-    border-bottom: 1px solid var(--color-border);
-  }
 }
 
 .job-filters {
@@ -2217,13 +2291,20 @@ a {
 }
 
 .job-filters__heading button {
+  display: inline-flex;
+  min-height: 24px;
   padding: 0;
   border: 0;
+  align-items: center;
   background: transparent;
   color: var(--color-brand-strong);
   cursor: pointer;
   font-size: 0.85rem;
   font-weight: 650;
+}
+
+.job-filters__toggle {
+  display: none;
 }
 
 .job-filter-field {
@@ -2512,6 +2593,29 @@ a {
   text-align: left;
 }
 
+/* The one open/close affordance on the site: a plus that rotates into a
+   cross. Every disclosure gets it from SmoothDisclosure, so only placement
+   is left to the feature that uses it. */
+.smooth-disclosure__marker {
+  display: inline-block;
+  color: var(--color-brand-strong);
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 450;
+  line-height: 1;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.smooth-disclosure__marker::before {
+  content: '+';
+}
+
+.smooth-disclosure[data-open='true']
+  > .smooth-disclosure__trigger
+  .smooth-disclosure__marker {
+  transform: rotate(45deg);
+}
+
 .smooth-disclosure__motion {
   display: grid;
   visibility: hidden;
@@ -2554,20 +2658,10 @@ a {
   list-style: none;
 }
 
-.faq-item > .smooth-disclosure__trigger::after {
+.faq-item .smooth-disclosure__marker {
   position: absolute;
   top: var(--space-5);
   right: var(--space-2);
-  color: var(--color-brand-strong);
-  content: '+';
-  font-family: var(--font-mono);
-  transform: rotate(0);
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.faq-item[data-open='true'] > .smooth-disclosure__trigger::after {
-  content: '−';
-  transform: rotate(180deg);
 }
 
 .faq-item__answer {
@@ -2677,6 +2771,9 @@ a {
 }
 
 .board-member__links a {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
   color: var(--color-ink-muted);
   font-size: 0.85rem;
   font-weight: 650;
@@ -3028,28 +3125,6 @@ a {
     display: block;
   }
 
-  .program-date-navigator__picker {
-    display: grid;
-    gap: 0.2rem;
-    color: var(--color-ink-muted);
-    font-size: 0.65rem;
-    font-weight: 750;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .program-date-navigator__picker select {
-    min-width: 9.5rem;
-    height: 2.75rem;
-    padding: 0 2rem 0 0.65rem;
-    border: 1px solid var(--color-border);
-    border-radius: 0;
-    background: var(--color-surface);
-    color: var(--color-brand-dark);
-    font: 700 0.78rem var(--font-sans);
-    text-transform: none;
-  }
-
   .program-date-navigator__viewport {
     margin-top: var(--space-3);
   }
@@ -3070,11 +3145,20 @@ a {
 
   .program-event-card {
     grid-template-columns: 5.5rem minmax(0, 1fr);
-    padding-inline: 0;
+    padding-inline: 0 2.25rem;
+  }
+
+  .program-event-disclosure .smooth-disclosure__marker {
+    position: absolute;
+    top: var(--space-5);
+    right: 0;
+  }
+
+  .program-event-disclosure[data-open='true'] .program-event-card strong {
+    color: var(--color-brand-strong);
   }
 
   .program-event-card__mobile-detail {
-    display: block;
     padding: 0 0 var(--space-6) 5.5rem;
   }
 
@@ -3088,6 +3172,16 @@ a {
 
   .program-detail--compact .program-detail__metadata {
     display: none;
+  }
+
+  .program-detail__compact-organizer {
+    margin: 0 0 var(--space-3);
+    color: var(--color-ink-muted);
+    font-size: 0.9rem;
+  }
+
+  .program-detail__compact-organizer strong {
+    color: var(--color-ink);
   }
 
   .program-detail--compact .program-detail__body > :first-child {
@@ -3123,9 +3217,40 @@ a {
     margin-top: var(--space-4);
   }
 
-  .stand-explorer__layout {
+  /* Lead with the plan drawing. On a phone the map is what people came for,
+     so it sits directly under the day tabs and the search plus company list
+     read as one block beneath it. `display: contents` lifts the map and the
+     directory out of the two-column wrapper so they can be ordered against
+     the toolbar, which is not their sibling on desktop. */
+  .stand-explorer {
     display: flex;
     flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .stand-explorer__layout {
+    display: contents;
+  }
+
+  .stand-explorer__layout > div:first-child {
+    order: 1;
+  }
+
+  .stand-explorer__toolbar {
+    order: 2;
+  }
+
+  .stand-selection {
+    order: 3;
+  }
+
+  .stand-directory {
+    order: 4;
+  }
+
+  .stand-table {
+    order: 5;
+    margin-top: 0;
   }
 
   .stand-explorer__layout > div:first-child,
@@ -3133,13 +3258,27 @@ a {
     width: 100%;
   }
 
-  .stand-map__markers {
-    display: none;
+  /* The hit target is deliberately NOT enlarged for touch here. The real map
+     packs ~40 stands into about 358px, with the closest pair 5.5px apart, so a
+     bigger target only makes a tap land on a neighbour. The dots stay readable
+     and the directory below is the reliable way to identify a stand. */
+
+  .stand-map__marker-label {
+    max-width: min(9rem, 42vw);
+    font-size: 0.68rem;
   }
 
   .stand-directory {
     max-height: none;
-    order: -1;
+  }
+
+  .stand-directory button {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+
+  .stand-directory button .stand-collaborator-badge {
+    grid-column: 2;
+    justify-self: start;
   }
 
   .jobs-layout {
@@ -3155,6 +3294,59 @@ a {
   .job-filters {
     position: static;
     order: -1;
+    padding: var(--space-4);
+  }
+
+  /* Collapsed, the panel is a single bar instead of three quarters of the
+     screen, so the first advert is visible without scrolling past the form. */
+  .job-filters__heading {
+    margin-bottom: var(--space-4);
+    align-items: center;
+  }
+
+  .job-filters__heading .site-eyebrow {
+    display: none;
+  }
+
+  .job-filters__heading h2 {
+    font-size: 1.35rem;
+  }
+
+  .job-filters__toggle {
+    display: flex;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--color-brand-dark);
+    border-radius: var(--radius-control);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    background: transparent;
+    color: var(--color-brand-dark);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 650;
+  }
+
+  .job-filters__count {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--color-brand-dark);
+    color: #fff;
+    font-size: 0.75rem;
+  }
+
+  .job-filters[data-expanded='false'] .job-filters__fields {
+    display: none;
+  }
+
+  .job-filters__fields {
+    margin-top: var(--space-4);
+  }
+
+  .job-filter-field + .job-filter-field {
+    margin-top: var(--space-4);
   }
 
   .job-grid {
@@ -3217,16 +3409,7 @@ a {
 
   .program-date-navigator__actions {
     width: 100%;
-    justify-content: space-between;
-  }
-
-  .program-date-navigator__picker {
-    min-width: 0;
-  }
-
-  .program-date-navigator__picker select {
-    width: min(11rem, 100%);
-    min-width: 0;
+    justify-content: flex-end;
   }
 
   .gallery-grid {
@@ -3745,7 +3928,10 @@ html[data-hero-mode='static'] .site-header--cinematic .site-navigation li a {
   flex-direction: column;
   color: #fff;
   transform-origin: center;
-  will-change: background-color, opacity, transform;
+  /* background-color cannot be composited, so hinting it only costs a layer.
+     opacity and transform are the two the scrubbed timeline actually animates
+     on the compositor. */
+  will-change: opacity, transform;
 }
 
 .event-countdown__unit + .event-countdown__unit {
@@ -3776,7 +3962,7 @@ html[data-hero-mode='static'] .site-header--cinematic .site-navigation li a {
 
 .event-countdown__unit dt {
   margin-top: 0.4rem;
-  font-size: clamp(0.55rem, 0.8vw, 0.65rem);
+  font-size: clamp(0.62rem, 0.8vw, 0.65rem);
   letter-spacing: 0.035em;
   text-transform: uppercase;
 }
@@ -4088,13 +4274,8 @@ a.current-company-directory__logo:active {
   transition: background-color 180ms ease;
 }
 
-.partner-showcase__associate-disclosure > .smooth-disclosure__trigger::after {
+.partner-showcase__associate-disclosure .smooth-disclosure__marker {
   margin-left: var(--space-3);
-  content: '+';
-  font-size: 1.35rem;
-  font-weight: 450;
-  line-height: 1;
-  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .partner-showcase__associate-disclosure > .smooth-disclosure__trigger:hover {
@@ -4105,11 +4286,6 @@ a.current-company-directory__logo:active {
   > .smooth-disclosure__trigger:focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: -3px;
-}
-
-.partner-showcase__associate-disclosure[data-open='true']
-  > .smooth-disclosure__trigger::after {
-  transform: rotate(45deg);
 }
 
 .partner-showcase__associate-copy {
@@ -4539,9 +4715,6 @@ a.current-company-directory__logo:active {
   .stand-map__marker-number,
 .site-root[data-route='stands']
   .stand-map__marker[data-active='true']
-  .stand-map__marker-number,
-.site-root[data-route='stands']
-  .stand-map__marker[data-selected='true']
   .stand-map__marker-number {
   border-color: var(--color-route-gallery);
   background: var(--color-route-stands);
@@ -4731,7 +4904,7 @@ a.current-company-directory__logo:active {
   }
 
   .event-countdown__unit dt {
-    font-size: clamp(0.5rem, 2.3vw, 0.62rem);
+    font-size: clamp(0.62rem, 2.3vw, 0.7rem);
   }
 
   .event-hero__static-purpose {
@@ -4965,7 +5138,7 @@ a.current-company-directory__logo:active {
   }
 
   .event-countdown__unit dt {
-    font-size: 0.46rem;
+    font-size: 0.62rem;
     letter-spacing: 0;
   }
 

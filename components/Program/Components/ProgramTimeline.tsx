@@ -10,6 +10,11 @@ import { findClosestDate } from '../../../utils/findClosestDate';
 import { eventInstant, eventLocalTime } from '../../../utils/eventTime';
 import { eventTime, toDayjs } from '../../../utils/time';
 import { ArrayElement } from '../../../utils/types';
+import {
+  MOBILE_LAYOUT_QUERY,
+  useMediaQuery,
+} from '../../../utils/useMediaQuery';
+import { SmoothDisclosure } from '../../DesignSystem/SmoothDisclosure';
 
 dayjs.extend(customParseFormat);
 
@@ -127,6 +132,11 @@ const EventDetails = ({
         </div>
       )}
     </dl>
+    {compact && event.company && (
+      <p className="program-detail__compact-organizer">
+        Arrangør: <strong>{event.company.name}</strong>
+      </p>
+    )}
     {event.usesTickets && (
       <p className="program-detail__notice">Påmelding kan være nødvendig.</p>
     )}
@@ -149,6 +159,11 @@ const ProgramTimeline = ({
 }: ProgramTimelineProps): JSX.Element => {
   const [activeEvent, setActiveEvent] = useState<ProgramEvent>();
   const [previewEvent, setPreviewEvent] = useState<ProgramEvent>();
+  // Below the layout breakpoint every event carries its own details inline, so
+  // the rows collapse into a list you can scan. Above it the details live in
+  // the pane beside the list and the rows only select.
+  const isMobileLayout = useMediaQuery(MOBILE_LAYOUT_QUERY);
+  const [expandedEventId, setExpandedEventId] = useState<string>();
   const eventsForDay = activeDate ? events[activeDate] || [] : [];
   const queryEvent =
     typeof router.query.event === 'string' ? router.query.event : undefined;
@@ -157,6 +172,16 @@ const ProgramTimeline = ({
     setActiveEvent(findInitialEvent(eventsForDay, activeDate, queryEvent));
     setPreviewEvent(undefined);
   }, [activeDate, eventsForDay, queryEvent]);
+
+  // Collapse when the visitor moves to another day, but not when opening a row
+  // republishes the event in the query string.
+  useEffect(() => setExpandedEventId(undefined), [activeDate]);
+
+  // A shared link points at one event, so open that one on arrival. Closing it
+  // leaves the query untouched, which is why this cannot fight the toggle.
+  useEffect(() => {
+    if (queryEvent) setExpandedEventId(queryEvent);
+  }, [queryEvent]);
 
   const selectEvent = (event: ProgramEvent): void => {
     setActiveEvent(event);
@@ -189,6 +214,42 @@ const ProgramTimeline = ({
           const isActive = displayedEvent?.id === event.id;
           const isSelected = activeEvent?.id === event.id;
           const isPast = hasEnded(event.date, event.timeEnd);
+          const summary = (
+            <>
+              <time dateTime={`${event.date}T${event.timeStart}`}>
+                {eventTime({
+                  start: toDayjs(event.date, event.timeStart),
+                  end: toDayjs(event.date, event.timeEnd),
+                })}
+              </time>
+              <span className="program-event-card__copy">
+                <strong>{event.title}</strong>
+                <span>{event.location}</span>
+              </span>
+            </>
+          );
+
+          if (isMobileLayout) {
+            return (
+              <li data-past={isPast} key={event.id}>
+                <SmoothDisclosure
+                  className="program-event-disclosure"
+                  contentClassName="program-event-card__mobile-detail"
+                  contentId={`program-event-${event.id}`}
+                  onOpenChange={(open): void => {
+                    setExpandedEventId(open ? event.id : undefined);
+                    if (open) selectEvent(event);
+                  }}
+                  open={expandedEventId === event.id}
+                  summary={summary}
+                  triggerClassName="program-event-card"
+                  triggerData={{ 'data-event-id': event.id }}
+                >
+                  <EventDetails compact event={event} />
+                </SmoothDisclosure>
+              </li>
+            );
+          }
 
           return (
             <li data-past={isPast} key={event.id}>
@@ -202,20 +263,8 @@ const ProgramTimeline = ({
                 onMouseEnter={(): void => setPreviewEvent(event)}
                 type="button"
               >
-                <time dateTime={`${event.date}T${event.timeStart}`}>
-                  {eventTime({
-                    start: toDayjs(event.date, event.timeStart),
-                    end: toDayjs(event.date, event.timeEnd),
-                  })}
-                </time>
-                <span className="program-event-card__copy">
-                  <strong>{event.title}</strong>
-                  <span>{event.location}</span>
-                </span>
+                {summary}
               </button>
-              <div className="program-event-card__mobile-detail">
-                <EventDetails compact event={event} />
-              </div>
             </li>
           );
         })}
