@@ -8,7 +8,9 @@ import {
   formatEventStartDateTime,
   getCountdownParts,
   getEventStartTimestamp,
+  getFairDays,
 } from '../../utils/countdown';
+import { eventInstant } from '../../utils/eventTime';
 
 const labels: Array<{
   key: keyof CountdownParts;
@@ -70,11 +72,62 @@ const CountdownComponent = ({
   );
 
   if (completed) {
+    const fairDays = getFairDays(
+      currentMetaData.startDate,
+      currentMetaData.endDate
+    );
+    // Resolved only after mount, like the countdown itself, so the server and
+    // the client render the same markup.
+    const today =
+      nowTimestamp === null
+        ? null
+        : eventInstant(new Date(nowTimestamp).toISOString()).format(
+            'YYYY-MM-DD'
+          );
+    const activeDay = fairDays.find((day) => day.date === today);
+
     return (
-      <div className="event-countdown event-countdown--complete" role="status">
-        <span className="event-countdown__kicker">
+      <div
+        className="event-countdown event-countdown--complete"
+        data-testid="event-countdown"
+        role="status"
+      >
+        <span className="event-countdown__kicker" data-countdown-content>
           {phase === 'postEvent' ? 'Takk for i år' : 'itDAGENE er i gang'}
         </span>
+        <p className="visually-hidden">
+          {activeDay
+            ? `Dag ${fairDays.indexOf(activeDay) + 1} av ${fairDays.length}: ${
+                activeDay.weekday
+              } ${activeDay.dayOfMonth}.`
+            : `itDAGENE går over ${fairDays.length} dager.`}
+        </p>
+        {fairDays.length > 0 && (
+          <dl
+            aria-hidden="true"
+            className="event-countdown__values"
+            data-countdown-grid
+            // Lets the stylesheet cap the row at the natural width for this
+            // many days, so two days do not stretch into two huge blocks.
+            style={
+              { '--fair-day-count': fairDays.length } as React.CSSProperties
+            }
+          >
+            {fairDays.map((day, index) => (
+              <div
+                // No --1..--4 modifier here: those carry the route colours,
+                // which mean nothing on a day tile.
+                className="event-countdown__unit"
+                data-countdown-tile
+                data-fair-day={day.date === today ? 'today' : 'other'}
+                key={day.date}
+              >
+                <dd data-countdown-content>{day.dayOfMonth}</dd>
+                <dt data-countdown-content>{day.weekday}</dt>
+              </div>
+            ))}
+          </dl>
+        )}
       </div>
     );
   }
@@ -116,6 +169,7 @@ export default createFragmentContainer(CountdownComponent, {
   currentMetaData: graphql`
     fragment Countdown_currentMetaData on MetaData {
       startDate
+      endDate
     }
   `,
 });

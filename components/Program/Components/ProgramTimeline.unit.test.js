@@ -181,4 +181,42 @@ describe('ProgramTimeline', () => {
       'Neste i Oslo'
     );
   });
+
+  it('renders expandable disclosures and shows the organizer in mobile layout', () => {
+    window.matchMedia = jest.fn().mockImplementation((query) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
+
+    act(() => {
+      root.render(
+        <ProgramTimeline
+          activeDate="2026-09-14"
+          events={events}
+          router={{ query: {} }}
+          updateQueryEvent={jest.fn()}
+        />
+      );
+    });
+
+    const disclosures = container.querySelectorAll('.program-event-disclosure');
+    expect(disclosures).toHaveLength(2);
+
+    const event2Trigger = disclosures[1].querySelector('.program-event-card');
+    act(() => Simulate.click(event2Trigger));
+
+    const organizer = disclosures[1].querySelector(
+      '.program-detail__compact-organizer'
+    );
+    expect(organizer).not.toBeNull();
+    expect(organizer.textContent).toBe('Arrangør: Computas');
+
+    delete window.matchMedia;
+  });
 });

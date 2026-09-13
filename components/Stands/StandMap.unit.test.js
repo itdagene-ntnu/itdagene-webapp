@@ -22,6 +22,7 @@ const firstDay = createDay('2026-09-14', 'Første dag', [
     number: 1,
     companyName: 'Alpha',
     companySlug: 'alpha',
+    collaboratorTier: 'main',
     position: { x: 20, y: 30 },
   },
   {
@@ -37,6 +38,7 @@ const secondDay = createDay('2026-09-15', 'Andre dag', [
     number: 3,
     companyName: 'Gamma',
     companySlug: 'gamma',
+    collaboratorTier: 'collaborator',
     position: { x: 60, y: 70 },
   },
 ]);
@@ -57,10 +59,8 @@ describe('StandMap', () => {
   });
 
   it('clears a previous-day search when the visitor changes day', () => {
-    const onSelect = jest.fn();
-
     act(() => {
-      root.render(<StandMap day={firstDay} onSelect={onSelect} />);
+      root.render(<StandMap day={firstDay} />);
     });
 
     const search = container.querySelector('#stand-search');
@@ -70,7 +70,7 @@ describe('StandMap', () => {
     expect(container.querySelectorAll('.stand-directory li')).toHaveLength(1);
 
     act(() => {
-      root.render(<StandMap day={secondDay} onSelect={onSelect} />);
+      root.render(<StandMap day={secondDay} />);
     });
 
     expect(container.querySelector('#stand-search').value).toBe('');
@@ -83,11 +83,9 @@ describe('StandMap', () => {
     ).toBeNull();
   });
 
-  it('shows the top search result in the stand summary without committing it', () => {
-    const onSelect = jest.fn();
-
+  it('shows the top search result in the stand summary', () => {
     act(() => {
-      root.render(<StandMap day={firstDay} onSelect={onSelect} />);
+      root.render(<StandMap day={firstDay} />);
     });
 
     act(() =>
@@ -101,10 +99,91 @@ describe('StandMap', () => {
       'Øverste søkeresultat'
     );
     expect(summary.querySelector('h2').textContent).toBe('Beta');
-    expect(onSelect).not.toHaveBeenCalled();
 
-    act(() => Simulate.click(summary.querySelector('button')));
+    act(() => Simulate.click(summary.querySelector('.stand-selection__clear')));
     expect(container.querySelector('#stand-search').value).toBe('');
     expect(container.querySelector('.stand-selection')).toBeNull();
+  });
+
+  it('marks a hovered company active on every surface without committing it', () => {
+    act(() => {
+      root.render(<StandMap day={firstDay} />);
+    });
+
+    const marker = container.querySelector(
+      '.stand-map__marker[data-stand-company="alpha"]'
+    );
+    const row = container.querySelector(
+      '.stand-directory button[data-stand-company="alpha"]'
+    );
+
+    act(() => Simulate.mouseEnter(row));
+    expect(marker.dataset.active).toBe('true');
+    expect(marker.querySelector('.stand-map__marker-label').textContent).toBe(
+      'Alpha'
+    );
+    expect(marker.getAttribute('aria-pressed')).toBe('false');
+
+    act(() => Simulate.mouseLeave(row));
+    expect(marker.dataset.active).toBe('false');
+    expect(marker.querySelector('.stand-map__marker-label')).toBeNull();
+  });
+
+  it('keeps a tapped company active for pointers that cannot hover', () => {
+    act(() => {
+      root.render(<StandMap day={firstDay} />);
+    });
+
+    const marker = container.querySelector(
+      '.stand-map__marker[data-stand-company="beta"]'
+    );
+    const row = container.querySelector(
+      '.stand-directory button[data-stand-company="beta"]'
+    );
+
+    act(() => Simulate.click(marker));
+    expect(marker.dataset.active).toBe('true');
+    expect(marker.getAttribute('aria-pressed')).toBe('true');
+    expect(row.dataset.active).toBe('true');
+
+    act(() => Simulate.click(marker));
+    expect(marker.dataset.active).toBe('false');
+    expect(marker.getAttribute('aria-pressed')).toBe('false');
+
+    act(() => Simulate.click(marker));
+    expect(marker.dataset.active).toBe('true');
+
+    const map = container.querySelector('.stand-map');
+    act(() => Simulate.click(map));
+    expect(marker.dataset.active).toBe('false');
+  });
+
+  it('labels collaborators on the map and in the directory', () => {
+    act(() => {
+      root.render(<StandMap day={firstDay} />);
+    });
+
+    const marker = container.querySelector(
+      '.stand-map__marker[data-stand-company="alpha"]'
+    );
+    expect(marker.dataset.collaboratorTier).toBe('main');
+    expect(marker.getAttribute('aria-label')).toBe(
+      'Stand 1, Alpha, Hovedsamarbeidspartner'
+    );
+    expect(
+      container.querySelector(
+        '.stand-directory button[data-stand-company="alpha"] .stand-collaborator-badge'
+      ).textContent
+    ).toBe('Hovedsamarbeidspartner');
+
+    expect(
+      container.querySelector('.stand-map__marker[data-stand-company="beta"]')
+        .dataset.collaboratorTier
+    ).toBeUndefined();
+    expect(
+      container.querySelector(
+        '.stand-directory button[data-stand-company="beta"] .stand-collaborator-badge'
+      )
+    ).toBeNull();
   });
 });

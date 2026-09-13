@@ -162,6 +162,16 @@ export const useHeroLogoTransition = (
 
     const staticExperience = experienceMode === 'static';
 
+    // Scroll and scrub callbacks run far more often than this value changes,
+    // and every announcement lands in the header's React state. Dispatch only
+    // on a real change so scrolling stays out of the render path.
+    let announcedVisibility: boolean | undefined;
+    const announceVisibility = (visible: boolean): void => {
+      if (visible === announcedVisibility) return;
+      announcedVisibility = visible;
+      announceHeaderActionVisibility(visible, headerAction);
+    };
+
     const setHeroMode = (
       mode: HeroExperienceMode | 'preparing',
       preparation?: HeroPreparationState
@@ -177,10 +187,16 @@ export const useHeroLogoTransition = (
     };
     const resolvePreparationState = (): HeroPreparationState =>
       window.scrollY > story.offsetTop + 1 ? 'scrolled' : 'top';
+    let preparationFrame = 0;
     const syncPreparationIdentity = (): void => {
-      if (story.dataset.heroMode !== 'preparing') return;
-      document.documentElement.dataset.heroPreparation =
-        resolvePreparationState();
+      if (story.dataset.heroMode !== 'preparing' || preparationFrame) return;
+      preparationFrame = window.requestAnimationFrame(() => {
+        preparationFrame = 0;
+        if (story.dataset.heroMode !== 'preparing') return;
+        const state = resolvePreparationState();
+        if (document.documentElement.dataset.heroPreparation === state) return;
+        document.documentElement.dataset.heroPreparation = state;
+      });
     };
 
     // Keep one complete identity visible while asynchronous motion is rebuilt.
@@ -190,28 +206,41 @@ export const useHeroLogoTransition = (
     );
 
     const setupStaticHeaderAction = (): (() => void) => {
+      let header = document.querySelector<HTMLElement>('.site-header');
+      let frame = 0;
+
       const updateHeaderAction = (): void => {
-        const header = document.querySelector<HTMLElement>('.site-header');
+        frame = 0;
+        if (!header?.isConnected) {
+          header = document.querySelector<HTMLElement>('.site-header');
+        }
         const actionRect = interestAction.getBoundingClientRect();
         const headerBottom = header?.getBoundingClientRect().bottom || 0;
-        announceHeaderActionVisibility(
-          actionRect.bottom <= headerBottom,
-          headerAction
-        );
+        announceVisibility(actionRect.bottom <= headerBottom);
+      };
+
+      // Both measurements force layout, and scroll fires several times per
+      // frame. One measurement per frame is all the screen can show.
+      const scheduleHeaderAction = (): void => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(updateHeaderAction);
       };
 
       updateHeaderAction();
-      window.addEventListener('scroll', updateHeaderAction, { passive: true });
-      window.addEventListener('resize', updateHeaderAction);
+      window.addEventListener('scroll', scheduleHeaderAction, {
+        passive: true,
+      });
+      window.addEventListener('resize', scheduleHeaderAction);
 
       return (): void => {
-        window.removeEventListener('scroll', updateHeaderAction);
-        window.removeEventListener('resize', updateHeaderAction);
-        announceHeaderActionVisibility(false, headerAction);
+        window.cancelAnimationFrame(frame);
+        window.removeEventListener('scroll', scheduleHeaderAction);
+        window.removeEventListener('resize', scheduleHeaderAction);
+        announceVisibility(false);
       };
     };
 
-    announceHeaderActionVisibility(false, headerAction);
+    announceVisibility(false);
 
     if (staticExperience) {
       const cleanupHeaderAction = setupStaticHeaderAction();
@@ -318,7 +347,7 @@ export const useHeroLogoTransition = (
             end: 'bottom bottom',
             invalidateOnRefresh: true,
             onUpdate: ({ progress }): void => {
-              announceHeaderActionVisibility(progress >= 0.18, headerAction);
+              announceVisibility(progress >= 0.18);
             },
             scrub: 0.7,
           },
@@ -373,8 +402,13 @@ export const useHeroLogoTransition = (
         });
 
         timeline
+          // The tiles hold full opacity all the way through the colour tween
+          // above, which lands them on the logo blue at 0.44, and are then
+          // swapped for the wordmark on a single frame. Fading them out
+          // instead read as a dissolve, and starting that fade before the
+          // colour had arrived made them go transparent mid-way.
+          .set(countdownTiles, { autoAlpha: 0 }, 0.46)
           .set(assembledLogo, { autoAlpha: 1 }, 0.46)
-          .to(countdownTiles, { autoAlpha: 0, duration: 0.08 }, 0.46)
           .to(
             assembledLogo,
             {
@@ -472,6 +506,7 @@ export const useHeroLogoTransition = (
 
     return (): void => {
       cancelled = true;
+      window.cancelAnimationFrame(preparationFrame);
       setHeroMode('preparing', resolvePreparationState());
       cleanupMotionResize?.();
       gsapContext?.revert();
@@ -484,7 +519,7 @@ export const useHeroLogoTransition = (
       video.pause();
       video.removeAttribute('src');
       video.load();
-      announceHeaderActionVisibility(false, headerAction);
+      announceVisibility(false);
       window.requestAnimationFrame(() => {
         if (!document.querySelector('.event-hero-story')) {
           delete document.documentElement.dataset.heroMode;

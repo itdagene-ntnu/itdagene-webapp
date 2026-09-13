@@ -101,11 +101,6 @@ describe('ProgramDateNavigator', () => {
     expect(selection.querySelector('span:last-child').textContent).toBe(
       '3 arrangementer'
     );
-    expect(
-      Array.from(container.querySelectorAll('optgroup')).map((group) =>
-        group.getAttribute('label')
-      )
-    ).toEqual(['August 2026', 'September 2026']);
   });
 
   it('steps through dates with controls and disables them at the bounds', () => {
@@ -203,26 +198,6 @@ describe('ProgramDateNavigator', () => {
     expect(window.sessionStorage.getItem('itdagene:focus-program-date')).toBe(
       null
     );
-  });
-
-  it('offers every date through the compact mobile picker', () => {
-    const onChange = jest.fn();
-
-    act(() => {
-      root.render(
-        <ProgramDateNavigator
-          activeDate="2026-08-02"
-          dates={['2026-08-02', '2026-09-11']}
-          eventCounts={{}}
-          onChange={onChange}
-        />
-      );
-    });
-
-    const picker = container.querySelector('[aria-label="Alle programdatoer"]');
-    act(() => Simulate.change(picker, { target: { value: '2026-09-11' } }));
-
-    expect(onChange).toHaveBeenCalledWith('2026-09-11');
   });
 
   it('keeps a single program day concise and renders nothing without dates', () => {

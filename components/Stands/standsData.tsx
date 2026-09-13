@@ -1,9 +1,24 @@
 export type StandMapDayId = string;
 
+// Partner tiers are highlighted on every stand surface. `main` is the
+// Hovedsamarbeidspartner, `collaborator` a Samarbeidspartner.
+export type CollaboratorTier = 'main' | 'collaborator';
+
+export const COLLABORATOR_TIER_LABELS: Record<CollaboratorTier, string> = {
+  main: 'Hovedsamarbeidspartner',
+  collaborator: 'Samarbeidspartner',
+};
+
+export const toCollaboratorTier = (
+  value: unknown
+): CollaboratorTier | undefined =>
+  value === 'main' || value === 'collaborator' ? value : undefined;
+
 export type StandMapStand = {
   number: number | string;
   companyName: string;
   companySlug: string;
+  collaboratorTier?: CollaboratorTier;
   position: {
     x: number;
     y: number;

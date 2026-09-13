@@ -32,6 +32,11 @@ type CurrentStandMapPlacement {
   companySlug: String!
   xPercent: Float!
   yPercent: Float!
+
+  """
+  Partner tier of the company, "main" for the main collaborator and "collaborator" for a collaborator. Null for a regular company.
+  """
+  collaboratorTier: String
 }
 
 """

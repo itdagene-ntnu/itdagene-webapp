@@ -25,7 +25,9 @@ type OptionalEventConfigurationResponse = {
   errors?: ReadonlyArray<unknown>;
 };
 
-export const OPTIONAL_EVENT_CONFIGURATION_QUERY = `
+const buildOptionalEventConfigurationQuery = (
+  includeCollaboratorTier: boolean
+): string => `
   query OptionalEventConfigurationQuery {
     currentMetaData {
       programPublished
@@ -46,12 +48,23 @@ export const OPTIONAL_EVENT_CONFIGURATION_QUERY = `
           companyName
           companySlug
           xPercent
-          yPercent
+          yPercent${
+            includeCollaboratorTier ? '\n          collaboratorTier' : ''
+          }
         }
       }
     }
   }
 `;
+
+export const OPTIONAL_EVENT_CONFIGURATION_QUERY =
+  buildOptionalEventConfigurationQuery(true);
+
+// A backend deployed before the partner highlight rejects the whole document
+// rather than the single unknown field, which would take the map, the venue and
+// the publication switches down with it.
+export const LEGACY_OPTIONAL_EVENT_CONFIGURATION_QUERY =
+  buildOptionalEventConfigurationQuery(false);
 
 export const parseOptionalEventConfiguration = (
   response: OptionalEventConfigurationResponse
@@ -82,6 +95,32 @@ export const parseOptionalEventConfiguration = (
   };
 };
 
+const postConfigurationQuery = async (
+  endpoint: string,
+  request: typeof fetch,
+  query: string,
+  signal?: AbortSignal
+): Promise<OptionalEventConfigurationResponse | null> => {
+  const response = await request(endpoint, {
+    body: JSON.stringify({
+      operationName: 'OptionalEventConfigurationQuery',
+      query,
+      variables: {},
+    }),
+    credentials: 'same-origin',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    signal,
+  });
+
+  if (!response.ok) return null;
+
+  return response.json();
+};
+
 export const fetchOptionalEventConfiguration = async (
   endpoint: string,
   request: typeof fetch = fetch,
@@ -94,24 +133,27 @@ export const fetchOptionalEventConfiguration = async (
     : undefined;
 
   try {
-    const response = await request(endpoint, {
-      body: JSON.stringify({
-        operationName: 'OptionalEventConfigurationQuery',
-        query: OPTIONAL_EVENT_CONFIGURATION_QUERY,
-        variables: {},
-      }),
-      credentials: 'same-origin',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      signal: controller?.signal,
-    });
+    const extended = await postConfigurationQuery(
+      endpoint,
+      request,
+      OPTIONAL_EVENT_CONFIGURATION_QUERY,
+      controller?.signal
+    );
 
-    if (!response.ok) return {};
+    if (!extended) return {};
+    if (!extended.errors?.length)
+      return parseOptionalEventConfiguration(extended);
 
-    return parseOptionalEventConfiguration(await response.json());
+    // Only the partner highlight depends on the newest field, so retry without
+    // it rather than dropping the whole configuration on an older backend.
+    const legacy = await postConfigurationQuery(
+      endpoint,
+      request,
+      LEGACY_OPTIONAL_EVENT_CONFIGURATION_QUERY,
+      controller?.signal
+    );
+
+    return legacy ? parseOptionalEventConfiguration(legacy) : {};
   } catch {
     // The public frontend is deployed independently from the backend. Keep the
     // unpublished-safe defaults until the extended schema is available.
