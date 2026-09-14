@@ -1998,17 +1998,33 @@ a {
   overflow: hidden;
   border: 1px solid var(--color-border);
   background: var(--color-surface-muted);
+  aspect-ratio: 1600 / 1131;
+}
+
+.stand-map::before {
+  content: '';
+  display: block;
+  padding-top: calc(1131 / 1600 * 100%);
 }
 
 .stand-map > img {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
 }
 
 .stand-map__markers {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .stand-map__marker {

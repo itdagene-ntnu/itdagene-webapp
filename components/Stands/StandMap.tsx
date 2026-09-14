@@ -175,7 +175,9 @@ export const StandMap = ({ day }: { day: StandMapDay }): JSX.Element => {
           >
             <img
               alt={`Plantegning med standplasseringer for ${day.label.toLowerCase()}`}
+              height={1131}
               src={day.mapImage}
+              width={1600}
             />
             <div
               aria-label={`Standkart for ${day.label}`}

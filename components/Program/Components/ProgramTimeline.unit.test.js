@@ -51,6 +51,8 @@ describe('ProgramTimeline', () => {
     container = document.createElement('div');
     document.body.appendChild(container);
     root = createRoot(container);
+    jest.useFakeTimers('modern');
+    jest.setSystemTime(new Date('2026-09-14T07:00:00.000Z'));
   });
 
   afterEach(() => {

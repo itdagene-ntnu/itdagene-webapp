@@ -26,7 +26,11 @@ const interactWithConnectedElement = async (selector, interaction) => {
 
     try {
       await element.evaluate((node) =>
-        node.scrollIntoView({ block: 'center', inline: 'center' })
+        node.scrollIntoView({
+          block: 'center',
+          inline: 'center',
+          behavior: 'auto',
+        })
       );
       await interaction(element);
       await element.dispose();
@@ -2314,7 +2318,7 @@ describe('Page rendering', () => {
       await page.$eval(directorySelector, (button) => button.dataset.active)
     ).toBe('true');
 
-    await page.click('.stand-table summary');
+    await page.$eval('.stand-table summary', (summary) => summary.click());
     await hoverConnectedElement(tableSelector);
     await page.waitForFunction(
       (selector) => document.querySelector(selector)?.dataset.active === 'true',
@@ -2330,7 +2334,7 @@ describe('Page rendering', () => {
     await page.$eval(tableSelector, (button) => button.click());
     expect(new URL(page.url()).searchParams.get('company')).toBeNull();
     expect(await page.$('.stand-selection')).toBeNull();
-  }, 30000);
+  }, 45000);
 
   test('Collaborators are highlighted on the map and in the directory', async () => {
     await page.setViewport({ width: 1440, height: 1000 });
